@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%= title %></title>
+        <link rel="stylesheet" href="/stylesheets/style.css" />
+    </head>
+    <body>
+        <h1><%= title %></h1>
+        <p>Hello! <% if (user_id) { %><b><%= user_id %></b><% } %></p>
+        <a href=".">Home</a> |
+        <% if (user_id) { %>
+            <a href="logout">Logout</a>
+        <% } else { %>
+            <a href="login">login</a> |
+            <a href="add_user">Add User</a>
+        <% } %>
+        <br><br>
+        <form method="post">
+            User Name: <br><input type="text" name="user"><br>
+            Password: <br><input type="password" name="pass"><br>
+            Retype-Password: <br><input type="password" name="pass2"><br>
+            <input type="submit" value="Register"><br>
+        </form>
+    </body>
+</html>
