@@ -4,6 +4,11 @@ var router = express.Router();
 // Loading database connection file by Yang Deokgyu
 var pool = require("../db.js");
 
+// https://github.com/caolan/async
+// Async is a utility module which provides straight-forward,
+// powerful functions for working with asynchronous JavaScript
+var async = require("async");
+
 /* GET */
 router.get('/', function(req, res, next) {
     res.render('index', {
@@ -48,18 +53,18 @@ router.post("/login", function(req, res) {
                 console.error(err);
             }
 
-        //     conn.query("SELECT count(*) cnt FROM users WHERE id=?", [id], function (err, rows) {
-        //         if (err) {
-        //             console.error(err);
-        //         } else {
-        //             cnt = rows[0].cnt;
-        //             if (cnt == 0) {
-        //                 res.send("<script>alert('Unregistered ID!'); history.back();</script>");
-        //             }
-        //         }
-        //         conn.release();
-        //     });
-        // });
+            conn.query("SELECT count(*) cnt FROM users WHERE id=?", [id], function (err, rows) {
+                if (err) {
+                    console.error(err);
+                } else {
+                    cnt = rows[0].cnt;
+                    if (cnt == 0) {
+                        res.send("<script>alert('Unregistered ID!'); history.back();</script>");
+                    }
+                }
+                conn.release();
+            });
+        });
 
         pool.getConnection(function (err, conn) {
             conn.query("SELECT count(*) cnt FROM users WHERE id=? and password=MD5(?)", [id, pw], function (err, rows) {

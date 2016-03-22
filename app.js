@@ -17,7 +17,7 @@ var cookieParser = require('cookie-parser');
 // https://github.com/expressjs/body-parser
 // Node.js body parsing middleware
 var bodyParser = require('body-parser');
-//https://github.com/expressjs/session
+// https://github.com/expressjs/session
 var session = require("express-session");
 
 // Include socket.io loading file by Yang Deokgyu
