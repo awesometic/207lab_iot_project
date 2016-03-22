@@ -33,7 +33,7 @@ like this,
 create table users (
  	idx int(10) not null auto_increment primary key,
  	id varchar(30) not null,
- 	password char(32) not null
+ 	password char(64) not null
 );
 ```
-The password will be stored into the table after encoding with MD5
+The password will be stored into the table after encoding with SHA-256

@@ -67,7 +67,7 @@ router.post("/login", function(req, res) {
         });
 
         pool.getConnection(function (err, conn) {
-            conn.query("SELECT count(*) cnt FROM users WHERE id=? and password=MD5(?)", [id, pw], function (err, rows) {
+            conn.query("SELECT count(*) cnt FROM users WHERE id=? and password=SHA2(?, 256)", [id, pw], function (err, rows) {
                 if (err) {
                     console.error(err);
                 } else {
@@ -100,7 +100,7 @@ router.post("/add_user", function(req, res) {
                 if (err) {
                     console.error(err);
                 }
-                conn.query("INSERT INTO users (id, password) VALUES (?, MD5(?))", [id, pw], function (err, rows) {
+                conn.query("INSERT INTO users (id, password) VALUES (?, SHA2(?, 256))", [id, pw], function (err, rows) {
                     if (err) {
                         console.error(err);
                     } else {
