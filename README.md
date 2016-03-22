@@ -1,5 +1,5 @@
 # nodejs_simple_login
-This is Node.js login with node-mysql, express-session, socket.io modules example
+This is Node.js Project example
 
 I've been testing this project on (will show you only necessary-modules for login)
 
@@ -9,6 +9,7 @@ I've been testing this project on (will show you only necessary-modules for logi
 * ejs 2.3.4
 * express-session 1.13.0
 * node-mysql 2.10.2
+* Async 2.0.0
 * MariaDB 10.1.12
 
 And I would keep up with update
@@ -23,6 +24,7 @@ and installed two unprepared modules to make a something webpages providing logi
 $ sudo npm install mysql --save
 $ sudo npm install express-session --save
 $ sudo npm install socket.io --save
+$ sudo npm install async --save
 ```
 
 If you want to test this, you have to create a table on your DBMS(MySQL or MariaDB would be supported)<br>
