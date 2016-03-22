@@ -47,41 +47,47 @@ router.post("/login", function(req, res) {
     if (id.length == 0 || pw.length == 0) {
         res.send("<script>alert('Fill out all of the textbox fields'); history.back();</script>");
     } else {
-        pool.getConnection(function (err, conn) {
-            var cnt;
-            if (err) {
-                console.error(err);
-            }
+        // var registeredId = false;
+        //
+        // pool.getConnection(function (err, conn) {
+        //     var cnt;
+        //     if (err) {
+        //         console.error(err);
+        //     }
+        //
+        //     conn.query("SELECT count(*) cnt FROM users WHERE id=?", [id], function (err, rows) {
+        //         if (err) {
+        //             console.error(err);
+        //         } else {
+        //             cnt = rows[0].cnt;
+        //             if (cnt == 0) {
+        //                 res.send("<script>alert('Unregistered ID!'); history.back();</script>");
+        //             } else {
+        //                 registeredId = true;
+        //             }
+        //         }
+        //         conn.release();
+        //     });
+        // });
 
-            conn.query("SELECT count(*) cnt FROM users WHERE id=?", [id], function (err, rows) {
-                if (err) {
-                    console.error(err);
-                } else {
-                    cnt = rows[0].cnt;
-                    if (cnt == 0) {
-                        res.send("<script>alert('Unregistered ID!'); history.back();</script>");
-                    }
-                }
-                conn.release();
-            });
-        });
-
-        pool.getConnection(function (err, conn) {
-            conn.query("SELECT count(*) cnt FROM users WHERE id=? and password=SHA2(?, 256)", [id, pw], function (err, rows) {
-                if (err) {
-                    console.error(err);
-                } else {
-                    var cnt = rows[0].cnt;
-                    if (cnt == 1) {
-                        req.session.user_id = id;
-                        res.send("<script>alert('Login Success!'); location.href='/';</script>");
+        // if (registeredId) {
+            pool.getConnection(function (err, conn) {
+                conn.query("SELECT count(*) cnt FROM users WHERE id=? and password=SHA2(?, 256)", [id, pw], function (err, rows) {
+                    if (err) {
+                        console.error(err);
                     } else {
-                        res.send("<script>alert('Password incorrect!'); history.back();</script>");
+                        var cnt = rows[0].cnt;
+                        if (cnt == 1) {
+                            req.session.user_id = id;
+                            res.send("<script>alert('Login Success!'); location.href='/';</script>");
+                        } else {
+                            res.send("<script>alert('Password incorrect!'); history.back();</script>");
+                        }
                     }
                     conn.release();
-                }
+                });
             });
-        });
+        // }
     }
 });
 
