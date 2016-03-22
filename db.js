@@ -10,18 +10,6 @@ var pool = mysql.createPool({
     database        : 'nodejs'
 });
 
-/* Closing all the connections in a pool */
-exports.poolEnd = function(err) {
-    console.end("err: " + err);
-    console.end("MySQL connection pool end");
-    pool.end();
-};
-
-exports.poolEnd = function() {
-    console.end("MySQL connection pool end");
-    pool.end();
-}
-
 /*
 var db_connection = mysql.createConnection({
     host      : 'localhost',
