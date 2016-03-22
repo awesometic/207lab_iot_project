@@ -12,21 +12,22 @@ var async = require("async");
 /* GET */
 router.get('/', function(req, res, next) {
     res.render('index', {
-        title: 'Express',
+        title: '207 LAB',
+        lab_desc: "공사중!",
         user_id: req.session.user_id
     });
 });
 
 router.get("/login", function(req, res, next) {
     res.render("login", {
-        title: "Express",
+        title: "207 LAB",
         user_id: req.session.user_id
     });
 });
 
 router.get("/add_user", function(req, res, next) {
     res.render("add_user", {
-        title: "Express",
+        title: "207 LAB",
         user_id: req.session.user_id
     });
 });

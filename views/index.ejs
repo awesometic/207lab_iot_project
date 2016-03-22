@@ -6,6 +6,7 @@
     </head>
     <body>
         <h1><%= title %></h1>
+        <h1><p><% if (lab_desc) { %><%= lab_desc %><% } %></p></h1>
         <p>Hello! <% if (user_id) { %><b><%= user_id %></b><% } %></p>
         <a href=".">Home</a> |
         <% if (user_id) { %>
