@@ -72,22 +72,22 @@ router.post("/login", function(req, res) {
         // });
 
         // if (registeredId) {
-            pool.getConnection(function (err, conn) {
-                conn.query("SELECT count(*) cnt FROM users WHERE id=? and password=SHA2(?, 256)", [id, pw], function (err, rows) {
-                    if (err) {
-                        console.error(err);
+        pool.getConnection(function (err, conn) {
+            conn.query("SELECT count(*) cnt FROM users WHERE id=? and password=SHA2(?, 256)", [id, pw], function (err, rows) {
+                if (err) {
+                    console.error(err);
+                } else {
+                    var cnt = rows[0].cnt;
+                    if (cnt == 1) {
+                        req.session.user_id = id;
+                        res.send("<script>alert('Login Success!'); location.href='/';</script>");
                     } else {
-                        var cnt = rows[0].cnt;
-                        if (cnt == 1) {
-                            req.session.user_id = id;
-                            res.send("<script>alert('Login Success!'); location.href='/';</script>");
-                        } else {
-                            res.send("<script>alert('Password incorrect!'); history.back();</script>");
-                        }
+                        res.send("<script>alert('Password incorrect!'); history.back();</script>");
                     }
-                    conn.release();
-                });
+                }
+                conn.release();
             });
+        });
         // }
     }
 });
