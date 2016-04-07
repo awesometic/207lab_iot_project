@@ -1,6 +1,6 @@
-/*
  //http://socket.io/docs/
- var io = require("socket.io").listen(2070);
+ var port = process.env.PORT || 2070;
+ var io = require("socket.io").listen(port);
 
  // Reference: http://playgroundblog.tistory.com/145
  // Reference: https://nodesource.com/blog/understanding-socketio/
@@ -15,27 +15,31 @@
 
  // Making left stuffs after android app that can communicate via socket that is made
  io.on("connection", function(socket) {
- socket.emit("an event", {
- MyNameIs: "Node.js"
- });
+     socket.emit("answer", {
+        MyNameIs: "207LAB Server"
+     });
 
- socket.on("other event", function(data) {
- console.log(data);
- });
+     socket.on("call", function(data) {
+        console.log(data);
+     });
 
- socket.on("disconnect", function() {
- io.emit("user disconnected");
- })
+     socket.on("disconnect", function() {
+        io.emit("user disconnected");
+     });
  });
 
  module.exports = io;
- */
+
 /** 2016. 04. 07
  * For socket.io test, make it chatting server using socket.io.
  * Source code by
  * http://socket.io/blog/native-socket-io-and-android/
  * https://github.com/socketio/socket.io/blob/master/examples/chat/index.js
  * https://github.com/socketio/socket.io-client-java
+ *
+ * 2016. 04. 07
+ * It works! with the app
+ * I'll not remove it just for fun
  * */
 // Setup basic express server
 // var express = require('express');
@@ -52,15 +56,13 @@
 // app.use(express.static(__dirname + '/public'));
 
 // Initialize socket.io
-var port = process.env.PORT || 2070;
-var io = require("socket.io").listen(port, function () {
-    console.log("Server listening at port %d", port);
-});
+var port = process.env.PORT || 2071;
+var io2 = require("socket.io").listen(port);
 
 // Chatroom
 var numUsers = 0;
 
-io.on('connection', function (socket) {
+io2.on('connection', function (socket) {
     var addedUser = false;
 
     // when the client emits 'new message', this listens and executes
