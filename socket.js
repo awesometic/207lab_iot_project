@@ -52,7 +52,11 @@
 // app.use(express.static(__dirname + '/public'));
 
 // Initialize socket.io
-var io = require("socket.io").listen(2070);
+var io = require("socket.io");
+var port = process.env.PORT || 2070;
+io.listen(port, function () {
+    console.log("Server listening at port %d", port);
+});
 
 // Chatroom
 var numUsers = 0;
