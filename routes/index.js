@@ -1,34 +1,175 @@
 var express = require('express');
 var router = express.Router();
 
-// Loading database connection file by Yang Deokgyu
-var pool = require("../db.js");
-
 // https://github.com/caolan/async
 // Async is a utility module which provides straight-forward,
 // powerful functions for working with asynchronous JavaScript
 var async = require("async");
 
+/* Functions using Database */
+// Loading database connection file by Yang Deokgyu
+var pool = require("../db.js");
+
+/** Must use callback function! These are references
+ * http://inspiredjw.tistory.com/entry/JavaScript-%EC%BD%9C%EB%B0%B1-%ED%95%A8%EC%88%98%EC%9D%98-%ED%99%9C%EC%9A%A9
+ * http://blog.jui.io/?p=19
+ * http://yubylab.tistory.com/entry/%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%EC%9D%98-%EC%BD%9C%EB%B0%B1%ED%95%A8%EC%88%98-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0
+ */
+
+var checkRegistered = function(res, smartphone_address, employee_number, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err) {
+            conn.release();
+            console.error(err);
+        }
+        conn.query("SELECT count(*) cnt FROM identity WHERE smartphone_address=? OR employee_number=?", [smartphone_address, employee_number], function(err, rows) {
+            if (err) {
+                console.error(err);
+            }
+            var cnt = rows[0].cnt;
+            var valid = false;
+
+            if (cnt > 0)
+                valid = true;
+
+            if (typeof callback === "function") {
+                callback(valid);
+            }
+
+            conn.release();
+        });
+    });
+};
+
+var checkLoginName = function(res, employee_number, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err) {
+            conn.release();
+            console.error(err);
+        }
+        conn.query("SELECT count(*) cnt FROM identity WHERE employee_number=?", [employee_number], function(err, rows) {
+            if (err) {
+                console.error(err);
+            }
+            var cnt = rows[0].cnt;
+            var valid = false;
+
+            if (cnt == 1)
+                valid = true;
+            else
+                res.send("<script> alert('Unregistered Employee!'); history.back(); </script>");
+
+            if (typeof callback === "function") {
+                callback(valid);
+            }
+
+            conn.release();
+        });
+    });
+};
+
+var checkLoginPassword = function(res, employee_number, password, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err) {
+            conn.release();
+            console.error(err);
+        }
+        conn.query("SELECT count(*) cnt FROM identity WHERE employee_number=? AND password=SHA2(?, 256)", [employee_number, password], function(err, rows) {
+            if (err) {
+                console.error(err);
+            }
+            var cnt = rows[0].cnt;
+            var valid = false;
+
+            if (cnt == 1)
+                valid = true;
+            else
+                res.send("<script> alert('Check your password!'); history.back(); </script>");
+
+            if (typeof callback === "function") {
+                callback(valid);
+            }
+
+            conn.release();
+        });
+    });
+};
+
+var loginValidation = function(req, res, employee_number, password) {
+    checkLoginName(res, employee_number, function(valid) {
+        if (valid) {
+            checkLoginPassword(res, employee_number, password, function(valid) {
+                if (valid) {
+                    req.session.employee_number = employee_number;
+                    res.send("<script> alert('Login Success!'); location.href='/'; </script>");
+                }
+            });
+        }
+    });
+};
+
+var registerUser = function(res, smartphone_address, employee_number, name, password, department, position, permission) {
+    pool.getConnection(function(err, conn) {
+        if (err) {
+            console.error(err);
+        }
+        conn.query("INSERT INTO identity (smartphone_address, employee_number, name, password, department, position, permission)" +
+            " VALUES (?, ?, ?, SHA2(?, 256), ?, ?, ?)", [smartphone_address, employee_number, name, password, department, position, permission], function (err) {
+            if (err)
+                console.error(err);
+            else
+                res.send("<script> alert('Register Success!'); location.href='/login'; </script>");
+
+            conn.release();
+        });
+    });
+};
+
+var registerWorkplace = function(res, name_workplace, location_workplace, uuid, gateway_address) {
+    pool.getConnection(function(err, conn) {
+        if (err) {
+            console.error(err);
+        }
+        conn.query("INSERT INTO workplace (name_workplace, location_workplace, UUID, gateway_address)" +
+            " VALUES (?, ?, ?, ?)", [name_workplace, location_workplace, uuid, gateway_address], function (err) {
+            if (err)
+                console.error(err);
+            else
+                res.send("<script> alert('Register Success!'); history.back(); </script>");
+
+            conn.release();
+        });
+    });
+};
+
 /* GET */
+var title = "Suwon Univ. 207 Lab - IoT Project";
 router.get('/', function(req, res, next) {
     res.render('index', {
-        title: '207 LAB',
+        title: title,
         lab_desc: "공사중!",
-        user_id: req.session.user_id
+        employee_number: req.session.employee_number
     });
 });
 
 router.get("/login", function(req, res, next) {
     res.render("login", {
-        title: "207 LAB",
-        user_id: req.session.user_id
+        title: title,
+        employee_number: req.session.employee_number
     });
 });
 
 router.get("/add_user", function(req, res, next) {
     res.render("add_user", {
-        title: "207 LAB",
-        user_id: req.session.user_id
+        title: title,
+        employee_number: req.session.employee_number
+    });
+});
+
+router.get("/add_workplace", function(req, res, next) {
+    res.render("add_workplace", {
+        title: title,
+        employee_number: req.session.employee_number
     });
 });
 
@@ -36,87 +177,55 @@ router.get("/logout", function(req, res, next) {
     req.session.destroy(function(err) {
         if (err)
             console.error("err", err);
-        res.send("<script>alert('Logout Success!'); location.href='/';</script>");
+        res.send("<script> alert('Logout Success!'); location.href='/';</script>");
     });
 });
 
 /* POST */
 router.post("/login", function(req, res) {
-    var id = req.body.user;
-    var pw = req.body.pass;
+    var employee_number = req.body.employee_number;
+    var password = req.body.password;
 
-    if (id.length == 0 || pw.length == 0) {
-        res.send("<script>alert('Fill out all of the textbox fields'); history.back();</script>");
-    } else {
-        // var registeredId = false;
-        //
-        // pool.getConnection(function (err, conn) {
-        //     var cnt;
-        //     if (err) {
-        //         console.error(err);
-        //     }
-        //
-        //     conn.query("SELECT count(*) cnt FROM users WHERE id=?", [id], function (err, rows) {
-        //         if (err) {
-        //             console.error(err);
-        //         } else {
-        //             cnt = rows[0].cnt;
-        //             if (cnt == 0) {
-        //                 res.send("<script>alert('Unregistered ID!'); history.back();</script>");
-        //             } else {
-        //                 registeredId = true;
-        //             }
-        //         }
-        //         conn.release();
-        //     });
-        // });
-
-        // if (registeredId) {
-        pool.getConnection(function (err, conn) {
-            conn.query("SELECT count(*) cnt FROM users WHERE id=? and password=SHA2(?, 256)", [id, pw], function (err, rows) {
-                if (err) {
-                    console.error(err);
-                } else {
-                    var cnt = rows[0].cnt;
-                    if (cnt == 1) {
-                        req.session.user_id = id;
-                        res.send("<script>alert('Login Success!'); location.href='/';</script>");
-                    } else {
-                        res.send("<script>alert('Password incorrect!'); history.back();</script>");
-                    }
-                }
-                conn.release();
-            });
-        });
-        // }
-    }
+    loginValidation(req, res, employee_number, password);
 });
 
 router.post("/add_user", function(req, res) {
-    var id = req.body.user;
-    var pw = req.body.pass;
-    var pw2 = req.body.pass2;
+    var smartphone_address = req.body.smartphone_address;
+    var employee_number = req.body.employee_number;
+    var name = req.body.name;
+    var password = req.body.password;
+    var retype_password = req.body.retype_password;
+    var department = req.body.department;
+    var position = req.body.position;
+    var permission = req.body.permission;
 
-    if (id.length == 0 || pw.length == 0 || pw2.length == 0) {
-        res.send("<script>alert('Fill out all of the textbox fields!'); history.back();</script>");
+    if (permission)
+        permission = 1;
+    else
+        permission = 0;
+
+    if (password != retype_password) {
+        res.send("<script> alert('Check Retype-Password!'); history.back(); </script>");
+    } else if (smartphone_address.length != 17) {
+        res.send("<script> alert('Type Correct Information!'); history.back(); </script>");
     } else {
-        if (pw != pw2) {
-            res.send("<script>alert('Check Retype-Password!'); history.back();</script>");
-        } else {
-            pool.getConnection(function (err, conn) {
-                if (err) {
-                    console.error(err);
-                }
-                conn.query("INSERT INTO users (id, password) VALUES (?, SHA2(?, 256))", [id, pw], function (err, rows) {
-                    if (err) {
-                        console.error(err);
-                    } else {
-                        res.send("<script>alert('Register Success!'); location.href='/login';</script>");
-                    }
-                    conn.release();
-                });
-            });
-        }
+        checkRegistered(res, smartphone_address, employee_number, function(valid) {
+            if (valid)
+                registerUser(res, smartphone_address, employee_number, name, password, department, position, permission);
+        });
+    }
+});
+
+router.post("/add_workplace", function(req, res) {
+    var name_workplace = req.body.name_workplace;
+    var location_workplace = req.body.location_workplace;
+    var uuid = req.body.uuid;
+    var gateway_address = req.body.gateway_address;
+
+    if (uuid.length != 32 || gateway_address.length != 17) {
+        res.send("<script> alert('Type Correct Information!'); history.back(); </script>");
+    } else {
+        registerWorkplace(res, name_workplace, location_workplace, uuid, gateway_address);
     }
 });
 

@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title><%= title %></title>
-        <link rel='stylesheet' href='/stylesheets/style.css' />
-    </head>
-    <body>
-        <h1><%= title %></h1>
-        <h1><p><% if (lab_desc) { %><%= lab_desc %><% } %></p></h1>
-        <p>Hello! <% if (user_id) { %><b><%= user_id %></b><% } %></p>
-        <a href=".">Home</a> |
-        <% if (user_id) { %>
-            <a href="logout">Logout</a>
-        <% } else { %>
-            <a href="login">login</a> |
-            <a href="add_user">Add User</a>
-        <% } %>
-        <br><br>
-    </body>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+<h1><%= title %></h1>
+<h1><p><% if (lab_desc) { %><%= lab_desc %><% } %></p></h1>
+<p>Hello! <% if (employee_number) { %><b><%= employee_number %></b><% } %></p>
+<a href=".">Home</a> |
+<% if (employee_number) { %>
+<a href="logout">Logout</a> |
+<a href="add_workplace">Add Workplace</a>
+<% } else { %>
+<a href="login">Login</a> |
+<a href="add_user">Add User</a>
+<% } %>
+<br><br>
+</body>
 </html>

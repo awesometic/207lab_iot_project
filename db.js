@@ -7,7 +7,7 @@ var pool = mysql.createPool({
     host            : 'localhost',
     user            : '207lab',
     password        : '207lab',
-    database        : '2016iotproject'
+    database        : 'project_CM'
 });
 
 /*
@@ -27,5 +27,5 @@ db_connection.query('select 5 + 5 as solution', function(err, rows, fields) {
 
 db_connection.end();
 */
-
+    
 module.exports = pool;

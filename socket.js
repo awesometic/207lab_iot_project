@@ -1,121 +1,179 @@
- //http://socket.io/docs/
- var port = process.env.PORT || 2070;
- var io = require("socket.io").listen(port);
+//http://socket.io/docs/
+var port = process.env.PORT || 2070;
+var io = require("socket.io").listen(port);
 
- // Reference: http://playgroundblog.tistory.com/145
- // Reference: https://nodesource.com/blog/understanding-socketio/
- // Reference: http://stackoverflow.com/questions/20979800/send-byte-array-in-node-js-to-server
+var pool = require("./db.js");
 
- // We'll communicate using json object
- // Reference: http://stackoverflow.com/questions/25615313/javascript-byte-array-to-json-and-back
+var analyzeJSON = function(data) {
+    var stringified;
 
- // There's java library that is made for socket.io
- // http://socket.io/blog/native-socket-io-and-android/
- // https://github.com/socketio/socket.io-client-java
+    stringified = JSON.stringify(data);
+    stringified.replace("{", "");
+    stringified.replace("}", "");
+    var stringifiedArr = stringified.split(",");
 
- // Making left stuffs after android app that can communicate via socket that is made
- io.on("connection", function(socket) {
-     socket.emit("answer", {
-        MyNameIs: "207LAB Server"
-     });
+    return stringifiedArr;
+};
 
-     socket.on("call", function(data) {
-        console.log(data);
-     });
+var getDeviceAddress = function(stringifiedArr) {
+    var deviceAddress = stringifiedArr[0].split(":");
 
-     socket.on("disconnect", function() {
-        io.emit("user disconnected");
-     });
- });
+    return deviceAddress;
+};
 
- module.exports = io;
+var getUUID = function(stringifiedArr) {
+    var uuid = stringifiedArr[1].split(":");
+    uuid[1] = uuid[1].replace(" ", "");
 
-/** 2016. 04. 07
- * For socket.io test, make it chatting server using socket.io.
- * Source code by
- * http://socket.io/blog/native-socket-io-and-android/
- * https://github.com/socketio/socket.io/blob/master/examples/chat/index.js
- * https://github.com/socketio/socket.io-client-java
- *
- * 2016. 04. 07
- * It works! with the app
- * I'll not remove it just for fun
- * */
-// Setup basic express server
-// var express = require('express');
-// var app = express();
-// var server = require('http').createServer(app);
-// var io = require('../..')(server);
-// var port = process.env.PORT || 3000;
+    return uuid;
+};
 
-// server.listen(port, function () {
-//     console.log('Server listening at port %d', port);
-// });
+var getMajor = function(stringifiedArr) {
+    var major = stringifiedArr[2].split(":");
 
-// Routing
-// app.use(express.static(__dirname + '/public'));
+    return major;
+};
 
-// Initialize socket.io
-var port = process.env.PORT || 2071;
-var io2 = require("socket.io").listen(port);
+var getMinor = function(stringifiedArr) {
+    var minor = stringifiedArr[3].split(":");
 
-// Chatroom
-var numUsers = 0;
+    return minor;
+};
 
-io2.on('connection', function (socket) {
-    var addedUser = false;
+var getSmartphoneAddress = function(stringifiedArr) {
+    var smartphoneAddress = stringifiedArr[4].split(":");
 
-    // when the client emits 'new message', this listens and executes
-    socket.on('new message', function (data) {
-        // we tell the client to execute 'new message'
-        socket.broadcast.emit('new message', {
-            username: socket.username,
-            message: data
+    return smartphoneAddress;
+}
+
+var getDatetime = function(stringifiedArr) {
+    var datetime = stringifiedArr[5].split(":");
+
+    return datetime;
+};
+
+var gatewayValidation = function(stringifiedArr, callback) {
+    var deviceAddress       = getDeviceAddress(stringifiedArr);
+    var uuid                = getUUID(stringifiedArr);
+
+    pool.getConnection(function(err, conn) {
+        conn.query("SELECT count(*) cnt FROM workplace WHERE gateway_address=? AND UUID=?", [deviceAddress[1], uuid[1]], function(err, rows) {
+            if (err)
+                console.error(err);
+            var cnt = rows[0].cnt;
+            var valid = false;
+
+            if (cnt == 1) {
+                console.log(deviceAddress[1] + " / " + uuid[1] + ": Valified Gateway");
+                valid = true;
+            } else {
+                console.log(deviceAddress[1] + " / " + uuid[1] + ": Not Valified Gateway");
+            }
+
+            if (typeof callback === "function") {
+                callback(valid);
+            }
+
+            conn.release();
         });
     });
+};
 
-    // when the client emits 'add user', this listens and executes
-    socket.on('add user', function (username) {
-        if (addedUser) return;
+var smartphoneValidation = function(stringifiedArr, callback) {
+    var smartphoneAddress   = getSmartphoneAddress(stringifiedArr);
 
-        // we store the username in the socket session for this client
-        socket.username = username;
-        ++numUsers;
-        addedUser = true;
-        socket.emit('login', {
-            numUsers: numUsers
-        });
-        // echo globally (all clients) that a person has connected
-        socket.broadcast.emit('user joined', {
-            username: socket.username,
-            numUsers: numUsers
-        });
-    });
+    pool.getConnection(function(err, conn) {
+        conn.query("SELECT count(*) cnt FROM identity WHERE smartphone_address=?", smartphoneAddress[1], function(err, rows) {
+            if (err)
+                console.error(err);
+            var cnt = rows[0].cnt;
+            var valid = false;
 
-    // when the client emits 'typing', we broadcast it to others
-    socket.on('typing', function () {
-        socket.broadcast.emit('typing', {
-            username: socket.username
-        });
-    });
+            if (cnt == 1) {
+                console.log(smartphoneAddress[1] + ": Valified Smartphone");
+                valid = true;
+            } else {
+                console.log(smartphoneAddress[1] + ": Not Valified Smartphone");
+            }
 
-    // when the client emits 'stop typing', we broadcast it to others
-    socket.on('stop typing', function () {
-        socket.broadcast.emit('stop typing', {
-            username: socket.username
+            if (typeof callback === "function") {
+                callback(valid);
+            }
+
+            conn.release();
         });
     });
+};
 
-    // when the user disconnects.. perform this
-    socket.on('disconnect', function () {
-        if (addedUser) {
-            --numUsers;
 
-            // echo globally that this client has left
-            socket.broadcast.emit('user left', {
-                username: socket.username,
-                numUsers: numUsers
+var getWorkplaceName = function(stringifiedArr, callback) {
+    var deviceAddress       = getDeviceAddress(stringifiedArr);
+    var uuid                = getUUID(stringifiedArr);
+    
+    pool.getConnection(function(err, conn) {
+        conn.query("SELECT name_workplace FROM workplace WHERE gateway_address=? AND UUID=?", [deviceAddress[1], uuid[1]], function(err, rows) {
+            if (err)
+                console.error(err);
+            var name_workplace = rows[0].name_workplace;
+            
+            if (typeof callback === "function") {
+                callback(name_workplace);
+            }
+
+            conn.release();
+        });
+    });
+};
+
+var registerCommute = function(stringifiedArr, callback) {
+    var smartphoneAddress   = getSmartphoneAddress(stringifiedArr);
+    var datetime            = getDatetime(stringifiedArr);
+
+    getWorkplaceName(stringifiedArr, function(name_workplace) {
+        pool.getConnection(function(err, conn) {
+            conn.query("INSERT INTO circumstance time, name_workplace, smartphone_address VALUES (?, ?, ?)", [datetime[1], name_workplace, smartphoneAddress[1]], function(err) {
+                if (err) {
+                    console.error(err);
+
+                    if (typeof callback === "function") {
+                        callback(false);
+                    }
+                } else {
+                    console.log(datetime[1] + " / " + name_workplace + " / " + smartphoneAddress[1] + ": Registered");
+
+                    if (typeof callback === "function") {
+                        callback(true);
+                    }
+                }
+                
+                conn.release();
             });
-        }
+        });
     });
+};
+
+io.on("connection", function(socket) {
+    var answerStr = "{ 'MyNameIs':'207LAB Server' }";
+    var answerJSONObj = JSON.parse(answerStr);
+
+    var stringifiedArr = array();
+    socket.on("call", function(data) {
+        console.log(data);
+        stringifiedArr = analyzeJSON(data);
+        
+        gatewayValidation(stringifiedArr, function(valid) {
+            if (valid)
+                smartphoneValidation(stringifiedArr, function(valid) {
+                    if (valid)
+                        registerCommute(stringifiedArr, function(valid) {
+                            if (valid)
+                                console.log("socket.on success: " + valid);
+                        });
+                });
+        });
+    });
+
+    socket.emit("answer", answerJSONObj);
 });
+
+module.exports = io;

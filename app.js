@@ -22,6 +22,7 @@ var session = require("express-session");
 
 // Include socket.io loading file by Yang Deokgyu
 var io = require("./socket");
+var io2 = require("./socket-chat.js");
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
