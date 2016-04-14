@@ -3,7 +3,7 @@
 //https://github.com/felixge/node-mysql
 var mysql = require('mysql');
 var pool = mysql.createPool({
-    connectionLimit : 10,
+    connectionLimit : 100,
     host            : 'localhost',
     user            : '207lab',
     password        : '207lab',

@@ -18,19 +18,20 @@ var pool = require("../db.js");
 
 var checkRegistered = function(res, smartphone_address, employee_number, callback) {
     pool.getConnection(function(err, conn) {
-        if (err) {
-            conn.release();
+        if (err)
             console.error(err);
-        }
+
         conn.query("SELECT count(*) cnt FROM identity WHERE smartphone_address=? OR employee_number=?", [smartphone_address, employee_number], function(err, rows) {
             if (err) {
                 console.error(err);
+                conn.release();
             }
+
             var cnt = rows[0].cnt;
-            var valid = false;
+            var valid = true;
 
             if (cnt > 0)
-                valid = true;
+                valid = false;
 
             if (typeof callback === "function") {
                 callback(valid);
@@ -43,14 +44,15 @@ var checkRegistered = function(res, smartphone_address, employee_number, callbac
 
 var checkLoginName = function(res, employee_number, callback) {
     pool.getConnection(function(err, conn) {
-        if (err) {
-            conn.release();
+        if (err)
             console.error(err);
-        }
+
         conn.query("SELECT count(*) cnt FROM identity WHERE employee_number=?", [employee_number], function(err, rows) {
             if (err) {
                 console.error(err);
+                conn.release();
             }
+
             var cnt = rows[0].cnt;
             var valid = false;
 
@@ -70,14 +72,15 @@ var checkLoginName = function(res, employee_number, callback) {
 
 var checkLoginPassword = function(res, employee_number, password, callback) {
     pool.getConnection(function(err, conn) {
-        if (err) {
-            conn.release();
+        if (err)
             console.error(err);
-        }
+
         conn.query("SELECT count(*) cnt FROM identity WHERE employee_number=? AND password=SHA2(?, 256)", [employee_number, password], function(err, rows) {
             if (err) {
                 console.error(err);
+                conn.release();
             }
+
             var cnt = rows[0].cnt;
             var valid = false;
 
@@ -110,13 +113,15 @@ var loginValidation = function(req, res, employee_number, password) {
 
 var registerUser = function(res, smartphone_address, employee_number, name, password, department, position, permission) {
     pool.getConnection(function(err, conn) {
-        if (err) {
+        if (err)
             console.error(err);
-        }
+
         conn.query("INSERT INTO identity (smartphone_address, employee_number, name, password, department, position, permission)" +
             " VALUES (?, ?, ?, SHA2(?, 256), ?, ?, ?)", [smartphone_address, employee_number, name, password, department, position, permission], function (err) {
-            if (err)
+            if (err) {
                 console.error(err);
+                conn.release();
+            }
             else
                 res.send("<script> alert('Register Success!'); location.href='/login'; </script>");
 
@@ -127,13 +132,15 @@ var registerUser = function(res, smartphone_address, employee_number, name, pass
 
 var registerWorkplace = function(res, name_workplace, location_workplace, uuid, gateway_address) {
     pool.getConnection(function(err, conn) {
-        if (err) {
+        if (err)
             console.error(err);
-        }
+
         conn.query("INSERT INTO workplace (name_workplace, location_workplace, UUID, gateway_address)" +
             " VALUES (?, ?, ?, ?)", [name_workplace, location_workplace, uuid, gateway_address], function (err) {
-            if (err)
+            if (err) {
                 console.error(err);
+                conn.release();
+            }
             else
                 res.send("<script> alert('Register Success!'); history.back(); </script>");
 
@@ -190,7 +197,6 @@ router.post("/login", function(req, res) {
 });
 
 router.post("/add_user", function(req, res) {
-    var smartphone_address = req.body.smartphone_address;
     var employee_number = req.body.employee_number;
     var name = req.body.name;
     var password = req.body.password;
@@ -198,6 +204,7 @@ router.post("/add_user", function(req, res) {
     var department = req.body.department;
     var position = req.body.position;
     var permission = req.body.permission;
+    var smartphone_address = req.body.smartphone_address;
 
     if (permission)
         permission = 1;
@@ -210,8 +217,9 @@ router.post("/add_user", function(req, res) {
         res.send("<script> alert('Type Correct Information!'); history.back(); </script>");
     } else {
         checkRegistered(res, smartphone_address, employee_number, function(valid) {
-            if (valid)
+            if (valid) {
                 registerUser(res, smartphone_address, employee_number, name, password, department, position, permission);
+            }
         });
     }
 });

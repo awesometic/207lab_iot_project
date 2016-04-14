@@ -70,8 +70,11 @@ var gatewayValidation = function(stringifiedArr, callback) {
 
     pool.getConnection(function(err, conn) {
         conn.query("SELECT count(*) cnt FROM workplace WHERE gateway_address=? AND UUID=?", [deviceAddress[1], uuid[1]], function(err, rows) {
-            if (err)
+            if (err) {
                 console.error(err);
+                conn.release();
+            }
+
             var cnt = rows[0].cnt;
             var valid = false;
 
@@ -96,8 +99,11 @@ var smartphoneValidation = function(stringifiedArr, callback) {
 
     pool.getConnection(function(err, conn) {
         conn.query("SELECT count(*) cnt FROM identity WHERE smartphone_address=?", smartphoneAddress[1], function(err, rows) {
-            if (err)
+            if (err) {
                 console.error(err);
+                conn.release();
+            }
+
             var cnt = rows[0].cnt;
             var valid = false;
 
@@ -124,8 +130,11 @@ var getWorkplaceName = function(stringifiedArr, callback) {
 
     pool.getConnection(function(err, conn) {
         conn.query("SELECT name_workplace FROM workplace WHERE gateway_address=? AND UUID=?", [deviceAddress[1], uuid[1]], function(err, rows) {
-            if (err)
+            if (err) {
                 console.error(err);
+                conn.release();
+            }
+
             var name_workplace = rows[0].name_workplace;
 
             if (typeof callback === "function") {
@@ -150,15 +159,18 @@ var registerCommute = function(stringifiedArr, callback) {
                     if (typeof callback === "function") {
                         callback(false);
                     }
+
+                    conn.release();
+
                 } else {
                     console.log("\"" + datetime[1] + "\" / \"" + name_workplace + "\" / \"" + smartphoneAddress[1] + "\": Registered");
 
                     if (typeof callback === "function") {
                         callback(true);
                     }
-                }
 
-                conn.release();
+                    conn.release();
+                }
             });
         });
     });
