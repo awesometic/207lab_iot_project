@@ -6,9 +6,14 @@ var pool = require("../db");
 /* GET */
 var title = "Suwon Univ. 207 Lab - IoT Project";
 router.get('/', function(req, res, next) {
+    console.log("========================================");
+    console.log("Session at index page");
+    console.log(req.session);
+    console.log("========================================");
     res.render('index', {
         title: title,
-        employee_number: req.session.employee_number
+        employee_number: req.session.employee_number,
+        smartphone_address: req.session.smartphone_address
     });
 });
 
@@ -22,14 +27,24 @@ router.get("/login", function(req, res, next) {
 router.get("/add_user", function(req, res, next) {
     res.render("add_user", {
         title: title,
-        employee_number: req.session.employee_number
+        employee_number: req.session.employee_number,
+        smartphone_address: req.session.smartphone_address
     });
 });
 
 router.get("/add_workplace", function(req, res, next) {
     res.render("add_workplace", {
         title: title,
-        employee_number: req.session.employee_number
+        employee_number: req.session.employee_number,
+        smartphone_address: req.session.smartphone_address
+    });
+});
+
+router.get("/circumstance", function(req, res, next) {
+    res.render("circumstance", {
+        title: title,
+        employee_number: req.session.employee_number,
+        smartphone_address: req.session.smartphone_address
     });
 });
 
@@ -46,7 +61,16 @@ router.post("/login", function(req, res) {
     var employee_number = req.body.employee_number;
     var password = req.body.password;
 
-    pool.loginValidation(req, res, employee_number, password);
+    pool.id_loginValidation(res, employee_number, password, function(valid) {
+        if (valid) {
+            pool.id_getSmartphoneAddress(res, employee_number, function(smartphone_number) {
+                req.session.employee_number = employee_number;
+                req.session.smartphone_address = smartphone_number;
+
+                res.send("<script> alert('Login Success!'); location.href='/'; </script>");
+            });
+        }
+    });
 });
 
 router.post("/add_user", function(req, res) {
@@ -69,9 +93,9 @@ router.post("/add_user", function(req, res) {
     } else if (smartphone_address.length != 17) {
         res.send("<script> alert('Type Correct Information!'); history.back(); </script>");
     } else {
-        pool.checkRegistered(res, smartphone_address, employee_number, function(valid) {
+        pool.id_checkRegistered(res, smartphone_address, employee_number, function(valid) {
             if (valid) {
-                pool.registerUser(res, smartphone_address, employee_number, name, password, department, position, permission);
+                pool.id_registerUser(res, smartphone_address, employee_number, name, password, department, position, permission);
             }
         });
     }
@@ -86,7 +110,7 @@ router.post("/add_workplace", function(req, res) {
     if (uuid.length != 32 || gateway_address.length != 17) {
         res.send("<script> alert('Type Correct Information!'); history.back(); </script>");
     } else {
-        pool.registerWorkplace(res, name_workplace, location_workplace, uuid, gateway_address);
+        pool.id_registerWorkplace(res, name_workplace, location_workplace, uuid, gateway_address);
     }
 });
 

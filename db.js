@@ -31,34 +31,9 @@ var pool = mysql.createPool({
 var async = require("async");
 
 /* Functions */
+/*!!! Need to move all of the res.send() or console.log out of here !!!*/
 /* index.js */
-var checkRegistered = function(res, smartphone_address, employee_number, callback) {
-    pool.getConnection(function(err, conn) {
-        if (err)
-            console.error(err);
-
-        conn.query("SELECT count(*) cnt FROM identity WHERE smartphone_address=? OR employee_number=?", [smartphone_address, employee_number], function(err, rows) {
-            if (err) {
-                console.error(err);
-                conn.release();
-            }
-
-            var cnt = rows[0].cnt;
-            var valid = true;
-
-            if (cnt > 0)
-                valid = false;
-
-            if (typeof callback === "function") {
-                callback(valid);
-            }
-
-            conn.release();
-        });
-    });
-};
-
-var checkLoginName = function(res, employee_number, callback) {
+var id_checkLoginName = function(res, employee_number, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -86,7 +61,7 @@ var checkLoginName = function(res, employee_number, callback) {
     });
 };
 
-var checkLoginPassword = function(res, employee_number, password, callback) {
+var id_checkLoginPassword = function(res, employee_number, password, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -114,20 +89,47 @@ var checkLoginPassword = function(res, employee_number, password, callback) {
     });
 };
 
-var loginValidation = function(req, res, employee_number, password) {
-    checkLoginName(res, employee_number, function(valid) {
+var id_loginValidation = function(res, employee_number, password, callback) {
+    id_checkLoginName(res, employee_number, function(valid) {
         if (valid) {
-            checkLoginPassword(res, employee_number, password, function(valid) {
+            id_checkLoginPassword(res, employee_number, password, function(valid) {
                 if (valid) {
-                    req.session.employee_number = employee_number;
-                    res.send("<script> alert('Login Success!'); location.href='/'; </script>");
+                    if (typeof callback === "function") {
+                        callback(true);
+                    }
                 }
             });
         }
     });
 };
 
-var registerUser = function(res, smartphone_address, employee_number, name, password, department, position, permission) {
+var id_checkRegistered = function(res, smartphone_address, employee_number, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("SELECT count(*) cnt FROM identity WHERE smartphone_address=? OR employee_number=?", [smartphone_address, employee_number], function(err, rows) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+
+            var cnt = rows[0].cnt;
+            var valid = true;
+
+            if (cnt > 0)
+                valid = false;
+
+            if (typeof callback === "function") {
+                callback(valid);
+            }
+
+            conn.release();
+        });
+    });
+};
+
+var id_registerUser = function(res, smartphone_address, employee_number, name, password, department, position, permission) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -146,7 +148,7 @@ var registerUser = function(res, smartphone_address, employee_number, name, pass
     });
 };
 
-var registerWorkplace = function(res, name_workplace, location_workplace, uuid, gateway_address) {
+var id_registerWorkplace = function(res, name_workplace, location_workplace, uuid, gateway_address) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -165,8 +167,54 @@ var registerWorkplace = function(res, name_workplace, location_workplace, uuid, 
     });
 };
 
+var id_getSmartphoneAddress = function(res, employee_number, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("SELECT smartphone_address FROM identity WHERE employee_number=?", [employee_number], function(err, rows) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+
+            var smartphone_address = rows[0].smartphone_address;
+
+            if (typeof callback === "function") {
+                callback(smartphone_address);
+            }
+
+            conn.release();
+        });
+    });
+};
+
+var id_checkAdmin = function(res, employee_number, smartphone_address, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("SELECT permission FROM identity WHERE employee_number=? AND smartphone_address=?", [employee_number, smartphone_address], function(err, rows) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+
+            var permission = false;
+            if (rows[0].permission == 1)
+                permission = true;
+
+            if (typeof callback === "function") {
+                callback(permission);
+            }
+
+            conn.release();
+        });
+    });
+};
+
 /* socket.js */
-var analyzeJSON = function(data) {
+var soc_analyzeJSON = function(data) {
 
     var stringified;
 
@@ -180,7 +228,7 @@ var analyzeJSON = function(data) {
     return stringifiedArr;
 };
 
-var getDeviceAddress = function(stringifiedArr) {
+var soc_getDeviceAddress = function(stringifiedArr) {
     var key = stringifiedArr[0].substr(0, 12);
     var value = stringifiedArr[0].substr(14, 17);
     var deviceAddress = [key, value];
@@ -189,28 +237,28 @@ var getDeviceAddress = function(stringifiedArr) {
     return deviceAddress;
 };
 
-var getUUID = function(stringifiedArr) {
+var soc_getUUID = function(stringifiedArr) {
     var uuid = stringifiedArr[1].split(":");
     uuid[1] = uuid[1].replace(/ /g, "");
 
     return uuid;
 };
 
-var getMajor = function(stringifiedArr) {
+var soc_getMajor = function(stringifiedArr) {
     var major = stringifiedArr[2].split(":");
     major[1] = major[1].replace(/ /g, "");
 
     return major;
 };
 
-var getMinor = function(stringifiedArr) {
+var soc_getMinor = function(stringifiedArr) {
     var minor = stringifiedArr[3].split(":");
     minor[1] = minor[1].replace(/ /g, "");
 
     return minor;
 };
 
-var getSmartphoneAddress = function(stringifiedArr) {
+var soc_getSmartphoneAddress = function(stringifiedArr) {
     var key = stringifiedArr[4].substr(0, 16);
     var value = stringifiedArr[4].substr(18, 17);
     var smartphoneAddress = [key, value];
@@ -218,7 +266,7 @@ var getSmartphoneAddress = function(stringifiedArr) {
     return smartphoneAddress;
 };
 
-var getDatetime = function(stringifiedArr) {
+var soc_getDatetime = function(stringifiedArr) {
     var key = stringifiedArr[5].substr(0, 7);
     var value = stringifiedArr[5].substr(9, 19);
     var datetime = [key, value];
@@ -226,9 +274,9 @@ var getDatetime = function(stringifiedArr) {
     return datetime;
 };
 
-var gatewayValidation = function(stringifiedArr, callback) {
-    var deviceAddress       = getDeviceAddress(stringifiedArr);
-    var uuid                = getUUID(stringifiedArr);
+var soc_gatewayValidation = function(stringifiedArr, callback) {
+    var deviceAddress       = soc_getDeviceAddress(stringifiedArr);
+    var uuid                = soc_getUUID(stringifiedArr);
 
     pool.getConnection(function(err, conn) {
         conn.query("SELECT count(*) cnt FROM workplace WHERE gateway_address=? AND UUID=?", [deviceAddress[1], uuid[1]], function(err, rows) {
@@ -256,8 +304,8 @@ var gatewayValidation = function(stringifiedArr, callback) {
     });
 };
 
-var smartphoneValidation = function(stringifiedArr, callback) {
-    var smartphoneAddress   = getSmartphoneAddress(stringifiedArr);
+var soc_smartphoneValidation = function(stringifiedArr, callback) {
+    var smartphoneAddress   = soc_getSmartphoneAddress(stringifiedArr);
 
     pool.getConnection(function(err, conn) {
         conn.query("SELECT count(*) cnt FROM identity WHERE smartphone_address=?", smartphoneAddress[1], function(err, rows) {
@@ -285,9 +333,9 @@ var smartphoneValidation = function(stringifiedArr, callback) {
     });
 };
 
-var getWorkplaceName = function(stringifiedArr, callback) {
-    var deviceAddress       = getDeviceAddress(stringifiedArr);
-    var uuid                = getUUID(stringifiedArr);
+var soc_getWorkplaceName = function(stringifiedArr, callback) {
+    var deviceAddress       = soc_getDeviceAddress(stringifiedArr);
+    var uuid                = soc_getUUID(stringifiedArr);
 
     pool.getConnection(function(err, conn) {
         conn.query("SELECT name_workplace FROM workplace WHERE gateway_address=? AND UUID=?", [deviceAddress[1], uuid[1]], function(err, rows) {
@@ -307,11 +355,11 @@ var getWorkplaceName = function(stringifiedArr, callback) {
     });
 };
 
-var registerCommute = function(stringifiedArr, callback) {
-    var smartphoneAddress   = getSmartphoneAddress(stringifiedArr);
-    var datetime            = getDatetime(stringifiedArr);
+var soc_registerCommute = function(stringifiedArr, callback) {
+    var smartphoneAddress   = soc_getSmartphoneAddress(stringifiedArr);
+    var datetime            = soc_getDatetime(stringifiedArr);
 
-    getWorkplaceName(stringifiedArr, function(name_workplace) {
+    soc_getWorkplaceName(stringifiedArr, function(name_workplace) {
         pool.getConnection(function(err, conn) {
             conn.query("INSERT INTO circumstance (time, name_workplace, smartphone_address) VALUES (?, ?, ?)", [datetime[1], name_workplace, smartphoneAddress[1]], function(err) {
                 if (err) {
@@ -341,22 +389,26 @@ var registerCommute = function(stringifiedArr, callback) {
 module.exports = pool;
 
 /* index.js */
-module.exports.checkRegistered      = checkRegistered;
-module.exports.checkLoginName       = checkLoginName;
-module.exports.checkLoginPassword   = checkLoginPassword;
-module.exports.loginValidation      = loginValidation;
-module.exports.registerUser         = registerUser;
-module.exports.registerWorkplace    = registerWorkplace;
+module.exports.id_checkLoginName            = id_checkLoginName;
+module.exports.id_checkLoginPassword        = id_checkLoginPassword;
+module.exports.id_loginValidation           = id_loginValidation;
+module.exports.id_checkRegistered           = id_checkRegistered;
+module.exports.id_registerUser              = id_registerUser;
+module.exports.id_registerWorkplace         = id_registerWorkplace;
+
+module.exports.id_getSmartphoneAddress      = id_getSmartphoneAddress;
+module.exports.id_checkAdmin                = id_checkAdmin;
+
 
 /* socket.js */
-module.exports.analyzeJSON          = analyzeJSON;
-module.exports.getDeviceAddress     = getDeviceAddress;
-module.exports.getUUID              = getUUID;
-module.exports.getMajor             = getMajor;
-module.exports.getMinor             = getMinor;
-module.exports.getSmartphoneAddress = getSmartphoneAddress;
-module.exports.getDatetime          = getDatetime;
-module.exports.gatewayValidation    = gatewayValidation;
-module.exports.smartphoneValidation = smartphoneValidation;
-module.exports.getWorkplaceName     = getWorkplaceName;
-module.exports.registerCommute      = registerCommute;
+module.exports.soc_analyzeJSON              = soc_analyzeJSON;
+module.exports.soc_getDeviceAddress         = soc_getDeviceAddress;
+module.exports.soc_getUUID                  = soc_getUUID;
+module.exports.soc_getMajor                 = soc_getMajor;
+module.exports.soc_getMinor                 = soc_getMinor;
+module.exports.soc_getSmartphoneAddress     = soc_getSmartphoneAddress;
+module.exports.soc_getDatetime              = soc_getDatetime;
+module.exports.soc_gatewayValidation        = soc_gatewayValidation;
+module.exports.soc_smartphoneValidation     = soc_smartphoneValidation;
+module.exports.soc_getWorkplaceName         = soc_getWorkplaceName;
+module.exports.soc_registerCommute          = soc_registerCommute;
