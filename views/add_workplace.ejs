@@ -1,27 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title><%= title %></title>
-    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <% include partials/head.ejs %>
 </head>
 <body>
-<h1><%= title %></h1>
-<p>Hello! <% if (employee_number) { %><b><%= employee_number %></b><% } %></p>
-<a href=".">Home</a> |
-<% if (employee_number) { %>
-<a href="logout">Logout</a> |
-<a href="add_workplace">Add Workplace</a>
-<% } else { %>
-<a href="login">Login</a> |
-<a href="add_user">Add User</a>
-<% } %>
-<br><br>
-<form method="post">
-    name_workplace: <br><input type="text" name="name_workplace" required><br>
-    location_workplace: <br><input type="text" name="location_workplace" required><br>
-    UUID: <br><input type="text" name="uuid" required><br>
-    gateway_address: <br><input type="text" name="gateway_address" required><br>
-    <input type="submit" value="Register"><br>
-</form>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <% include partials/header.ejs %>
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal" method="post">
+                <div class="form-group">
+                    <label class="control-label col-md-4">name_workplace</label>
+                    <div class="col-md-4">
+                        <input name="name_workplace" type="text" class="form-control" required/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4">location_workplace</label>
+                    <div class="col-md-4">
+                        <input name="location_workplace" type="text" class="form-control" required/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4">uuid</label>
+                    <div class="col-md-4">
+                        <input name="uuid" type="text" class="form-control" required/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4">gateway_address</label>
+                    <div class="col-md-4">
+                        <input name="gateway_address" type="test" class="form-control" required/>
+                    </div>
+                </div>
+                <div class="col-md-8 text-right">
+                    <input class="btn btn-primary" type="submit" value="Register"/>
+                </div>
+            </form>
+        </div>
+        <div class="panel-footer">
+            <% include partials/footer.ejs %>
+        </div>
+    </div>
+</div>
 </body>
 </html>

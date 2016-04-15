@@ -1,25 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title><%= title %></title>
-    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <% include partials/head.ejs %>
 </head>
 <body>
-<h1><%= title %></h1>
-<p>Hello! <% if (employee_number) { %><b><%= employee_number %></b><% } %></p>
-<a href=".">Home</a> |
-<% if (employee_number) { %>
-<a href="logout">Logout</a> |
-<a href="add_workplace">Add Workplace</a>
-<% } else { %>
-<a href="login">Login</a> |
-<a href="add_user">Add User</a>
-<% } %>
-<br><br>
-<form method="post">
-    <input type="text" name="employee_number"><br>
-    <input type="password" name="password"><br>
-    <input type="submit" value="Login"><br>
-</form>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <% include partials/header.ejs %>
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal" method="post">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="employee_number" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" name="password" required>
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary" value="Login">
+                </div>
+            </form>
+        </div>
+        <div class="panel-footer">
+            <% include partials/footer.ejs %>
+        </div>
+    </div>
+</div>
 </body>
 </html>

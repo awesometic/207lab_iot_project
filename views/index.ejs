@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <% include partials/head.ejs %>
 </head>
 <body>
-<h1><%= title %></h1>
-<h1><p><% if (lab_desc) { %><%= lab_desc %><% } %></p></h1>
-<p>Hello! <% if (employee_number) { %><b><%= employee_number %></b><% } %></p>
-<a href=".">Home</a> |
-<% if (employee_number) { %>
-<a href="logout">Logout</a> |
-<a href="add_workplace">Add Workplace</a>
-<% } else { %>
-<a href="login">Login</a> |
-<a href="add_user">Add User</a>
-<% } %>
-<br><br>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <% include partials/header.ejs %>
+        </div>
+        <div class="panel-body">
+            <p>
+                임시 사용자 웹사이트입니다<br>이 사이트는 곧 다른 구성원이 진행중인 디자인의 사이트로 변경될 것입니다.
+            </p>
+        </div>
+        <div class="panel-footer">
+            <% include partials/footer.ejs %>
+        </div>
+    </div>
+</div>
 </body>
 </html>

@@ -1,31 +1,73 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title><%= title %></title>
-    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <% include partials/head.ejs %>
 </head>
 <body>
-<h1><%= title %></h1>
-<p>Hello! <% if (employee_number) { %><b><%= employee_number %></b><% } %></p>
-<a href=".">Home</a> |
-<% if (employee_number) { %>
-<a href="logout">Logout</a> |
-<a href="add_workplace">Add Workplace</a>
-<% } else { %>
-<a href="login">Login</a> |
-<a href="add_user">Add User</a>
-<% } %>
-<br><br>
-<form method="post">
-    employee_number: <br><input type="text" name="employee_number" required><br>
-    name: <br><input type="text" name="name" required><br>
-    password: <br><input type="password" name="password" required><br>
-    Retype-Password: <br><input type="password" name="retype_password" required><br>
-    department: <br><input type="text" name="department" required><br>
-    position: <br><input type="text" name="position" required><br>
-    permission:<input type="checkbox" name="permission">Admin<br>
-    smartphone_address: <br><input type="text" name="smartphone_address" required><br>
-    <input type="submit" value="Register"><br>
-</form>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <% include partials/header.ejs %>
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal" method="post">
+                <div class="form-group">
+                    <label class="control-label col-md-4">employee_number</label>
+                    <div class="col-md-4">
+                        <input name="employee_number" type="text" class="form-control" required/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4">name</label>
+                    <div class="col-md-4">
+                        <input name="name" type="text" class="form-control" required/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4">password</label>
+                    <div class="col-md-4">
+                        <input name="password" type="password" class="form-control" required/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4">retype_password</label>
+                    <div class="col-md-4">
+                        <input name="retype_password" type="password" class="form-control" required/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4">department</label>
+                    <div class="col-md-4">
+                        <input name="department" type="text" class="form-control" required/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4">position</label>
+                    <div class="col-md-4">
+                        <input name="position" type="text" class="form-control" required/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4">permission</label>
+                    <div class="col-md-4 checkbox">
+                        <label><input name="permission" type="checkbox" value="">admin</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4">smartphone_address</label>
+                    <div class="col-md-4">
+                        <input name="smartphone_address" type="text" class="form-control" required/>
+                    </div>
+                </div>
+                <div class="col-md-8 text-right">
+                    <input class="btn btn-primary" type="submit" value="Register"/>
+                </div>
+            </form>
+        </div>
+        <div class="panel-footer">
+            <% include partials/footer.ejs %>
+        </div>
+    </div>
+</div>
 </body>
 </html>
