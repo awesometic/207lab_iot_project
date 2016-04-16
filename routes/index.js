@@ -41,10 +41,20 @@ router.get("/add_workplace", function(req, res, next) {
 });
 
 router.get("/circumstance", function(req, res, next) {
-    res.render("circumstance", {
-        title: title,
-        employee_number: req.session.employee_number,
-        smartphone_address: req.session.smartphone_address
+
+    var employee_number = req.session.employee_number;
+    var smartphone_address = req.session.smartphone_address;
+
+    var date = new Date();
+    var currentDate = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
+
+    pool.id_getCircumstance(res, currentDate, smartphone_address, function (rows) {
+        res.render("circumstance", {
+            title: title,
+            employee_number: employee_number,
+            smartphone_address: smartphone_address,
+            rows: rows
+        });
     });
 });
 

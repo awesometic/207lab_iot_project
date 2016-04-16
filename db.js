@@ -213,6 +213,25 @@ var id_checkAdmin = function(res, employee_number, smartphone_address, callback)
     });
 };
 
+/* Not using date yet */
+var id_getCircumstance = function(res, date, smartphone_address, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("SELECT * FROM circumstance WHERE smartphone_address=?", [smartphone_address], function(err, rows) {
+            if (err)
+                console.error(err);
+            console.log(rows);
+            if (typeof callback === "function") {
+                callback(rows);
+            }
+
+            conn.release();
+        });
+    });
+};
+
 /* socket.js */
 var soc_analyzeJSON = function(data) {
 
@@ -278,28 +297,31 @@ var soc_gatewayValidation = function(stringifiedArr, callback) {
     var deviceAddress       = soc_getDeviceAddress(stringifiedArr);
     var uuid                = soc_getUUID(stringifiedArr);
 
-    pool.getConnection(function(err, conn) {
-        conn.query("SELECT count(*) cnt FROM workplace WHERE gateway_address=? AND UUID=?", [deviceAddress[1], uuid[1]], function(err, rows) {
-            if (err) {
-                console.error(err);
+    soc_getWorkplaceName(stringifiedArr, function(name_workplace) {
+        pool.getConnection(function(err, conn) {
+            conn.query("SELECT count(*) cnt FROM workplace WHERE gateway_address=? AND UUID=?", [deviceAddress[1], uuid[1]], function(err, rows) {
+                if (err) {
+                    console.error(err);
+                    conn.release();
+                }
+
+                var cnt = rows[0].cnt;
+                var valid = false;
+
+                if (cnt == 1) {
+                    console.log("\"" + deviceAddress[1] + "\" / \"" + uuid[1] + "\": Verified Gateway");
+                    // console.log("Workplace: \"" + name_workplace + "\"");
+                    valid = true;
+                } else {
+                    console.log("\"" + deviceAddress[1] + "\" / \"" + uuid[1] + "\": Not Verified Gateway");
+                }
+
+                if (typeof callback === "function") {
+                    callback(valid);
+                }
+
                 conn.release();
-            }
-
-            var cnt = rows[0].cnt;
-            var valid = false;
-
-            if (cnt == 1) {
-                console.log("\"" + deviceAddress[1] + "\" / \"" + uuid[1] + "\": Verified Gateway");
-                valid = true;
-            } else {
-                console.log("\"" + deviceAddress[1] + "\" / \"" + uuid[1] + "\": Not Verified Gateway");
-            }
-
-            if (typeof callback === "function") {
-                callback(valid);
-            }
-
-            conn.release();
+            });
         });
     });
 };
@@ -307,28 +329,31 @@ var soc_gatewayValidation = function(stringifiedArr, callback) {
 var soc_smartphoneValidation = function(stringifiedArr, callback) {
     var smartphoneAddress   = soc_getSmartphoneAddress(stringifiedArr);
 
-    pool.getConnection(function(err, conn) {
-        conn.query("SELECT count(*) cnt FROM identity WHERE smartphone_address=?", smartphoneAddress[1], function(err, rows) {
-            if (err) {
-                console.error(err);
+    soc_getSmartphoneUserName(stringifiedArr, function(name) {
+        pool.getConnection(function(err, conn) {
+            conn.query("SELECT count(*) cnt FROM identity WHERE smartphone_address=?", smartphoneAddress[1], function(err, rows) {
+                if (err) {
+                    console.error(err);
+                    conn.release();
+                }
+
+                var cnt = rows[0].cnt;
+                var valid = false;
+
+                if (cnt == 1) {
+                    console.log("\"" + smartphoneAddress[1] + "\": Verified Smartphone");
+                    // console.log("User: \"" + name + "\"");
+                    valid = true;
+                } else {
+                    console.log("\"" + smartphoneAddress[1] + "\": Not Verified Smartphone");
+                }
+
+                if (typeof callback === "function") {
+                    callback(valid);
+                }
+
                 conn.release();
-            }
-
-            var cnt = rows[0].cnt;
-            var valid = false;
-
-            if (cnt == 1) {
-                console.log("\"" + smartphoneAddress[1] + "\": Verified Smartphone");
-                valid = true;
-            } else {
-                console.log("\"" + smartphoneAddress[1] + "\": Not Verified Smartphone");
-            }
-
-            if (typeof callback === "function") {
-                callback(valid);
-            }
-
-            conn.release();
+            });
         });
     });
 };
@@ -348,6 +373,27 @@ var soc_getWorkplaceName = function(stringifiedArr, callback) {
 
             if (typeof callback === "function") {
                 callback(name_workplace);
+            }
+
+            conn.release();
+        });
+    });
+};
+
+var soc_getSmartphoneUserName = function(stringifiedArr, callback) {
+    var smartphone_address = soc_getSmartphoneAddress(stringifiedArr);
+
+    pool.getConnection(function(err, conn) {
+        conn.query("SELECT name FROM identity WHERE smartphone_address=?", [smartphone_address[1]], function(err, rows) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+
+            var name = rows[0].name;
+
+            if (typeof callback === "function") {
+                callback(name);
             }
 
             conn.release();
@@ -399,6 +445,8 @@ module.exports.id_registerWorkplace         = id_registerWorkplace;
 module.exports.id_getSmartphoneAddress      = id_getSmartphoneAddress;
 module.exports.id_checkAdmin                = id_checkAdmin;
 
+module.exports.id_getCircumstance           = id_getCircumstance;
+
 
 /* socket.js */
 module.exports.soc_analyzeJSON              = soc_analyzeJSON;
@@ -411,4 +459,5 @@ module.exports.soc_getDatetime              = soc_getDatetime;
 module.exports.soc_gatewayValidation        = soc_gatewayValidation;
 module.exports.soc_smartphoneValidation     = soc_smartphoneValidation;
 module.exports.soc_getWorkplaceName         = soc_getWorkplaceName;
+module.exports.soc_getSmartphoneUserName    = soc_getSmartphoneUserName;
 module.exports.soc_registerCommute          = soc_registerCommute;
