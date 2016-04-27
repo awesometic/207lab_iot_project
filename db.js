@@ -141,7 +141,7 @@ var id_registerUser = function(res, smartphone_address, employee_number, name, p
                 conn.release();
             }
             else
-                res.send("<script> alert('Register Success!'); location.href='/login'; </script>");
+                res.send("<script> alert('Register Success!'); location.href='/'; </script>");
 
             conn.release();
         });

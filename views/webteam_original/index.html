@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>207LAB</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */ 
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 450px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      padding-top: 20px;
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+    
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+    
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height:auto;} 
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#">207Lab</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Home</a></li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+  
+<div class="container-fluid text-center">    
+  <div class="row content">
+    <div class="col-sm-2 sidenav">
+      <p><a href="#">로그인 하세요</a></p>
+    </div>
+    <div class="col-sm-8 text-left"> 
+      <h1>Member List</h1>
+      <p>김선광</p>
+      <p>이유택</p>
+      <p>심정현</p>
+      <p>김경민</p>
+      <p>양덕규</p>
+      <p>백소영</p>
+      <p>강은정</p>
+      <hr>
+      <h3>출퇴근 관리</h3>
+      <p>로그인 하세요</p>
+    </div>
+    <div class="col-sm-2 sidenav">
+        <h3>Login<span class="glyphicon glyphicon-log-in"></span></h3>
+      <form name="login" class="form-inline" role="form" method="post" action="LoginHome.html">
+        <div class="form-group">
+          <label for="user_id">ID:</label><br>
+          <input name="user_id" type="id" class="form-control" id="user_id">
+        </div>
+        <div class="form-group">
+          <label for="pwd">Password:</label><br>
+          <input name="pass" type="password" class="form-control" id="pwd">
+        </div>
+        <div class="checkbox">
+          <label><input name="Manager" type="checkbox"> Manager</label><br>
+          <label><input name="Remember" type="checkbox"> Remember me</label><br>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-default">Login</button>
+      <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">Join Now</button>
+      </form>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Join Form</h4>
+        </div>
+        <form class="form-horizontal" role="form" method="post">
+    <div class="form-group">
+      <label class="col-sm-2 control-label">ID</label>
+      <div class="col-sm-10">
+        <input class="form-control" name="user_id" id="user_id" type="id" >
+      </div>
+      <label class="col-sm-2 control-label">PASSWORD</label>
+      <div class="col-sm-10">
+        <input class="form-control" name="user_pwd" id="user_pwd" type="password" >
+      </div>
+      <label class="col-sm-2 control-label">PASSWORD</label>
+      <div class="col-sm-10">
+        <input class="form-control" name="user_pwd2" id="user_pwd2" type="password" >
+      </div>
+      <label class="col-sm-2 control-label">POSITION</label>
+      <div class="col-sm-10">
+        <input class="form-control" name="user_pst" id="user_pst" type="text" >
+      </div>
+    </div>
+    
+        <div class="modal-footer">
+        <input type="reset" size="20" class="btn btn-default" name="reset" value="Clear">
+          <button type="submit" class="btn btn-default" data-dismiss="modal">Submit</button>
+        </div>
+        </form>
+    </div>
+  </div>
+    </div>
+  </div>
+</div>
+</div>
+<footer class="container-fluid text-center">
+  <p>207Lab</p>
+</footer>
+
+</body>
+</html>

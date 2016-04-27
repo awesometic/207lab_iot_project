@@ -6,10 +6,11 @@ I'm using on it (Any language and framework)
 * Javascript
 * Bootstrap
 * D3.js (Not yet)
-* Jquery (Not yet)
+* Jquery
 * ejs (npm package)
 * socket.io (npm package)
 * MySQL
 
-Created by 11050038 Yang Deokgyu<br>
+
+Repository created by 11050038 Yang Deokgyu<br>
 since 2016. 02.
