@@ -248,46 +248,48 @@ var soc_analyzeJSON = function(data) {
 };
 
 var soc_getDeviceAddress = function(stringifiedArr) {
-    var key = stringifiedArr[0].substr(0, 12);
-    var value = stringifiedArr[0].substr(14, 17);
+    var key = stringifiedArr[0].substr(0, 18);
+    var value = stringifiedArr[0].substr(20, 17);
     var deviceAddress = [key, value];
-
 
     return deviceAddress;
 };
 
 var soc_getUUID = function(stringifiedArr) {
     var uuid = stringifiedArr[1].split(":");
-    uuid[1] = uuid[1].replace(/ /g, "");
+    uuid[0] = "uuid";
+    uuid[1] = uuid[1].replace(/ /g, "").substr(0, 32);
 
     return uuid;
 };
 
 var soc_getMajor = function(stringifiedArr) {
-    var major = stringifiedArr[2].split(":");
-    major[1] = major[1].replace(/ /g, "");
+    var major = stringifiedArr[1].split(":");
+    major[0] = "major";
+    major[1] = major[1].replace(/ /g, "").substr(32, 4);
 
     return major;
 };
 
 var soc_getMinor = function(stringifiedArr) {
-    var minor = stringifiedArr[3].split(":");
-    minor[1] = minor[1].replace(/ /g, "");
+    var minor = stringifiedArr[1].split(":");
+    minor[0] = "minor";
+    minor[1] = minor[1].replace(/ /g, "").substr(36, 4);
 
     return minor;
 };
 
 var soc_getSmartphoneAddress = function(stringifiedArr) {
-    var key = stringifiedArr[4].substr(0, 16);
-    var value = stringifiedArr[4].substr(18, 17);
+    var key = stringifiedArr[2].substr(0, 16);
+    var value = stringifiedArr[2].substr(18, 17);
     var smartphoneAddress = [key, value];
 
     return smartphoneAddress;
 };
 
 var soc_getDatetime = function(stringifiedArr) {
-    var key = stringifiedArr[5].substr(0, 7);
-    var value = stringifiedArr[5].substr(9, 19);
+    var key = stringifiedArr[3].substr(0, 7);
+    var value = stringifiedArr[3].substr(9, 19);
     var datetime = [key, value];
 
     return datetime;
@@ -431,6 +433,14 @@ var soc_registerCommute = function(stringifiedArr, callback) {
     });
 };
 
+var soc_RSSICalibration = function(stringifiedArr, callback) {
+    
+};
+
+var soc_getRSSI = function(stringifiedArr, callback) {
+    
+};
+
 /* Exports */
 module.exports = pool;
 
@@ -461,3 +471,6 @@ module.exports.soc_smartphoneValidation     = soc_smartphoneValidation;
 module.exports.soc_getWorkplaceName         = soc_getWorkplaceName;
 module.exports.soc_getSmartphoneUserName    = soc_getSmartphoneUserName;
 module.exports.soc_registerCommute          = soc_registerCommute;
+
+module.exports.soc_RSSICalibration          = soc_RSSICalibration;
+module.exports.soc_getRSSI                  = soc_getRSSI;

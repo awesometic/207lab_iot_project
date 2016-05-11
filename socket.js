@@ -8,9 +8,17 @@ io.on("connection", function(socket) {
 
     var stringifiedArr;
 
-    socket.on("call", function(data) {
+    /*
+    {
+        BeaconDeviceAddress: '00:00:00:00:00:00',
+        BeaconData: '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00',
+        SmartphoneAddress: '00:00:00:00:00:00',
+        DateTime: '0000/00/00 00:00:00'
+    }
+    */
+    socket.on("circumstance", function(data) {
         console.log("========================================");
-        console.log("data receive: ");
+        console.log("-- Receive New Commute Record --");
         console.log(data);
         stringifiedArr = pool.soc_analyzeJSON(data);
 
@@ -34,10 +42,83 @@ io.on("connection", function(socket) {
         });
     });
 
-    socket.emit("answer", {
-        socketCommunication: "Success"
+    /*
+    {
+         BeaconDeviceAddress1: '00:00:00:00:00:00',
+         BeaconDeviceAddress2: '00:00:00:00:00:00',
+         BeaconDeviceAddress3: '00:00:00:00:00:00',
+         BeaconData1: '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00',
+         BeaconData2: '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00',
+         BeaconData3: '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00',
+         SmartphoneAddress: '00:00:00:00:00:00',
+         DateTime: '0000/00/00 00:00:00',
+         IsNew: 'false',
+         CoordinateX: '00',
+         CoordinateY: '00',
+         CoordinateZ: '00'
+    }
+     */
+    socket.on("calibration", function(data) {
+        console.log("========================================");
+        console.log("-- Receive New Calibration Data --");
+        console.log(data);
+        stringifiedArr = pool.soc_analyzeJSON(data);
+        
+        pool.soc_gatewayValidation(stringifiedArr, function(valid) {
+            if (valid) {
+                pool.soc_smartphoneValidation(stringifiedArr, function(valid) {
+                    if (valid) {
+                        pool.soc_RSSICalibration(stringifiedArr, function(valid) {
+                            if (valid) {
+
+                            }
+                            console.log("========================================");
+                        });
+                    } else {
+                        console.log("========================================");
+                    }
+                });
+            } else {
+                console.log("========================================");
+            }
+        });
     });
 
+    /*
+    {
+         SmartphoneAddress: '00:00:00:00:00:00',
+         DateTime: '0000/00/00 00:00:00'
+    }
+     */
+    socket.on("requestRSSI", function(data) {
+        console.log("========================================");
+        console.log("-- Receive Request Current Each RSSI Coordinate --");
+        console.log(data);
+        stringifiedArr = pool.soc_analyzeJSON(data);
+
+        pool.soc_gatewayValidation(stringifiedArr, function(valid) {
+            if (valid) {
+                pool.soc_smartphoneValidation(stringifiedArr, function(valid) {
+                    if (valid) {
+                        pool.soc_getRSSI(stringifiedArr, function(valid) {
+                            if (valid) {
+
+                            }
+                            console.log("========================================");
+                        });
+                    } else {
+                        console.log("========================================");
+                    }
+                });
+            } else {
+                console.log("========================================");
+            }
+        });
+    });
+
+    socket.emit("answer", {
+        isSuccess: "true"
+    });
 });
 
 module.exports = io;
