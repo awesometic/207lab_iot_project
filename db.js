@@ -148,13 +148,57 @@ var id_registerUser = function(res, smartphone_address, employee_number, name, p
     });
 };
 
-var id_registerWorkplace = function(res, name_workplace, location_workplace, uuid, gateway_address) {
+var id_registerWorkplace = function(res, name_workplace, location_workplace) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
 
-        conn.query("INSERT INTO workplace (name_workplace, location_workplace, UUID, gateway_address)" +
-            " VALUES (?, ?, ?, ?)", [name_workplace, location_workplace, uuid, gateway_address], function (err) {
+        conn.query("INSERT INTO workplace (name_workplace, location_workplace, coordinateX, coordinateY, coordinateZ)" +
+            " VALUES (?, ?, ?, ?, ?)", [name_workplace, location_workplace, 0, 0, 0], function (err) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+            else
+                res.send("<script> alert('Register Success!'); history.back(); </script>");
+
+            conn.release();
+        });
+    });
+};
+
+var id_searchAvailableBeacon = function(res, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("SELECT * FROM beacon WHERE id_workplace=-1", function (err, rows) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+
+            var availableBeacon = new Array();
+            for (var i = 0; i < rows.length; i++) {
+                availableBeacon.push(rows[i].beacon_address);
+            }
+
+            if (typeof callback === "function") {
+                callback(availableBeacon);
+            }
+
+            conn.release();
+        });
+    });
+};
+
+var id_registerBeacon = function(res, uuid, major, minor, beacon_address) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("INSERT INTO beacon (UUID, major, minor, beacon_address, id_workplace)" +
+            " VALUES (?, ?, ?, ?, ?)", [uuid, major, minor, beacon_address, -1], function (err) {
             if (err) {
                 console.error(err);
                 conn.release();
@@ -247,138 +291,157 @@ var soc_analyzeJSON = function(data) {
     return stringifiedArr;
 };
 
-var soc_getDeviceAddress = function(stringifiedArr) {
-    var key = stringifiedArr[0].substr(0, 18);
-    var value = stringifiedArr[0].substr(20, 17);
-    var deviceAddress = [key, value];
+var soc_getBeaconAddressArr = function(stringifiedArr) {
+    var beaconAddressArr = new Array();
+    for (var i = 0; i < 3; i++) {
+        beaconAddressArr.push(stringifiedArr[i].substr(21, 17));
+    }
 
-    return deviceAddress;
+    return beaconAddressArr;
 };
 
-var soc_getUUID = function(stringifiedArr) {
-    var uuid = stringifiedArr[1].split(":");
-    uuid[0] = "uuid";
-    uuid[1] = uuid[1].replace(/ /g, "").substr(0, 32);
+var soc_getUUIDArr = function(stringifiedArr) {
+    var uuidArr = new Array();
+    for (var i = 3; i < 6; i++) {
+        uuidArr.push(stringifiedArr[i].split(":")[1].replace(/ /g, "").substr(0, 32));
+    }
 
-    return uuid;
+    return uuidArr;
 };
 
-var soc_getMajor = function(stringifiedArr) {
-    var major = stringifiedArr[1].split(":");
-    major[0] = "major";
-    major[1] = major[1].replace(/ /g, "").substr(32, 4);
+var soc_getMajorArr = function(stringifiedArr) {
+    var majorArr = new Array();
+    for (var i = 3; i < 6; i++) {
+        majorArr.push(stringifiedArr[i].split(":")[1].replace(/ /g, "").substr(32, 4));
+    }
 
-    return major;
+    return majorArr;
 };
 
-var soc_getMinor = function(stringifiedArr) {
-    var minor = stringifiedArr[1].split(":");
-    minor[0] = "minor";
-    minor[1] = minor[1].replace(/ /g, "").substr(36, 4);
+var soc_getMinorArr = function(stringifiedArr) {
+    var minorArr = new Array();
+    for (var i = 3; i < 6; i++) {
+        minorArr.push(stringifiedArr[i].split(":")[1].replace(/ /g, "").substr(36, 4));
+    }
 
-    return minor;
+    return minorArr;
 };
 
 var soc_getSmartphoneAddress = function(stringifiedArr) {
-    var key = stringifiedArr[2].substr(0, 16);
-    var value = stringifiedArr[2].substr(18, 17);
-    var smartphoneAddress = [key, value];
+    var value = stringifiedArr[6].substr(18, 17);
 
-    return smartphoneAddress;
+    return value;
 };
 
 var soc_getDatetime = function(stringifiedArr) {
-    var key = stringifiedArr[3].substr(0, 7);
-    var value = stringifiedArr[3].substr(9, 19);
-    var datetime = [key, value];
+    var value = stringifiedArr[7].substr(9, 19);
 
-    return datetime;
+    return value;
 };
 
 var soc_gatewayValidation = function(stringifiedArr, callback) {
-    var deviceAddress       = soc_getDeviceAddress(stringifiedArr);
-    var uuid                = soc_getUUID(stringifiedArr);
+    var beaconAddressArr    = soc_getBeaconAddressArr(stringifiedArr);
+    var uuidArr             = soc_getUUIDArr(stringifiedArr);
+    var majorArr            = soc_getMajorArr(stringifiedArr);
+    var minorArr            = soc_getMinorArr(stringifiedArr);
 
-    soc_getWorkplaceName(stringifiedArr, function(name_workplace) {
-        pool.getConnection(function(err, conn) {
-            conn.query("SELECT count(*) cnt FROM workplace WHERE gateway_address=? AND UUID=?", [deviceAddress[1], uuid[1]], function(err, rows) {
+    soc_getWorkplaceOfBeacons(beaconAddressArr, uuidArr, majorArr, minorArr, function(id) {
+        soc_getWorkplaceName(id, function(name_workplace) {
+
+            if (name_workplace != "undefined") {
+                console.log("Verified Gateway: " + name_workplace);
+
+                if (typeof callback === "function") {
+                    callback(id);
+                }
+            } else {
+                console.log("Unverified Gateway");
+
+                if (typeof callback === "function") {
+                    callback(false);
+                }
+            }
+        });
+    });
+};
+
+var soc_getWorkplaceName = function(id_workplace, callback) {
+    pool.getConnection(function(err, conn) {
+        conn.query("SELECT IF ((SELECT COUNT(*) AS cnt FROM workplace WHERE id_workplace=? HAVING cnt > 0)"
+            + ", (SELECT name_workplace FROM workplace WHERE id_workplace=?), 'undefined') AS name_workplace"
+            , [id_workplace, id_workplace]
+            , function(err, rows) {
                 if (err) {
                     console.error(err);
                     conn.release();
                 }
 
-                var cnt = rows[0].cnt;
-                var valid = false;
-
-                if (cnt == 1) {
-                    console.log("\"" + deviceAddress[1] + "\" / \"" + uuid[1] + "\": Verified Gateway");
-                    // console.log("Workplace: \"" + name_workplace + "\"");
-                    valid = true;
-                } else {
-                    console.log("\"" + deviceAddress[1] + "\" / \"" + uuid[1] + "\": Not Verified Gateway");
-                }
-
                 if (typeof callback === "function") {
-                    callback(valid);
+                    callback(rows[0].name_workplace);
                 }
 
                 conn.release();
             });
-        });
+    });
+};
+
+var soc_getWorkplaceOfBeacons = function(beaconAddressArr, uuidArr, majorArr, minorArr, callback) {
+    pool.getConnection(function(err, conn) {
+        /* Needs better query than it */
+        /* Check whether each beacon exists in the beacon table */
+        conn.query("SELECT IF ((SELECT COUNT(*) AS cnt FROM beacon WHERE "
+            + "(beacon_address=? AND UUID=? AND major=? AND minor=?) OR "
+            + "(beacon_address=? AND UUID=? AND major=? AND minor=?) OR "
+            + "(beacon_address=? AND UUID=? AND major=? AND minor=?) HAVING cnt=3) AND "
+            /* Check whether id_workplace values each beacon has are same */
+            /* When the two strings are same, STRCMP() returns 0 */
+            + "(SELECT IF (STRCMP((SELECT id_workplace FROM beacon WHERE beacon_address=?), "
+            + "(SELECT id_workplace FROM beacon WHERE beacon_address=?)), FALSE, TRUE)) AND "
+            + "(SELECT IF (STRCMP((SELECT id_workplace FROM beacon WHERE beacon_address=?), "
+            + "(SELECT id_workplace FROM beacon WHERE beacon_address=?)), FALSE, TRUE))"
+            /* If true, returns id_workplace value, or not, returns -1 as id_workplace */
+            + ", (SELECT id_workplace FROM beacon WHERE beacon_address=?), -1) "
+            + "AS id_workplace"
+            , [
+                beaconAddressArr[0], uuidArr[0], majorArr[0], minorArr[0],
+                beaconAddressArr[1], uuidArr[1], majorArr[1], minorArr[1],
+                beaconAddressArr[2], uuidArr[2], majorArr[2], minorArr[2],
+                beaconAddressArr[0], beaconAddressArr[1],
+                beaconAddressArr[0], beaconAddressArr[2],
+                beaconAddressArr[0]
+            ]
+            , function(err, rows) {
+                if (err) {
+                    console.error(err);
+                    conn.release();
+                }
+
+                if (typeof callback === "function") {
+                    callback(rows[0].id_workplace);
+                }
+
+                conn.release();
+            });
     });
 };
 
 var soc_smartphoneValidation = function(stringifiedArr, callback) {
-    var smartphoneAddress   = soc_getSmartphoneAddress(stringifiedArr);
 
     soc_getSmartphoneUserName(stringifiedArr, function(name) {
-        pool.getConnection(function(err, conn) {
-            conn.query("SELECT count(*) cnt FROM identity WHERE smartphone_address=?", smartphoneAddress[1], function(err, rows) {
-                if (err) {
-                    console.error(err);
-                    conn.release();
-                }
 
-                var cnt = rows[0].cnt;
-                var valid = false;
-
-                if (cnt == 1) {
-                    console.log("\"" + smartphoneAddress[1] + "\": Verified Smartphone");
-                    // console.log("User: \"" + name + "\"");
-                    valid = true;
-                } else {
-                    console.log("\"" + smartphoneAddress[1] + "\": Not Verified Smartphone");
-                }
-
-                if (typeof callback === "function") {
-                    callback(valid);
-                }
-
-                conn.release();
-            });
-        });
-    });
-};
-
-var soc_getWorkplaceName = function(stringifiedArr, callback) {
-    var deviceAddress       = soc_getDeviceAddress(stringifiedArr);
-    var uuid                = soc_getUUID(stringifiedArr);
-
-    pool.getConnection(function(err, conn) {
-        conn.query("SELECT name_workplace FROM workplace WHERE gateway_address=? AND UUID=?", [deviceAddress[1], uuid[1]], function(err, rows) {
-            if (err) {
-                console.error(err);
-                conn.release();
-            }
-
-            var name_workplace = rows[0].name_workplace;
+        if (name != "undefined") {
+            console.log("Verified Smartphone: " + name);
 
             if (typeof callback === "function") {
-                callback(name_workplace);
+                callback(name);
             }
+        } else {
+            console.log("Unverified Smartphone");
 
-            conn.release();
-        });
+            if (typeof callback === "function") {
+                callback(false);
+            }
+        }
     });
 };
 
@@ -386,59 +449,59 @@ var soc_getSmartphoneUserName = function(stringifiedArr, callback) {
     var smartphone_address = soc_getSmartphoneAddress(stringifiedArr);
 
     pool.getConnection(function(err, conn) {
-        conn.query("SELECT name FROM identity WHERE smartphone_address=?", [smartphone_address[1]], function(err, rows) {
-            if (err) {
-                console.error(err);
+        conn.query("SELECT IF ((SELECT COUNT(*) AS cnt FROM identity WHERE smartphone_address=? HAVING cnt > 0)"
+            + ", (SELECT name FROM identity WHERE smartphone_address=?), 'undefined') AS name"
+            , [smartphone_address, smartphone_address]
+            , function(err, rows) {
+                if (err) {
+                    console.error(err);
+                    conn.release();
+                }
+
+                if (typeof callback === "function") {
+                    callback(rows[0].name);
+                }
+
                 conn.release();
-            }
-
-            var name = rows[0].name;
-
-            if (typeof callback === "function") {
-                callback(name);
-            }
-
-            conn.release();
-        });
+            });
     });
 };
 
-var soc_registerCommute = function(stringifiedArr, callback) {
+var soc_registerCommute = function(stringifiedArr, id_workplace, callback) {
     var smartphoneAddress   = soc_getSmartphoneAddress(stringifiedArr);
     var datetime            = soc_getDatetime(stringifiedArr);
 
-    soc_getWorkplaceName(stringifiedArr, function(name_workplace) {
-        pool.getConnection(function(err, conn) {
-            conn.query("INSERT INTO circumstance (time, name_workplace, smartphone_address) VALUES (?, ?, ?)", [datetime[1], name_workplace, smartphoneAddress[1]], function(err) {
-                if (err) {
-                    console.error(err);
+    pool.getConnection(function(err, conn) {
+        conn.query("INSERT INTO circumstance (datetime, id_workplace, smartphone_address)" +
+            "VALUES (?, ?, ?)", [datetime, id_workplace, smartphoneAddress], function(err) {
+            if (err) {
+                console.error(err);
 
-                    if (typeof callback === "function") {
-                        callback(false);
-                    }
-
-                    conn.release();
-
-                } else {
-                    console.log("\"" + datetime[1] + "\" / \"" + name_workplace + "\" / \"" + smartphoneAddress[1] + "\": Registered");
-
-                    if (typeof callback === "function") {
-                        callback(true);
-                    }
-
-                    conn.release();
+                if (typeof callback === "function") {
+                    callback(false);
                 }
-            });
+
+                conn.release();
+
+            } else {
+                console.log("\"" + datetime + "\" / \"" + id_workplace + "\" / \"" + smartphoneAddress + "\": Registered");
+
+                if (typeof callback === "function") {
+                    callback(true);
+                }
+
+                conn.release();
+            }
         });
     });
 };
 
 var soc_RSSICalibration = function(stringifiedArr, callback) {
-    
+
 };
 
 var soc_getRSSI = function(stringifiedArr, callback) {
-    
+
 };
 
 /* Exports */
@@ -452,6 +515,9 @@ module.exports.id_checkRegistered           = id_checkRegistered;
 module.exports.id_registerUser              = id_registerUser;
 module.exports.id_registerWorkplace         = id_registerWorkplace;
 
+module.exports.id_searchAvailableBeacon     = id_searchAvailableBeacon;
+module.exports.id_registerBeacon            = id_registerBeacon;
+
 module.exports.id_getSmartphoneAddress      = id_getSmartphoneAddress;
 module.exports.id_checkAdmin                = id_checkAdmin;
 
@@ -460,14 +526,15 @@ module.exports.id_getCircumstance           = id_getCircumstance;
 
 /* socket.js */
 module.exports.soc_analyzeJSON              = soc_analyzeJSON;
-module.exports.soc_getDeviceAddress         = soc_getDeviceAddress;
-module.exports.soc_getUUID                  = soc_getUUID;
-module.exports.soc_getMajor                 = soc_getMajor;
-module.exports.soc_getMinor                 = soc_getMinor;
+module.exports.soc_getBeaconAddressArr      = soc_getBeaconAddressArr;
+module.exports.soc_getUUIDArr               = soc_getUUIDArr;
+module.exports.soc_getMajorArr              = soc_getMajorArr;
+module.exports.soc_getMinorArr              = soc_getMinorArr;
 module.exports.soc_getSmartphoneAddress     = soc_getSmartphoneAddress;
 module.exports.soc_getDatetime              = soc_getDatetime;
 module.exports.soc_gatewayValidation        = soc_gatewayValidation;
 module.exports.soc_smartphoneValidation     = soc_smartphoneValidation;
+module.exports.soc_getWorkplaceOfBeacons    = soc_getWorkplaceOfBeacons;
 module.exports.soc_getWorkplaceName         = soc_getWorkplaceName;
 module.exports.soc_getSmartphoneUserName    = soc_getSmartphoneUserName;
 module.exports.soc_registerCommute          = soc_registerCommute;
