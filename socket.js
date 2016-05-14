@@ -32,7 +32,9 @@ io.on("connection", function(socket) {
                     if (name) {
                         pool.soc_registerCommute(stringifiedArr, id, function (valid) {
                             if (valid) {
-
+                                socket.emit("answer", {
+                                    isSuccess: "true"
+                                });
                             }
                             console.log("========================================");
                         });
@@ -56,10 +58,9 @@ io.on("connection", function(socket) {
      BeaconData3: '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00',
      SmartphoneAddress: '00:00:00:00:00:00',
      DateTime: '0000/00/00 00:00:00',
-     IsNew: 'false',
-     CoordinateX: '00',
-     CoordinateY: '00',
-     CoordinateZ: '00'
+     CoordinateX: '-00',
+     CoordinateY: '-00',
+     CoordinateZ: '-00'
      }
      */
     socket.on("calibration", function(data) {
@@ -72,9 +73,11 @@ io.on("connection", function(socket) {
             if (id) {
                 pool.soc_smartphoneValidation(stringifiedArr, function(name) {
                     if (name) {
-                        pool.soc_RSSICalibration(stringifiedArr, function(valid) {
+                        pool.soc_RSSICalibration(stringifiedArr, id, name, function(valid) {
                             if (valid) {
-
+                                socket.emit("answer", {
+                                    isSuccess: "true"
+                                });
                             }
                             console.log("========================================");
                         });
@@ -102,9 +105,9 @@ io.on("connection", function(socket) {
 
         pool.soc_smartphoneValidation(stringifiedArr, function(name) {
             if (name) {
-                pool.soc_getRSSI(stringifiedArr, function(valid) {
-                    if (valid) {
-
+                pool.soc_getRSSI(function(rows) {
+                    if (rows) {
+                        socket.emit("RSSIs", rows);
                     }
                     console.log("========================================");
                 });
@@ -112,10 +115,6 @@ io.on("connection", function(socket) {
                 console.log("========================================");
             }
         });
-    });
-
-    socket.emit("answer", {
-        isSuccess: "true"
     });
 });
 

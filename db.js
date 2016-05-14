@@ -328,15 +328,39 @@ var soc_getMinorArr = function(stringifiedArr) {
 };
 
 var soc_getSmartphoneAddress = function(stringifiedArr) {
-    var value = stringifiedArr[6].substr(18, 17);
+    var value = "";
+
+    for (var i = 0; i < stringifiedArr.length; i++) {
+        if (stringifiedArr[i].split(":")[0].indexOf("SmartphoneAddress") != -1) {
+            value = stringifiedArr[i].substr(18, 17);
+            break;
+        }
+    }
 
     return value;
 };
 
 var soc_getDatetime = function(stringifiedArr) {
-    var value = stringifiedArr[7].substr(9, 19);
+    var value = "";
+
+    for (var i = 0; i < stringifiedArr.length; i++) {
+        if (stringifiedArr[i].split(":")[0].indexOf("DateTime") != -1) {
+            value = stringifiedArr[i].substr(9, 19);
+            break;
+        }
+    }
 
     return value;
+};
+
+var soc_getCoordinate = function(stringifiedArr) {
+    var coordinateArr = new Array();
+
+    coordinateArr.push(parseInt(stringifiedArr[8].substr(12, 3)));
+    coordinateArr.push(parseInt(stringifiedArr[9].substr(12, 3)));
+    coordinateArr.push(parseInt(stringifiedArr[10].substr(12, 3)));
+
+    return coordinateArr;
 };
 
 var soc_gatewayValidation = function(stringifiedArr, callback) {
@@ -496,12 +520,52 @@ var soc_registerCommute = function(stringifiedArr, id_workplace, callback) {
     });
 };
 
-var soc_RSSICalibration = function(stringifiedArr, callback) {
+var soc_RSSICalibration = function(stringifiedArr, id, name, callback) {
+    var coordinateArr        = soc_getCoordinate(stringifiedArr);
+    var datetime            = soc_getDatetime(stringifiedArr);
 
+    pool.getConnection(function(err, conn) {
+        conn.query("UPDATE workplace SET coordinateX=?, coordinateY=?, coordinateZ=? WHERE id_workplace=?"
+            , [coordinateArr[0], coordinateArr[1], coordinateArr[2], id], function(err) {
+                if (err) {
+                    console.error(err);
+
+                    if (typeof callback === "function") {
+                        callback(false);
+                    }
+
+                    conn.release();
+
+                } else {
+                    console.log(datetime + "\t" + "Coordinate updated at " + id + " workplace, by " + name);
+
+                    if (typeof callback === "function") {
+                        callback(true);
+                    }
+
+                    conn.release();
+                }
+            });
+    });
 };
 
-var soc_getRSSI = function(stringifiedArr, callback) {
+var soc_getRSSI = function(callback) {
+    pool.getConnection(function(err, conn) {
+        conn.query("SELECT id_workplace, coordinateX, coordinateY, coordinateZ FROM workplace", function(err, rows) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
 
+            console.log(rows);
+
+            if (typeof callback === "function") {
+                callback(rows);
+            }
+
+            conn.release();
+        });
+    });
 };
 
 /* Exports */
@@ -541,3 +605,5 @@ module.exports.soc_registerCommute          = soc_registerCommute;
 
 module.exports.soc_RSSICalibration          = soc_RSSICalibration;
 module.exports.soc_getRSSI                  = soc_getRSSI;
+
+module.exports.soc_getCoordinate            = soc_getCoordinate;
