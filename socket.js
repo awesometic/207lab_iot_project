@@ -97,17 +97,17 @@ io.on("connection", function(socket) {
      DateTime: '0000/00/00 00:00:00'
      }
      */
-    socket.on("requestRSSI", function(data) {
+    socket.on("requestEssentialData", function(data) {
         console.log("========================================");
-        console.log("-- Receive Request Current Each RSSI Coordinate --");
+        console.log("-- Receive Request Current Each RSSI Coordinate and Beacon MAC Address --");
         console.log(data);
         stringifiedArr = pool.soc_analyzeJSON(data);
 
         pool.soc_smartphoneValidation(stringifiedArr, function(name) {
             if (name) {
-                pool.soc_getRSSI(function(rows) {
-                    if (rows) {
-                        socket.emit("RSSIs", rows);
+                pool.soc_getEssentialData(function(data) {
+                    if (data) {
+                        socket.emit("data", data);
                     }
                     console.log("========================================");
                 });
