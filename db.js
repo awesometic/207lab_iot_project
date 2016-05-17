@@ -550,15 +550,25 @@ var soc_RSSICalibration = function(stringifiedArr, id, name, callback) {
 };
 
 var soc_getEssentialData = function(callback) {
-    soc_getBeaconMACAddress(function(beaconMAC) {
-        if (beaconMAC) {
-            soc_getRSSI(function(RSSI) {
-                if (RSSI) {
-                    console.log(beaconMAC + "\n###\n" + RSSI);
-                    callback(beaconMAC + "\n###\n" + RSSI);
-                }
-            });
-        }
+    pool.getConnection(function(err, conn) {
+        conn.query("SELECT workplace.id_workplace, coordinateX, coordinateY, coordinateZ, "
+            + "GROUP_CONCAT(beacon.beacon_address SEPARATOR '-') as beacon_address "
+            + "FROM workplace, beacon WHERE workplace.id_workplace=beacon.id_workplace "
+            + "AND workplace.beacon_set=1 "
+            + "ORDER BY workplace.id_workplace", function(err, rows) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+
+            console.log(rows);
+
+            if (typeof callback === "function") {
+                callback(rows);
+            }
+
+            conn.release();
+        });
     });
 };
 
