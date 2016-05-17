@@ -564,7 +564,7 @@ var soc_getEssentialData = function(callback) {
 
 var soc_getBeaconMACAddress = function(callback) {
     pool.getConnection(function(err, conn) {
-        conn.query("SELECT beacon_address FROM beacon", function(err, rows) {
+        conn.query("SELECT beacon_address, id_workplace FROM beacon", function(err, rows) {
             if (err) {
                 console.error(err);
                 conn.release();
