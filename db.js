@@ -103,7 +103,24 @@ var id_loginValidation = function(res, employee_number, password, callback) {
     });
 };
 
-var id_checkRegistered = function(res, smartphone_address, employee_number, callback) {
+var id_getUserInfo = function(smartphone_address, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+        conn.query("SELECT * FROM identity WHERE smartphone_address=?", [smartphone_address], function(err, rows) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+
+            if (typeof callback === "function") {
+                callback(rows[0]);
+            }
+        });
+    });
+};
+
+var id_checkUserRegistered = function(res, smartphone_address, employee_number, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -148,6 +165,106 @@ var id_registerUser = function(res, smartphone_address, employee_number, name, p
     });
 };
 
+var id_modifyUser = function(res, smartphone_address, employee_number, modify_name, modify_password, modify_department, modify_position, modify_permission, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("UPDATE identity SET name=?, password=SHA2(?, 256), department=?, position=?, permission=? WHERE smartphone_address=? AND employee_number=?", [modify_name, modify_password, modify_department, modify_position, modify_permission, smartphone_address, employee_number], function(err) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+            else
+                res.send("<script> alert('Modify Success!'); location.href='/'; </script>");
+        });
+    });
+};
+
+var id_deleteUser = function(res, smartphone_address, employee_number, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("DELETE FROM identity WHERE smartphone_address=? AND employee_number=?", [smartphone_address, employee_number], function (err) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+            else
+                res.send("<script> alert('Delete Success!'); location.href='/'; </script>");
+        });
+    });
+};
+
+var id_getWorkplaceInfo = function(name_workplace, location_workplace, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+        conn.query("SELECT * FROM workplace WHERE name_workplace=? AND location_workplace", [name_workplace, location_workplace], function(err, rows) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+
+            if (typeof callback === "function") {
+                callback(rows[0]);
+            }
+        });
+    });
+};
+
+var id_getWorkplaceID = function(name_workplace, location_workplace, callback) {
+    id_checkWorkplaceRegistered(name_workplace, location_workplace, function(valid) {
+        if (valid) {
+            pool.getConnection(function(err, conn) {
+                if (err)
+                    console.error(err);
+
+                conn.query("SELECT id_workplace FROM workplace WHERE name_workplace=? AND location_workplace=?", [name_workplace, location_workplace], function(err, rows) {
+                    if (err) {
+                        console.error(err);
+                        conn.release();
+                    } else {
+                        if (typeof callback === "function") {
+                            callback(rows[0].id_workplace);
+                        }
+                    }
+                });
+            });
+        } else {
+
+        }
+    });
+};
+
+/* What makes each workplace unique? */
+var id_checkWorkplaceRegistered = function(name_workplace, location_workplace, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("SELECT count(*) cnt FROM workplace WHERE name_workplace=? AND location_workplace", [name_workplace, location_workplace], function(err, rows) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+
+            var cnt = rows[0].cnt;
+            var valid = true;
+
+            if (cnt > 0)
+                valid = false;
+
+            if (typeof callback === "function") {
+                callback(valid);
+            }
+
+            conn.release();
+        });
+    });
+};
+
 var id_registerWorkplace = function(res, name_workplace, location_workplace) {
     pool.getConnection(function(err, conn) {
         if (err)
@@ -167,7 +284,58 @@ var id_registerWorkplace = function(res, name_workplace, location_workplace) {
     });
 };
 
-var id_searchAvailableBeacon = function(res, callback) {
+var id_modifyWorkplace = function(res, name_workplace, location_workplace, modify_name_workplace, modify_location_workplace, callback) {
+    id_getWorkplaceID(name_workplace, location_workplace, function(id_workplace) {
+        pool.getConnection(function(err, conn) {
+            if (err)
+                console.error(err);
+
+            conn.query("UPDATE workplace SET name_workplace=?, location_workplace=? WHERE id_workplace=?", [modify_name_workplace, modify_location_workplace, id_workplace], function(err) {
+                if (err) {
+                    console.error(err);
+                    conn.release();
+                }
+                else
+                    res.send("<script> alert('Modify Success!'); location.href='/'; </script>");
+            });
+        });
+    });
+};
+
+var id_deleteWorkplace = function(res, name_workplace, location_workplace, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("DELETE FROM workplace WHERE name_workplace=? AND location_workplace=?", [name_workplace, location_workplace], function (err) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+            else
+                res.send("<script> alert('Delete Success!'); location.href='/'; </script>");
+        });
+    });
+};
+
+var id_getBeaconInfo = function(beacon_address, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+        conn.query("SELECT * FROM beacon WHERE beacon_address=?", [beacon_address], function(err, rows) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+
+            if (typeof callback === "function") {
+                callback(rows[0]);
+            }
+        });
+    });
+};
+
+var id_getAvailableBeacon = function(res, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -192,6 +360,32 @@ var id_searchAvailableBeacon = function(res, callback) {
     });
 };
 
+var id_checkBeaconRegistered = function(beacon_address, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("SELECT count(*) cnt FROM beacon WHERE beacon_address=?", [beacon_address], function(err, rows) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+
+            var cnt = rows[0].cnt;
+            var valid = true;
+
+            if (cnt > 0)
+                valid = false;
+
+            if (typeof callback === "function") {
+                callback(valid);
+            }
+
+            conn.release();
+        });
+    });
+};
+
 var id_registerBeacon = function(res, uuid, major, minor, beacon_address) {
     pool.getConnection(function(err, conn) {
         if (err)
@@ -207,6 +401,38 @@ var id_registerBeacon = function(res, uuid, major, minor, beacon_address) {
                 res.send("<script> alert('Register Success!'); history.back(); </script>");
 
             conn.release();
+        });
+    });
+};
+
+var id_modifyBeacon = function(res, beacon_address, modify_uuid, modify_major, modify_minor, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("UPDATE beacon SET UUID=?, major=?, minor=? WHERE beacon_addres=?", [modify_uuid, modify_major, modify_minor, beacon_address], function(err) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+            else
+                res.send("<script> alert('Modify Success!'); location.href='/'; </script>");
+        });
+    });
+};
+
+var id_deleteBeacon = function(res, uuid, major, minor, beacon_address, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("DELETE FROM beacon WHERE UUID=? AND major=? AND minor=? AND beacon_address=?", [uuid, major, minor, beacon_address], function (err) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+            else
+                res.send("<script> alert('Delete Success!'); location.href='/'; </script>");
         });
     });
 };
@@ -552,7 +778,7 @@ var soc_RSSICalibration = function(stringifiedArr, id, name, callback) {
 var soc_getEssentialData = function(callback) {
     pool.getConnection(function(err, conn) {
         conn.query("SELECT workplace.id_workplace, coordinateX, coordinateY, coordinateZ, "
-            + "GROUP_CONCAT(beacon.beacon_address SEPARATOR '-') as beacon_address "
+            + "GROUP_CONCAT(beacon.beacon_address SEPARATOR '-') AS beacon_address "
             + "FROM workplace, beacon WHERE workplace.id_workplace=beacon.id_workplace "
             + "AND workplace.beacon_set=1 "
             + "ORDER BY workplace.id_workplace", function(err, rows) {
@@ -613,12 +839,26 @@ module.exports = pool;
 module.exports.id_checkLoginName            = id_checkLoginName;
 module.exports.id_checkLoginPassword        = id_checkLoginPassword;
 module.exports.id_loginValidation           = id_loginValidation;
-module.exports.id_checkRegistered           = id_checkRegistered;
-module.exports.id_registerUser              = id_registerUser;
-module.exports.id_registerWorkplace         = id_registerWorkplace;
 
-module.exports.id_searchAvailableBeacon     = id_searchAvailableBeacon;
+module.exports.id_getUserInfo               = id_getUserInfo;
+module.exports.id_checkUserRegistered       = id_checkUserRegistered;
+module.exports.id_registerUser              = id_registerUser;
+module.exports.id_modifyUser                = id_modifyUser;
+module.exports.id_deleteUser                = id_deleteUser;
+
+module.exports.id_getWorkplaceInfo          = id_getWorkplaceInfo;
+module.exports.id_getWorkplaceID            = id_getWorkplaceID;
+module.exports.id_checkWorkplaceRegistered  = id_checkWorkplaceRegistered;
+module.exports.id_registerWorkplace         = id_registerWorkplace;
+module.exports.id_modifyWorkplace           = id_modifyWorkplace;
+module.exports.id_deleteWorkplace           = id_deleteWorkplace;
+
+module.exports.id_getBeaconInfo             = id_getBeaconInfo;
+module.exports.id_getAvailableBeacon        = id_getAvailableBeacon;
+module.exports.id_checkBeaconRegistered     = id_checkBeaconRegistered;
 module.exports.id_registerBeacon            = id_registerBeacon;
+module.exports.id_modifyBeacon              = id_modifyBeacon;
+module.exports.id_deleteBeacon              = id_deleteBeacon;
 
 module.exports.id_getSmartphoneAddress      = id_getSmartphoneAddress;
 module.exports.id_checkAdmin                = id_checkAdmin;
