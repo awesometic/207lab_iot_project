@@ -146,13 +146,13 @@ var id_checkUserRegistered = function(res, smartphone_address, employee_number, 
     });
 };
 
-var id_registerUser = function(res, smartphone_address, employee_number, name, password, department, position, permission) {
+var id_registerUser = function(res, smartphone_address, employee_number, name, password, department, position, permission, admin) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
 
-        conn.query("INSERT INTO identity (smartphone_address, employee_number, name, password, department, position, permission)" +
-            " VALUES (?, ?, ?, SHA2(?, 256), ?, ?, ?)", [smartphone_address, employee_number, name, password, department, position, permission], function (err) {
+        conn.query("INSERT INTO identity (smartphone_address, employee_number, name, password, department, position, permission, admin)" +
+            " VALUES (?, ?, ?, SHA2(?, 256), ?, ?, ?, ?)", [smartphone_address, employee_number, name, password, department, position, permission, admin], function (err) {
             if (err) {
                 console.error(err);
                 conn.release();
@@ -165,12 +165,12 @@ var id_registerUser = function(res, smartphone_address, employee_number, name, p
     });
 };
 
-var id_modifyUser = function(res, smartphone_address, employee_number, modify_name, modify_password, modify_department, modify_position, modify_permission, callback) {
+var id_modifyUser = function(res, smartphone_address, employee_number, modify_name, modify_password, modify_department, modify_position, modify_admin, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
 
-        conn.query("UPDATE identity SET name=?, password=SHA2(?, 256), department=?, position=?, permission=? WHERE smartphone_address=? AND employee_number=?", [modify_name, modify_password, modify_department, modify_position, modify_permission, smartphone_address, employee_number], function(err) {
+        conn.query("UPDATE identity SET name=?, password=SHA2(?, 256), department=?, position=?, admin=? WHERE smartphone_address=? AND employee_number=?", [modify_name, modify_password, modify_department, modify_position, modify_admin, smartphone_address, employee_number], function(err) {
             if (err) {
                 console.error(err);
                 conn.release();

@@ -68,7 +68,8 @@ router.post("/", function(req, res) {
         var join_pwd2 = req.body.join_pwd2;
         var department = '';
         var join_pst = req.body.join_pst;
-        var permission = false;
+        var permission = true;
+        var admin = true;
         var smartphone_address = req.body.join_smartphone_address;
 
         if (permission)
@@ -76,14 +77,21 @@ router.post("/", function(req, res) {
         else
             permission = 0;
 
+        if (admin)
+            admin = 1;
+        else
+            admin = 0;
+
         if (join_pwd != join_pwd2) {
             res.send("<script> alert('Check Retype-Password!'); history.back(); </script>");
         } else if (smartphone_address.length != 17) {
             res.send("<script> alert('Type Correct Information!'); history.back(); </script>");
         } else {
-            pool.id_checkRegistered(res, smartphone_address, join_id, function(valid) {
+            pool.id_checkUserRegistered(res, smartphone_address, join_id, function(valid) {
                 if (valid) {
-                    pool.id_registerUser(res, smartphone_address, join_id, name, join_pwd, department, join_pst, permission);
+                    pool.id_registerUser(res, smartphone_address, join_id, name, join_pwd, department, join_pst, permission, admin);
+                } else {
+                    res.send("<script> alert('Already Registered!'); history.back(); </script>");
                 }
             });
         }
