@@ -1,0 +1,168 @@
+<div class="tab-content">
+    <div id="home" class="tab-pane fade in active" align="center">
+        <img src="207lab.jpg" style="width:650px;height:300px;">
+        <br><br><br>
+    </div>
+
+    <div id="beaconlist" class="tab-pane fade">
+        <br>
+        <div class="panel panel-primary" style="width: 500px">
+            <div class="panel-heading">Beacon List</div>
+            <div class="panel-body pre-scrollable">
+                <a data-toggle="tab" href="#beacon_detail">1</a>
+                <!--여기에 db를 가져와야해요-->
+            </div>
+            <div class="panel-footer"><ul class="nav nav-justified"><li><a data-toggle="tab" href="#addbeacon">추가</a></li></ul></div>
+        </div>
+    </div>
+
+    <div id="workplacelist" class="tab-pane fade">
+        <br>
+        <div class="panel panel-primary" style="width: 500px">
+            <div class="panel-heading">Workplace List</div>
+            <div class="panel-body pre-scrollable">
+                <a data-toggle="tab" href="#workplace_detail">207</a>
+                <!--여기에 db를 가져와야해요-->
+            </div>
+            <div class="panel-footer"><ul class="nav nav-justified"><li><a data-toggle="tab" href="#addworkplace">추가</a></li></ul></div>
+        </div>
+    </div>
+
+    <div id="employeelist" class="tab-pane fade">
+        <br>
+        <div class="panel panel-primary" style="width: 500px">
+            <div class="panel-heading">Employee List</div>
+            <div class="panel-body pre-scrollable">
+                <a data-toggle="tab" href="#employee_detail">백소영</a>
+                <!--여기에 db를 가져와야해요-->
+            </div>
+            <div class="panel-footer"><ul class="nav nav-justified"><li><a data-toggle="tab" href="#addemployee">추가</a></li></ul></div>
+        </div>
+    </div>
+
+    <div id="beacon_detail" class="tab-pane fade">
+        <br>
+        <div class="panel panel-primary" style="width: 500px">
+            <div class="panel-heading">여기 그 클릭한 비콘이름</div>
+            <div class="panel-body">
+                비콘 세부정보가 여기에!!
+                <!--여기에 db를 가져와야해요-->
+            </div>
+            <div class="panel-footer"><ul class="nav nav-justified"><li><a data-toggle="tab" href="#">수정</a></li><li><a data-toggle="tab" href="#">삭제</a></li></ul></div>
+        </div>
+    </div>
+
+    <div id="workplace_detail" class="tab-pane fade">
+        <br>
+        <div class="panel panel-primary" style="width: 500px">
+            <div class="panel-heading">여기 그 클릭한 작업장이름</div>
+            <div class="panel-body">
+                작업장 세부정보가 여기에!!
+                <!--여기에 db를 가져와야해요-->
+            </div>
+            <div class="panel-footer"><ul class="nav nav-justified"><li><a data-toggle="tab" href="#">수정</a></li><li><a data-toggle="tab" href="#">삭제</a></li></ul></div>
+        </div>
+    </div>
+
+    <div id="employee_detail" class="tab-pane fade">
+        <br>
+        <div class="panel panel-primary" style="width: 500px">
+            <div class="panel-heading">백소영</div>
+            <div class="panel-body">
+                이쁘고 착하고 귀엽고 깜찍한
+                <!--여기에 db를 가져와야해요-->
+            </div>
+            <div class="panel-footer"><ul class="nav nav-justified"><li><a data-toggle="tab" href="#">수정</a></li><li><a data-toggle="tab" href="#">삭제</a></li></ul></div>
+        </div>
+    </div>
+
+    <div id="addbeacon" class="tab-pane fade">
+        <h3>비콘 추가</h3>
+        <form action="#">
+            <label for="UUID">UUID</label>
+            <input class="af" type="text" id="UUID" name="UUID">
+
+            <label for="mayor">Mayor</label>
+            <input class="af" type="text" id="mayor" name="ma">
+
+            <label for="minor">Minor</label>
+            <input class="af" type="text" id="minor" name="min">
+
+            <label for="beacon_address">Beacon_Address</label>
+            <input class="af" type="text" id="beacon_address" name="ba">
+
+            <label for="id_workplace">ID_Workplace</label>
+            <select class="af" id="id_workplace" name="iw">
+                <option value="A">A</option>
+                <option value="B">B</option>
+            </select>
+            <input class="af" type="submit" value="Submit">
+        </form>
+    </div>
+    <div id="addemployee" class="tab-pane fade">
+        <h3>사용자 추가</h3>
+        <form action="#">
+            <label for="smartphone_address">Smartphone_Address</label>
+            <input  class="af" type="text" id="smartphone_address" name="sa">
+
+            <label for="employee_number">Employee_Number</label>
+            <input class="af" type="text" id="employee_number" name="en">
+
+            <label for="name">Name</label>
+            <input class="af" type="text" id="name" name="n">
+
+            <label for="password">Password</label>
+            <input class="af" type="password" id="password" name="pw">
+
+            <label for="password_check">Password_Check</label>
+            <input class="af" type="password" id="password_check" name="pwc">
+
+            <label for="department">Department</label>
+            <input class="af" type="text" id="department" name="dm">
+
+            <label for="position">Position</label>
+            <input class="af" type="text" id="position" name="ps">
+
+            <label for="permission">Permition</label>
+            <select class="af" id="permission" name="pm">
+                <option value="employee">Employee</option>
+                <option value="admin">Admin</option>
+            </select>
+
+            <input class="af" type="submit" value="Submit">
+        </form>
+    </div>
+    <div id="addworkplace" class="tab-pane fade">
+        <h3>작업장 추가</h3>
+        <form action="#">
+            <label for="name">Name</label>
+            <input class="af" type="text" id="name" name="n">
+
+            <label for="location">Location</label>
+            <select class="af" id="location" name="lo">
+                <option value="A">A</option>
+                <option value="B">B</option>
+            </select>
+
+            <input class="af" type="submit" value="Submit">
+        </form>
+    </div>
+    <div id="tptable" class="tab-pane fade">
+        <h3>시간장소</h3>
+        <div class="col-sm-5 text-left">
+            <!--시간-장소 d3를 여기에-->
+        </div>
+    </div>
+    <div id="pmtable" class="tab-pane fade">
+        <h3>장소이동</h3>
+        <div class="col-sm-5 text-left">
+            <!--장소-이동 d3를 여기에-->
+        </div>
+    </div>
+    <div id="wptable" class="tab-pane fade">
+        <h3>요일장소</h3>
+        <div class="col-sm-5 text-left">
+            <!--요일-장소 d3를 여기에-->
+        </div>
+    </div>
+</div>

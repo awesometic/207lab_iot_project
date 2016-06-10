@@ -13,24 +13,8 @@ router.get('/', function(req, res, next) {
     });
 });
 
-router.get("/login", function(req, res, next) {
-    res.render("login", {
-        title: title,
-        user_id: req.session.user_id,
-        smartphone_address: req.session.smartphone_address
-    });
-});
-
-router.get("/myhistory", function(req, res, next) {
-    res.render("myhistory", {
-        title: title,
-        user_id: req.session.user_id,
-        smartphone_address: req.session.smartphone_address
-    });
-});
-
-router.get("/mylocation", function(req, res, next) {
-    res.render("mylocation", {
+router.get("/main_home", function(req, res, next) {
+    res.render("main_home", {
         title: title,
         user_id: req.session.user_id,
         smartphone_address: req.session.smartphone_address
@@ -57,20 +41,20 @@ router.post("/", function(req, res) {
                     req.session.user_id = user_id;
                     req.session.smartphone_address = smartphone_number;
 
-                    res.send("<script> alert('Login Success!'); location.href='/'; </script>");
+                    res.send("<script> alert('Login Success!'); location.href='/main_home'; </script>");
                 });
             }
         });
     } else if (typeof req.body.join_id != 'undefined') {
-        var join_id = req.body.join_id;
-        var name = '';
+        var join_id = req.body.employee_number;
+        var name = req.body.name;
         var join_pwd = req.body.join_pwd;
         var join_pwd2 = req.body.join_pwd2;
         var department = '';
-        var join_pst = req.body.join_pst;
-        var permission = true;
-        var admin = true;
-        var smartphone_address = req.body.join_smartphone_address;
+        var join_pst = req.body.position;
+        var permission = req.body.permission;
+        var admin = req.body.admin;
+        var smartphone_address = req.body.smartphone_address;
 
         if (permission)
             permission = 1;

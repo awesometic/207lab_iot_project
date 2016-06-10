@@ -1,0 +1,60 @@
+<div class="tab-content">
+    <div id="home" class="tab-pane fade in active">
+
+    </div>
+    <div id="tp" class="tab-pane fade">
+        <ul class="nav nav-pills nav-stacked">
+            <li><a data-toggle="tab" href="#wptable">요일별 장소</a></li>
+            <%
+            var permission = true;//db에서 받아와야하는데...띠로리..1이 관리자
+            if (permission) { %>
+            <li><a data-toggle="tab" href="#tptable">시간별 위치</a></li>
+            <li><a data-toggle="tab" href="#pmtable">사무실이동</a></li>
+            <% } %>
+        </ul>
+    </div>
+
+    <div id="pm" class="tab-pane fade">
+        <ul class="nav nav-pills nav-stacked">
+            <li><a data-toggle="tab" href="#wptable">요일별 장소</a></li>
+            <%
+            var permission = true;//db에서 받아와야하는데...띠로리..1이 관리자
+            if (permission) { %>
+            <li><a data-toggle="tab" href="#tptable">시간별 위치</a></li>
+            <li><a data-toggle="tab" href="#pmtable">사무실이동</a></li>
+            <% } %>
+        </ul>
+    </div>
+    <div id="wp" class="tab-pane fade">
+        <ul class="nav nav-pills nav-stacked">
+            <li><a data-toggle="tab" href="#wptable">요일별 장소</a></li>
+            <%
+            var permission = true;//db에서 받아와야하는데...띠로리..1이 관리자
+            if (permission) { %>
+            <li><a data-toggle="tab" href="#tptable">시간별 위치</a></li>
+            <li><a data-toggle="tab" href="#pmtable">사무실이동</a></li>
+            <% } %>
+        </ul>
+    </div>
+    <div id="beacon" class="tab-pane fade">
+        <ul class="nav nav-pills nav-stacked">
+            <li><a data-toggle="tab" href="#beaconlist">비콘</a></li>
+            <li><a data-toggle="tab" href="#workplacelist">작업장</a></li>
+            <li><a data-toggle="tab" href="#employeelist">직원</a></li>
+        </ul>
+    </div>
+    <div id="workplace" class="tab-pane fade">
+        <ul class="nav nav-pills nav-stacked">
+            <li><a data-toggle="tab" href="#beaconlist">비콘</a></li>
+            <li><a data-toggle="tab" href="#workplacelist">작업장</a></li>
+            <li><a data-toggle="tab" href="#employeelist">직원</a></li>
+        </ul>
+    </div>
+    <div id="employee" class="tab-pane fade">
+        <ul class="nav nav-pills nav-stacked">
+            <li><a data-toggle="tab" href="#beaconlist">비콘</a></li>
+            <li><a data-toggle="tab" href="#workplacelist">작업장</a></li>
+            <li><a data-toggle="tab" href="#employeelist">직원</a></li>
+        </ul>
+    </div>
+</div>
