@@ -1,19 +1,111 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title><%= title %></title>
-        <link rel='stylesheet' href='/stylesheets/style.css' />
-    </head>
-    <body>
-        <h1><%= title %></h1>
-        <p>Hello! <% if (user_id) { %><b><%= user_id %></b><% } %></p>
-        <a href=".">Home</a> |
-        <% if (user_id) { %>
-            <a href="logout">Logout</a>
-        <% } else { %>
-            <a href="login">login</a> |
-            <a href="add_user">Add User</a>
+<head>
+    <% include partials/head.ejs %>
+</head>
+<body>
+<% include partials/nav.ejs %>
+<div class="container-fluid text-center">
+    <div class="row content">
+        <div class="col-sm-2 sidenav">
+            <% if (user_id) { %>
+            <p><a href="mylocation">현재 위치</a></p>
+            <p><a href="myhistory">출퇴근 기록</a></p>
+            <% } else { %>
+            <p><a href="#">로그인 하세요</a></p>
+            <% } %>
+        </div>
+        <div class="col-sm-8 text-left">
+            <h1>Member List</h1>
+            <p>김선광</p>
+            <p>이유택</p>
+            <p>심정현</p>
+            <p>김경민</p>
+            <p>양덕규</p>
+            <p>백소영</p>
+            <p>강은정</p>
+            <hr>
+            <h3>출퇴근 관리</h3>
+            <% if (user_id) { %>
+            <p>로그인 되었습니다</p>
+            <p>사용자: <b><%= user_id %></b><br>스마트폰 주소: <b><%= smartphone_address %></b></p>
+            <% } else { %>
+            <p>로그인 하세요</p>
+            <% } %>
+        </div>
+        <div class="col-sm-2 sidenav">
+            <% if (user_id) { %>
+            <a href="logout">Logout<span class="glyphicon glyphicon-log-in"></span></a>
+            <% } else { %>
+            <h3>Login<span class="glyphicon glyphicon-log-in"></span></h3>
+            <form name="login" class="form-inline" role="form" method="post">
+                <div class="form-group">
+                    <label for="user_id">ID:</label><br>
+                    <input name="user_id" type="id" class="form-control" id="user_id">
+                </div>
+                <div class="form-group">
+                    <label for="pwd">Password:</label><br>
+                    <input name="pass" type="password" class="form-control" id="pwd">
+                </div>
+                <div class="checkbox">
+                    <label><input name="Manager" type="checkbox"> Manager</label><br>
+                    <label><input name="Remember" type="checkbox"> Remember me</label><br>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-default">Login</button>
+                <button type="button" class="btn btn-default" id="open-modal">Join Now</button>
+            </form>
+
+            <!-- Modal -->
+            <div class="modal fade" id="modal-join" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Join Form</h4>
+                        </div>
+                        <form class="form-horizontal" role="form" method="post">
+                            <div class="modal-body">
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">ID</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" name="join_id" id="join_id" type="id" >
+                                    </div>
+                                    <label class="col-sm-2 control-label">PASSWORD</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" name="join_pwd" id="join_pwd" type="password" >
+                                    </div>
+                                    <label class="col-sm-2 control-label">PASSWORD</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" name="join_pwd2" id="join_pwd2" type="password" >
+                                    </div>
+                                    <label class="col-sm-2 control-label">POSITION</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" name="join_pst" id="join_pst" type="text" >
+                                    </div>
+                                    <label class="col-sm-2 control-label">SMARTPHONE ADDRESSS</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" name="join_smartphone_address" id="join_smartphone_address" type="text" >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <input type="reset" size="20" class="btn btn-default" name="reset" value="Clear">
+                                <button type="submit" class="btn btn-default">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
         <% } %>
-        <br><br>
-    </body>
+    </div>
+</div>
+
+<% include partials/footer.ejs %>
+</body>
 </html>

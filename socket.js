@@ -1,20 +1,121 @@
 //http://socket.io/docs/
-var io = require("socket.io").listen(2070);
+var port = process.env.PORT || 2070;
+var io = require("socket.io").listen(port);
 
-// Reference: http://playgroundblog.tistory.com/145
-// Reference: https://nodesource.com/blog/understanding-socketio/
-// Reference: http://stackoverflow.com/questions/20979800/send-byte-array-in-node-js-to-server
+var pool = require("./db");
 
-// We'll communicate using json object
-// Reference: http://stackoverflow.com/questions/25615313/javascript-byte-array-to-json-and-back
+io.on("connection", function(socket) {
 
-// Making left stuffs after android app that can communicate via socket is made
-io.sockets.on("connection", function(socket) {
-    socket.on("call", function(data) {
+    var stringifiedArr;
+
+    /*
+     {
+     BeaconDeviceAddress1: '00:00:00:00:00:00',
+     BeaconDeviceAddress2: '00:00:00:00:00:00',
+     BeaconDeviceAddress3: '00:00:00:00:00:00',
+     BeaconData1: '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00',
+     BeaconData2: '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00',
+     BeaconData3: '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00',
+     SmartphoneAddress: '00:00:00:00:00:00',
+     DateTime: '0000/00/00 00:00:00'
+     }
+     */
+    socket.on("circumstance", function(data) {
+        console.log("========================================");
+        console.log("-- Receive New Commute Record --");
         console.log(data);
-        socket.emit("answer", "hi");
+        stringifiedArr = pool.soc_analyzeJSON(data);
+
+        pool.soc_gatewayValidation(stringifiedArr, function(id) {
+            if (id) {
+                pool.soc_smartphoneValidation(stringifiedArr, function (name) {
+                    if (name) {
+                        pool.soc_registerCommute(stringifiedArr, id, function (valid) {
+                            if (valid) {
+                                socket.emit("answer", {
+                                    isSuccess: "true"
+                                });
+                            }
+                            console.log("========================================");
+                        });
+                    } else {
+                        console.log("========================================");
+                    }
+                });
+            } else {
+                console.log("========================================");
+            }
+        });
     });
 
+    /*
+     {
+     BeaconDeviceAddress1: '00:00:00:00:00:00',
+     BeaconDeviceAddress2: '00:00:00:00:00:00',
+     BeaconDeviceAddress3: '00:00:00:00:00:00',
+     BeaconData1: '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00',
+     BeaconData2: '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00',
+     BeaconData3: '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00',
+     SmartphoneAddress: '00:00:00:00:00:00',
+     DateTime: '0000/00/00 00:00:00',
+     CoordinateX: '-00',
+     CoordinateY: '-00',
+     CoordinateZ: '-00'
+     }
+     */
+    socket.on("calibration", function(data) {
+        console.log("========================================");
+        console.log("-- Receive New Calibration Data --");
+        console.log(data);
+        stringifiedArr = pool.soc_analyzeJSON(data);
+
+        pool.soc_gatewayValidation(stringifiedArr, function(id) {
+            if (id) {
+                pool.soc_smartphoneValidation(stringifiedArr, function(name) {
+                    if (name) {
+                        pool.soc_RSSICalibration(stringifiedArr, id, name, function(valid) {
+                            if (valid) {
+                                socket.emit("answer", {
+                                    isSuccess: "true"
+                                });
+                            }
+                            console.log("========================================");
+                        });
+                    } else {
+                        console.log("========================================");
+                    }
+                });
+            } else {
+                console.log("========================================");
+            }
+        });
+    });
+
+    /*
+     {
+     SmartphoneAddress: '00:00:00:00:00:00',
+     DateTime: '0000/00/00 00:00:00'
+     }
+     */
+    socket.on("requestEssentialData", function(data) {
+        console.log("========================================");
+        console.log("-- Receive Request Current Each RSSI Coordinate and Beacon MAC Address --");
+        console.log(data);
+        stringifiedArr = pool.soc_analyzeJSON(data);
+
+        pool.soc_smartphoneValidation(stringifiedArr, function(name) {
+            if (name) {
+                pool.soc_getEssentialData(function(data) {
+                    if (data) {
+                        socket.emit("data", data);
+                    }
+                    console.log("========================================");
+                });
+            } else {
+                console.log("========================================");
+            }
+        });
+    });
 });
 
 module.exports = io;
