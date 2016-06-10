@@ -1,12 +1,13 @@
 $(document).ready(function() {
 
-    $(document).ready(function(){
-        $("#p1").mouseenter(function(){
-            alert("You entered p1!");
-        });
+    $("#open-modal").click(function(){
+        $("#myModal").modal();
     });
-    $(document).ready(function(){
-        $('[data-toggle="popover"]').popover({ trigger: "hover" });
+
+    $("#p1").mouseenter(function(){
+        alert("You entered p1!");
     });
+
+    $('[data-toggle="popover"]').popover({ trigger: "hover" });
 
 });

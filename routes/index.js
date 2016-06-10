@@ -45,7 +45,7 @@ router.post("/", function(req, res) {
                 });
             }
         });
-    } else if (typeof req.body.join_id != 'undefined') {
+    } else if (typeof req.body.employee_number != 'undefined') {
         var join_id = req.body.employee_number;
         var name = req.body.name;
         var join_pwd = req.body.join_pwd;
