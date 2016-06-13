@@ -4,24 +4,30 @@
     <% include partials/head.ejs %>
 </head>
 <body>
-<nav class="navbar navbar-inverse" data-spy="affix" data-offset-top="197">
-    <div class="container-fluid">
-        <% include partials/menu.ejs %>
+<div id="body">
+    <div id="nav">
+        <nav class="navbar navbar-inverse" data-spy="affix" data-offset-top="197">
+            <% include partials/menu.ejs %>
+        </nav>
     </div>
-</nav>
+    <div id="main" class="container-fluid">
+        <div id="wrapper-row" class="row">
+            <div id="sidenav" class="col-sm-2 sidenav">
+                <% include partials/side_menu.ejs %>
+            </div>
+            <div id="container" class="col-sm-10 col-md-offset-2 content">
+                <div id="header">
 
-<div class="container-fluid text-center">
-    <div class="row content">
-        <div class="col-sm-2 sidenav">
-            <% include partials/side_menu.ejs %>
-        </div>
-        <div class="col-sm-9 text-left">
-            <% include partials/maindiv.ejs %>
+                </div>
+                <div id="content">
+                    <% include partials/maindiv.ejs %>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-<footer>
+<div id="footer">
     <% include partials/footer.ejs %>
-</footer>
+</div>
 </body>
 </html>

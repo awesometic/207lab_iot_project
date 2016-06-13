@@ -2,19 +2,43 @@
 <html>
 <head>
     <% include partials/head.ejs %>
+    <style>
+        /* http://webdir.tistory.com/31 */
+        #logo {
+            width: 650px;
+            height: 300px;
+        }
+        #main {
+            height: 100%;
+            text-align: center;
+        }
+        #main:before {
+            content: "";
+            display: inline-block;
+            width: 1px;
+            height: 100%;
+            margin-right: 0;
+            vertical-align: middle;
+        }
+        #content {
+            display: inline-block;
+        }
+    </style>
 </head>
 <body>
-<% include partials/side_menu.ejs %>
-<div class="container-fluid text-center">
-    <br><br><br><br>
-    <div align="center">
-        <img src="207lab.jpg" style="width:650px;height:300px;">
-        <% include partials/login_join.ejs %>
+<div id="body">
+    <div id="main" class="container-fluid">
+        <div id="header">
+
+        </div>
+        <div id="content">
+            <img id="logo" src="207lab.jpg">
+            <% include partials/login_join.ejs %>
+        </div>
     </div>
-    <br><br><br><br><br><br>
 </div>
-<footer>
+<div id="footer">
     <% include partials/footer.ejs %>
-</footer>
+</div>
 </body>
 </html>
