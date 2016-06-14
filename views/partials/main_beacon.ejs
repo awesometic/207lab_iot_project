@@ -1,0 +1,50 @@
+<br>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4 class="text-center">비콘 목록</h4>
+    </div>
+    <div class="panel-body pre-scrollable main-info-list">
+        <a data-toggle="tab" href="#beacon_detail">1</a>
+    </div>
+    <div class="panel-footer">
+        <ul class="nav nav-justified">
+            <li><a data-toggle="tab" href="#addbeacon">추가</a></li>
+        </ul>
+    </div>
+</div>
+
+<div id="beacon-detail" class="tab-pane fade">
+    <br>
+    <div class="panel panel-primary">
+        <div class="panel-heading">여기 그 클릭한 비콘이름</div>
+        <div class="panel-body">
+            비콘 세부정보가 여기에!!
+            <!--여기에 db를 가져와야해요-->
+        </div>
+        <div class="panel-footer"><ul class="nav nav-justified"><li><a data-toggle="tab" href="#">수정</a></li><li><a data-toggle="tab" href="#">삭제</a></li></ul></div>
+    </div>
+</div>
+
+<div id="beacon-add" class="tab-pane fade">
+    <h3>비콘 추가</h3>
+    <form action="#">
+        <label for="UUID">UUID</label>
+        <input class="af" type="text" id="UUID" name="UUID">
+
+        <label for="mayor">Mayor</label>
+        <input class="af" type="text" id="mayor" name="ma">
+
+        <label for="minor">Minor</label>
+        <input class="af" type="text" id="minor" name="min">
+
+        <label for="beacon_address">Beacon_Address</label>
+        <input class="af" type="text" id="beacon_address" name="ba">
+
+        <label for="id_workplace">ID_Workplace</label>
+        <select class="af" id="id_workplace" name="iw">
+            <option value="A">A</option>
+            <option value="B">B</option>
+        </select>
+        <input class="af" type="submit" value="Submit">
+    </form>
+</div>

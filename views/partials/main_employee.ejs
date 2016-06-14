@@ -1,0 +1,59 @@
+
+<br>
+<div class="panel panel-primary" style="width: 100%">
+    <div class="panel-heading">직원 목록</div>
+    <div class="panel-body pre-scrollable">
+        <a data-toggle="tab" href="#employee_detail">백소영</a>
+    </div>
+    <div class="panel-footer">
+        <ul class="nav nav-justified">
+            <li><a data-toggle="tab" href="#addemployee">추가</a></li>
+        </ul>
+    </div>
+</div>
+
+<div id="employee_detail" class="tab-pane fade">
+    <br>
+    <div class="panel panel-primary" style="width: 500px">
+        <div class="panel-heading">백소영</div>
+        <div class="panel-body">
+            이쁘고 착하고 귀엽고 깜찍한
+            <!--여기에 db를 가져와야해요-->
+        </div>
+        <div class="panel-footer"><ul class="nav nav-justified"><li><a data-toggle="tab" href="#">수정</a></li><li><a data-toggle="tab" href="#">삭제</a></li></ul></div>
+    </div>
+</div>
+
+<div id="addemployee" class="tab-pane fade">
+    <h3>사용자 추가</h3>
+    <form action="#">
+        <label for="smartphone_address">Smartphone_Address</label>
+        <input  class="af" type="text" id="smartphone_address" name="sa">
+
+        <label for="employee_number">Employee_Number</label>
+        <input class="af" type="text" id="employee_number" name="en">
+
+        <label for="name">Name</label>
+        <input class="af" type="text" id="name" name="n">
+
+        <label for="password">Password</label>
+        <input class="af" type="password" id="password" name="pw">
+
+        <label for="password_check">Password_Check</label>
+        <input class="af" type="password" id="password_check" name="pwc">
+
+        <label for="department">Department</label>
+        <input class="af" type="text" id="department" name="dm">
+
+        <label for="position">Position</label>
+        <input class="af" type="text" id="position" name="ps">
+
+        <label for="permission">Permition</label>
+        <select class="af" id="permission" name="pm">
+            <option value="employee">Employee</option>
+            <option value="admin">Admin</option>
+        </select>
+
+        <input class="af" type="submit" value="Submit">
+    </form>
+</div>

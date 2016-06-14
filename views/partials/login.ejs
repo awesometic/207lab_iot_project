@@ -9,10 +9,10 @@
         <label><input name="Remember" type="checkbox"> Remember me </label>
     </div>
     <button type="submit" class="btn btn-group-lg">Login</button><br>
-    <a style="color: #c12e2a" id="open-modal"><span class="glyphicon glyphicon-user"></span>Sign Up</a>
+    <a style="color: #c12e2a" id="login-open-modal"><span class="glyphicon glyphicon-user"></span>Sign Up</a>
 </form>
 <!-- Modal -->
-<div class="modal fade" id="myModal" role="dialog">
+<div class="modal fade" id="login-join-modal" role="dialog">
     <div class="modal-dialog">
 
         <!-- Modal content-->
@@ -23,7 +23,7 @@
             </div>
             <form class="form-horizontal" role="form" method="post">
                 <div class="modal-body">
-                    <% include employee/join.ejs %>
+                    <% include join.ejs %>
                 </div>
                 <div class="modal-footer">
                     <input type="reset" size="20" class="btn btn-default" name="reset" value="Clear">

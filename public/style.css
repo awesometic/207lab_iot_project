@@ -30,10 +30,6 @@ body {
     min-height: 100%;
 }
 
-#main {
-
-}
-
 #container {
     padding-bottom: 1em;
 }
@@ -46,6 +42,15 @@ body {
     background-color: #555;
     color: white;
 }
+
+.panel {
+    width: 100%;
+}
+
+.main-info-list {
+    height: 20em;
+}
+
 
 @media screen and (max-width: 1000px) {
     .sidenav {

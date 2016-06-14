@@ -130,7 +130,6 @@ io.on("connection", function(socket) {
      SmartphoneAddress: '12:11:11:11:11:11'
      }
      */
-
     socket.on("amIRegistered", function(data) {
         console.log("========================================");
         console.log("-- Am I Registered? - from unknown Android Application User --");
@@ -138,9 +137,20 @@ io.on("connection", function(socket) {
         stringifiedArr = pool.soc_analyzeJSON(data);
 
         pool.soc_amIRegistered(stringifiedArr, function(isRegistered) {
-            socket.emit("data", isRegistered);
+            if (isRegistered) {
+                pool.soc_getSmartphoneUserName(stringifiedArr, function(name) {
+                   pool.soc_getSmartphoneUserENum(stringifiedArr, function(employee_number) {
+                      socket.emit("data", {
+                          name: name,
+                          employee_number: employee_number
+                      });
+                   });
+                });
+            } else {
+                socket.emit("data", isRegistered);
+                console.log("========================================");
+            }
         });
-        console.log("========================================");
     });
 });
 

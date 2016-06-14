@@ -640,7 +640,6 @@ var soc_getDatetime = function(stringifiedArr) {
 var soc_getCoordinate = function(stringifiedArr) {
     var coordinateArr = new Array();
 
-
     for (var i = 0; i < stringifiedArr.length; i++) {
         if (stringifiedArr[i].split(":")[0].indexOf("CoordinateX") != -1) {
             coordinateArr.push(parseInt(stringifiedArr[8].substr(12, 3)));
@@ -791,6 +790,28 @@ var soc_getSmartphoneUserName = function(stringifiedArr, callback) {
     });
 };
 
+var soc_getSmartphoneUserEmployeeNumber = function(stringifiedArr, callback) {
+  var smartphone_address = soc_getSmartphoneAddress(stringifiedArr);
+
+    pool.getConnection(function(err, conn) {
+        conn.query("SELECT IF ((SELECT COUNT(*) AS cnt FROM identity WHERE smartphone_address=? HAVING cnt > 0)"
+            + ", (SELECT employee_number FROM identity WHERE smartphone_address=?), 'undefined') AS name"
+            , [smartphone_address, smartphone_address]
+            , function(err, rows) {
+                if (err) {
+                    console.error(err);
+                    conn.release();
+                }
+
+                if (typeof callback === "function") {
+                    callback(rows[0].employee_number);
+                }
+
+                conn.release();
+            });
+    });
+};
+
 var soc_registerCommute = function(stringifiedArr, id_workplace, callback) {
     var smartphoneAddress   = soc_getSmartphoneAddress(stringifiedArr);
     var datetime            = soc_getDatetime(stringifiedArr);
@@ -920,7 +941,8 @@ var soc_amIRegistered = function(stringifiedArr, callback) {
             var isRegistered = false;
             if (rows[0].cnt == 1)
                 isRegistered = true;
-            
+
+            console.log(datetime + "\tIs \"" + smartphone_address + "\" registered? " + isRegistered);
             if (typeof callback === "function") {
                 callback(isRegistered);
             }
@@ -978,6 +1000,7 @@ module.exports.soc_smartphoneValidation     = soc_smartphoneValidation;
 module.exports.soc_getWorkplaceOfBeacons    = soc_getWorkplaceOfBeacons;
 module.exports.soc_getWorkplaceName         = soc_getWorkplaceName;
 module.exports.soc_getSmartphoneUserName    = soc_getSmartphoneUserName;
+module.exports.soc_getSmartphoneUserENum    = soc_getSmartphoneUserEmployeeNumber;
 module.exports.soc_registerCommute          = soc_registerCommute;
 
 module.exports.soc_RSSICalibration          = soc_RSSICalibration;

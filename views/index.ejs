@@ -29,6 +29,7 @@
 </head>
 <body>
 <div id="body">
+
     <% if (smartphone_address && user_id) { %>
     <div id="nav">
         <nav class="navbar navbar-inverse" data-spy="affix" data-offset-top="197">
@@ -40,16 +41,14 @@
             <div id="sidenav" class="col-sm-2 sidenav">
                 <% include partials/sidenav.ejs %>
             </div>
-            <div id="container" class="col-sm-10 col-md-offset-2 content">
-                <div id="header">
-
-                </div>
-                <div id="content">
-                    <% include partials/maindiv.ejs %>
+            <div id="content">
+                <div id="container" class="col-sm-10 col-md-offset-2 content">
+                    <% include partials/main.ejs %>
                 </div>
             </div>
         </div>
     </div>
+
     <% } else { %>
     <div id="main" class="container-fluid">
         <div id="header">
@@ -61,6 +60,7 @@
         </div>
     </div>
     <% } %>
+
 </div>
 <div id="footer">
     <% include partials/footer.ejs %>

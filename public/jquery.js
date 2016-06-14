@@ -1,13 +1,30 @@
 $(document).ready(function() {
 
-    $("#open-modal").click(function(){
-        $("#myModal").modal();
+    $("#login-open-modal").click(function(){
+        $("#login-join-modal").modal();
     });
 
-    $("#p1").mouseenter(function(){
-        alert("You entered p1!");
-    });
+    $("#sidenav-management").delegate(".sidenav-management-list", "click", function() {
+        var title = this.title;
 
-    $('[data-toggle="popover"]').popover({ trigger: "hover" });
+        switch (title) {
+            
+            case "beacon":
+                $("#main-info-container").load("main_beacon.ejs");
+                $("#beacon-detail").css("display", "none");
+                $("#beacon-add").css("display", "none");
+                break;
+            case "workplace":
+                $("#main-info-container").load("main_workplace.ejs");
+                break;
+            case "employee":
+                $("#main-info-container").load("main_employee.ejs");
+                break;
+
+            default:
+                alert("오류가 발생했습니다!");
+                break;
+        }
+    });
 
 });
