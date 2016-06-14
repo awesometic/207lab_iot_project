@@ -6,11 +6,20 @@ var pool = require("../db");
 /* GET */
 var title = "Suwon Univ. 207 Lab - IoT Project";
 router.get('/', function(req, res, next) {
-    res.render('index', {
-        title: title,
-        user_id: req.session.user_id,
-        smartphone_address: req.session.smartphone_address,
-        admin: req.session.admin
+    var user_id = req.session.user_id;
+    var smartphone_address = req.session.smartphone_address;
+
+    var date = new Date();
+    var currentDate = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
+
+    pool.id_getCircumstance(res, currentDate, smartphone_address, function (rows) {
+        res.render("index", {
+            title: title,
+            user_id: user_id,
+            smartphone_address: smartphone_address,
+            admin: req.session.admin,
+            rows: rows
+        });
     });
 });
 

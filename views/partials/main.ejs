@@ -23,8 +23,8 @@
             <div class="panel-heading">
                 <h4 class="text-center">작업장 목록</h4>
             </div>
-            <div class="main-list panel-body pre-scrollable">
-                <% include workplace/workplace_list.ejs %>
+            <div id="main-workplace-list" class="main-list panel-body pre-scrollable">
+
             </div>
             <div class="panel-footer"><ul class="nav nav-justified"><li><a data-toggle="tab" href="#addworkplace">추가</a></li></ul></div>
         </div>
@@ -36,8 +36,8 @@
             <div class="panel-heading">
                 <h4 class="text-center">직원 목록</h4>
             </div>
-            <div class="main-list panel-body pre-scrollable">
-                <% include employee/employee_list.ejs %>
+            <div id="main-employee-list" class="main-list panel-body pre-scrollable">
+
             </div>
             <div class="panel-footer"><ul class="nav nav-justified"><li><a data-toggle="tab" href="#addemployee">추가</a></li></ul></div>
         </div>
@@ -104,6 +104,43 @@
         <h3>요일장소</h3>
         <div class="col-sm-5 text-left">
             <!--요일-장소 d3를 여기에-->
+        </div>
+    </div>
+
+    <div id="presentation" class="tab-pane fade">
+        <h3>출퇴근 테이블</h3>
+        <div class="col-sm-5 text-left">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>date</th>
+                    <th>name_workplace</th>
+                    <th>smartphone_address</th>
+                </tr>
+                </thead>
+                <tbody>
+                <div id="circumstance-table-body">
+                    <%
+                    for (var i = 0; i < rows.length; i++) {
+                        var row = rows[i];
+                    %>
+                    <tr>
+                        <td>
+                            <%=row.time %>
+                        </td>
+                        <td>
+                            <%=row.name_workplace %>
+                        </td>
+                        <td>
+                            <%=row.smartphone_address %>
+                        </td>
+                    </tr>
+                    <%
+                    }
+                    %>
+                </div>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

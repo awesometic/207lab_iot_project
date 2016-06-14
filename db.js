@@ -509,16 +509,19 @@ var id_checkAdmin = function(res, employee_number, smartphone_address, callback)
     });
 };
 
-/* Not using date yet */
 var id_getCircumstance = function(res, date, smartphone_address, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
 
-        conn.query("SELECT * FROM circumstance WHERE smartphone_address=?", [smartphone_address], function(err, rows) {
-            if (err)
+        conn.query("SELECT * FROM circumstance WHERE smartphone_address=? AND datetime LIKE ?", [smartphone_address, date + "%"], function(err, rows) {
+            if (err) {
                 console.error(err);
+                conn.release();
+            }
+
             console.log(rows);
+
             if (typeof callback === "function") {
                 callback(rows);
             }
@@ -791,7 +794,7 @@ var soc_getSmartphoneUserName = function(stringifiedArr, callback) {
 };
 
 var soc_getSmartphoneUserEmployeeNumber = function(stringifiedArr, callback) {
-  var smartphone_address = soc_getSmartphoneAddress(stringifiedArr);
+    var smartphone_address = soc_getSmartphoneAddress(stringifiedArr);
 
     pool.getConnection(function(err, conn) {
         conn.query("SELECT IF ((SELECT COUNT(*) AS cnt FROM identity WHERE smartphone_address=? HAVING cnt > 0)"
@@ -899,15 +902,15 @@ var soc_getBeaconMACAddress = function(callback) {
             if (err) {
                 console.error(err);$(document).ready(function() {
 
-    $("#login-open-modal").click(function(){
-        $("#login-join-modal").modal();
-    });
+                    $("#login-open-modal").click(function(){
+                        $("#login-join-modal").modal();
+                    });
 
-    $("#main-beacon-list").ready(function() {
-        
-       $("#main-beacon-list").html()
-    });
-});
+                    $("#main-beacon-list").ready(function() {
+
+                        $("#main-beacon-list").html()
+                    });
+                });
 
                 conn.release();
             }
@@ -941,14 +944,14 @@ var soc_getRSSI = function(callback) {
 var soc_amIRegistered = function(stringifiedArr, callback) {
     var datetime = soc_getDatetime(stringifiedArr);
     var smartphone_address = soc_getSmartphoneAddress(stringifiedArr);
-    
+
     pool.getConnection(function(err, conn) {
         conn.query("SELECT COUNT(*) AS cnt FROM identity WHERE smartphone_address=?", [smartphone_address], function(err, rows) {
             if (err) {
                 console.error(err);
                 conn.release();
             }
-            
+
             var isRegistered = false;
             if (rows[0].cnt == 1)
                 isRegistered = true;
