@@ -6,10 +6,12 @@
 
     <div id="beaconlist" class="tab-pane fade">
         <br>
-        <div class="panel panel-primary" style="width: 500px">
-            <div class="panel-heading">Beacon List</div>
-            <div class="panel-body pre-scrollable">
-                <% include beacon/beacon_list.ejs %>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="text-center">비콘 목록</h4>
+            </div>
+            <div id="main-beacon-list" class="main-list panel-body pre-scrollable">
+
             </div>
             <div class="panel-footer"><ul class="nav nav-justified"><li><a data-toggle="tab" href="#addbeacon">추가</a></li></ul></div>
         </div>
@@ -17,9 +19,11 @@
 
     <div id="workplacelist" class="tab-pane fade">
         <br>
-        <div class="panel panel-primary" style="width: 500px">
-            <div class="panel-heading">Workplace List</div>
-            <div class="panel-body pre-scrollable">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="text-center">작업장 목록</h4>
+            </div>
+            <div class="main-list panel-body pre-scrollable">
                 <% include workplace/workplace_list.ejs %>
             </div>
             <div class="panel-footer"><ul class="nav nav-justified"><li><a data-toggle="tab" href="#addworkplace">추가</a></li></ul></div>
@@ -28,9 +32,11 @@
 
     <div id="employeelist" class="tab-pane fade">
         <br>
-        <div class="panel panel-primary" style="width: 500px">
-            <div class="panel-heading">Employee List</div>
-            <div class="panel-body pre-scrollable">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="text-center">직원 목록</h4>
+            </div>
+            <div class="main-list panel-body pre-scrollable">
                 <% include employee/employee_list.ejs %>
             </div>
             <div class="panel-footer"><ul class="nav nav-justified"><li><a data-toggle="tab" href="#addemployee">추가</a></li></ul></div>
@@ -39,7 +45,7 @@
 
     <div id="beacon_detail" class="tab-pane fade">
         <br>
-        <div class="panel panel-primary" style="width: 500px">
+        <div class="panel panel-primary">
             <div class="panel-heading">여기 그 클릭한 비콘이름</div>
             <div class="panel-body">
                 비콘 세부정보가 여기에!!
@@ -51,7 +57,7 @@
 
     <div id="workplace_detail" class="tab-pane fade">
         <br>
-        <div class="panel panel-primary" style="width: 500px">
+        <div class="panel panel-primary">
             <div class="panel-heading">여기 그 클릭한 작업장이름</div>
             <div class="panel-body">
                 작업장 세부정보가 여기에!!
@@ -63,7 +69,7 @@
 
     <div id="employee_detail" class="tab-pane fade">
         <br>
-        <div class="panel panel-primary" style="width: 500px">
+        <div class="panel panel-primary">
             <div class="panel-heading">백소영</div>
             <div class="panel-body">
                 이쁘고 착하고 귀엽고 깜찍한

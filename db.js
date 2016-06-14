@@ -795,7 +795,7 @@ var soc_getSmartphoneUserEmployeeNumber = function(stringifiedArr, callback) {
 
     pool.getConnection(function(err, conn) {
         conn.query("SELECT IF ((SELECT COUNT(*) AS cnt FROM identity WHERE smartphone_address=? HAVING cnt > 0)"
-            + ", (SELECT employee_number FROM identity WHERE smartphone_address=?), 'undefined') AS name"
+            + ", (SELECT employee_number FROM identity WHERE smartphone_address=?), 'undefined') AS employee_number"
             , [smartphone_address, smartphone_address]
             , function(err, rows) {
                 if (err) {
@@ -897,7 +897,18 @@ var soc_getBeaconMACAddress = function(callback) {
     pool.getConnection(function(err, conn) {
         conn.query("SELECT beacon_address, id_workplace FROM beacon", function(err, rows) {
             if (err) {
-                console.error(err);
+                console.error(err);$(document).ready(function() {
+
+    $("#login-open-modal").click(function(){
+        $("#login-join-modal").modal();
+    });
+
+    $("#main-beacon-list").ready(function() {
+        
+       $("#main-beacon-list").html()
+    });
+});
+
                 conn.release();
             }
 

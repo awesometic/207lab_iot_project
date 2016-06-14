@@ -139,16 +139,17 @@ io.on("connection", function(socket) {
         pool.soc_amIRegistered(stringifiedArr, function(isRegistered) {
             if (isRegistered) {
                 pool.soc_getSmartphoneUserName(stringifiedArr, function(name) {
-                   pool.soc_getSmartphoneUserENum(stringifiedArr, function(employee_number) {
-                      socket.emit("data", {
-                          name: name,
-                          employee_number: employee_number
-                      });
-                   });
+                    pool.soc_getSmartphoneUserENum(stringifiedArr, function(employee_number) {
+                        socket.emit("data", {
+                            name: name,
+                            employee_number: employee_number
+                        });
+                        console.log("========================================");
+                    });
                 });
             } else {
                 socket.emit("data", {
-                    registered: false
+                    registered: "false"
                 });
                 console.log("========================================");
             }
