@@ -141,6 +141,7 @@ io.on("connection", function(socket) {
                 pool.soc_getSmartphoneUserName(stringifiedArr, function(name) {
                     pool.soc_getSmartphoneUserENum(stringifiedArr, function(employee_number) {
                         socket.emit("data", {
+                            registered: "true",
                             name: name,
                             employee_number: employee_number
                         });
