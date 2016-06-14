@@ -545,8 +545,16 @@ var soc_analyzeJSON = function(data) {
 
 var soc_getBeaconAddressArr = function(stringifiedArr) {
     var beaconAddressArr = new Array();
+
     for (var i = 0; i < 3; i++) {
-        beaconAddressArr.push(stringifiedArr[i].substr(21, 17));
+
+        for (var j = 0; j < stringifiedArr.length; j++) {
+            if (stringifiedArr[j].split(":")[0].indexOf("BeaconDeviceAddress" + (i + 1)) != -1) {
+                beaconAddressArr.push(stringifiedArr[j].substr(21, 17));
+                break;
+            }
+        }
+
     }
 
     return beaconAddressArr;
@@ -554,8 +562,16 @@ var soc_getBeaconAddressArr = function(stringifiedArr) {
 
 var soc_getUUIDArr = function(stringifiedArr) {
     var uuidArr = new Array();
-    for (var i = 3; i < 6; i++) {
-        uuidArr.push(stringifiedArr[i].split(":")[1].replace(/ /g, "").substr(0, 32));
+
+    for (var i = 0; i < 3; i++) {
+
+        for (var j = 0; j < stringifiedArr.length; j++) {
+            if (stringifiedArr[j].split(":")[0].indexOf("BeaconData" + (i + 1)) != -1) {
+                uuidArr.push(stringifiedArr[j].split(":")[1].replace(/ /g, "").substr(0, 32));
+                break;
+            }
+        }
+
     }
 
     return uuidArr;
@@ -563,8 +579,16 @@ var soc_getUUIDArr = function(stringifiedArr) {
 
 var soc_getMajorArr = function(stringifiedArr) {
     var majorArr = new Array();
-    for (var i = 3; i < 6; i++) {
-        majorArr.push(stringifiedArr[i].split(":")[1].replace(/ /g, "").substr(32, 4));
+
+    for (var i = 0; i < 3; i++) {
+
+        for (var j = 0; j < stringifiedArr.length; j++) {
+            if (stringifiedArr[j].split(":")[0].indexOf("BeaconData" + (i + 1)) != -1) {
+                majorArr.push(stringifiedArr[j].split(":")[1].replace(/ /g, "").substr(32, 4));
+                break;
+            }
+        }
+
     }
 
     return majorArr;
@@ -572,8 +596,16 @@ var soc_getMajorArr = function(stringifiedArr) {
 
 var soc_getMinorArr = function(stringifiedArr) {
     var minorArr = new Array();
-    for (var i = 3; i < 6; i++) {
-        minorArr.push(stringifiedArr[i].split(":")[1].replace(/ /g, "").substr(36, 4));
+
+    for (var i = 0; i < 3; i++) {
+
+        for (var j = 0; j < stringifiedArr.length; j++) {
+            if (stringifiedArr[j].split(":")[0].indexOf("BeaconData" + (i + 1)) != -1) {
+                minorArr.push(stringifiedArr[j].split(":")[1].replace(/ /g, "").substr(36, 4));
+                break;
+            }
+        }
+
     }
 
     return minorArr;
@@ -608,9 +640,25 @@ var soc_getDatetime = function(stringifiedArr) {
 var soc_getCoordinate = function(stringifiedArr) {
     var coordinateArr = new Array();
 
-    coordinateArr.push(parseInt(stringifiedArr[8].substr(12, 3)));
-    coordinateArr.push(parseInt(stringifiedArr[9].substr(12, 3)));
-    coordinateArr.push(parseInt(stringifiedArr[10].substr(12, 3)));
+
+    for (var i = 0; i < stringifiedArr.length; i++) {
+        if (stringifiedArr[i].split(":")[0].indexOf("CoordinateX") != -1) {
+            coordinateArr.push(parseInt(stringifiedArr[8].substr(12, 3)));
+            break;
+        }
+    }
+    for (var i = 0; i < stringifiedArr.length; i++) {
+        if (stringifiedArr[i].split(":")[0].indexOf("CoordinateY") != -1) {
+            coordinateArr.push(parseInt(stringifiedArr[9].substr(12, 3)));
+            break;
+        }
+    }
+    for (var i = 0; i < stringifiedArr.length; i++) {
+        if (stringifiedArr[i].split(":")[0].indexOf("CoordinateZ") != -1) {
+            coordinateArr.push(parseInt(stringifiedArr[10].substr(12, 3)));
+            break;
+        }
+    }
 
     return coordinateArr;
 };

@@ -26,6 +26,13 @@ io.on("connection", function(socket) {
         console.log(data);
         stringifiedArr = pool.soc_analyzeJSON(data);
 
+        // console.log(pool.soc_getSmartphoneAddress(stringifiedArr));
+        // console.log(pool.soc_getBeaconAddressArr(stringifiedArr));
+        // console.log(pool.soc_getUUIDArr(stringifiedArr));
+        // console.log(pool.soc_getMajorArr(stringifiedArr));
+        // console.log(pool.soc_getMinorArr(stringifiedArr));
+        // console.log(pool.soc_getDatetime(stringifiedArr));
+
         pool.soc_gatewayValidation(stringifiedArr, function(id) {
             if (id) {
                 pool.soc_smartphoneValidation(stringifiedArr, function (name) {
