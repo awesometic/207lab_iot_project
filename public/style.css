@@ -9,6 +9,7 @@
     padding: 20px 0 20px 0;
     background-color: #f1f1f1;
     height: 100%;
+    text-align: center;
 }
 
 /* Sticky Footer */
@@ -35,7 +36,6 @@ body {
 
 #container {
     padding-bottom: 1em;
-    background-color:Gray;
 }
 
 #footer {

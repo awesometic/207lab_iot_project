@@ -9,8 +9,7 @@
         <div class="panel panel-primary" style="width: 500px">
             <div class="panel-heading">Beacon List</div>
             <div class="panel-body pre-scrollable">
-                <a data-toggle="tab" href="#beacon_detail">1</a>
-                <!--여기에 db를 가져와야해요-->
+                <% include beacon/beacon_list.ejs %>
             </div>
             <div class="panel-footer"><ul class="nav nav-justified"><li><a data-toggle="tab" href="#addbeacon">추가</a></li></ul></div>
         </div>
@@ -21,8 +20,7 @@
         <div class="panel panel-primary" style="width: 500px">
             <div class="panel-heading">Workplace List</div>
             <div class="panel-body pre-scrollable">
-                <a data-toggle="tab" href="#workplace_detail">207</a>
-                <!--여기에 db를 가져와야해요-->
+                <% include workplace/workplace_list.ejs %>
             </div>
             <div class="panel-footer"><ul class="nav nav-justified"><li><a data-toggle="tab" href="#addworkplace">추가</a></li></ul></div>
         </div>
@@ -33,8 +31,7 @@
         <div class="panel panel-primary" style="width: 500px">
             <div class="panel-heading">Employee List</div>
             <div class="panel-body pre-scrollable">
-                <a data-toggle="tab" href="#employee_detail">백소영</a>
-                <!--여기에 db를 가져와야해요-->
+                <% include employee/employee_list.ejs %>
             </div>
             <div class="panel-footer"><ul class="nav nav-justified"><li><a data-toggle="tab" href="#addemployee">추가</a></li></ul></div>
         </div>
@@ -77,75 +74,13 @@
     </div>
 
     <div id="addbeacon" class="tab-pane fade">
-        <h3>비콘 추가</h3>
-        <form action="#">
-            <label for="UUID">UUID</label>
-            <input class="af" type="text" id="UUID" name="UUID">
-
-            <label for="mayor">Mayor</label>
-            <input class="af" type="text" id="mayor" name="ma">
-
-            <label for="minor">Minor</label>
-            <input class="af" type="text" id="minor" name="min">
-
-            <label for="beacon_address">Beacon_Address</label>
-            <input class="af" type="text" id="beacon_address" name="ba">
-
-            <label for="id_workplace">ID_Workplace</label>
-            <select class="af" id="id_workplace" name="iw">
-                <option value="A">A</option>
-                <option value="B">B</option>
-            </select>
-            <input class="af" type="submit" value="Submit">
-        </form>
+        <% include beacon/add_beacon.ejs %>
     </div>
     <div id="addemployee" class="tab-pane fade">
-        <h3>사용자 추가</h3>
-        <form action="#">
-            <label for="smartphone_address">Smartphone_Address</label>
-            <input  class="af" type="text" id="smartphone_address" name="sa">
-
-            <label for="employee_number">Employee_Number</label>
-            <input class="af" type="text" id="employee_number" name="en">
-
-            <label for="name">Name</label>
-            <input class="af" type="text" id="name" name="n">
-
-            <label for="password">Password</label>
-            <input class="af" type="password" id="password" name="pw">
-
-            <label for="password_check">Password_Check</label>
-            <input class="af" type="password" id="password_check" name="pwc">
-
-            <label for="department">Department</label>
-            <input class="af" type="text" id="department" name="dm">
-
-            <label for="position">Position</label>
-            <input class="af" type="text" id="position" name="ps">
-
-            <label for="permission">Permition</label>
-            <select class="af" id="permission" name="pm">
-                <option value="employee">Employee</option>
-                <option value="admin">Admin</option>
-            </select>
-
-            <input class="af" type="submit" value="Submit">
-        </form>
+        <% include employee/add_employee.ejs %>
     </div>
     <div id="addworkplace" class="tab-pane fade">
-        <h3>작업장 추가</h3>
-        <form action="#">
-            <label for="name">Name</label>
-            <input class="af" type="text" id="name" name="n">
-
-            <label for="location">Location</label>
-            <select class="af" id="location" name="lo">
-                <option value="A">A</option>
-                <option value="B">B</option>
-            </select>
-
-            <input class="af" type="submit" value="Submit">
-        </form>
+        <% include workplace/add_workplace.ejs %>
     </div>
     <div id="tptable" class="tab-pane fade">
         <h3>시간장소</h3>

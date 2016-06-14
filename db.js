@@ -89,14 +89,40 @@ var id_checkLoginPassword = function(res, employee_number, password, callback) {
     });
 };
 
+id_isAdmin = function(res, employee_number, password, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("SELECT admin FROM identity WHERE employee_number=? AND password=SHA2(?, 256)", [employee_number, password], function(err, rows) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+
+            var isAdmin = false;
+            if (rows[0].admin)
+                isAdmin = true;
+
+            if (typeof callback === "function") {
+                callback(isAdmin);
+            }
+
+            conn.release();
+        });
+    });
+};
+
 var id_loginValidation = function(res, employee_number, password, callback) {
     id_checkLoginName(res, employee_number, function(valid) {
         if (valid) {
             id_checkLoginPassword(res, employee_number, password, function(valid) {
                 if (valid) {
-                    if (typeof callback === "function") {
-                        callback(true);
-                    }
+                    id_isAdmin(res, employee_number, password, function(isAdmin) {
+                        if (typeof callback === "function") {
+                            callback(isAdmin);
+                        }
+                    });
                 }
             });
         }
@@ -838,6 +864,7 @@ module.exports = pool;
 /* index.js */
 module.exports.id_checkLoginName            = id_checkLoginName;
 module.exports.id_checkLoginPassword        = id_checkLoginPassword;
+module.exports.id_isAdmin                   = id_isAdmin;
 module.exports.id_loginValidation           = id_loginValidation;
 
 module.exports.id_getUserInfo               = id_getUserInfo;

@@ -4,14 +4,13 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand" href="main_home">207Lab</a>
+    <a class="navbar-brand" href="/">207Lab</a>
 </div>
 <div class="collapse navbar-collapse" id="myNavbar">
     <ul class="nav navbar-nav"><!--버튼 여기서 추가-->
         <li><a data-toggle="tab" href="#wp">출퇴근기록</a></li>
         <%
-        var permission = true;//db에서 받아와야하는데...띠로리..1이 관리자
-        if (permission) { %>
+        if (admin) { %>
                 <li class="dropdown"><a data-toggle="tab" href="#beacon">관리</a></li>
         <% } %>
     </ul>

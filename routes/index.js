@@ -9,15 +9,8 @@ router.get('/', function(req, res, next) {
     res.render('index', {
         title: title,
         user_id: req.session.user_id,
-        smartphone_address: req.session.smartphone_address
-    });
-});
-
-router.get("/main_home", function(req, res, next) {
-    res.render("main_home", {
-        title: title,
-        user_id: req.session.user_id,
-        smartphone_address: req.session.smartphone_address
+        smartphone_address: req.session.smartphone_address,
+        admin: req.session.admin
     });
 });
 
@@ -35,45 +28,48 @@ router.post("/", function(req, res) {
         var user_id = req.body.user_id;
         var pass = req.body.pass;
 
-        pool.id_loginValidation(res, user_id, pass, function (valid) {
-            if (valid) {
-                pool.id_getSmartphoneAddress(res, user_id, function (smartphone_number) {
-                    req.session.user_id = user_id;
-                    req.session.smartphone_address = smartphone_number;
+        pool.id_loginValidation(res, user_id, pass, function (isAdmin) {
+            pool.id_getSmartphoneAddress(res, user_id, function (smartphone_number) {
+                req.session.user_id = user_id;
+                req.session.smartphone_address = smartphone_number;
 
-                    res.send("<script> alert('Login Success!'); location.href='/main_home'; </script>");
-                });
-            }
+                if (isAdmin)
+                    req.session.admin = true;
+                else
+                    req.session.admin = false;
+
+                res.send("<script> alert('Login Success!'); location.href='/'; </script>");
+            });
         });
     } else if (typeof req.body.employee_number != 'undefined') {
-        var join_id = req.body.employee_number;
+        var smartphone_address = req.body.smartphone_address;
+        var employee_number = req.body.employee_number;
         var name = req.body.name;
-        var join_pwd = req.body.join_pwd;
-        var join_pwd2 = req.body.join_pwd2;
-        var department = '';
-        var join_pst = req.body.position;
+        var password1 = req.body.join_pwd;
+        var password2 = req.body.join_pwd2;
+        var department = req.body.department;
+        var position = req.body.position;
         var permission = req.body.permission;
         var admin = req.body.admin;
-        var smartphone_address = req.body.smartphone_address;
 
-        if (permission)
-            permission = 1;
-        else
+        if (permission == "false")
             permission = 0;
-
-        if (admin)
-            admin = 1;
         else
-            admin = 0;
+            permission = 1;
 
-        if (join_pwd != join_pwd2) {
+        if (admin == "false")
+            admin = 0;
+        else
+            admin = 1;
+
+        if (password1 != password2) {
             res.send("<script> alert('Check Retype-Password!'); history.back(); </script>");
         } else if (smartphone_address.length != 17) {
             res.send("<script> alert('Type Correct Information!'); history.back(); </script>");
         } else {
-            pool.id_checkUserRegistered(res, smartphone_address, join_id, function(valid) {
+            pool.id_checkUserRegistered(res, smartphone_address, employee_number, function(valid) {
                 if (valid) {
-                    pool.id_registerUser(res, smartphone_address, join_id, name, join_pwd, department, join_pst, permission, admin);
+                    pool.id_registerUser(res, smartphone_address, employee_number, name, password1, department, position, permission, admin);
                 } else {
                     res.send("<script> alert('Already Registered!'); history.back(); </script>");
                 }

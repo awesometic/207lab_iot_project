@@ -2,6 +2,7 @@
 <html>
 <head>
     <% include partials/head.ejs %>
+    <% if (!smartphone_address && !user_id) { %>
     <style>
         /* http://webdir.tistory.com/31 */
         #logo {
@@ -24,18 +25,42 @@
             display: inline-block;
         }
     </style>
+    <% } %>
 </head>
 <body>
 <div id="body">
+    <% if (smartphone_address && user_id) { %>
+    <div id="nav">
+        <nav class="navbar navbar-inverse" data-spy="affix" data-offset-top="197">
+            <% include partials/nav.ejs %>
+        </nav>
+    </div>
+    <div id="main" class="container-fluid">
+        <div id="wrapper-row" class="row">
+            <div id="sidenav" class="col-sm-2 sidenav">
+                <% include partials/sidenav.ejs %>
+            </div>
+            <div id="container" class="col-sm-10 col-md-offset-2 content">
+                <div id="header">
+
+                </div>
+                <div id="content">
+                    <% include partials/maindiv.ejs %>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% } else { %>
     <div id="main" class="container-fluid">
         <div id="header">
 
         </div>
         <div id="content">
             <img id="logo" src="207lab.jpg">
-            <% include partials/login_join.ejs %>
+            <% include partials/login.ejs %>
         </div>
     </div>
+    <% } %>
 </div>
 <div id="footer">
     <% include partials/footer.ejs %>
