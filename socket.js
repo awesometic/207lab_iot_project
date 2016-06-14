@@ -147,7 +147,9 @@ io.on("connection", function(socket) {
                    });
                 });
             } else {
-                socket.emit("data", isRegistered);
+                socket.emit("data", {
+                    registered: false
+                });
                 console.log("========================================");
             }
         });
