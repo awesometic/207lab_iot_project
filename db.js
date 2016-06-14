@@ -906,6 +906,30 @@ var soc_getRSSI = function(callback) {
     });
 };
 
+var soc_amIRegistered = function(stringifiedArr, callback) {
+    var datetime = soc_getDatetime(stringifiedArr);
+    var smartphone_address = soc_getSmartphoneAddress(stringifiedArr);
+    
+    pool.getConnection(function(err, conn) {
+        conn.query("SELECT COUNT(*) AS cnt FROM identity WHERE smartphone_address=?", [smartphone_address], function(err, rows) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+            
+            var isRegistered = false;
+            if (rows[0].cnt == 1)
+                isRegistered = true;
+            
+            if (typeof callback === "function") {
+                callback(isRegistered);
+            }
+
+            conn.release();
+        });
+    });
+};
+
 /* Exports */
 module.exports = pool;
 
@@ -962,3 +986,5 @@ module.exports.soc_getBeaconMACAddress      = soc_getBeaconMACAddress;
 module.exports.soc_getRSSI                  = soc_getRSSI;
 
 module.exports.soc_getCoordinate            = soc_getCoordinate;
+
+module.exports.soc_amIRegistered            = soc_amIRegistered;

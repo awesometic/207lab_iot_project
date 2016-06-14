@@ -22,7 +22,7 @@ io.on("connection", function(socket) {
      */
     socket.on("circumstance", function(data) {
         console.log("========================================");
-        console.log("-- Receive New Commute Record --");
+        console.log("-- New Commute Record --");
         console.log(data);
         stringifiedArr = pool.soc_analyzeJSON(data);
 
@@ -72,7 +72,7 @@ io.on("connection", function(socket) {
      */
     socket.on("calibration", function(data) {
         console.log("========================================");
-        console.log("-- Receive New Calibration Data --");
+        console.log("-- New Calibration Data --");
         console.log(data);
         stringifiedArr = pool.soc_analyzeJSON(data);
 
@@ -106,7 +106,7 @@ io.on("connection", function(socket) {
      */
     socket.on("requestEssentialData", function(data) {
         console.log("========================================");
-        console.log("-- Receive Request Current Each RSSI Coordinate and Beacon MAC Address --");
+        console.log("-- Request Current Each RSSI Coordinate and Beacon MAC Address --");
         console.log(data);
         stringifiedArr = pool.soc_analyzeJSON(data);
 
@@ -122,6 +122,25 @@ io.on("connection", function(socket) {
                 console.log("========================================");
             }
         });
+    });
+
+    /*
+     {
+     DateTime: '0000/00/00 00:00:00',
+     SmartphoneAddress: '12:11:11:11:11:11'
+     }
+     */
+
+    socket.on("amIRegistered", function(data) {
+        console.log("========================================");
+        console.log("-- Am I Registered? - from unknown Android Application User --");
+        console.log(data);
+        stringifiedArr = pool.soc_analyzeJSON(data);
+
+        pool.soc_amIRegistered(stringifiedArr, function(isRegistered) {
+            socket.emit("data", isRegistered);
+        });
+        console.log("========================================");
     });
 });
 
