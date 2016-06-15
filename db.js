@@ -565,7 +565,7 @@ var id_getCircumstance = function(res, date, smartphone_address, callback) {
         if (err)
             console.error(err);
 
-        conn.query("SELECT * FROM circumstance WHERE smartphone_address=? AND datetime LIKE ?", [smartphone_address, date + "%"], function(err, rows) {
+        conn.query("SELECT * FROM circumstance WHERE smartphone_address=? ORDER BY datetime DESC LIMIT 20", [smartphone_address], function(err, rows) {
             if (err) {
                 console.error(err);
                 conn.release();
