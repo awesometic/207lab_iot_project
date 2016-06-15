@@ -129,6 +129,23 @@ var id_loginValidation = function(res, employee_number, password, callback) {
     });
 };
 
+var id_getUserList = function(employee_number, admin, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+        conn.query("SELECT * FROM identity WHERE employee_number!=?", [employee_number], function(err, rows) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+
+            if (typeof callback === "function") {
+                callback(rows);
+            }
+        });
+    });
+};
+
 var id_getUserInfo = function(smartphone_address, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
@@ -219,6 +236,23 @@ var id_deleteUser = function(res, smartphone_address, employee_number, callback)
             }
             else
                 res.send("<script> alert('Delete Success!'); location.href='/'; </script>");
+        });
+    });
+};
+
+var id_getWorkplaceList = function(employee_number, admin, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+        conn.query("SELECT * FROM workplace", [employee_number], function(err, rows) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+
+            if (typeof callback === "function") {
+                callback(rows);
+            }
         });
     });
 };
@@ -340,6 +374,23 @@ var id_deleteWorkplace = function(res, name_workplace, location_workplace, callb
             }
             else
                 res.send("<script> alert('Delete Success!'); location.href='/'; </script>");
+        });
+    });
+};
+
+var id_getBeaconList = function(employee_number, admin, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+        conn.query("SELECT * FROM beacon", [employee_number], function(err, rows) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+
+            if (typeof callback === "function") {
+                callback(rows);
+            }
         });
     });
 };
@@ -975,12 +1026,14 @@ module.exports.id_checkLoginPassword        = id_checkLoginPassword;
 module.exports.id_isAdmin                   = id_isAdmin;
 module.exports.id_loginValidation           = id_loginValidation;
 
+module.exports.id_getUserList               = id_getUserList;
 module.exports.id_getUserInfo               = id_getUserInfo;
 module.exports.id_checkUserRegistered       = id_checkUserRegistered;
 module.exports.id_registerUser              = id_registerUser;
 module.exports.id_modifyUser                = id_modifyUser;
 module.exports.id_deleteUser                = id_deleteUser;
 
+module.exports.id_getWorkplaceList          = id_getWorkplaceList;
 module.exports.id_getWorkplaceInfo          = id_getWorkplaceInfo;
 module.exports.id_getWorkplaceID            = id_getWorkplaceID;
 module.exports.id_checkWorkplaceRegistered  = id_checkWorkplaceRegistered;
@@ -988,6 +1041,7 @@ module.exports.id_registerWorkplace         = id_registerWorkplace;
 module.exports.id_modifyWorkplace           = id_modifyWorkplace;
 module.exports.id_deleteWorkplace           = id_deleteWorkplace;
 
+module.exports.id_getBeaconList             = id_getBeaconList;
 module.exports.id_getBeaconInfo             = id_getBeaconInfo;
 module.exports.id_getAvailableBeacon        = id_getAvailableBeacon;
 module.exports.id_checkBeaconRegistered     = id_checkBeaconRegistered;

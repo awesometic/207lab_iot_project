@@ -6,6 +6,16 @@ var pool = require("../db");
 /* GET */
 var title = "Suwon Univ. 207 Lab - IoT Project";
 router.get('/', function(req, res, next) {
+    res.render('index', {
+        title: title,
+        page: "index",
+        user_id: req.session.user_id,
+        smartphone_address: req.session.smartphone_address,
+        admin: req.session.admin
+    });
+});
+
+router.get('/log', function(req, res, next) {
     var user_id = req.session.user_id;
     var smartphone_address = req.session.smartphone_address;
 
@@ -15,10 +25,37 @@ router.get('/', function(req, res, next) {
     pool.id_getCircumstance(res, currentDate, smartphone_address, function (rows) {
         res.render("index", {
             title: title,
+            page: "log",
             user_id: user_id,
             smartphone_address: smartphone_address,
             admin: req.session.admin,
             rows: rows
+        });
+    });
+});
+
+router.get('/management', function(req, res, next) {
+    var user_id = req.session.user_id;
+    var smartphone_address = req.session.smartphone_address;
+    var admin = req.session.admin;
+
+    var date = new Date();
+    var currentDate = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
+
+    pool.id_getUserList(user_id, admin, function(userListRows) {
+        pool.id_getWorkplaceList(user_id, admin, function(workplaceListRows) {
+           pool.id_getBeaconList(user_id, admin, function(beaconListRows) {
+               res.render("index", {
+                   title: title,
+                   page: "management",
+                   user_id: user_id,
+                   smartphone_address: smartphone_address,
+                   userlist: userListRows,
+                   workplacelist: workplaceListRows,
+                   beaconlist: beaconListRows,
+                   admin: admin
+               });
+           });
         });
     });
 });
