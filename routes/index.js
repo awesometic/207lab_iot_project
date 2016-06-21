@@ -20,7 +20,11 @@ router.get('/log', function(req, res, next) {
     var smartphone_address = req.session.smartphone_address;
 
     var date = new Date();
-    var currentDate = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
+    var currentMonth = date.getMonth() + 1;
+    var str_currentMonth;
+    if (currentMonth < 10)
+        str_currentMonth = '0' + currentMonth;
+    var currentDate = date.getFullYear() + "-" + str_currentMonth + "-" + date.getDate();
 
     pool.id_getCircumstance(res, currentDate, smartphone_address, function (rows) {
         res.render("index", {
@@ -40,7 +44,11 @@ router.get('/management', function(req, res, next) {
     var admin = req.session.admin;
 
     var date = new Date();
-    var currentDate = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
+    var currentMonth = date.getMonth() + 1;
+    var str_currentMonth;
+    if (currentMonth < 10)
+        str_currentMonth = '0' + currentMonth;
+    var currentDate = date.getFullYear() + "-" + str_currentMonth + "-" + date.getDate();
 
     pool.id_getUserList(user_id, admin, function(userListRows) {
         pool.id_getWorkplaceList(user_id, admin, function(workplaceListRows) {
