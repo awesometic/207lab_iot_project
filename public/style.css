@@ -51,6 +51,12 @@ body {
     height: 10em;
 }
 
+.row {
+    min-width: 100%;
+    /*min-hieght: calc();*/
+    /*min-height: -webkit-calc(100% - );*/
+}
+
 
 @media screen and (max-width: 1000px) {
     .sidenav {

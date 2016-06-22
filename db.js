@@ -574,7 +574,43 @@ var id_getCircumstance = function(res, date, smartphone_address, callback) {
                 conn.release();
             }
 
-            console.log(rows);
+            if (typeof callback === "function") {
+                callback(rows);
+            }
+
+            conn.release();
+        });
+    });
+};
+
+var id_getPopulationOfDepartments = function(callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        var sql = "SELECT department, COUNT(*) as count FROM identity GROUP BY department";
+
+        conn.query(sql, function(err, rows) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+
+            /*
+            var str_items = "items: [ ";
+            var departmentName;
+            for (var i = 0; i < rows.length; i++) {
+                if (rows[i].department == "")
+                    departmentName = "undefined";
+                else
+                    departmentName = rows[i].department;
+
+                str_items += "{ text: \"" + departmentName + "\", count: \"" + rows[i].count + "\" }";
+                if (i != rows.length - 1)
+                    str_items += ", ";
+            }
+            str_items += " ]";
+            */
 
             if (typeof callback === "function") {
                 callback(rows);
@@ -1056,7 +1092,7 @@ module.exports.id_getSmartphoneAddress      = id_getSmartphoneAddress;
 module.exports.id_checkAdmin                = id_checkAdmin;
 
 module.exports.id_getCircumstance           = id_getCircumstance;
-
+module.exports.id_getPopulOfDepartment      = id_getPopulationOfDepartments;
 
 /* socket.js */
 module.exports.soc_analyzeJSON              = soc_analyzeJSON;

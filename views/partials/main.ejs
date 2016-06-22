@@ -131,26 +131,28 @@
     <% } else if (page == "log") { %>
 
     <div id="tptable" class="tab-pane fade">
-        <h3>시간장소</h3>
         <div class="col-sm-5 text-left">
             <!--시간-장소 d3를 여기에-->
         </div>
     </div>
+    <div id="d3-departments-bubble-chart" class="tab-pane fade">
+        <div class="col-sm-5 text-left">
+            <% include charts/d3_departments.ejs %>
+        </div>
+    </div>
+
     <div id="pmtable" class="tab-pane fade">
-        <h3>장소이동</h3>
         <div class="col-sm-5 text-left">
             <!--장소-이동 d3를 여기에-->
         </div>
     </div>
     <div id="wptable" class="tab-pane fade">
-        <h3>요일장소</h3>
         <div class="col-sm-5 text-left">
             <!--요일-장소 d3를 여기에-->
         </div>
     </div>
 
     <div id="presentation" class="tab-pane fade">
-        <h3>출퇴근 테이블</h3>
         <div class="col-sm-5 text-left">
             <table class="table table-striped">
                 <thead>
@@ -165,7 +167,7 @@
                     <%
                     for (var i = 0; i < rows.length; i++) {
                         var row = rows[i];
-                    %>
+                    %>e
                     <tr>
                         <td>
                             <%=row.datetime %>

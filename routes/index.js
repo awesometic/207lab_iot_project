@@ -27,13 +27,16 @@ router.get('/log', function(req, res, next) {
     var currentDate = date.getFullYear() + "-" + str_currentMonth + "-" + date.getDate();
 
     pool.id_getCircumstance(res, currentDate, smartphone_address, function (rows) {
-        res.render("index", {
-            title: title,
-            page: "log",
-            user_id: user_id,
-            smartphone_address: smartphone_address,
-            admin: req.session.admin,
-            rows: rows
+        pool.id_getPopulOfDepartment(function (departItems) {
+            res.render("index", {
+                title: title,
+                page: "log",
+                user_id: user_id,
+                smartphone_address: smartphone_address,
+                admin: req.session.admin,
+                rows: rows,
+                departItems: departItems
+            });
         });
     });
 });
