@@ -5,7 +5,7 @@ I'm using on it (Any language and framework)
 * Node.js
 * Javascript
 * Bootstrap
-* D3.js (Not yet)
+* D3.js
 * Jquery
 * ejs (npm package)
 * socket.io (npm package)
