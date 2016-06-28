@@ -717,19 +717,6 @@ var soc_getSmartphoneAddress = function(stringifiedArr) {
     return value;
 };
 
-var soc_getDatetime = function(stringifiedArr) {
-    var value = "";
-
-    for (var i = 0; i < stringifiedArr.length; i++) {
-        if (stringifiedArr[i].split(":")[0].indexOf("DateTime") != -1) {
-            value = stringifiedArr[i].substr(9, 19);
-            break;
-        }
-    }
-
-    return value;
-};
-
 var soc_getCoordinate = function(stringifiedArr) {
     var coordinateArr = new Array();
 
@@ -905,9 +892,8 @@ var soc_getSmartphoneUserEmployeeNumber = function(stringifiedArr, callback) {
     });
 };
 
-var soc_registerCommute = function(stringifiedArr, id_workplace, callback) {
+var soc_registerCommute = function(stringifiedArr, id_workplace, datetime, callback) {
     var smartphoneAddress   = soc_getSmartphoneAddress(stringifiedArr);
-    var datetime            = soc_getDatetime(stringifiedArr);
 
     pool.getConnection(function(err, conn) {
         conn.query("INSERT INTO circumstance (datetime, id_workplace, smartphone_address)" +
@@ -934,9 +920,8 @@ var soc_registerCommute = function(stringifiedArr, id_workplace, callback) {
     });
 };
 
-var soc_RSSICalibration = function(stringifiedArr, id, name, callback) {
+var soc_RSSICalibration = function(stringifiedArr, id, name, datetime, callback) {
     var coordinateArr        = soc_getCoordinate(stringifiedArr);
-    var datetime            = soc_getDatetime(stringifiedArr);
 
     pool.getConnection(function(err, conn) {
         conn.query("UPDATE workplace SET coordinateX=?, coordinateY=?, coordinateZ=? WHERE id_workplace=?"
@@ -1031,8 +1016,7 @@ var soc_getRSSI = function(callback) {
     });
 };
 
-var soc_amIRegistered = function(stringifiedArr, callback) {
-    var datetime = soc_getDatetime(stringifiedArr);
+var soc_amIRegistered = function(stringifiedArr, datetime, callback) {
     var smartphone_address = soc_getSmartphoneAddress(stringifiedArr);
 
     pool.getConnection(function(err, conn) {
@@ -1101,7 +1085,6 @@ module.exports.soc_getUUIDArr               = soc_getUUIDArr;
 module.exports.soc_getMajorArr              = soc_getMajorArr;
 module.exports.soc_getMinorArr              = soc_getMinorArr;
 module.exports.soc_getSmartphoneAddress     = soc_getSmartphoneAddress;
-module.exports.soc_getDatetime              = soc_getDatetime;
 module.exports.soc_gatewayValidation        = soc_gatewayValidation;
 module.exports.soc_smartphoneValidation     = soc_smartphoneValidation;
 module.exports.soc_getWorkplaceOfBeacons    = soc_getWorkplaceOfBeacons;

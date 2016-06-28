@@ -7,6 +7,14 @@ var pool = require("./db");
 io.on("connection", function(socket) {
 
     var stringifiedArr;
+    
+    var date = new Date();
+    var currentMonth = date.getMonth() + 1;
+    var str_currentMonth;
+    if (currentMonth < 10)
+        str_currentMonth = '0' + currentMonth;
+    var currentDate = date.getFullYear() + "-" + str_currentMonth + "-" + date.getDate()
+        + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 
     /*
      {
@@ -17,7 +25,6 @@ io.on("connection", function(socket) {
      BeaconData2: '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00',
      BeaconData3: '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00',
      SmartphoneAddress: '00:00:00:00:00:00',
-     DateTime: '0000/00/00 00:00:00'
      }
      */
     socket.on("circumstance", function(data) {
@@ -37,7 +44,7 @@ io.on("connection", function(socket) {
             if (id) {
                 pool.soc_smartphoneValidation(stringifiedArr, function (name) {
                     if (name) {
-                        pool.soc_registerCommute(stringifiedArr, id, function (valid) {
+                        pool.soc_registerCommute(stringifiedArr, id, currentDate, function (valid) {
                             if (valid) {
                                 socket.emit("answer", {
                                     isSuccess: "true"
@@ -64,7 +71,6 @@ io.on("connection", function(socket) {
      BeaconData2: '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00',
      BeaconData3: '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00',
      SmartphoneAddress: '00:00:00:00:00:00',
-     DateTime: '0000/00/00 00:00:00',
      CoordinateX: '-00',
      CoordinateY: '-00',
      CoordinateZ: '-00'
@@ -80,7 +86,7 @@ io.on("connection", function(socket) {
             if (id) {
                 pool.soc_smartphoneValidation(stringifiedArr, function(name) {
                     if (name) {
-                        pool.soc_RSSICalibration(stringifiedArr, id, name, function(valid) {
+                        pool.soc_RSSICalibration(stringifiedArr, id, name, currentDate, function(valid) {
                             if (valid) {
                                 socket.emit("answer", {
                                     isSuccess: "true"
@@ -101,7 +107,6 @@ io.on("connection", function(socket) {
     /*
      {
      SmartphoneAddress: '00:00:00:00:00:00',
-     DateTime: '0000/00/00 00:00:00'
      }
      */
     socket.on("requestEssentialData", function(data) {
@@ -126,7 +131,6 @@ io.on("connection", function(socket) {
 
     /*
      {
-     DateTime: '0000/00/00 00:00:00',
      SmartphoneAddress: '12:11:11:11:11:11'
      }
      */
@@ -136,7 +140,7 @@ io.on("connection", function(socket) {
         console.log(data);
         stringifiedArr = pool.soc_analyzeJSON(data);
 
-        pool.soc_amIRegistered(stringifiedArr, function(isRegistered) {
+        pool.soc_amIRegistered(stringifiedArr, currentDate, function(isRegistered) {
             if (isRegistered) {
                 pool.soc_getSmartphoneUserName(stringifiedArr, function(name) {
                     pool.soc_getSmartphoneUserENum(stringifiedArr, function(employee_number) {
