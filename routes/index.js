@@ -2,6 +2,14 @@ var express = require('express');
 var router = express.Router();
 
 var pool = require("../db");
+var logger = require("../logger");
+
+var date = new Date();
+var currentMonth = date.getMonth() + 1;
+var str_currentMonth;
+if (currentMonth < 10)
+    str_currentMonth = '0' + currentMonth;
+var currentDate = date.getFullYear() + "-" + str_currentMonth + "-" + date.getDate();
 
 /* GET */
 var title = "Suwon Univ. 207 Lab - IoT Project";
@@ -18,13 +26,6 @@ router.get('/', function(req, res, next) {
 router.get('/log', function(req, res, next) {
     var user_id = req.session.user_id;
     var smartphone_address = req.session.smartphone_address;
-
-    var date = new Date();
-    var currentMonth = date.getMonth() + 1;
-    var str_currentMonth;
-    if (currentMonth < 10)
-        str_currentMonth = '0' + currentMonth;
-    var currentDate = date.getFullYear() + "-" + str_currentMonth + "-" + date.getDate();
 
     pool.id_getCircumstance(res, currentDate, smartphone_address, function (rows) {
         pool.id_getPopulOfDepartment(function (departItems) {
@@ -45,13 +46,6 @@ router.get('/management', function(req, res, next) {
     var user_id = req.session.user_id;
     var smartphone_address = req.session.smartphone_address;
     var admin = req.session.admin;
-
-    var date = new Date();
-    var currentMonth = date.getMonth() + 1;
-    var str_currentMonth;
-    if (currentMonth < 10)
-        str_currentMonth = '0' + currentMonth;
-    var currentDate = date.getFullYear() + "-" + str_currentMonth + "-" + date.getDate();
 
     pool.id_getUserList(user_id, admin, function(userListRows) {
         pool.id_getWorkplaceList(user_id, admin, function(workplaceListRows) {

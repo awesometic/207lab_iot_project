@@ -89,7 +89,7 @@ var id_checkLoginPassword = function(res, employee_number, password, callback) {
     });
 };
 
-id_isAdmin = function(res, employee_number, password, callback) {
+var id_isAdmin = function(res, employee_number, password, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
