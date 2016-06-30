@@ -31,7 +31,7 @@ router.get('/log', function(req, res, next) {
     var user_id = req.session.user_id;
     var smartphone_address = req.session.smartphone_address;
 
-    pool.id_getCircumstance(res, getCurrentDateTime(), smartphone_address, function (rows) {
+    pool.id_getCircumstance(getCurrentDateTime(), smartphone_address, function (rows) {
         pool.id_getPopulOfDepartment(function (departItems) {
             res.render("index", {
                 title: title,
@@ -73,7 +73,7 @@ router.get("/logout", function(req, res, next) {
     req.session.destroy(function(err) {
         if (err)
             console.error("err", err);
-        res.send("<script> alert('Logout Success!'); location.href='/';</script>");
+        res.send("<script> location.href='/';</script>");
     });
 });
 
@@ -83,18 +83,24 @@ router.post("/", function(req, res) {
         var user_id = req.body.user_id;
         var pass = req.body.pass;
 
-        pool.id_loginValidation(res, user_id, pass, function (isAdmin) {
-            pool.id_getSmartphoneAddress(res, user_id, function (smartphone_number) {
-                req.session.user_id = user_id;
-                req.session.smartphone_address = smartphone_number;
+        pool.id_loginValidation(user_id, pass, function (result) {
+            if (result == "unregistered")
+                res.send("<script> alert('Unregistered Employee!'); history.back(); </script>");
+            else if (result == "wrong password")
+                res.send("<script> alert('Check your password!'); history.back(); </script>");
+            else {
+                pool.id_getSmartphoneAddress(user_id, function (smartphone_number) {
+                    req.session.user_id = user_id;
+                    req.session.smartphone_address = smartphone_number;
 
-                if (isAdmin)
-                    req.session.admin = true;
-                else
-                    req.session.admin = false;
+                    if (result)
+                        req.session.admin = true;
+                    else
+                        req.session.admin = false;
 
-                res.send("<script> alert('Login Success!'); location.href='/'; </script>");
-            });
+                    res.send("<script> location.href='/'; </script>");
+                });
+            }
         });
     } else if (typeof req.body.employee_number != 'undefined') {
         var smartphone_address = req.body.smartphone_address;
@@ -122,9 +128,15 @@ router.post("/", function(req, res) {
         } else if (smartphone_address.length != 17) {
             res.send("<script> alert('Type Correct Information!'); history.back(); </script>");
         } else {
-            pool.id_checkUserRegistered(res, smartphone_address, employee_number, function(valid) {
+            pool.id_checkUserRegistered(smartphone_address, employee_number, function(valid) {
                 if (valid) {
-                    pool.id_registerUser(res, smartphone_address, employee_number, name, password1, department, position, permission, admin);
+                    pool.id_registerUser(smartphone_address, employee_number, name, password1, department, position, permission, admin, function(success) {
+                        if (success) {
+                            res.send("<script> alert('Register Success!'); history.back(); </script>");
+                        } else {
+                            res.send("<script> alert('Register Fail!'); history.back(); </script>");
+                        }
+                    });
                 } else {
                     res.send("<script> alert('Already Registered!'); history.back(); </script>");
                 }

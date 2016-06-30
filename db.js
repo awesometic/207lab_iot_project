@@ -30,10 +30,12 @@ var pool = mysql.createPool({
 // powerful functions for working with asynchronous JavaScript
 var async = require("async");
 
+var logger = require("./logger");
+
 /* Functions */
 /*!!! Need to move all of the res.send() or console.log out of here !!!*/
 /* index.js */
-var id_checkLoginName = function(res, employee_number, callback) {
+var id_checkLoginName = function(employee_number, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -49,8 +51,6 @@ var id_checkLoginName = function(res, employee_number, callback) {
 
             if (cnt == 1)
                 valid = true;
-            else
-                res.send("<script> alert('Unregistered Employee!'); history.back(); </script>");
 
             if (typeof callback === "function") {
                 callback(valid);
@@ -61,7 +61,7 @@ var id_checkLoginName = function(res, employee_number, callback) {
     });
 };
 
-var id_checkLoginPassword = function(res, employee_number, password, callback) {
+var id_checkLoginPassword = function(employee_number, password, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -77,8 +77,6 @@ var id_checkLoginPassword = function(res, employee_number, password, callback) {
 
             if (cnt == 1)
                 valid = true;
-            else
-                res.send("<script> alert('Check your password!'); history.back(); </script>");
 
             if (typeof callback === "function") {
                 callback(valid);
@@ -89,7 +87,7 @@ var id_checkLoginPassword = function(res, employee_number, password, callback) {
     });
 };
 
-var id_isAdmin = function(res, employee_number, password, callback) {
+var id_isAdmin = function(employee_number, password, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -113,18 +111,26 @@ var id_isAdmin = function(res, employee_number, password, callback) {
     });
 };
 
-var id_loginValidation = function(res, employee_number, password, callback) {
-    id_checkLoginName(res, employee_number, function(valid) {
+var id_loginValidation = function(employee_number, password, callback) {
+    id_checkLoginName(employee_number, function(valid) {
         if (valid) {
-            id_checkLoginPassword(res, employee_number, password, function(valid) {
+            id_checkLoginPassword(employee_number, password, function(valid) {
                 if (valid) {
-                    id_isAdmin(res, employee_number, password, function(isAdmin) {
+                    id_isAdmin(employee_number, password, function(isAdmin) {
                         if (typeof callback === "function") {
                             callback(isAdmin);
                         }
                     });
+                } else {
+                    if (typeof callback === "function") {
+                        callback("wrong password");
+                    }
                 }
             });
+        } else {
+            if (typeof callback === "function") {
+                callback("unregistered");
+            }
         }
     });
 };
@@ -163,7 +169,7 @@ var id_getUserInfo = function(smartphone_address, callback) {
     });
 };
 
-var id_checkUserRegistered = function(res, smartphone_address, employee_number, callback) {
+var id_checkUserRegistered = function(smartphone_address, employee_number, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -189,7 +195,7 @@ var id_checkUserRegistered = function(res, smartphone_address, employee_number, 
     });
 };
 
-var id_registerUser = function(res, smartphone_address, employee_number, name, password, department, position, permission, admin) {
+var id_registerUser = function(smartphone_address, employee_number, name, password, department, position, permission, admin, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -200,15 +206,17 @@ var id_registerUser = function(res, smartphone_address, employee_number, name, p
                 console.error(err);
                 conn.release();
             }
-            else
-                res.send("<script> alert('Register Success!'); location.href='/'; </script>");
+            
+            if (typeof callback === "function") {
+                callback(true);
+            }
 
             conn.release();
         });
     });
 };
 
-var id_modifyUser = function(res, smartphone_address, employee_number, modify_name, modify_password, modify_department, modify_position, modify_admin, callback) {
+var id_modifyUser = function(smartphone_address, employee_number, modify_name, modify_password, modify_department, modify_position, modify_admin, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -218,13 +226,17 @@ var id_modifyUser = function(res, smartphone_address, employee_number, modify_na
                 console.error(err);
                 conn.release();
             }
-            else
-                res.send("<script> alert('Modify Success!'); location.href='/'; </script>");
+            
+            if (typeof callback === "function") {
+                callback(true);
+            }
+
+            conn.release();
         });
     });
 };
 
-var id_deleteUser = function(res, smartphone_address, employee_number, callback) {
+var id_deleteUser = function(smartphone_address, employee_number, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -234,8 +246,12 @@ var id_deleteUser = function(res, smartphone_address, employee_number, callback)
                 console.error(err);
                 conn.release();
             }
-            else
-                res.send("<script> alert('Delete Success!'); location.href='/'; </script>");
+
+            if (typeof callback === "function") {
+                callback(true);
+            }
+
+            conn.release();
         });
     });
 };
@@ -325,7 +341,7 @@ var id_checkWorkplaceRegistered = function(name_workplace, location_workplace, c
     });
 };
 
-var id_registerWorkplace = function(res, name_workplace, location_workplace) {
+var id_registerWorkplace = function(name_workplace, location_workplace, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -336,15 +352,17 @@ var id_registerWorkplace = function(res, name_workplace, location_workplace) {
                 console.error(err);
                 conn.release();
             }
-            else
-                res.send("<script> alert('Register Success!'); history.back(); </script>");
+
+            if (typeof callback === "function") {
+                callback(true);
+            }
 
             conn.release();
         });
     });
 };
 
-var id_modifyWorkplace = function(res, name_workplace, location_workplace, modify_name_workplace, modify_location_workplace, callback) {
+var id_modifyWorkplace = function(name_workplace, location_workplace, modify_name_workplace, modify_location_workplace, callback) {
     id_getWorkplaceID(name_workplace, location_workplace, function(id_workplace) {
         pool.getConnection(function(err, conn) {
             if (err)
@@ -355,14 +373,18 @@ var id_modifyWorkplace = function(res, name_workplace, location_workplace, modif
                     console.error(err);
                     conn.release();
                 }
-                else
-                    res.send("<script> alert('Modify Success!'); location.href='/'; </script>");
+
+                if (typeof callback === "function") {
+                    callback(true);
+                }
+
+                conn.release();
             });
         });
     });
 };
 
-var id_deleteWorkplace = function(res, name_workplace, location_workplace, callback) {
+var id_deleteWorkplace = function(name_workplace, location_workplace, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -372,8 +394,12 @@ var id_deleteWorkplace = function(res, name_workplace, location_workplace, callb
                 console.error(err);
                 conn.release();
             }
-            else
-                res.send("<script> alert('Delete Success!'); location.href='/'; </script>");
+
+            if (typeof callback === "function") {
+                callback(true);
+            }
+
+            conn.release();
         });
     });
 };
@@ -412,7 +438,7 @@ var id_getBeaconInfo = function(beacon_address, callback) {
     });
 };
 
-var id_getAvailableBeacon = function(res, callback) {
+var id_getAvailableBeacon = function(callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -463,7 +489,7 @@ var id_checkBeaconRegistered = function(beacon_address, callback) {
     });
 };
 
-var id_registerBeacon = function(res, uuid, major, minor, beacon_address) {
+var id_registerBeacon = function(uuid, major, minor, beacon_address, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -474,15 +500,17 @@ var id_registerBeacon = function(res, uuid, major, minor, beacon_address) {
                 console.error(err);
                 conn.release();
             }
-            else
-                res.send("<script> alert('Register Success!'); history.back(); </script>");
+
+            if (typeof callback === "function") {
+                callback(true);
+            }
 
             conn.release();
         });
     });
 };
 
-var id_modifyBeacon = function(res, beacon_address, modify_uuid, modify_major, modify_minor, callback) {
+var id_modifyBeacon = function(beacon_address, modify_uuid, modify_major, modify_minor, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -492,13 +520,17 @@ var id_modifyBeacon = function(res, beacon_address, modify_uuid, modify_major, m
                 console.error(err);
                 conn.release();
             }
-            else
-                res.send("<script> alert('Modify Success!'); location.href='/'; </script>");
+
+            if (typeof callback === "function") {
+                callback(true);
+            }
+
+            conn.release();
         });
     });
 };
 
-var id_deleteBeacon = function(res, uuid, major, minor, beacon_address, callback) {
+var id_deleteBeacon = function(uuid, major, minor, beacon_address, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -508,13 +540,17 @@ var id_deleteBeacon = function(res, uuid, major, minor, beacon_address, callback
                 console.error(err);
                 conn.release();
             }
-            else
-                res.send("<script> alert('Delete Success!'); location.href='/'; </script>");
+
+            if (typeof callback === "function") {
+                callback(true);
+            }
+
+            conn.release();
         });
     });
 };
 
-var id_getSmartphoneAddress = function(res, employee_number, callback) {
+var id_getSmartphoneAddress = function(employee_number, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -536,7 +572,7 @@ var id_getSmartphoneAddress = function(res, employee_number, callback) {
     });
 };
 
-var id_checkAdmin = function(res, employee_number, smartphone_address, callback) {
+var id_checkAdmin = function(employee_number, smartphone_address, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -560,7 +596,7 @@ var id_checkAdmin = function(res, employee_number, smartphone_address, callback)
     });
 };
 
-var id_getCircumstance = function(res, date, smartphone_address, callback) {
+var id_getCircumstance = function(date, smartphone_address, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -595,23 +631,7 @@ var id_getPopulationOfDepartments = function(callback) {
                 console.error(err);
                 conn.release();
             }
-
-            /*
-            var str_items = "items: [ ";
-            var departmentName;
-            for (var i = 0; i < rows.length; i++) {
-                if (rows[i].department == "")
-                    departmentName = "undefined";
-                else
-                    departmentName = rows[i].department;
-
-                str_items += "{ text: \"" + departmentName + "\", count: \"" + rows[i].count + "\" }";
-                if (i != rows.length - 1)
-                    str_items += ", ";
-            }
-            str_items += " ]";
-            */
-
+            
             if (typeof callback === "function") {
                 callback(rows);
             }
@@ -959,8 +979,6 @@ var soc_getEssentialData = function(callback) {
                 console.error(err);
                 conn.release();
             }
-
-            console.log(rows);
 
             if (typeof callback === "function") {
                 callback(rows);
