@@ -9,6 +9,7 @@ I'm using on it (Any language and framework)
 * Jquery
 * ejs (npm package)
 * socket.io (npm package)
+* winston (npm package)
 * MySQL
 
 
