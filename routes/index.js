@@ -4,12 +4,16 @@ var router = express.Router();
 var pool = require("../db");
 var logger = require("../logger");
 
-var date = new Date();
-var currentMonth = date.getMonth() + 1;
-var str_currentMonth;
-if (currentMonth < 10)
-    str_currentMonth = '0' + currentMonth;
-var currentDate = date.getFullYear() + "-" + str_currentMonth + "-" + date.getDate();
+var getCurrentDateTime = function() {
+    var date = new Date();
+    var currentMonth = date.getMonth() + 1;
+    var str_currentMonth;
+    if (currentMonth < 10)
+        str_currentMonth = '0' + currentMonth;
+
+    return date.getFullYear() + "-" + str_currentMonth + "-" + date.getDate()
+        + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+};
 
 /* GET */
 var title = "Suwon Univ. 207 Lab - IoT Project";
@@ -27,7 +31,7 @@ router.get('/log', function(req, res, next) {
     var user_id = req.session.user_id;
     var smartphone_address = req.session.smartphone_address;
 
-    pool.id_getCircumstance(res, currentDate, smartphone_address, function (rows) {
+    pool.id_getCircumstance(res, getCurrentDateTime(), smartphone_address, function (rows) {
         pool.id_getPopulOfDepartment(function (departItems) {
             res.render("index", {
                 title: title,
