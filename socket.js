@@ -3,6 +3,7 @@ var port = process.env.PORT || 2070;
 var io = require("socket.io").listen(port);
 
 var pool = require("./db");
+var logger = require("./logger");
 
 io.on("connection", function(socket) {
 
@@ -31,17 +32,7 @@ io.on("connection", function(socket) {
      }
      */
     socket.on("circumstance", function(data) {
-        console.log("========================================");
-        console.log("-- New Commute Record --");
-        console.log(data);
         stringifiedArr = pool.soc_analyzeJSON(data);
-
-        // console.log(pool.soc_getSmartphoneAddress(stringifiedArr));
-        // console.log(pool.soc_getBeaconAddressArr(stringifiedArr));
-        // console.log(pool.soc_getUUIDArr(stringifiedArr));
-        // console.log(pool.soc_getMajorArr(stringifiedArr));
-        // console.log(pool.soc_getMinorArr(stringifiedArr));
-        // console.log(pool.soc_getDatetime(stringifiedArr));
 
         pool.soc_gatewayValidation(stringifiedArr, function(id) {
             if (id) {
@@ -52,15 +43,17 @@ io.on("connection", function(socket) {
                                 socket.emit("answer", {
                                     isSuccess: "true"
                                 });
+
+                                logger("socket").info("Circumstance", "New commute record: \n" + stringifiedArr + "\n\tRegister success");
                             }
-                            console.log("========================================");
+                            logger("socket").info("Circumstance", "New commute record: \n" + stringifiedArr + "\n\tRegister fail: Database connection problem");
                         });
                     } else {
-                        console.log("========================================");
+                        logger("socket").info("Circumstance", "New commute record: \n" + stringifiedArr + "\n\tRegister fail: Unverified smartphone");
                     }
                 });
             } else {
-                console.log("========================================");
+                logger("socket").info("Circumstance", "New commute record: \n" + stringifiedArr + "\n\tRegister fail: Unverified gateway");
             }
         });
     });
@@ -80,9 +73,6 @@ io.on("connection", function(socket) {
      }
      */
     socket.on("calibration", function(data) {
-        console.log("========================================");
-        console.log("-- New Calibration Data --");
-        console.log(data);
         stringifiedArr = pool.soc_analyzeJSON(data);
 
         pool.soc_gatewayValidation(stringifiedArr, function(id) {
@@ -94,15 +84,17 @@ io.on("connection", function(socket) {
                                 socket.emit("answer", {
                                     isSuccess: "true"
                                 });
+
+                                logger("socket").info("Calibration", "New calibration data: \n" + stringifiedArr + "\n\tRegister success");
                             }
-                            console.log("========================================");
+                            logger("socket").info("Calibration", "New calibration data: \n" + stringifiedArr + "\n\tRegister fail: Database connection problem");
                         });
                     } else {
-                        console.log("========================================");
+                        logger("socket").info("Calibration", "New calibration data: \n" + stringifiedArr + "\n\tRegister fail: Unverified smartphone");
                     }
                 });
             } else {
-                console.log("========================================");
+                logger("socket").info("Calibration", "New calibration data: \n" + stringifiedArr + "\n\tRegister fail: Unverified gateway");
             }
         });
     });
@@ -113,9 +105,6 @@ io.on("connection", function(socket) {
      }
      */
     socket.on("requestEssentialData", function(data) {
-        console.log("========================================");
-        console.log("-- Request Current Each RSSI Coordinate and Beacon MAC Address --");
-        console.log(data);
         stringifiedArr = pool.soc_analyzeJSON(data);
 
         pool.soc_smartphoneValidation(stringifiedArr, function(name) {
@@ -124,10 +113,11 @@ io.on("connection", function(socket) {
                     if (data) {
                         socket.emit("data", data);
                     }
-                    console.log("========================================");
+
+                    logger("socket").info("RequestData", "Request from user: \n" + stringifiedArr + "\n\tSend success");
                 });
             } else {
-                console.log("========================================");
+                logger("socket").info("RequestData", "Request from user: \n" + stringifiedArr + "\n\tSend fail: Unverified smartphone");
             }
         });
     });
@@ -138,9 +128,6 @@ io.on("connection", function(socket) {
      }
      */
     socket.on("amIRegistered", function(data) {
-        console.log("========================================");
-        console.log("-- Am I Registered? - from unknown Android Application User --");
-        console.log(data);
         stringifiedArr = pool.soc_analyzeJSON(data);
 
         pool.soc_amIRegistered(stringifiedArr, getCurrentDateTime(), function(isRegistered) {
@@ -152,14 +139,14 @@ io.on("connection", function(socket) {
                             name: name,
                             employee_number: employee_number
                         });
-                        console.log("========================================");
+                        logger("socket").info("AutoLoginData", "Whether user registered or not: \n" + stringifiedArr + "\n\tSend: " + name + ", " + employee_number);
                     });
                 });
             } else {
                 socket.emit("data", {
                     registered: "false"
                 });
-                console.log("========================================");
+                logger("socket").info("AutoLoginData", "Whether user registered or not: \n" + stringifiedArr + "\n\tSend: Not registered");
             }
         });
     });

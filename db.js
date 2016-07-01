@@ -33,9 +33,9 @@ var async = require("async");
 var logger = require("./logger");
 
 /* Functions */
-/*!!! Need to move all of the res.send() or console.log out of here !!!*/
 /* index.js */
 var id_checkLoginName = function(employee_number, callback) {
+    logger().info("test", "content");
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -770,16 +770,11 @@ var soc_gatewayValidation = function(stringifiedArr, callback) {
 
     soc_getWorkplaceOfBeacons(beaconAddressArr, uuidArr, majorArr, minorArr, function(id) {
         soc_getWorkplaceName(id, function(name_workplace) {
-
             if (name_workplace != "undefined") {
-                console.log("Verified Gateway: " + name_workplace);
-
                 if (typeof callback === "function") {
                     callback(id);
                 }
             } else {
-                console.log("Unverified Gateway");
-
                 if (typeof callback === "function") {
                     callback(false);
                 }
@@ -853,13 +848,11 @@ var soc_smartphoneValidation = function(stringifiedArr, callback) {
     soc_getSmartphoneUserName(stringifiedArr, function(name) {
 
         if (name != "undefined") {
-            console.log("Verified Smartphone: " + name);
 
             if (typeof callback === "function") {
                 callback(name);
             }
         } else {
-            console.log("Unverified Smartphone");
 
             if (typeof callback === "function") {
                 callback(false);
@@ -928,7 +921,6 @@ var soc_registerCommute = function(stringifiedArr, id_workplace, datetime, callb
                 conn.release();
 
             } else {
-                console.log("\"" + datetime + "\" / \"" + id_workplace + "\" / \"" + smartphoneAddress + "\": Registered");
 
                 if (typeof callback === "function") {
                     callback(true);
@@ -956,7 +948,6 @@ var soc_RSSICalibration = function(stringifiedArr, id, name, datetime, callback)
                     conn.release();
 
                 } else {
-                    console.log(datetime + "\t" + "Coordinate updated at " + id + " workplace, by " + name);
 
                     if (typeof callback === "function") {
                         callback(true);
@@ -1048,7 +1039,6 @@ var soc_amIRegistered = function(stringifiedArr, datetime, callback) {
             if (rows[0].cnt == 1)
                 isRegistered = true;
 
-            console.log(datetime + "\tIs \"" + smartphone_address + "\" registered? " + isRegistered);
             if (typeof callback === "function") {
                 callback(isRegistered);
             }
