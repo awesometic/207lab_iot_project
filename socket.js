@@ -151,12 +151,33 @@ io.on("connection", function(socket) {
         });
     });
 
+    /*
+     {
+     SmartphoneAddress: '12:11:11:11:11:11',
+     Signal: 'SOMETHING'
+     }
+     */
     socket.on("requestChartData", function(data) {
         stringifiedArr = pool.soc_analyzeJSON(data);
+        var signal = pool.soc_getSignal(stringifiedArr);
 
-        pool.chart_getPopulOfDepartment(function(data) {
-           socket.emit("data", data);
-        });
+        switch (signal) {
+            case "POPULATION":
+                pool.soc_smartphoneValidation(stringifiedArr, function (name) {
+                    if (name != undefined) {
+                        pool.chart_getPopulOfDepartment(function (chartData) {
+                            socket.emit("data", chartData);
+                        });
+                    } else {
+                        socket.emit("data", {
+                            registered: "false"
+                        });
+                    }
+                });
+                break;
+            default:
+                break;
+        }
     });
 });
 

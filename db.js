@@ -739,6 +739,19 @@ var soc_getCoordinate = function(stringifiedArr) {
     return coordinateArr;
 };
 
+var soc_getSignal = function(stringifiedArr) {
+    var signal;
+
+    for (var i = 0; i < stringifiedArr.length; i++) {
+        if (stringifiedArr[i].split(":")[0].indexOf("Signal") != -1) {
+            signal = stringifiedArr[i].split(":")[1].trim();
+            break;
+        }
+    }
+
+    return signal;
+};
+
 var soc_gatewayValidation = function(stringifiedArr, callback) {
     var beaconAddressArr    = soc_getBeaconAddressArr(stringifiedArr);
     var uuidArr             = soc_getUUIDArr(stringifiedArr);
@@ -1093,6 +1106,7 @@ module.exports.soc_getUUIDArr               = soc_getUUIDArr;
 module.exports.soc_getMajorArr              = soc_getMajorArr;
 module.exports.soc_getMinorArr              = soc_getMinorArr;
 module.exports.soc_getSmartphoneAddress     = soc_getSmartphoneAddress;
+module.exports.soc_getSignal                = soc_getSignal;
 module.exports.soc_gatewayValidation        = soc_gatewayValidation;
 module.exports.soc_smartphoneValidation     = soc_smartphoneValidation;
 module.exports.soc_getWorkplaceOfBeacons    = soc_getWorkplaceOfBeacons;
