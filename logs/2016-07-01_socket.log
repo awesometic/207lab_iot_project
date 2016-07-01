@@ -1,0 +1,3 @@
+2016-07-01 17:50:48 - info: Circumstance New commute record: 
+BeaconDeviceAddress1:00:00:00:00:00:00,BeaconDeviceAddress2:00:00:00:00:00:00,BeaconDeviceAddress3:00:00:00:00:00:00,BeaconData1:00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00,BeaconData2:00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00,BeaconData3:00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00,SmartphoneAddress:00:00:00:00:00:00
+	Register fail: Unverified gateway
