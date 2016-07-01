@@ -35,7 +35,6 @@ var logger = require("./logger");
 /* Functions */
 /* index.js */
 var id_checkLoginName = function(employee_number, callback) {
-    logger().info("test", "content");
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);

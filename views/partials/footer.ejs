@@ -1,6 +1,9 @@
 <div class="text-center">
-    <p>207 Lab</p>
-    <% if (admin) { %>
-    <p> 관리자 계정으로 접속하셨습니다. </p>
-    <% } %>
+    <p>
+        207 Lab<br>
+        현재 IP 주소: <script type="text/javascript">document.write(ip());</script><br>
+        <% if (admin) { %>
+        <strong>관리자 계정으로 접속하셨습니다.</strong>
+        <% } %>
+    </p>
 </div>
