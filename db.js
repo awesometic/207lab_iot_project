@@ -618,28 +618,6 @@ var id_getCircumstance = function(date, smartphone_address, callback) {
     });
 };
 
-var id_getPopulationOfDepartments = function(callback) {
-    pool.getConnection(function(err, conn) {
-        if (err)
-            console.error(err);
-
-        var sql = "SELECT department, COUNT(*) as count FROM identity GROUP BY department";
-
-        conn.query(sql, function(err, rows) {
-            if (err) {
-                console.error(err);
-                conn.release();
-            }
-            
-            if (typeof callback === "function") {
-                callback(rows);
-            }
-
-            conn.release();
-        });
-    });
-};
-
 /* socket.js */
 var soc_analyzeJSON = function(data) {
 
@@ -1047,6 +1025,30 @@ var soc_amIRegistered = function(stringifiedArr, datetime, callback) {
     });
 };
 
+/* Chart */
+var chart_getPopulationOfDepartments = function(callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        var sql = "SELECT department, COUNT(*) as count FROM identity GROUP BY department";
+
+        conn.query(sql, function(err, rows) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+
+            if (typeof callback === "function") {
+                callback(rows);
+            }
+
+            conn.release();
+        });
+    });
+};
+
+
 /* Exports */
 module.exports = pool;
 
@@ -1083,7 +1085,6 @@ module.exports.id_getSmartphoneAddress      = id_getSmartphoneAddress;
 module.exports.id_checkAdmin                = id_checkAdmin;
 
 module.exports.id_getCircumstance           = id_getCircumstance;
-module.exports.id_getPopulOfDepartment      = id_getPopulationOfDepartments;
 
 /* socket.js */
 module.exports.soc_analyzeJSON              = soc_analyzeJSON;
@@ -1104,7 +1105,9 @@ module.exports.soc_RSSICalibration          = soc_RSSICalibration;
 module.exports.soc_getEssentialData         = soc_getEssentialData;
 module.exports.soc_getBeaconMACAddress      = soc_getBeaconMACAddress;
 module.exports.soc_getRSSI                  = soc_getRSSI;
-
 module.exports.soc_getCoordinate            = soc_getCoordinate;
 
 module.exports.soc_amIRegistered            = soc_amIRegistered;
+
+/* Chart */
+module.exports.chart_getPopulOfDepartment   = chart_getPopulationOfDepartments;

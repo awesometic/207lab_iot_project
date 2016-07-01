@@ -32,7 +32,7 @@ router.get('/log', function(req, res, next) {
     var smartphone_address = req.session.smartphone_address;
 
     pool.id_getCircumstance(getCurrentDateTime(), smartphone_address, function (rows) {
-        pool.id_getPopulOfDepartment(function (departItems) {
+        pool.chart_getPopulOfDepartment(function (departItems) {
             res.render("index", {
                 title: title,
                 page: "log",

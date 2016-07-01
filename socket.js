@@ -150,6 +150,14 @@ io.on("connection", function(socket) {
             }
         });
     });
+
+    socket.on("requestChartData", function(data) {
+        stringifiedArr = pool.soc_analyzeJSON(data);
+
+        pool.chart_getPopulOfDepartment(function(data) {
+           socket.emit("data", data);
+        });
+    });
 });
 
 module.exports = io;
