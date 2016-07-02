@@ -129,22 +129,26 @@ io.on("connection", function(socket) {
      */
     socket.on("amIRegistered", function(data) {
         stringifiedArr = pool.soc_analyzeJSON(data);
+        var smartphone_address = pool.soc_getSmartphoneAddress(stringifiedArr);
 
-        pool.soc_amIRegistered(stringifiedArr, getCurrentDateTime(), function(isRegistered) {
+        pool.soc_amIRegistered(smartphone_address, getCurrentDateTime(), function(isRegistered) {
             if (isRegistered) {
-                pool.soc_getSmartphoneUserName(stringifiedArr, function(name) {
+                pool.soc_getSmartphoneUserName(stringifiedArr, function(employee_name) {
                     pool.soc_getSmartphoneUserENum(stringifiedArr, function(employee_number) {
-                        socket.emit("data", {
-                            registered: "true",
-                            name: name,
-                            employee_number: employee_number
+                        pool.id_isPermitted(smartphone_address, employee_number, function(permitted) {
+                            socket.emit("data", {
+                                registered: true,
+                                permitted: permitted,
+                                name: employee_name,
+                                employee_number: employee_number
+                            });
+                            logger("socket").info("AutoLoginData", "Whether user registered or not: \n" + stringifiedArr + "\n\tSend: " + employee_name + ", " + employee_number); 
                         });
-                        logger("socket").info("AutoLoginData", "Whether user registered or not: \n" + stringifiedArr + "\n\tSend: " + name + ", " + employee_number);
                     });
                 });
             } else {
                 socket.emit("data", {
-                    registered: "false"
+                    registered: false
                 });
                 logger("socket").info("AutoLoginData", "Whether user registered or not: \n" + stringifiedArr + "\n\tSend: Not registered");
             }

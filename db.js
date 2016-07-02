@@ -110,6 +110,30 @@ var id_isAdmin = function(employee_number, password, callback) {
     });
 };
 
+var id_isPermitted = function(smartphone_address, employee_number, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("SELECT admin FROM identity WHERE smartphone_address=? AND employee_number=?", [smartphone_address, employee_number], function(err, rows) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+
+            var isPermitted = false;
+            if (rows[0].permission)
+                isPermitted = true;
+
+            if (typeof callback === "function") {
+                callback(isPermitted);
+            }
+
+            conn.release();
+        });
+    });
+};
+
 var id_loginValidation = function(employee_number, password, callback) {
     id_checkLoginName(employee_number, function(valid) {
         if (valid) {
@@ -1015,9 +1039,7 @@ var soc_getRSSI = function(callback) {
     });
 };
 
-var soc_amIRegistered = function(stringifiedArr, datetime, callback) {
-    var smartphone_address = soc_getSmartphoneAddress(stringifiedArr);
-
+var soc_amIRegistered = function(smartphone_address, datetime, callback) {
     pool.getConnection(function(err, conn) {
         conn.query("SELECT COUNT(*) AS cnt FROM identity WHERE smartphone_address=?", [smartphone_address], function(err, rows) {
             if (err) {
@@ -1069,6 +1091,7 @@ module.exports = pool;
 module.exports.id_checkLoginName            = id_checkLoginName;
 module.exports.id_checkLoginPassword        = id_checkLoginPassword;
 module.exports.id_isAdmin                   = id_isAdmin;
+module.exports.id_isPermitted               = id_isPermitted;
 module.exports.id_loginValidation           = id_loginValidation;
 
 module.exports.id_getUserList               = id_getUserList;
