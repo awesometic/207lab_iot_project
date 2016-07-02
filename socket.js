@@ -142,7 +142,7 @@ io.on("connection", function(socket) {
                                 name: employee_name,
                                 employee_number: employee_number
                             });
-                            logger("socket").info("AutoLoginData", "Whether user registered or not: \n" + stringifiedArr + "\n\tSend: " + employee_name + ", " + employee_number); 
+                            logger("socket").info("AutoLoginData", "Whether user registered or not: \n" + stringifiedArr + "\n\tSend: " + employee_name + ", " + employee_number);
                         });
                     });
                 });
@@ -152,6 +152,44 @@ io.on("connection", function(socket) {
                 });
                 logger("socket").info("AutoLoginData", "Whether user registered or not: \n" + stringifiedArr + "\n\tSend: Not registered");
             }
+        });
+    });
+
+    /*
+    {
+    SmartphoneAddress: '00:00:00:00:00:00',
+    EmployeeNumber: '00000000',
+    Name: 'NAME',
+    Password: 'PASSWORD',
+    Department: 'DEPARTMENT',
+    Position: 'POSITION',
+    Permission: 0,
+    Admin: 0
+    }
+     */
+    socket.on("signupRequest", function(data) {
+        stringifiedArr = pool.soc_analyzeJSON(data);
+        var smartphone_address = pool.soc_getSmartphoneAddress(stringifiedArr);
+        var employee_number = pool.soc_getEmployeeNumber(stringifiedArr);
+        var name = pool.soc_getName(stringifiedArr);
+        var password = pool.soc_getPassword(stringifiedArr);
+        var department = pool.soc_getDepartment(stringifiedArr);
+        var position = pool.soc_getPosition(stringifiedArr);
+        var permission = pool.soc_getPermission(stringifiedArr);
+        var admin = pool.soc_getAdmin(stringifiedArr);
+
+        pool.id_registerUser(smartphone_address, employee_number, name, password, department, position, permission, admin, function(success) {
+           if (success) {
+               socket.emit("answer", {
+                  requestSuccess: true
+               });
+               logger("socket").info("signupRequest", "New sign-up request: \n" + smartphone_address + "\t" + employee_number + "\t" + name + "\n\tRegister Success");
+           } else {
+               socket.emit("answer", {
+                   requestSuccess: false
+               });
+               logger("socket").info("signupRequest", "New sign-up request: \n" + smartphone_address + "\t" + employee_number + "\t" + name + "\n\tRegister Fail");
+           }
         });
     });
 

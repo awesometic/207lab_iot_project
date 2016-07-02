@@ -776,6 +776,97 @@ var soc_getSignal = function(stringifiedArr) {
     return signal;
 };
 
+var soc_getEmployeeNumber = function(stringifiedArr) {
+    var employee_number;
+
+    for (var i = 0; i < stringifiedArr.length; i++) {
+        if (stringifiedArr[i].split(":")[0].indexOf("EmployeeNumber") != -1) {
+            employee_number = stringifiedArr[i].split(":")[1].trim();
+            break;
+        }
+    }
+
+    return employee_number;
+};
+
+var soc_getName = function(stringifiedArr) {
+    var name;
+
+    for (var i = 0; i < stringifiedArr.length; i++) {
+        if (stringifiedArr[i].split(":")[0].indexOf("Name") != -1) {
+            name = stringifiedArr[i].split(":")[1].trim();
+            break;
+        }
+    }
+
+    return name;
+};
+
+var soc_getPassword = function(stringifiedArr) {
+    var password;
+
+    for (var i = 0; i < stringifiedArr.length; i++) {
+        if (stringifiedArr[i].split(":")[0].indexOf("Password") != -1) {
+            password = stringifiedArr[i].split(":")[1].trim();
+            break;
+        }
+    }
+
+    return password;
+};
+
+var soc_getDepartment = function(stringifiedArr) {
+    var department;
+
+    for (var i = 0; i < stringifiedArr.length; i++) {
+        if (stringifiedArr[i].split(":")[0].indexOf("Department") != -1) {
+            department = stringifiedArr[i].split(":")[1].trim();
+            break;
+        }
+    }
+
+    return department;
+};
+
+var soc_getPosition = function(stringifiedArr) {
+    var position;
+
+    for (var i = 0; i < stringifiedArr.length; i++) {
+        if (stringifiedArr[i].split(":")[0].indexOf("Position") != -1) {
+            position = stringifiedArr[i].split(":")[1].trim();
+            break;
+        }
+    }
+
+    return position;
+};
+
+var soc_getPermission = function(stringifiedArr) {
+    var permission;
+
+    for (var i = 0; i < stringifiedArr.length; i++) {
+        if (stringifiedArr[i].split(":")[0].indexOf("Permission") != -1) {
+            permission = stringifiedArr[i].split(":")[1].trim();
+            break;
+        }
+    }
+
+    return permission;
+};
+
+var soc_getAdmin = function(stringifiedArr) {
+    var admin;
+
+    for (var i = 0; i < stringifiedArr.length; i++) {
+        if (stringifiedArr[i].split(":")[0].indexOf("Admin") != -1) {
+            admin = stringifiedArr[i].split(":")[1].trim();
+            break;
+        }
+    }
+
+    return admin;
+};
+
 var soc_gatewayValidation = function(stringifiedArr, callback) {
     var beaconAddressArr    = soc_getBeaconAddressArr(stringifiedArr);
     var uuidArr             = soc_getUUIDArr(stringifiedArr);
@@ -1130,6 +1221,13 @@ module.exports.soc_getMajorArr              = soc_getMajorArr;
 module.exports.soc_getMinorArr              = soc_getMinorArr;
 module.exports.soc_getSmartphoneAddress     = soc_getSmartphoneAddress;
 module.exports.soc_getSignal                = soc_getSignal;
+module.exports.soc_getEmployeeNumber        = soc_getEmployeeNumber;
+module.exports.soc_getName                  = soc_getName;
+module.exports.soc_getPassword              = soc_getPassword;
+module.exports.soc_getDepartment            = soc_getDepartment;
+module.exports.soc_getPosition              = soc_getPosition;
+module.exports.soc_getPermission            = soc_getPermission;
+module.exports.soc_getAdmin                 = soc_getAdmin;
 module.exports.soc_gatewayValidation        = soc_gatewayValidation;
 module.exports.soc_smartphoneValidation     = soc_smartphoneValidation;
 module.exports.soc_getWorkplaceOfBeacons    = soc_getWorkplaceOfBeacons;
