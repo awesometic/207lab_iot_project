@@ -115,7 +115,7 @@ var id_isPermitted = function(smartphone_address, employee_number, callback) {
         if (err)
             console.error(err);
 
-        conn.query("SELECT admin FROM identity WHERE smartphone_address=? AND employee_number=?", [smartphone_address, employee_number], function(err, rows) {
+        conn.query("SELECT permission FROM identity WHERE smartphone_address=? AND employee_number=?", [smartphone_address, employee_number], function(err, rows) {
             if (err) {
                 console.error(err);
                 conn.release();
