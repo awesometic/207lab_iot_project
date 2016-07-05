@@ -18,55 +18,69 @@ var getCurrentDateTime = function() {
 /* GET */
 var title = "Suwon Univ. 207 Lab - IoT Project";
 router.get('/', function(req, res, next) {
-    res.render('index', {
-        title: title,
-        page: "index",
-        user_id: req.session.user_id,
-        smartphone_address: req.session.smartphone_address,
-        admin: req.session.admin
-    });
-});
-
-router.get('/log', function(req, res, next) {
-    var user_id = req.session.user_id;
-    var smartphone_address = req.session.smartphone_address;
-
-    pool.id_getCircumstance(getCurrentDateTime(), smartphone_address, function (rows) {
-        pool.chart_getPopulOfDepartment(function (departItems) {
-            res.render("index", {
-                title: title,
-                page: "log",
-                user_id: user_id,
-                smartphone_address: smartphone_address,
-                admin: req.session.admin,
-                rows: rows,
-                departItems: departItems
-            });
-        });
-    });
-});
-
-router.get('/management', function(req, res, next) {
-    var user_id = req.session.user_id;
+    var employee_number = req.session.user_id;
     var smartphone_address = req.session.smartphone_address;
     var admin = req.session.admin;
 
-    pool.id_getUserList(user_id, admin, function(userListRows) {
-        pool.id_getWorkplaceList(user_id, admin, function(workplaceListRows) {
-           pool.id_getBeaconList(user_id, admin, function(beaconListRows) {
-               res.render("index", {
-                   title: title,
-                   page: "management",
-                   user_id: user_id,
-                   smartphone_address: smartphone_address,
-                   userlist: userListRows,
-                   workplacelist: workplaceListRows,
-                   beaconlist: beaconListRows,
-                   admin: admin
-               });
-           });
-        });
+    res.render('index', {
+        title: title,
+        page: "index",
+        user_id: employee_number,
+        smartphone_address: smartphone_address,
+        admin: admin
     });
+
+});
+
+router.get('/log', function(req, res, next) {
+    var employee_number = req.session.user_id;
+    var smartphone_address = req.session.smartphone_address;
+    var admin = req.session.admin;
+
+    if (typeof employee_number != "undefined" || typeof smartphone_address != "undefined") {
+        pool.id_getCircumstance(getCurrentDateTime(), smartphone_address, function (rows) {
+            pool.chart_getPopulOfDepartment(function (departItems) {
+                res.render("index", {
+                    title: title,
+                    page: "log",
+                    user_id: employee_number,
+                    smartphone_address: smartphone_address,
+                    admin: admin,
+                    rows: rows,
+                    departItems: departItems
+                });
+            });
+        });
+    } else {
+        res.send("<script> location.href='/'; </script>");
+    }
+});
+
+router.get('/management', function(req, res, next) {
+    var employee_number = req.session.user_id;
+    var smartphone_address = req.session.smartphone_address;
+    var admin = req.session.admin;
+
+    if (typeof employee_number != "undefined" || typeof smartphone_address != "undefined") {
+        pool.id_getUserList(employee_number, admin, function(userListRows) {
+            pool.id_getWorkplaceList(employee_number, admin, function(workplaceListRows) {
+                pool.id_getBeaconList(employee_number, admin, function(beaconListRows) {
+                    res.render("index", {
+                        title: title,
+                        page: "management",
+                        user_id: employee_number,
+                        smartphone_address: smartphone_address,
+                        userlist: userListRows,
+                        workplacelist: workplaceListRows,
+                        beaconlist: beaconListRows,
+                        admin: admin
+                    });
+                });
+            });
+        });
+    } else {
+        res.send("<script> location.href='/'; </script>");
+    }
 });
 
 router.get("/logout", function(req, res, next) {
@@ -75,6 +89,93 @@ router.get("/logout", function(req, res, next) {
             console.error("err", err);
         res.send("<script> location.href='/';</script>");
     });
+});
+
+router.get('/developer', function(req, res, next) {
+    var employee_number = req.session.user_id;
+    var smartphone_address = req.session.smartphone_address;
+    var admin = req.session.admin;
+
+    if (typeof employee_number != "undefined" || typeof smartphone_address != "undefined") {
+        pool.id_checkAdmin(employee_number, smartphone_address, function(isAdmin) {
+            if (isAdmin) {
+                res.render('developer/index', {
+                    title: title,
+                    page: "developer/index",
+                    user_id: employee_number,
+                    smartphone_address: smartphone_address,
+                    admin: admin
+                });
+            } else {
+                res.send(
+                    "<script>" +
+                    "alert('Permission denied!');" +
+                    "history.go(-1);" +
+                    "</script>"
+                );
+            }
+        });
+    } else {
+        res.send("<script> location.href='/'; </script>");
+    }
+});
+
+router.get('/developer/socket', function(req, res, next) {
+    var employee_number = req.session.user_id;
+    var smartphone_address = req.session.smartphone_address;
+    var admin = req.session.admin;
+
+    if (typeof employee_number != "undefined" || typeof smartphone_address != "undefined") {
+        pool.id_checkAdmin(employee_number, smartphone_address, function(isAdmin) {
+            if (isAdmin) {
+                res.render('developer/socket', {
+                    title: title,
+                    page: "developer/socket",
+                    user_id: employee_number,
+                    smartphone_address: smartphone_address,
+                    admin: admin
+                });
+            } else {
+                res.send(
+                    "<script>" +
+                    "alert('Permission denied!');" +
+                    "history.go(-1);" +
+                    "</script>"
+                );
+            }
+        });
+    } else {
+        res.send("<script> location.href='/'; </script>");
+    }
+});
+
+router.get('/developer/database', function(req, res, next) {
+    var employee_number = req.session.user_id;
+    var smartphone_address = req.session.smartphone_address;
+    var admin = req.session.admin;
+
+    if (typeof employee_number != "undefined" || typeof smartphone_address != "undefined") {
+        pool.id_checkAdmin(employee_number, smartphone_address, function(isAdmin) {
+            if (isAdmin) {
+                res.render('developer/database', {
+                    title: title,
+                    page: "developer/database",
+                    user_id: employee_number,
+                    smartphone_address: smartphone_address,
+                    admin: admin
+                });
+            } else {
+                res.send(
+                    "<script>" +
+                    "alert('Permission denied!');" +
+                    "history.go(-1);" +
+                    "</script>"
+                );
+            }
+        });
+    } else {
+        res.send("<script> location.href='/'; </script>");
+    }
 });
 
 /* POST */

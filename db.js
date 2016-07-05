@@ -600,18 +600,18 @@ var id_checkAdmin = function(employee_number, smartphone_address, callback) {
         if (err)
             console.error(err);
 
-        conn.query("SELECT permission FROM identity WHERE employee_number=? AND smartphone_address=?", [employee_number, smartphone_address], function(err, rows) {
+        conn.query("SELECT admin FROM identity WHERE employee_number=? AND smartphone_address=?", [employee_number, smartphone_address], function(err, rows) {
             if (err) {
                 console.error(err);
                 conn.release();
             }
 
-            var permission = false;
-            if (rows[0].permission == 1)
-                permission = true;
+            var admin = false;
+            if (rows[0].admin == 1)
+                admin = true;
 
             if (typeof callback === "function") {
-                callback(permission);
+                callback(admin);
             }
 
             conn.release();
