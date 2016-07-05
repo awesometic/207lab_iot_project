@@ -6,15 +6,32 @@
     </button>
     <a class="navbar-brand" href="/">207Lab</a>
 </div>
+
+<!-- top -->
 <div class="collapse navbar-collapse" id="navbar">
     <ul class="nav navbar-nav"><!--버튼 여기서 추가-->
         <li><a href="log">출퇴근기록</a></li>
         <%
         if (admin) { %>
-                <li class="dropdown"><a href="management">관리</a></li>
+        <li class="dropdown"><a href="management">관리</a></li>
         <% } %>
     </ul>
     <ul class="nav navbar-nav navbar-right">
         <li><a href="logout">로그아웃</a></li>
     </ul>
 </div>
+
+<!-- bottom -->
+<nav class="navbar navbar-inverse navbar-fixed-bottom">
+    <div class="container-fluid">
+        <div class="text-center" style="color: lightgray">
+            <p>
+                207 Lab<br>
+                현재 IP 주소: <script type="text/javascript">document.write(ip());</script><br>
+                <% if (admin) { %>
+                <strong>관리자 계정으로 접속하셨습니다.</strong>
+                <% } %>
+            </p>
+        </div>
+    </div>
+</nav>
