@@ -18,14 +18,14 @@ var getCurrentDateTime = function() {
 /* GET */
 var title = "Suwon Univ. 207 Lab - IoT Project";
 router.get('/', function(req, res, next) {
-    var employee_number = req.session.user_id;
+    var employee_number = req.session.employee_number;
     var smartphone_address = req.session.smartphone_address;
     var admin = req.session.admin;
 
     res.render('index', {
         title: title,
         page: "index",
-        user_id: employee_number,
+        employee_number: employee_number,
         smartphone_address: smartphone_address,
         admin: admin
     });
@@ -33,7 +33,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/log', function(req, res, next) {
-    var employee_number = req.session.user_id;
+    var employee_number = req.session.employee_number;
     var smartphone_address = req.session.smartphone_address;
     var admin = req.session.admin;
 
@@ -43,7 +43,7 @@ router.get('/log', function(req, res, next) {
                 res.render("index", {
                     title: title,
                     page: "log",
-                    user_id: employee_number,
+                    employee_number: employee_number,
                     smartphone_address: smartphone_address,
                     admin: admin,
                     rows: rows,
@@ -57,18 +57,18 @@ router.get('/log', function(req, res, next) {
 });
 
 router.get('/management', function(req, res, next) {
-    var employee_number = req.session.user_id;
+    var employee_number = req.session.employee_number;
     var smartphone_address = req.session.smartphone_address;
     var admin = req.session.admin;
 
     if (typeof employee_number != "undefined" || typeof smartphone_address != "undefined") {
-        pool.id_getUserList(employee_number, admin, function(userListRows) {
+        pool.id_getUserList(function(userListRows) {
             pool.id_getWorkplaceList(employee_number, admin, function(workplaceListRows) {
                 pool.id_getBeaconList(employee_number, admin, function(beaconListRows) {
                     res.render("index", {
                         title: title,
                         page: "management",
-                        user_id: employee_number,
+                        employee_number: employee_number,
                         smartphone_address: smartphone_address,
                         userlist: userListRows,
                         workplacelist: workplaceListRows,
@@ -92,7 +92,7 @@ router.get("/logout", function(req, res, next) {
 });
 
 router.get('/developer', function(req, res, next) {
-    var employee_number = req.session.user_id;
+    var employee_number = req.session.employee_number;
     var smartphone_address = req.session.smartphone_address;
     var admin = req.session.admin;
 
@@ -102,7 +102,7 @@ router.get('/developer', function(req, res, next) {
                 res.render('developer/index', {
                     title: title,
                     page: "developer/index",
-                    user_id: employee_number,
+                    employee_number: employee_number,
                     smartphone_address: smartphone_address,
                     admin: admin
                 });
@@ -121,19 +121,52 @@ router.get('/developer', function(req, res, next) {
 });
 
 router.get('/developer/socket', function(req, res, next) {
-    var employee_number = req.session.user_id;
+    var employee_number = req.session.employee_number;
     var smartphone_address = req.session.smartphone_address;
     var admin = req.session.admin;
 
     if (typeof employee_number != "undefined" || typeof smartphone_address != "undefined") {
         pool.id_checkAdmin(employee_number, smartphone_address, function(isAdmin) {
             if (isAdmin) {
-                res.render('developer/socket', {
-                    title: title,
-                    page: "developer/socket",
-                    user_id: employee_number,
-                    smartphone_address: smartphone_address,
-                    admin: admin
+                pool.id_getUserList(function(userList) {
+                    if (typeof userList !== 'undefined') {
+                        pool.id_getDepartmentList(function (departmentList) {
+                            if (typeof departmentList !== 'undefined') {
+                                pool.id_getPositionList(function (positionList) {
+                                    if (typeof positionList !== 'undefined') {
+                                        res.render('developer/socket', {
+                                            title: title,
+                                            page: "developer/socket",
+                                            employee_number: employee_number,
+                                            smartphone_address: smartphone_address,
+                                            userList: userList,
+                                            departmentList: departmentList,
+                                            positionList: positionList,
+                                            admin: admin
+                                        });
+                                    } else {
+                                        res.send(
+                                            "<script>" +
+                                            "alert('There\\'s no available position!');" +
+                                            "</script>"
+                                        );
+                                    }
+                                });
+                            } else {
+                                res.send(
+                                    "<script>" +
+                                    "alert('There\\'s no available department!');" +
+                                    "</script>"
+                                );
+                            }
+                        });
+                    } else {
+                        res.send(
+                            "<script>" +
+                            "alert('There\\'s no selectable user!');" +
+                            "</script>"
+                        );
+                    }
                 });
             } else {
                 res.send(
@@ -150,7 +183,7 @@ router.get('/developer/socket', function(req, res, next) {
 });
 
 router.get('/developer/database', function(req, res, next) {
-    var employee_number = req.session.user_id;
+    var employee_number = req.session.employee_number;
     var smartphone_address = req.session.smartphone_address;
     var admin = req.session.admin;
 
@@ -160,7 +193,7 @@ router.get('/developer/database', function(req, res, next) {
                 res.render('developer/database', {
                     title: title,
                     page: "developer/database",
-                    user_id: employee_number,
+                    employee_number: employee_number,
                     smartphone_address: smartphone_address,
                     admin: admin
                 });
@@ -180,18 +213,18 @@ router.get('/developer/database', function(req, res, next) {
 
 /* POST */
 router.post("/", function(req, res) {
-    if (typeof req.body.user_id != 'undefined') {
-        var user_id = req.body.user_id;
+    if (typeof req.body.employee_number != 'undefined') {
+        var employee_number = req.body.employee_number;
         var pass = req.body.pass;
 
-        pool.id_loginValidation(user_id, pass, function (result) {
+        pool.id_loginValidation(employee_number, pass, function (result) {
             if (result == "unregistered")
                 res.send("<script> alert('Unregistered Employee!'); history.back(); </script>");
             else if (result == "wrong password")
                 res.send("<script> alert('Check your password!'); history.back(); </script>");
             else {
-                pool.id_getSmartphoneAddress(user_id, function (smartphone_number) {
-                    req.session.user_id = user_id;
+                pool.id_getSmartphoneAddress(employee_number, function (smartphone_number) {
+                    req.session.employee_number = employee_number;
                     req.session.smartphone_address = smartphone_number;
 
                     if (result)
@@ -243,6 +276,88 @@ router.post("/", function(req, res) {
                 }
             });
         }
+    }
+});
+
+router.post("/developer/socket", function(req, res) {
+    var employee_number = req.session.employee_number;
+    var smartphone_address = req.session.smartphone_address;
+    var admin = req.session.admin;
+
+    var sel_department = req.body.sel_department;
+    var sel_position = req.body.sel_position;
+    var check_permission = req.body.check_permission;
+    var check_admin = req.body.check_admin;
+
+    if (sel_department == "All")
+        sel_department = '';
+    if (sel_position == "All")
+        sel_position = '';
+    if (typeof check_permission === "undefined")
+        check_permission = 0;
+    else
+        check_permission = 1;
+    if (typeof check_admin === "undefined")
+        check_admin = 0;
+    else
+        check_admin = 1;
+
+    console.log(sel_department + " " + sel_position + " " + check_permission + " " + check_admin);
+
+    if (typeof employee_number != "undefined" || typeof smartphone_address != "undefined") {
+        pool.id_checkAdmin(employee_number, smartphone_address, function(isAdmin) {
+            if (isAdmin) {
+                pool.id_getUserListCond(sel_department, sel_position, check_permission, check_admin, function(userList) {
+                    if (typeof userList !== 'undefined') {
+                        pool.id_getDepartmentList(function (departmentList) {
+                            if (typeof departmentList !== 'undefined') {
+                                pool.id_getPositionList(function (positionList) {
+                                    if (typeof positionList !== 'undefined') {
+                                        res.render('developer/socket', {
+                                            title: title,
+                                            page: "developer/socket",
+                                            employee_number: employee_number,
+                                            smartphone_address: smartphone_address,
+                                            userList: userList,
+                                            departmentList: departmentList,
+                                            positionList: positionList,
+                                            admin: admin
+                                        });
+                                    } else {
+                                        res.send(
+                                            "<script>" +
+                                            "alert('There\\'s no available position!');" +
+                                            "</script>"
+                                        );
+                                    }
+                                });
+                            } else {
+                                res.send(
+                                    "<script>" +
+                                    "alert('There\\'s no available department!');" +
+                                    "</script>"
+                                );
+                            }
+                        });
+                    } else {
+                        res.send(
+                            "<script>" +
+                            "alert('There\\'s no selectable user!');" +
+                            "</script>"
+                        );
+                    }
+                });
+            } else {
+                res.send(
+                    "<script>" +
+                    "alert('Permission denied!');" +
+                    "history.go(-1);" +
+                    "</script>"
+                );
+            }
+        });
+    } else {
+        res.send("<script> location.href='/'; </script>");
     }
 });
 

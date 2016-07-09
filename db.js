@@ -158,11 +158,11 @@ var id_loginValidation = function(employee_number, password, callback) {
     });
 };
 
-var id_getUserList = function(employee_number, admin, callback) {
+var id_getUserList = function(callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
-        conn.query("SELECT * FROM identity WHERE employee_number!=?", [employee_number], function(err, rows) {
+        conn.query("SELECT * FROM identity", function(err, rows) {
             if (err) {
                 console.error(err);
                 conn.release();
@@ -566,6 +566,70 @@ var id_deleteBeacon = function(uuid, major, minor, beacon_address, callback) {
 
             if (typeof callback === "function") {
                 callback(true);
+            }
+
+            conn.release();
+        });
+    });
+};
+
+var id_getUserListCond = function(department, position, permission, admin, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        var sql = "SELECT * FROM identity WHERE department LIKE " + conn.escape('%' + department + '%') +
+                " AND position LIKE " + conn.escape('%' + position + '%') +
+                " AND permission=" + conn.escape(permission) + " AND admin=" + conn.escape(admin);
+
+        conn.query(sql, function(err, rows) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+
+            if (typeof callback === "function") {
+                callback(rows);
+            }
+
+            conn.release();
+        });
+    });
+};
+
+var id_getDepartmentList = function(callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("SELECT department FROM identity GROUP BY department", function(err, rows) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+
+            if (typeof callback === "function") {
+                callback(rows);
+            }
+
+            conn.release();
+        });
+    });
+};
+
+var id_getPositionList = function(callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("SELECT position FROM identity GROUP BY position", function(err, rows) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+
+            if (typeof callback === "function") {
+                callback(rows);
             }
 
             conn.release();
@@ -1207,6 +1271,10 @@ module.exports.id_checkBeaconRegistered     = id_checkBeaconRegistered;
 module.exports.id_registerBeacon            = id_registerBeacon;
 module.exports.id_modifyBeacon              = id_modifyBeacon;
 module.exports.id_deleteBeacon              = id_deleteBeacon;
+
+module.exports.id_getUserListCond           = id_getUserListCond;
+module.exports.id_getDepartmentList         = id_getDepartmentList;
+module.exports.id_getPositionList           = id_getPositionList;
 
 module.exports.id_getSmartphoneAddress      = id_getSmartphoneAddress;
 module.exports.id_checkAdmin                = id_checkAdmin;

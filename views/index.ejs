@@ -2,7 +2,7 @@
 <html>
 <head>
     <% include partials/head.ejs %>
-    <% if (!smartphone_address && !user_id) { %>
+    <% if (!smartphone_address && !employee_number) { %>
     <style>
         /* http://webdir.tistory.com/31 */
         #logo {
@@ -30,7 +30,7 @@
 <body>
 <div id="body">
 
-    <% if (smartphone_address && user_id) { %>
+    <% if (smartphone_address && employee_number) { %>
     <div id="nav">
         <nav class="navbar navbar-inverse" data-spy="affix" data-offset-top="197">
             <% include partials/nav.ejs %>
@@ -64,8 +64,8 @@
             <img id="logo" src="207lab.jpg">
             <form name="login" class="form-inline" role="form" method="post">
                 <div class="form-group">
-                    <label for="user_id">ID</label>
-                    <input name="user_id" type="id" class="form-control" id="user_id">
+                    <label for="employee_number">ID</label>
+                    <input name="employee_number" type="id" class="form-control" id="employee_number">
                     <label for="pwd">Password</label>
                     <input name="pass" type="password" class="form-control" id="pwd"><br>
                 </div><br>
