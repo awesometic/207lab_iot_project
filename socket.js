@@ -45,8 +45,9 @@ io.on("connection", function(socket) {
                                 });
 
                                 logger("socket").info("Circumstance", "New commute record: \n" + stringifiedArr + "\n\tRegister success");
+                            } else {
+                                logger("socket").info("Circumstance", "New commute record: \n" + stringifiedArr + "\n\tRegister fail: Database connection problem");
                             }
-                            logger("socket").info("Circumstance", "New commute record: \n" + stringifiedArr + "\n\tRegister fail: Database connection problem");
                         });
                     } else {
                         logger("socket").info("Circumstance", "New commute record: \n" + stringifiedArr + "\n\tRegister fail: Unverified smartphone");
@@ -124,7 +125,7 @@ io.on("connection", function(socket) {
 
     /*
      {
-     SmartphoneAddress: '12:11:11:11:11:11'
+     SmartphoneAddress: '00:00:00:00:00:00'
      }
      */
     socket.on("amIRegistered", function(data) {
@@ -195,7 +196,7 @@ io.on("connection", function(socket) {
 
     /*
      {
-     SmartphoneAddress: '12:11:11:11:11:11',
+     SmartphoneAddress: '00:00:00:00:00:00',
      Signal: 'SOMETHING'
      }
      */

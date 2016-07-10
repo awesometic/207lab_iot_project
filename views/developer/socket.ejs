@@ -7,9 +7,6 @@
     <!-- JQuery -->
     <script>
         $(document).ready(function() {
-            // Target url should be modified when the service will be sold
-            var socket = io.connect("http://localhost:2070");
-
             $("#btn-commute-all-user").click(function() {
                 location.href = location.pathname;
             });
@@ -28,7 +25,16 @@
                 $("#commute-info").html("Click to send new commute data with <strong>" + str_info + "</strong>");
             });
 
-            $("#btn-commute-send").click(function() {
+            $("#btn-commute-send").unbind("click").bind("click", function(event) {
+                var socket;
+
+                if (window.location.hostname == "localhost")
+                    socket = io.connect("http://localhost:2070/");
+                else {
+                    // Target url should be modified when the service be sold
+                    socket = io.connect("http://14.63.219.156:2070/");
+                }
+
                 socket.emit("circumstance", {
                     BeaconDeviceAddress1: '00:1A:7D:DA:71:07',
                     BeaconDeviceAddress2: '00:1A:7D:DA:71:03',
@@ -37,6 +43,14 @@
                     BeaconData2: 'bf0cc4a4eb9f4f06b7161f5ff49a8f4700020002',
                     BeaconData3: '709bd64042d14b1a990a36d4a1e527d800030001',
                     SmartphoneAddress: $("#user-smartphone-address").text()
+                });
+
+                socket.on("answer", function(data) {
+                    if (data.isSuccess == "true") {
+                        alert("Send new commute data success!");
+                    }
+
+                    socket.close();
                 });
             });
 
