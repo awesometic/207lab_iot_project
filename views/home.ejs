@@ -1,0 +1,18 @@
+<html>
+<head></head>
+<body>
+<% if (userid || smartphone_address || admin) { %>
+id: <%=userid %><br>
+smartphone_address: <%=smartphone_address %><br>
+admin: <%=admin %><br>
+<% } else { %>
+There's no session data
+<% } %>
+
+
+<% if (admin) { %>
+Logged in admin account<br>
+<% } %>
+<a href="/logout">logout</a>
+</body>
+</html>
