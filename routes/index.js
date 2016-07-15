@@ -25,22 +25,6 @@ router.get('/', function(req, res, next) {
 
 });
 
-router.get('/features', function(req, res, next) {
-
-    res.render('features', {
-        title: title
-    });
-
-});
-
-router.get('/contact', function(req, res, next) {
-
-    res.render('contact', {
-        title: title
-    });
-
-});
-
 router.get('/signup', function(req, res, next) {
 
     res.render('signup', {
