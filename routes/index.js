@@ -74,6 +74,49 @@ router.get('/logout', function(req, res, next) {
     });
 });
 
+router.get('/chart', function(req, res, next) {
+    var userid = req.session.userid;
+    var smartphone_address = req.session.smartphone_address;
+    var admin = req.session.admin;
+
+    if (typeof userid != "undefined" || typeof smartphone_address != "undefined") {
+
+        pool.chart_getPopulOfDepartment(function (departItems) {
+            if (admin) {
+                res.render('chart', {
+                    title: title,
+                    userid: req.session.userid,
+                    smartphone_address: req.session.smartphone_address,
+                    admin: req.session.admin,
+                    departItems: departItems
+                });
+            } else {
+                res.render('chart', {
+                    title: title,
+                    userid: req.session.userid,
+                    smartphone_address: req.session.smartphone_address,
+                    admin: req.session.admin,
+                    departItems: departItems
+                });
+            }
+        });
+
+    } else {
+        res.send("<script>location.href='/';</script>");
+    }
+});
+
+router.get('/test', function(req, res, next) {
+    pool.chart_getPopulOfDepartment(function (departItems) {
+        res.render('chart/d3_population_of_each_department', {
+            title: title,
+            userid: req.session.userid,
+            smartphone_address: req.session.smartphone_address,
+            admin: req.session.admin,
+            departItems: departItems
+        });
+    });
+});
 
 
 /* POST */

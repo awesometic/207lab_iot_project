@@ -109,16 +109,12 @@
 
                 <li class=""><a href="#"><i class="fa fa-search"></i> <span> 근무기록조회</span></a></li>
 
-
-
                 <!-- chart sidebar -->
                 <li class="treeview">
-                    <a href="charts">
+                    <a href="#">
                         <i class="fa fa-pie-chart"></i>
                         <span> 그래프보기</span>
-                        <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
+                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
                     <ul class="treeview-menu">
                         <li><a href="chart"><i class="fa fa-circle-o"></i>첫번째</a></li>
@@ -137,6 +133,73 @@
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                차트 2개 적용 예시
+                <small>밑 차트는 데이터베이스 연동이 아직 안 되어있음</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="HOME"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">그래프 보기</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">부서별 인원 수</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div><!-- /.box-tools -->
+                        </div><!-- /.box-header -->
+                        <div class="box-body">
+                            <div id="d3-population-of-each-department">
+                                <h4>
+                                    <a href="test">Click here to see chart</a>
+                                </h4>
+                            </div>
+                        </div><!-- /.box-body -->
+                    </div><!-- /.box -->
+                </div><!-- /.col-md-6 -->
+                <div class="col-md-6">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">reserved</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div><!-- /.box-tools -->
+                        </div><!-- /.box-header -->
+                        <div class="box-body">
+                            reserved
+                        </div><!-- /.box-body -->
+                    </div><!-- /.box -->
+                </div><!-- /.col-md-6 -->
+            </div><!-- /.row -->
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">시간별 장소</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div><!-- /.box-tools -->
+                        </div><!-- /.box-header -->
+                        <div class="box-body">
+                            <div id="d3-place-per-time">
+                                <% include chart/d3_place_per_time.ejs %>
+                            </div>
+                        </div><!-- /.box-body -->
+                    </div><!-- /.box -->
+                </div><!-- /.col-md-12 -->
+            </div><!-- /.row -->
+
+        </section><!-- /.content-header -->
 
     </div>
     <!-- /.content-wrapper -->
