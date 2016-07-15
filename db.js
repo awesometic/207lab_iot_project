@@ -807,19 +807,19 @@ var soc_getCoordinate = function(stringifiedArr) {
 
     for (var i = 0; i < stringifiedArr.length; i++) {
         if (stringifiedArr[i].split(":")[0].indexOf("CoordinateX") != -1) {
-            coordinateArr.push(parseInt(stringifiedArr[8].substr(12, 3)));
+            coordinateArr.push(parseInt(stringifiedArr[i].substr(12, 3)));
             break;
         }
     }
     for (var i = 0; i < stringifiedArr.length; i++) {
         if (stringifiedArr[i].split(":")[0].indexOf("CoordinateY") != -1) {
-            coordinateArr.push(parseInt(stringifiedArr[9].substr(12, 3)));
+            coordinateArr.push(parseInt(stringifiedArr[i].substr(12, 3)));
             break;
         }
     }
     for (var i = 0; i < stringifiedArr.length; i++) {
         if (stringifiedArr[i].split(":")[0].indexOf("CoordinateZ") != -1) {
-            coordinateArr.push(parseInt(stringifiedArr[10].substr(12, 3)));
+            coordinateArr.push(parseInt(stringifiedArr[i].substr(12, 3)));
             break;
         }
     }
