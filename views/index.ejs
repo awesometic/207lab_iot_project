@@ -1,108 +1,76 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <% include partials/head.ejs %>
-    <% if (!smartphone_address && !employee_number) { %>
-    <style>
-        /* http://webdir.tistory.com/31 */
-        #logo {
-            width: 650px;
-            height: 300px;
-        }
-        #main {
-            height: 100%;
-            text-align: center;
-        }
-        #main:before {
-            content: "";
-            display: inline-block;
-            width: 1px;
-            height: 100%;
-            margin-right: 0;
-            vertical-align: middle;
-        }
-        #content {
-            display: inline-block;
-        }
-    </style>
-    <% } %>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>IOT project</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="docs/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="style.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
+
 <body>
-<div id="body">
 
-    <% if (smartphone_address && employee_number) { %>
-    <div id="nav">
-        <nav class="navbar navbar-inverse" data-spy="affix" data-offset-top="197">
-            <% include partials/nav.ejs %>
-        </nav>
-    </div>
-    <div id="main" class="container-fluid">
-        <div id="wrapper-row" class="row">
-            <div id="sidenav" class="col-sm-2 sidenav">
-                <% include partials/sidenav.ejs %>
+<div class="site-wrapper">
+
+    <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+            <div class="inner cover">
+                <h2 class="cover-heading" style='padding-bottom:35px;'>Login</h2>
             </div>
-            <div id="content">
-                <div id="container" class="col-sm-10 col-md-offset-2 content">
-                    <div id="home" class="tab-pane fade in active" align="center">
-                        <% if (page == "index") { %>
-                        <img src="207lab.jpg" style="width:650px;height:300px;">
-                        <% } else { %>
-                        <% include partials/main.ejs %>
-                        <% } %>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+            <div class="container">
+                <form class="form-signin" method="post">
+                    <label for="inputId" class="sr-only">Identification</label>
+                    <input type="text" id="inputId" class="form-control" placeholder="Identification" name="signin_id" required autofocus>
 
-    <% } else { %>
-    <div id="main" class="container-fluid">
-        <div id="header">
+                    <label for="inputPassword" class="sr-only">Password</label>
+                    <input type="password" id="inputPassword" class="form-control" placeholder="Password" name="signin_pw" required>
 
-        </div>
-        <div id="content">
-            <img id="logo" src="207lab.jpg">
-            <form name="login" class="form-inline" role="form" method="post">
-                <div class="form-group">
-                    <label for="employee_number">ID</label>
-                    <input name="employee_number" type="id" class="form-control" id="employee_number">
-                    <label for="pwd">Password</label>
-                    <input name="pass" type="password" class="form-control" id="pwd"><br>
-                </div><br>
-                <div class="checkbox">
-                    <label><input name="Remember" type="checkbox"> Remember me </label>
-                </div>
-                <button type="submit" class="btn btn-group-lg">Login</button><br>
-                <a style="color: #c12e2a" id="login-open-modal"><span class="glyphicon glyphicon-user"></span>Sign Up</a>
-            </form>
-            <!-- Modal -->
-            <div class="modal fade" id="login-join-modal" role="dialog">
-                <div class="modal-dialog">
+                    <button class="signbutton" type="submit">Sign in</button>
+                    <button class="signbutton"><a href="signup">Sign up</a></button>
+                </form>
+            </div> <!-- /container -->
 
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">회원 가입 신청</h4>
-                        </div>
-                        <form class="form-horizontal" role="form" method="post">
-                            <div class="modal-body">
-                                <% include partials/join.ejs %>
-                            </div>
-                            <div class="modal-footer">
-                                <input type="reset" size="20" class="btn btn-default" name="reset" value="Clear">
-                                <button type="submit" class="btn btn-default">Submit</button>
-                            </div>
-                        </form>
-                    </div>
-
+            <div class="mastfoot">
+                <div class="inner">
+                    <p>project for <a href="http://getbootstrap.com">IOT commuting system</a>,
+                        by <a href="https://twitter.com/mdo">@207LAB in suwon univ</a>.</p>
                 </div>
             </div>
 
         </div>
+
     </div>
-    <% } %>
 
 </div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="docs/assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="docs/assets/js/ie10-viewport-bug-workaround.js"></script>
 </body>
 </html>
