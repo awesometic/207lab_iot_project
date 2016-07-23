@@ -1012,9 +1012,9 @@ var soc_getWorkplaceOfBeacons = function(beaconAddressArr, uuidArr, majorArr, mi
     });
 };
 
-var soc_smartphoneValidation = function(smartphone_address, callback) {
+var soc_smartphoneValidation = function(stringifiedArr, callback) {
 
-    soc_getSmartphoneUserName(smartphone_address, function(name) {
+    soc_getSmartphoneUserName(stringifiedArr, function(name) {
 
         if (name != "undefined") {
 
@@ -1030,7 +1030,9 @@ var soc_smartphoneValidation = function(smartphone_address, callback) {
     });
 };
 
-var soc_getSmartphoneUserName = function(smartphone_address, callback) {
+var soc_getSmartphoneUserName = function(stringifiedArr, callback) {
+    var smartphone_address = soc_getSmartphoneAddress(stringifiedArr);
+
     pool.getConnection(function(err, conn) {
         conn.query("SELECT IF ((SELECT COUNT(*) AS cnt FROM identity WHERE smartphone_address=? HAVING cnt > 0)"
             + ", (SELECT name FROM identity WHERE smartphone_address=?), 'undefined') AS name"

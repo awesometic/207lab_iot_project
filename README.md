@@ -9,7 +9,6 @@ I'm using on it (Any language and framework)
 * node-mysql (npm package)
 * socket.io (npm package)
 * winston (npm package)
-* node-rsa (npm package)
 * AdminLTE 2 and the other plugins belong to it such as Bootstrap, Jquery, Morris.js, ...(npm package)
 * D3.js
 
