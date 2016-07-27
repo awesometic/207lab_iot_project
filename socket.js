@@ -3,22 +3,52 @@ var port = process.env.PORT || 2070;
 var io = require("socket.io").listen(port);
 
 var pool = require("./db");
-var logger = require("./logger");
+var logger = require('./logger');
+var schedule = require('node-schedule');
+
+var analyzer = require('./analyzer');
+
+// To get server's current time
+function getCurrentDateTime() {
+    var date = new Date();
+    var currentMonth = date.getMonth() + 1;
+    var str_currentMonth;
+    if (currentMonth < 10)
+        str_currentMonth = '0' + currentMonth;
+
+    return date.getFullYear() + "-" + str_currentMonth + "-" + date.getDate()
+        + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+}
 
 io.on("connection", function(socket) {
 
     var stringifiedArr;
 
-    var getCurrentDateTime = function() {
-        var date = new Date();
-        var currentMonth = date.getMonth() + 1;
-        var str_currentMonth;
-        if (currentMonth < 10)
-            str_currentMonth = '0' + currentMonth;
+    // Send a new RSA public key to all socket connected smartphone at everyday midnight
+    schedule.scheduleJob('0 1 * * *', function() {
+        socket.emit('rsaPublicKey', {
+            publicKey: analyzer.rsa.getPublicKey()
+        });
+    });
 
-        return date.getFullYear() + "-" + str_currentMonth + "-" + date.getDate()
-            + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-    };
+    // Send a current RSA public key to socket connected smartphone without validation of smartphone
+    socket.on('requestRsaPublicKeyWithoutSmartphoneAddress', function() {
+        socket.emit('rsaPublicKey', {
+            publicKey: analyzer.rsa.getPublicKey()
+        });
+    });
+
+    socket.on('requestRsaPublicKey', function(data) {
+        var smartphoneAddress = getSmartphoneAddress(data);
+
+        pool.soc_smartphoneValidation(smartphoneAddress, function(name) {
+            if (name) {
+                socket.emit('rsaPublicKey', {
+                    publicKey: analyzer.rsa.getPublicKey()
+                });
+            }
+        });
+    });
 
     /*
      {
@@ -106,21 +136,28 @@ io.on("connection", function(socket) {
      }
      */
     socket.on("requestEssentialData", function(data) {
-        stringifiedArr = pool.soc_analyzeJSON(data);
+        if (typeof data === "undefined" || JSON.stringify(data).replace(/\{/g, "").replace(/\}/g, "").length == 0) {
+            logger("socket").info("RequestData", "Request from user: received undefined data or empty");
+        } else {
+            var smartphoneRsaPublicKey = data.rsaPublicKey;
+            var contentJson = analyzer.extractContentFromReceivedJson(data);
+            var smartphoneAddress = analyzer.getSmartphoneAddress(contentJson);
 
-        pool.soc_smartphoneValidation(stringifiedArr, function(name) {
-            if (name) {
-                pool.soc_getEssentialData(function(data) {
-                    if (data) {
-                        socket.emit("data", data);
-                    }
+            pool.soc_smartphoneValidation(smartphoneAddress, function (name) {
+                if (name) {
+                    pool.soc_getEssentialData(function (data) {
 
-                    logger("socket").info("RequestData", "Request from user: \n" + stringifiedArr + "\n\tSend success");
-                });
-            } else {
-                logger("socket").info("RequestData", "Request from user: \n" + stringifiedArr + "\n\tSend fail: Unverified smartphone");
-            }
-        });
+                        if (data) {
+                            socket.emit("data", analyzer.encryptSendJson(smartphoneRsaPublicKey, data));
+                        }
+
+                        logger("socket").info("RequestData", "Request from user: \n" + smartphoneAddress + "\n\tSend success");
+                    });
+                } else {
+                    logger("socket").info("RequestData", "Request from user: \n" + smartphoneAddress + "\n\tSend fail: Unverified smartphone");
+                }
+            });
+        }
     });
 
     /*
@@ -134,7 +171,7 @@ io.on("connection", function(socket) {
 
         pool.soc_amIRegistered(smartphone_address, getCurrentDateTime(), function(isRegistered) {
             if (isRegistered) {
-                pool.soc_getSmartphoneUserName(stringifiedArr, function(employee_name) {
+                pool.soc_getSmartphoneUserName(smartphone_address, function(employee_name) {
                     pool.soc_getSmartphoneUserENum(stringifiedArr, function(employee_number) {
                         pool.id_isPermitted(smartphone_address, employee_number, function(permitted) {
                             socket.emit("data", {
@@ -157,16 +194,16 @@ io.on("connection", function(socket) {
     });
 
     /*
-    {
-    SmartphoneAddress: '00:00:00:00:00:00',
-    EmployeeNumber: '00000000',
-    Name: 'NAME',
-    Password: 'PASSWORD',
-    Department: 'DEPARTMENT',
-    Position: 'POSITION',
-    Permission: 0,
-    Admin: 0
-    }
+     {
+     SmartphoneAddress: '00:00:00:00:00:00',
+     EmployeeNumber: '00000000',
+     Name: 'NAME',
+     Password: 'PASSWORD',
+     Department: 'DEPARTMENT',
+     Position: 'POSITION',
+     Permission: 0,
+     Admin: 0
+     }
      */
     socket.on("signupRequest", function(data) {
         stringifiedArr = pool.soc_analyzeJSON(data);
@@ -180,17 +217,17 @@ io.on("connection", function(socket) {
         var admin = pool.soc_getAdmin(stringifiedArr);
 
         pool.id_registerUser(smartphone_address, employee_number, name, password, department, position, permission, admin, function(success) {
-           if (success) {
-               socket.emit("answer", {
-                  requestSuccess: true
-               });
-               logger("socket").info("signupRequest", "New sign-up request: \n" + smartphone_address + "\t" + employee_number + "\t" + name + "\n\tRegister Success");
-           } else {
-               socket.emit("answer", {
-                   requestSuccess: false
-               });
-               logger("socket").info("signupRequest", "New sign-up request: \n" + smartphone_address + "\t" + employee_number + "\t" + name + "\n\tRegister Fail");
-           }
+            if (success) {
+                socket.emit("answer", {
+                    requestSuccess: true
+                });
+                logger("socket").info("signupRequest", "New sign-up request: \n" + smartphone_address + "\t" + employee_number + "\t" + name + "\n\tRegister Success");
+            } else {
+                socket.emit("answer", {
+                    requestSuccess: false
+                });
+                logger("socket").info("signupRequest", "New sign-up request: \n" + smartphone_address + "\t" + employee_number + "\t" + name + "\n\tRegister Fail");
+            }
         });
     });
 
@@ -205,6 +242,8 @@ io.on("connection", function(socket) {
         var signal = pool.soc_getSignal(stringifiedArr);
 
         switch (signal) {
+
+            // Population of each department
             case "POPULATION":
                 pool.soc_smartphoneValidation(stringifiedArr, function (name) {
                     if (name != undefined) {
@@ -218,8 +257,10 @@ io.on("connection", function(socket) {
                     }
                 });
                 break;
+
             default:
                 break;
+
         }
     });
 });
