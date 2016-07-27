@@ -272,7 +272,7 @@ io.on("connection", function(socket) {
      Signal: 'SOMETHING'
      }
      */
-    socket.on("amIRegistered", function(data) {
+    socket.on("requestChartData", function(data) {
         if (typeof data === "undefined" || JSON.stringify(data).replace(/\{/g, "").replace(/\}/g, "").length == 0) {
             logger("socket").info("requestChartData", "Request Chart Data: received undefined data or empty");
         } else {
@@ -288,7 +288,7 @@ io.on("connection", function(socket) {
                     pool.soc_smartphoneValidation(smartphoneAddress, function (name) {
                         if (name != undefined) {
                             pool.chart_getPopulOfDepartment(function (chartData) {
-                                socket.emit("data", analyzer.encryptSendJson(smartphoneAddress, chartData));
+                                socket.emit("data", analyzer.encryptSendJson(smartphoneRsaPublicKey, chartData));
                             });
                         } else {
                             var contentJsonString = "{ ";
