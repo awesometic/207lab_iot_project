@@ -707,236 +707,7 @@ var id_getCircumstance = function(date, smartphone_address, callback) {
 };
 
 /* socket.js */
-var soc_analyzeJSON = function(data) {
-
-    var stringified;
-
-    stringified = JSON.stringify(data);
-    stringified = stringified
-        .replace(/\{/g, "")
-        .replace(/\}/g, "")
-        .replace(/\"/g, "");
-    var stringifiedArr = stringified.split(",");
-
-    return stringifiedArr;
-};
-
-var soc_getBeaconAddressArr = function(stringifiedArr) {
-    var beaconAddressArr = new Array();
-
-    for (var i = 0; i < 3; i++) {
-
-        for (var j = 0; j < stringifiedArr.length; j++) {
-            if (stringifiedArr[j].split(":")[0].indexOf("BeaconDeviceAddress" + (i + 1)) != -1) {
-                beaconAddressArr.push(stringifiedArr[j].substr(21, 17));
-                break;
-            }
-        }
-
-    }
-
-    return beaconAddressArr;
-};
-
-var soc_getUUIDArr = function(stringifiedArr) {
-    var uuidArr = new Array();
-
-    for (var i = 0; i < 3; i++) {
-
-        for (var j = 0; j < stringifiedArr.length; j++) {
-            if (stringifiedArr[j].split(":")[0].indexOf("BeaconData" + (i + 1)) != -1) {
-                uuidArr.push(stringifiedArr[j].split(":")[1].replace(/ /g, "").substr(0, 32));
-                break;
-            }
-        }
-
-    }
-
-    return uuidArr;
-};
-
-var soc_getMajorArr = function(stringifiedArr) {
-    var majorArr = new Array();
-
-    for (var i = 0; i < 3; i++) {
-
-        for (var j = 0; j < stringifiedArr.length; j++) {
-            if (stringifiedArr[j].split(":")[0].indexOf("BeaconData" + (i + 1)) != -1) {
-                majorArr.push(stringifiedArr[j].split(":")[1].replace(/ /g, "").substr(32, 4));
-                break;
-            }
-        }
-
-    }
-
-    return majorArr;
-};
-
-var soc_getMinorArr = function(stringifiedArr) {
-    var minorArr = new Array();
-
-    for (var i = 0; i < 3; i++) {
-
-        for (var j = 0; j < stringifiedArr.length; j++) {
-            if (stringifiedArr[j].split(":")[0].indexOf("BeaconData" + (i + 1)) != -1) {
-                minorArr.push(stringifiedArr[j].split(":")[1].replace(/ /g, "").substr(36, 4));
-                break;
-            }
-        }
-
-    }
-
-    return minorArr;
-};
-
-var soc_getSmartphoneAddress = function(stringifiedArr) {
-    var value = "";
-
-    for (var i = 0; i < stringifiedArr.length; i++) {
-        if (stringifiedArr[i].split(":")[0].indexOf("SmartphoneAddress") != -1) {
-            value = stringifiedArr[i].substr(18, 17);
-            break;
-        }
-    }
-
-    return value;
-};
-
-var soc_getCoordinate = function(stringifiedArr) {
-    var coordinateArr = new Array();
-
-    for (var i = 0; i < stringifiedArr.length; i++) {
-        if (stringifiedArr[i].split(":")[0].indexOf("CoordinateX") != -1) {
-            coordinateArr.push(parseInt(stringifiedArr[i].substr(12, 3)));
-            break;
-        }
-    }
-    for (var i = 0; i < stringifiedArr.length; i++) {
-        if (stringifiedArr[i].split(":")[0].indexOf("CoordinateY") != -1) {
-            coordinateArr.push(parseInt(stringifiedArr[i].substr(12, 3)));
-            break;
-        }
-    }
-    for (var i = 0; i < stringifiedArr.length; i++) {
-        if (stringifiedArr[i].split(":")[0].indexOf("CoordinateZ") != -1) {
-            coordinateArr.push(parseInt(stringifiedArr[i].substr(12, 3)));
-            break;
-        }
-    }
-
-    return coordinateArr;
-};
-
-var soc_getSignal = function(stringifiedArr) {
-    var signal;
-
-    for (var i = 0; i < stringifiedArr.length; i++) {
-        if (stringifiedArr[i].split(":")[0].indexOf("Signal") != -1) {
-            signal = stringifiedArr[i].split(":")[1].trim();
-            break;
-        }
-    }
-
-    return signal;
-};
-
-var soc_getEmployeeNumber = function(stringifiedArr) {
-    var employee_number;
-
-    for (var i = 0; i < stringifiedArr.length; i++) {
-        if (stringifiedArr[i].split(":")[0].indexOf("EmployeeNumber") != -1) {
-            employee_number = stringifiedArr[i].split(":")[1].trim();
-            break;
-        }
-    }
-
-    return employee_number;
-};
-
-var soc_getName = function(stringifiedArr) {
-    var name;
-
-    for (var i = 0; i < stringifiedArr.length; i++) {
-        if (stringifiedArr[i].split(":")[0].indexOf("Name") != -1) {
-            name = stringifiedArr[i].split(":")[1].trim();
-            break;
-        }
-    }
-
-    return name;
-};
-
-var soc_getPassword = function(stringifiedArr) {
-    var password;
-
-    for (var i = 0; i < stringifiedArr.length; i++) {
-        if (stringifiedArr[i].split(":")[0].indexOf("Password") != -1) {
-            password = stringifiedArr[i].split(":")[1].trim();
-            break;
-        }
-    }
-
-    return password;
-};
-
-var soc_getDepartment = function(stringifiedArr) {
-    var department;
-
-    for (var i = 0; i < stringifiedArr.length; i++) {
-        if (stringifiedArr[i].split(":")[0].indexOf("Department") != -1) {
-            department = stringifiedArr[i].split(":")[1].trim();
-            break;
-        }
-    }
-
-    return department;
-};
-
-var soc_getPosition = function(stringifiedArr) {
-    var position;
-
-    for (var i = 0; i < stringifiedArr.length; i++) {
-        if (stringifiedArr[i].split(":")[0].indexOf("Position") != -1) {
-            position = stringifiedArr[i].split(":")[1].trim();
-            break;
-        }
-    }
-
-    return position;
-};
-
-var soc_getPermission = function(stringifiedArr) {
-    var permission;
-
-    for (var i = 0; i < stringifiedArr.length; i++) {
-        if (stringifiedArr[i].split(":")[0].indexOf("Permission") != -1) {
-            permission = stringifiedArr[i].split(":")[1].trim();
-            break;
-        }
-    }
-
-    return permission;
-};
-
-var soc_getAdmin = function(stringifiedArr) {
-    var admin;
-
-    for (var i = 0; i < stringifiedArr.length; i++) {
-        if (stringifiedArr[i].split(":")[0].indexOf("Admin") != -1) {
-            admin = stringifiedArr[i].split(":")[1].trim();
-            break;
-        }
-    }
-
-    return admin;
-};
-
-var soc_gatewayValidation = function(stringifiedArr, callback) {
-    var beaconAddressArr    = soc_getBeaconAddressArr(stringifiedArr);
-    var uuidArr             = soc_getUUIDArr(stringifiedArr);
-    var majorArr            = soc_getMajorArr(stringifiedArr);
-    var minorArr            = soc_getMinorArr(stringifiedArr);
-
+var soc_gatewayValidation = function(beaconAddressArr, uuidArr, majorArr, minorArr, callback) {
     soc_getWorkplaceOfBeacons(beaconAddressArr, uuidArr, majorArr, minorArr, function(id) {
         soc_getWorkplaceName(id, function(name_workplace) {
             if (name_workplace != "undefined") {
@@ -1012,17 +783,15 @@ var soc_getWorkplaceOfBeacons = function(beaconAddressArr, uuidArr, majorArr, mi
     });
 };
 
-var soc_smartphoneValidation = function(stringifiedArr, callback) {
+var soc_smartphoneValidation = function(smartphone_address, callback) {
 
-    soc_getSmartphoneUserName(stringifiedArr, function(name) {
+    soc_getSmartphoneUserName(smartphone_address, function(name) {
 
         if (name != "undefined") {
-
             if (typeof callback === "function") {
                 callback(name);
             }
         } else {
-
             if (typeof callback === "function") {
                 callback(false);
             }
@@ -1030,9 +799,7 @@ var soc_smartphoneValidation = function(stringifiedArr, callback) {
     });
 };
 
-var soc_getSmartphoneUserName = function(stringifiedArr, callback) {
-    var smartphone_address = soc_getSmartphoneAddress(stringifiedArr);
-
+var soc_getSmartphoneUserName = function(smartphone_address, callback) {
     pool.getConnection(function(err, conn) {
         conn.query("SELECT IF ((SELECT COUNT(*) AS cnt FROM identity WHERE smartphone_address=? HAVING cnt > 0)"
             + ", (SELECT name FROM identity WHERE smartphone_address=?), 'undefined') AS name"
@@ -1052,13 +819,12 @@ var soc_getSmartphoneUserName = function(stringifiedArr, callback) {
     });
 };
 
-var soc_getSmartphoneUserEmployeeNumber = function(stringifiedArr, callback) {
-    var smartphone_address = soc_getSmartphoneAddress(stringifiedArr);
+var soc_getSmartphoneUserEmployeeNumber = function(smartphoneAddress, callback) {
 
     pool.getConnection(function(err, conn) {
         conn.query("SELECT IF ((SELECT COUNT(*) AS cnt FROM identity WHERE smartphone_address=? HAVING cnt > 0)"
             + ", (SELECT employee_number FROM identity WHERE smartphone_address=?), 'undefined') AS employee_number"
-            , [smartphone_address, smartphone_address]
+            , [smartphoneAddress, smartphoneAddress]
             , function(err, rows) {
                 if (err) {
                     console.error(err);
@@ -1074,9 +840,7 @@ var soc_getSmartphoneUserEmployeeNumber = function(stringifiedArr, callback) {
     });
 };
 
-var soc_registerCommute = function(stringifiedArr, id_workplace, datetime, callback) {
-    var smartphoneAddress   = soc_getSmartphoneAddress(stringifiedArr);
-
+var soc_registerCommute = function(smartphoneAddress, id_workplace, datetime, callback) {
     pool.getConnection(function(err, conn) {
         conn.query("INSERT INTO circumstance (datetime, id_workplace, smartphone_address)" +
             "VALUES (?, ?, ?)", [datetime, id_workplace, smartphoneAddress], function(err) {
@@ -1101,9 +865,7 @@ var soc_registerCommute = function(stringifiedArr, id_workplace, datetime, callb
     });
 };
 
-var soc_RSSICalibration = function(stringifiedArr, id, name, datetime, callback) {
-    var coordinateArr        = soc_getCoordinate(stringifiedArr);
-
+var soc_RSSICalibration = function(scoordinateArr, id, name, datetime, callback) {
     pool.getConnection(function(err, conn) {
         conn.query("UPDATE workplace SET coordinateX=?, coordinateY=?, coordinateZ=? WHERE id_workplace=?"
             , [coordinateArr[0], coordinateArr[1], coordinateArr[2], id], function(err) {
@@ -1282,20 +1044,6 @@ module.exports.id_checkAdmin                = id_checkAdmin;
 module.exports.id_getCircumstance           = id_getCircumstance;
 
 /* socket.js */
-module.exports.soc_analyzeJSON              = soc_analyzeJSON;
-module.exports.soc_getBeaconAddressArr      = soc_getBeaconAddressArr;
-module.exports.soc_getUUIDArr               = soc_getUUIDArr;
-module.exports.soc_getMajorArr              = soc_getMajorArr;
-module.exports.soc_getMinorArr              = soc_getMinorArr;
-module.exports.soc_getSmartphoneAddress     = soc_getSmartphoneAddress;
-module.exports.soc_getSignal                = soc_getSignal;
-module.exports.soc_getEmployeeNumber        = soc_getEmployeeNumber;
-module.exports.soc_getName                  = soc_getName;
-module.exports.soc_getPassword              = soc_getPassword;
-module.exports.soc_getDepartment            = soc_getDepartment;
-module.exports.soc_getPosition              = soc_getPosition;
-module.exports.soc_getPermission            = soc_getPermission;
-module.exports.soc_getAdmin                 = soc_getAdmin;
 module.exports.soc_gatewayValidation        = soc_gatewayValidation;
 module.exports.soc_smartphoneValidation     = soc_smartphoneValidation;
 module.exports.soc_getWorkplaceOfBeacons    = soc_getWorkplaceOfBeacons;
@@ -1308,7 +1056,6 @@ module.exports.soc_RSSICalibration          = soc_RSSICalibration;
 module.exports.soc_getEssentialData         = soc_getEssentialData;
 module.exports.soc_getBeaconMACAddress      = soc_getBeaconMACAddress;
 module.exports.soc_getRSSI                  = soc_getRSSI;
-module.exports.soc_getCoordinate            = soc_getCoordinate;
 
 module.exports.soc_amIRegistered            = soc_amIRegistered;
 
