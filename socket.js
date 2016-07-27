@@ -21,9 +21,6 @@ function getCurrentDateTime() {
 }
 
 io.on("connection", function(socket) {
-
-    var stringifiedArr;
-
     // Send a new RSA public key to all socket connected smartphone at everyday midnight
     schedule.scheduleJob('0 1 * * *', function() {
         socket.emit('rsaPublicKey', {
@@ -39,7 +36,7 @@ io.on("connection", function(socket) {
     });
 
     socket.on('requestRsaPublicKey', function(data) {
-        var smartphoneAddress = getSmartphoneAddress(data);
+        var smartphoneAddress = analyzer.getSmartphoneAddress(data);
 
         pool.soc_smartphoneValidation(smartphoneAddress, function(name) {
             if (name) {
@@ -62,31 +59,42 @@ io.on("connection", function(socket) {
      }
      */
     socket.on("circumstance", function(data) {
-        stringifiedArr = pool.soc_analyzeJSON(data);
+        if (typeof data === "undefined" || JSON.stringify(data).replace(/\{/g, "").replace(/\}/g, "").length == 0) {
+            logger("socket").info("circumstance", "New commute record: received undefined data or empty");
+        } else {
+            var smartphoneRsaPublicKey = data.rsaPublicKey;
+            var contentJson = analyzer.extractContentFromReceivedJson(data);
+            var smartphoneAddress = analyzer.getSmartphoneAddress(contentJson);
+            var beaconAddressArr = analyzer.getBeaconAddressArray(contentJson);
+            var uuidArr = analyzer.getUuidArray(contentJson);
+            var majorArr = analyzer.getMajorArray(contentJson);
+            var minorArr = analyzer.getMinorArray(contentJson);
 
-        pool.soc_gatewayValidation(stringifiedArr, function(id) {
-            if (id) {
-                pool.soc_smartphoneValidation(stringifiedArr, function (name) {
-                    if (name) {
-                        pool.soc_registerCommute(stringifiedArr, id, getCurrentDateTime(), function (valid) {
-                            if (valid) {
-                                socket.emit("answer", {
-                                    isSuccess: "true"
-                                });
+            pool.soc_gatewayValidation(beaconAddressArr, uuidArr, majorArr, minorArr, function (id) {
+                if (id) {
+                    pool.soc_smartphoneValidation(smartphoneAddress, function (name) {
+                        if (name) {
+                            pool.soc_registerCommute(smartphoneAddress, id, getCurrentDateTime(), function (valid) {
+                                if (valid) {
+                                    var contentJsonString = "{ ";
+                                    contentJsonString += "\"requestSuccess\":\"" + true + "\"";
+                                    contentJsonString += " }";
 
-                                logger("socket").info("Circumstance", "New commute record: \n" + stringifiedArr + "\n\tRegister success");
-                            } else {
-                                logger("socket").info("Circumstance", "New commute record: \n" + stringifiedArr + "\n\tRegister fail: Database connection problem");
-                            }
-                        });
-                    } else {
-                        logger("socket").info("Circumstance", "New commute record: \n" + stringifiedArr + "\n\tRegister fail: Unverified smartphone");
-                    }
-                });
-            } else {
-                logger("socket").info("Circumstance", "New commute record: \n" + stringifiedArr + "\n\tRegister fail: Unverified gateway");
-            }
-        });
+                                    socket.emit("answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
+                                    logger("socket").info("Circumstance", "New commute record: \n\tRegister success");
+                                } else {
+                                    logger("socket").info("Circumstance", "New commute record: \n\tRegister fail: Database connection problem");
+                                }
+                            });
+                        } else {
+                            logger("socket").info("Circumstance", "New commute record: \n\tRegister fail: Unverified smartphone");
+                        }
+                    });
+                } else {
+                    logger("socket").info("Circumstance", "New commute record: \n\tRegister fail: Unverified gateway");
+                }
+            });
+        }
     });
 
     /*
@@ -104,30 +112,42 @@ io.on("connection", function(socket) {
      }
      */
     socket.on("calibration", function(data) {
-        stringifiedArr = pool.soc_analyzeJSON(data);
+        if (typeof data === "undefined" || JSON.stringify(data).replace(/\{/g, "").replace(/\}/g, "").length == 0) {
+            logger("socket").info("calibration", "New calibration data: received undefined data or empty");
+        } else {
+            var smartphoneRsaPublicKey = data.rsaPublicKey;
+            var contentJson = analyzer.extractContentFromReceivedJson(data);
+            var smartphoneAddress = analyzer.getSmartphoneAddress(contentJson);
+            var beaconAddressArr = analyzer.getBeaconAddressArray(contentJson);
+            var uuidArr = analyzer.getUuidArray(contentJson);
+            var majorArr = analyzer.getMajorArray(contentJson);
+            var minorArr = analyzer.getMinorArray(contentJson);
+            var coordinateArr = analyzer.getCoordinateArray(contentJson);
 
-        pool.soc_gatewayValidation(stringifiedArr, function(id) {
-            if (id) {
-                pool.soc_smartphoneValidation(stringifiedArr, function(name) {
-                    if (name) {
-                        pool.soc_RSSICalibration(stringifiedArr, id, name, getCurrentDateTime(), function(valid) {
-                            if (valid) {
-                                socket.emit("answer", {
-                                    isSuccess: "true"
-                                });
+            pool.soc_gatewayValidation(beaconAddressArr, uuidArr, majorArr, minorArr, function(id) {
+                if (id) {
+                    pool.soc_smartphoneValidation(smartphoneAddress, function(name) {
+                        if (name) {
+                            pool.soc_RSSICalibration(coordinateArr, id, name, getCurrentDateTime(), function(valid) {
+                                if (valid) {
+                                    var contentJsonString = "{ ";
+                                    contentJsonString += "\"requestSuccess\":\"" + true + "\"";
+                                    contentJsonString += " }";
 
-                                logger("socket").info("Calibration", "New calibration data: \n" + stringifiedArr + "\n\tRegister success");
-                            }
-                            logger("socket").info("Calibration", "New calibration data: \n" + stringifiedArr + "\n\tRegister fail: Database connection problem");
-                        });
-                    } else {
-                        logger("socket").info("Calibration", "New calibration data: \n" + stringifiedArr + "\n\tRegister fail: Unverified smartphone");
-                    }
-                });
-            } else {
-                logger("socket").info("Calibration", "New calibration data: \n" + stringifiedArr + "\n\tRegister fail: Unverified gateway");
-            }
-        });
+                                    socket.emit("answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
+                                    logger("socket").info("Calibration", "New calibration data: \n\tRegister success");
+                                }
+                                logger("socket").info("Calibration", "New calibration data: \n\tRegister fail: Database connection problem");
+                            });
+                        } else {
+                            logger("socket").info("Calibration", "New calibration data: \n\tRegister fail: Unverified smartphone");
+                        }
+                    });
+                } else {
+                    logger("socket").info("Calibration", "New calibration data: \n\tRegister fail: Unverified gateway");
+                }
+            });
+        }
     });
 
     /*
@@ -166,31 +186,38 @@ io.on("connection", function(socket) {
      }
      */
     socket.on("amIRegistered", function(data) {
-        stringifiedArr = pool.soc_analyzeJSON(data);
-        var smartphone_address = pool.soc_getSmartphoneAddress(stringifiedArr);
+        if (typeof data === "undefined" || JSON.stringify(data).replace(/\{/g, "").replace(/\}/g, "").length == 0) {
+            logger("socket").info("amIRegistered", "Whether user registered or not: received undefined data or empty");
+        } else {
+            var smartphoneRsaPublicKey = data.rsaPublicKey;
+            var contentJson = analyzer.extractContentFromReceivedJson(data);
+            var smartphoneAddress = analyzer.getSmartphoneAddress(contentJson);
 
-        pool.soc_amIRegistered(smartphone_address, getCurrentDateTime(), function(isRegistered) {
-            if (isRegistered) {
-                pool.soc_getSmartphoneUserName(smartphone_address, function(employee_name) {
-                    pool.soc_getSmartphoneUserENum(stringifiedArr, function(employee_number) {
-                        pool.id_isPermitted(smartphone_address, employee_number, function(permitted) {
-                            socket.emit("data", {
-                                registered: true,
-                                permitted: permitted,
-                                name: employee_name,
-                                employee_number: employee_number
+            pool.soc_amIRegistered(smartphoneAddress, getCurrentDateTime(), function (isRegistered) {
+                if (isRegistered) {
+                    pool.soc_getSmartphoneUserName(smartphoneAddress, function (employee_name) {
+                        pool.soc_getSmartphoneUserENum(smartphoneAddress, function (employee_number) {
+                            pool.id_isPermitted(smartphoneAddress, employee_number, function (permitted) {
+                                var contentJsonString = "{ ";
+                                contentJsonString += "\"registered\":\"" + true + "\", ";
+                                contentJsonString += "\"permitted\":\"" + permitted + "\",";
+                                contentJsonString += "\"name\":\"" + employee_name + "\",";
+                                contentJsonString += "\"employee_number\":\"" + employee_number + "\"";
+                                contentJsonString += " }";
+
+                                socket.emit("data", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
+                                logger("socket").info("amIRegistered", "Whether user registered or not:\n\tSend: " + employee_name + ", " + employee_number);
                             });
-                            logger("socket").info("AutoLoginData", "Whether user registered or not: \n" + stringifiedArr + "\n\tSend: " + employee_name + ", " + employee_number);
                         });
                     });
-                });
-            } else {
-                socket.emit("data", {
-                    registered: false
-                });
-                logger("socket").info("AutoLoginData", "Whether user registered or not: \n" + stringifiedArr + "\n\tSend: Not registered");
-            }
-        });
+                } else {
+                    socket.emit("data", {
+                        registered: false
+                    });
+                    logger("socket").info("amIRegistered", "Whether user registered or not:\n\tSend: Not registered");
+                }
+            });
+        }
     });
 
     /*
@@ -206,29 +233,37 @@ io.on("connection", function(socket) {
      }
      */
     socket.on("signupRequest", function(data) {
-        stringifiedArr = pool.soc_analyzeJSON(data);
-        var smartphone_address = pool.soc_getSmartphoneAddress(stringifiedArr);
-        var employee_number = pool.soc_getEmployeeNumber(stringifiedArr);
-        var name = pool.soc_getName(stringifiedArr);
-        var password = pool.soc_getPassword(stringifiedArr);
-        var department = pool.soc_getDepartment(stringifiedArr);
-        var position = pool.soc_getPosition(stringifiedArr);
-        var permission = pool.soc_getPermission(stringifiedArr);
-        var admin = pool.soc_getAdmin(stringifiedArr);
+        if (typeof data === "undefined" || JSON.stringify(data).replace(/\{/g, "").replace(/\}/g, "").length == 0) {
+            logger("socket").info("signupRequest", "New sign-up request: received undefined data or empty");
+        } else {
+            var smartphoneRsaPublicKey = data.rsaPublicKey;
+            var contentJson = analyzer.extractContentFromReceivedJson(data);
+            var smartphone_address = analyzer.getSmartphoneAddress(contentJson);
+            var employee_number = analyzer.getEmployeeNumber(contentJson);
+            var name = analyzer.getName(contentJson);
+            var password = analyzer.getPassword(contentJson);
+            var department = analyzer.getDepartment(contentJson);
+            var position = analyzer.getPosition(contentJson);
+            var permission = analyzer.getPermission(contentJson);
+            var admin = analyzer.getAdmin(contentJson);
 
-        pool.id_registerUser(smartphone_address, employee_number, name, password, department, position, permission, admin, function(success) {
-            if (success) {
-                socket.emit("answer", {
-                    requestSuccess: true
-                });
-                logger("socket").info("signupRequest", "New sign-up request: \n" + smartphone_address + "\t" + employee_number + "\t" + name + "\n\tRegister Success");
-            } else {
-                socket.emit("answer", {
-                    requestSuccess: false
-                });
-                logger("socket").info("signupRequest", "New sign-up request: \n" + smartphone_address + "\t" + employee_number + "\t" + name + "\n\tRegister Fail");
-            }
-        });
+            pool.id_registerUser(smartphone_address, employee_number, name, password, department, position, permission, admin, function(success) {
+                var contentJsonString ="{ ";
+                if (success) {
+                    contentJsonString += "\"requestSuccess\":\"" + true + "\"";
+                    contentJsonString += " }";
+
+                    socket.emit("answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
+                    logger("socket").info("signupRequest", "New sign-up request: \n" + smartphone_address + "\t" + employee_number + "\t" + name + "\n\tRegister Success");
+                } else {
+                    contentJsonString += "\"requestSuccess\":\"" + true + "\"";
+                    contentJsonString += " }";
+
+                    socket.emit("answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
+                    logger("socket").info("signupRequest", "New sign-up request: \n" + smartphone_address + "\t" + employee_number + "\t" + name + "\n\tRegister Fail");
+                }
+            });
+        }
     });
 
     /*
@@ -237,30 +272,38 @@ io.on("connection", function(socket) {
      Signal: 'SOMETHING'
      }
      */
-    socket.on("requestChartData", function(data) {
-        stringifiedArr = pool.soc_analyzeJSON(data);
-        var signal = pool.soc_getSignal(stringifiedArr);
+    socket.on("amIRegistered", function(data) {
+        if (typeof data === "undefined" || JSON.stringify(data).replace(/\{/g, "").replace(/\}/g, "").length == 0) {
+            logger("socket").info("requestChartData", "Request Chart Data: received undefined data or empty");
+        } else {
+            var smartphoneRsaPublicKey = data.rsaPublicKey;
+            var contentJson = analyzer.extractContentFromReceivedJson(data);
+            var smartphoneAddress = analyzer.getSmartphoneAddress(contentJson);
+            var signal = analyzer.getSignal(contentJson);
+            
+            switch (signal) {
 
-        switch (signal) {
+                // Population of each department
+                case "POPULATION":
+                    pool.soc_smartphoneValidation(smartphoneAddress, function (name) {
+                        if (name != undefined) {
+                            pool.chart_getPopulOfDepartment(function (chartData) {
+                                socket.emit("data", analyzer.encryptSendJson(smartphoneAddress, chartData));
+                            });
+                        } else {
+                            var contentJsonString = "{ ";
+                            contentJsonString += "\"registered\":\"" + false + "\"";
+                            contentJsonString += " }";
 
-            // Population of each department
-            case "POPULATION":
-                pool.soc_smartphoneValidation(stringifiedArr, function (name) {
-                    if (name != undefined) {
-                        pool.chart_getPopulOfDepartment(function (chartData) {
-                            socket.emit("data", chartData);
-                        });
-                    } else {
-                        socket.emit("data", {
-                            registered: "false"
-                        });
-                    }
-                });
-                break;
+                            socket.emit("data", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
+                        }
+                    });
+                    break;
 
-            default:
-                break;
+                default:
+                    break;
 
+            }
         }
     });
 });
