@@ -1044,20 +1044,6 @@ module.exports.id_checkAdmin                = id_checkAdmin;
 module.exports.id_getCircumstance           = id_getCircumstance;
 
 /* socket.js */
-module.exports.soc_analyzeJSON              = soc_analyzeJSON;
-module.exports.soc_getBeaconAddressArr      = soc_getBeaconAddressArr;
-module.exports.soc_getUUIDArr               = soc_getUUIDArr;
-module.exports.soc_getMajorArr              = soc_getMajorArr;
-module.exports.soc_getMinorArr              = soc_getMinorArr;
-module.exports.soc_getSmartphoneAddress     = soc_getSmartphoneAddress;
-module.exports.soc_getSignal                = soc_getSignal;
-module.exports.soc_getEmployeeNumber        = soc_getEmployeeNumber;
-module.exports.soc_getName                  = soc_getName;
-module.exports.soc_getPassword              = soc_getPassword;
-module.exports.soc_getDepartment            = soc_getDepartment;
-module.exports.soc_getPosition              = soc_getPosition;
-module.exports.soc_getPermission            = soc_getPermission;
-module.exports.soc_getAdmin                 = soc_getAdmin;
 module.exports.soc_gatewayValidation        = soc_gatewayValidation;
 module.exports.soc_smartphoneValidation     = soc_smartphoneValidation;
 module.exports.soc_getWorkplaceOfBeacons    = soc_getWorkplaceOfBeacons;
@@ -1070,7 +1056,6 @@ module.exports.soc_RSSICalibration          = soc_RSSICalibration;
 module.exports.soc_getEssentialData         = soc_getEssentialData;
 module.exports.soc_getBeaconMACAddress      = soc_getBeaconMACAddress;
 module.exports.soc_getRSSI                  = soc_getRSSI;
-module.exports.soc_getCoordinate            = soc_getCoordinate;
 
 module.exports.soc_amIRegistered            = soc_amIRegistered;
 
