@@ -4,6 +4,9 @@ var router = express.Router();
 var pool = require("../db");
 var logger = require("../logger");
 
+// session will be expired in 1 hour
+var cookieExpires = 3600000;
+
 var getCurrentDateTime = function() {
     var date = new Date();
     var currentMonth = date.getMonth() + 1;
@@ -111,14 +114,18 @@ router.post("/", function(req, res) {
     pool.id_loginValidation(signin_id, signin_pw, function(valid) {
 
         if (valid == "unregistered") {
+            // If employee number is unregistered
             res.send("<script>alert('Unregistered user!'); history.go(-1);</script>");
         } else if (valid == "wrong password") {
+            // If typed password is wrong
             res.send("<script>alert('Check your password!'); history.go(-1);</script>");
         } else if (typeof valid !== "undefined") {
+            // Login success
             pool.id_getSmartphoneAddress(signin_id, function (smartphone_address) {
                 req.session.userid = signin_id;
                 req.session.smartphone_address = smartphone_address;
                 req.session.admin = valid;
+                req.session.cookie.expires = new Date(Date.now() + cookieExpires);
 
                 res.send("<script>location.href='/home';</script>");
             });
