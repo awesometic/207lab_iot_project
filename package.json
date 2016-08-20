@@ -20,6 +20,7 @@
     "node-schedule": "^1.1.1",
     "serve-favicon": "~2.3.0",
     "socket.io": "^1.4.5",
+    "time": "^0.11.4",
     "winston": "^2.2.0",
     "winston-daily-rotate-file": "^1.1.4"
   }

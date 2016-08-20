@@ -29,7 +29,7 @@ var pool = mysql.createPool({
 // Async is a utility module which provides straight-forward,
 // powerful functions for working with asynchronous JavaScript
 var async = require("async");
-
+var currentTime = require('./currentTime');
 var logger = require("./logger");
 
 /* Functions */
@@ -229,7 +229,7 @@ var id_registerUser = function(smartphone_address, employee_number, name, passwo
                 console.error(err);
                 conn.release();
             }
-            
+
             if (typeof callback === "function") {
                 callback(true);
             }
@@ -249,7 +249,7 @@ var id_modifyUser = function(smartphone_address, employee_number, modify_name, m
                 console.error(err);
                 conn.release();
             }
-            
+
             if (typeof callback === "function") {
                 callback(true);
             }
@@ -579,8 +579,8 @@ var id_getUserListCond = function(department, position, permission, admin, callb
             console.error(err);
 
         var sql = "SELECT * FROM identity WHERE department LIKE " + conn.escape('%' + department + '%') +
-                " AND position LIKE " + conn.escape('%' + position + '%') +
-                " AND permission=" + conn.escape(permission) + " AND admin=" + conn.escape(admin);
+            " AND position LIKE " + conn.escape('%' + position + '%') +
+            " AND permission=" + conn.escape(permission) + " AND admin=" + conn.escape(admin);
 
         conn.query(sql, function(err, rows) {
             if (err) {
@@ -1000,6 +1000,225 @@ var chart_getPopulationOfDepartments = function(callback) {
     });
 };
 
+/**
+ * It returns working time of the user or users
+ * Parameters is not specified, but the sequence of each parameters is important
+ * Each parameters should be:
+ *  smartphone_address, id_workplace, startDatetime, endDatetime
+ *
+ * Parameter usage (count):
+ *  0 (none)
+ *  1 smartphone_address
+ *  2 smartphone_address, id_workplace
+ *  3 smartphone_address, id_workplace, startDatetime
+ *  4 smartphone_address, id_workplace, startDatetime, endDatetime
+ *  2 smartphone_address, startDatetime
+ *  3 smartphone_address, startDatetime, endDatetime
+ *  1 id_workplace
+ *  2 id_workplace, startDatetime
+ *  3 id_workplace, startDatetime, endDatetime
+ *  1 startDatetime
+ *  2 startDatetime, endDatetime
+ *
+ *  1
+ *  smartphone_address
+ *  id_workplace
+ *  startDatetime
+ *
+ *  2
+ *  smartphone_address, id_workplace
+ *  smartphone_address, startDatetime
+ *  id_workplace, startDatetime
+ *  startDatetime, endDatetime
+ *
+ *  3
+ *  smartphone_address, id_workplace, startDatetime
+ *  smartphone_address, startDatetime, endDatetime
+ *  id_workplace, startDatetime, endDatetime
+ *
+ *  4
+ *  smartphone_address, id_workplace, startDatetime, endDatetime
+ *
+ *
+ * It is not necessary to put all parameters in, even you can put no parameters in here
+ * It returns specific working time as concepts
+ */
+var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
+    var smartphone_address; // 00:00:00:00:00:00
+    var id_workplace;
+    var startDatetime; // 0000-00-00 00:00:00
+    var endDatetime;
+
+    var sql = "SELECT DATE_FORMAT(datetime, '%Y-%m-%d %H:%i:%s') as datetime, id_workplace, smartphone_address FROM circumstance";
+
+    var args = [];
+    for (var i = 0; i < arguments.length; i++) {
+        args.push(arguments[i]);
+    }
+
+    callback = args.pop();
+
+    if (args.length > 0) arg1 = args.shift(); else arg1 = null;
+    if (args.length > 0) arg2 = args.shift(); else arg2 = null;
+    if (args.length > 0) arg3 = args.shift(); else arg3 = null;
+    if (args.length > 0) arg4 = args.shift(); else arg4 = null;
+
+    if (arg1 != null) args.push(arg1);
+    if (arg2 != null) args.push(arg2);
+    if (arg3 != null) args.push(arg3);
+    if (arg4 != null) args.push(arg4);
+
+    pool.getConnection(function(err, conn) {
+        if (err) {
+            console.error(err);
+            conn.release();
+        }
+
+        switch (args.length) {
+            case 0:
+                break;
+
+            case 1:
+                args[0] = String(args[0]);
+
+                switch (args[0].length) {
+                    case 17:
+                        smartphone_address = args[0];
+                        sql += " WHERE smartphone_address = " + conn.escape(smartphone_address);
+                        break;
+
+                    case 19:
+                        startDatetime= currentTime.getCurrentTimezoneDateTime(args[0]);
+
+                        sql += " WHERE datetime >= " + conn.escape(startDatetime);
+                        break;
+
+                    default:
+                        id_workplace = args[0];
+                        sql += " WHERE id_workplace = " + conn.escape(id_workplace);
+                        break;
+                }
+                break;
+
+            case 2:
+                args[0] = String(args[0]);
+                args[1] = String(args[1]);
+
+                switch (args[0].length) {
+                    case 17:
+                        smartphone_address = args[0];
+
+                        switch (args[1].length) {
+                            case 19:
+                                startDatetime = currentTime.getCurrentTimezoneDateTime(args[1]);
+                                sql += " WHERE smartphone_address = " + conn.escape(smartphone_address) +
+                                    " AND datetime >= "  + conn.escape(startDatetime);
+                                break;
+
+                            default:
+                                id_workplace = args[1];
+                                sql += " WHERE smartphone_address = " + conn.escape(smartphone_address) +
+                                    " AND id_workplace = "  + conn.escape(id_workplace);
+                                break;
+                        }
+                        break;
+
+                    case 19:
+                        startDatetime = currentTime.getCurrentTimezoneDateTime(args[0]);
+                        endDatetime = currentTime.getCurrentTimezoneDateTime(args[1]);
+
+                        sql += " WHERE datetime >= " + conn.escape(startDatetime) +
+                            " AND datetime <= " + conn.escape(endDatetime);
+                        break;
+
+                    default:
+                        id_workplace = args[0];
+                        startDatetime = currentTime.getCurrentTimezoneDateTime(args[1]);
+                        sql += " WHERE id_workplace = " + conn.escape(id_workplace) +
+                            " AND datetime >= " + conn.escape(startDatetime);
+                        break;
+                }
+                break;
+
+            case 3:
+                args[0] = String(args[0]);
+                args[1] = String(args[1]);
+                args[2] = String(args[2]);
+
+                switch (args[0].length) {
+                    case 17:
+                        smartphone_address = args[0];
+
+                        switch (args[1].length) {
+                            case 19:
+                                startDatetime = currentTime.getCurrentTimezoneDateTime(args[1]);
+                                endDatetime = currentTime.getCurrentTimezoneDateTime(args[2]);
+                                sql += " WHERE smartphone_address = " + conn.escape(smartphone_address) +
+                                    " AND datetime >= " + conn.escape(startDatetime) + " AND datetime <= " + conn.escape(endDatetime);
+                                break;
+
+                            default:
+                                id_workplace = args[1];
+                                startDatetime = currentTime.getCurrentTimezoneDateTime(args[2]);
+                                sql += " WHERE smartphone_address = " + conn.escape(smartphone_address) +
+                                    "AND id_workplace = " + conn.escape(id_workplace) + " AND datetime >= " + conn.escape(startDatetime);
+                                break;
+                        }
+                        break;
+
+                    default:
+                        id_workplace = args[0];
+                        startDatetime = currentTime.getCurrentTimezoneDateTime(args[1]);
+                        endDatetime = currentTime.getCurrentTimezoneDateTime(args[2]);
+                        sql += " WHERE id_workplace = " + conn.escape(id_workplace) +
+                            " AND datetime >= " + conn.escape(startDatetime) + " AND datetime <= " + conn.escape(endDatetime);
+                        break;
+                }
+                break;
+
+            case 4:
+                args[0] = String(args[0]);
+                args[1] = String(args[1]);
+                args[2] = String(args[2]);
+                args[3] = String(args[3]);
+
+                smartphone_address = args[0];
+                id_workplace = args[1];
+                startDatetime = currentTime.getCurrentTimezoneDateTime(args[2]);
+                endDatetime = currentTime.getCurrentTimezoneDateTime(args[3]);
+
+                sql += " WHERE smartphone_address = " + conn.escape(smartphone_address) +
+                    " AND id_workplace = " + conn.escape(id_workplace) +
+                    " AND datetime >= " + conn.escape(startDatetime) + " AND datetime <= " + conn.escape(endDatetime);
+                break;
+
+            default:
+                sql = null;
+                break;
+        }
+
+        conn.query(sql, function(err, rows) {
+            if (err) {
+                console.error(err);
+                conn.release();
+            }
+
+            console.log(sql);
+            if (typeof rows[0].datetime !== 'undefined') {
+                console.log(rows[0].datetime);
+                console.log(rows[rows.length - 1].datetime);
+            }
+
+            if (typeof callback === "function") {
+                callback(rows);
+            }
+
+            if (conn.connected) {
+                conn.release();
+            }
+        });
+    });
+};
 
 /* Exports */
 module.exports = pool;
@@ -1061,3 +1280,4 @@ module.exports.soc_amIRegistered            = soc_amIRegistered;
 
 /* Chart */
 module.exports.chart_getPopulOfDepartment   = chart_getPopulationOfDepartments;
+module.exports.chart_getCircumstanceTable   = chart_getCircumstanceTable;

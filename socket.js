@@ -5,20 +5,10 @@ var io = require("socket.io").listen(port);
 var pool = require("./db");
 var logger = require('./logger');
 var schedule = require('node-schedule');
+var async = require('async');
+var currentTime = require('./currentTime');
 
 var analyzer = require('./analyzer');
-
-// To get server's current time
-function getCurrentDateTime() {
-    var date = new Date();
-    var currentMonth = date.getMonth() + 1;
-    var str_currentMonth;
-    if (currentMonth < 10)
-        str_currentMonth = '0' + currentMonth;
-
-    return date.getFullYear() + "-" + str_currentMonth + "-" + date.getDate()
-        + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-}
 
 io.on("connection", function(socket) {
     // Send a new RSA public key to all socket connected smartphone at everyday midnight
@@ -74,7 +64,7 @@ io.on("connection", function(socket) {
                 if (id) {
                     pool.soc_smartphoneValidation(smartphoneAddress, function (name) {
                         if (name) {
-                            pool.soc_registerCommute(smartphoneAddress, id, getCurrentDateTime(), function (valid) {
+                            pool.soc_registerCommute(smartphoneAddress, id, currentTime.getCurrentDateTime(), function (valid) {
                                 if (valid) {
                                     var contentJsonString = "{ ";
                                     contentJsonString += "\"requestSuccess\":\"" + true + "\"";
@@ -128,7 +118,7 @@ io.on("connection", function(socket) {
                 if (id) {
                     pool.soc_smartphoneValidation(smartphoneAddress, function(name) {
                         if (name) {
-                            pool.soc_RSSICalibration(coordinateArr, id, name, getCurrentDateTime(), function(valid) {
+                            pool.soc_RSSICalibration(coordinateArr, id, name, currentTime.getCurrentDateTime(), function(valid) {
                                 if (valid) {
                                     var contentJsonString = "{ ";
                                     contentJsonString += "\"requestSuccess\":\"" + true + "\"";
@@ -193,7 +183,7 @@ io.on("connection", function(socket) {
             var contentJson = analyzer.extractContentFromReceivedJson(data);
             var smartphoneAddress = analyzer.getSmartphoneAddress(contentJson);
 
-            pool.soc_amIRegistered(smartphoneAddress, getCurrentDateTime(), function (isRegistered) {
+            pool.soc_amIRegistered(smartphoneAddress, currentTime.getCurrentDateTime(), function (isRegistered) {
                 if (isRegistered) {
                     pool.soc_getSmartphoneUserName(smartphoneAddress, function (employee_name) {
                         pool.soc_getSmartphoneUserENum(smartphoneAddress, function (employee_number) {
@@ -280,7 +270,7 @@ io.on("connection", function(socket) {
             var contentJson = analyzer.extractContentFromReceivedJson(data);
             var smartphoneAddress = analyzer.getSmartphoneAddress(contentJson);
             var signal = analyzer.getSignal(contentJson);
-            
+
             switch (signal) {
 
                 // Population of each department
@@ -306,6 +296,7 @@ io.on("connection", function(socket) {
             }
         }
     });
+
 });
 
 module.exports = io;
