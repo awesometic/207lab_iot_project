@@ -36,13 +36,13 @@ router.get('/signup', function(req, res, next) {
 
 });
 
-router.get('/home', function(req, res, next) {
+router.get('/dashboard', function(req, res, next) {
     var userid = req.session.userid;
     var smartphone_address = req.session.smartphone_address;
     var admin = req.session.admin;
 
     if (typeof userid != "undefined" || typeof smartphone_address != "undefined") {
-        res.render('home', {
+        res.render('dashboard', {
             title: title,
             userid: req.session.userid,
             smartphone_address: req.session.smartphone_address,
@@ -53,6 +53,54 @@ router.get('/home', function(req, res, next) {
     }
 });
 
+router.get('/profile', function(req, res, next) {
+
+    res.render('profile', {
+        title: title
+    });
+
+});
+
+router.get('/member', function(req, res, next) {
+
+    res.render('member', {
+        title: title
+    });
+
+});
+
+router.get('/workplace', function(req, res, next) {
+
+    res.render('workplace', {
+        title: title
+    });
+
+});
+
+router.get('/beacon', function(req, res, next) {
+
+    res.render('beacon', {
+        title: title
+    });
+
+});
+
+router.get('/managework', function(req, res, next) {
+
+    res.render('managework', {
+        title: title
+    });
+
+});
+
+router.get('/permission', function(req, res, next) {
+
+    res.render('permission', {
+        title: title
+    });
+
+});
+
 router.get('/logout', function(req, res, next) {
     req.session.destroy(function(err) {
         if (err)
@@ -61,50 +109,21 @@ router.get('/logout', function(req, res, next) {
     });
 });
 
-router.get('/chart', function(req, res, next) {
-    var userid = req.session.userid;
-    var smartphone_address = req.session.smartphone_address;
-    var admin = req.session.admin;
+router.get('/d3chart1', function(req, res, next) {
 
-    if (typeof userid != "undefined" || typeof smartphone_address != "undefined") {
-
-        pool.chart_getPopulOfDepartment(function (departItems) {
-            if (admin) {
-                res.render('chart', {
-                    title: title,
-                    userid: req.session.userid,
-                    smartphone_address: req.session.smartphone_address,
-                    admin: req.session.admin,
-                    departItems: departItems
-                });
-            } else {
-                res.render('chart', {
-                    title: title,
-                    userid: req.session.userid,
-                    smartphone_address: req.session.smartphone_address,
-                    admin: req.session.admin,
-                    departItems: departItems
-                });
-            }
-        });
-
-    } else {
-        res.send("<script>location.href='/';</script>");
-    }
-});
-
-router.get('/test', function(req, res, next) {
-    pool.chart_getPopulOfDepartment(function (departItems) {
-        res.render('chart/d3_population_of_each_department', {
-            title: title,
-            userid: req.session.userid,
-            smartphone_address: req.session.smartphone_address,
-            admin: req.session.admin,
-            departItems: departItems
-        });
+    res.render('d3chart1', {
+        title: title
     });
+
 });
 
+router.get('/d3chart2', function(req, res, next) {
+
+    res.render('d3chart2', {
+        title: title
+    });
+
+});
 
 /* POST */
 router.post("/", function(req, res) {
@@ -127,7 +146,7 @@ router.post("/", function(req, res) {
                 req.session.admin = valid;
                 req.session.cookie.expires = new Date(Date.now() + cookieExpires);
 
-                res.send("<script>location.href='/home';</script>");
+                res.send("<script>location.href='/dashboard';</script>");
             });
         } else {
             res.send("<script>alert('Server error'); history.go(-1);</script>");

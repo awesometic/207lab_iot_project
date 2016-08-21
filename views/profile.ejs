@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Project_CM</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="dist/css/skins/skin-blue.min.css">
+</head>
+
+
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <!-- Main Header -->
+    <header class="main-header">
+
+        <!-- Logo -->
+        <a href="dashboard" class="logo">
+            <!-- mini logo for sidebar mini 50x50 pixels -->
+            <span class="logo-mini"><b>207LAB</b></span>
+            <!-- logo for regular state and mobile devices -->
+            <span class="logo-lg"><b>Suwon univ</b></span>
+        </a>
+
+        <!-- Header Navbar -->
+        <nav class="navbar navbar-static-top" role="navigation">
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+
+
+            <!-- Navbar Right Menu -->
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+
+                    <!-- left-head side picture part -->
+                    <li class="dropdown user user-menu">
+                        <!-- Menu Toggle Button -->
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <!-- The user image in the navbar-->
+                            <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                            <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                            <span class="hidden-xs">이름 </span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- The user image in the menu -->
+                            <li class="user-header">
+                                <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+
+                                <p>
+                                    이름 - 직급(또는 부서)
+                                    <small>근무시작일</small>
+                                </p>
+
+                            </li>
+
+                            <!-- Menu Footer-->
+                            <li class="user-footer">
+                                <div class="pull-right">
+                                    <a href="logout" class="btn btn-default btn-flat">로그아웃</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Control Sidebar Toggle Button -->
+
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <!-- Left side column. contains the logo and sidebar -->
+    <aside class="main-sidebar">
+
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+
+            <!-- Sidebar user panel (optional) -->
+            <div class="user-panel">
+                <div class="pull-left image">
+                    <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                </div>
+                <div class="pull-left info">
+                    <p>이름</p>
+                    <!-- Status -->
+                    <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                </div>
+            </div>
+
+
+
+            <!-- Sidebar Menu -->
+            <ul class="sidebar-menu">
+                <li class="header">Suwon university(회사이름)</li>
+                <!-- Optionally, you can add icons to the links -->
+
+                <li class=""><a href="dashboard"><i class="fa fa-bell"></i> <span> 메인페이지</span></a></li>
+                <!--                   http://14.63.219.156/dashboard                 -->
+                <li class="active"><a href="profile"><i class="fa fa-user"></i> <span> 개인정보수정</span></a></li>
+                <!--                   http://14.63.219.156/profile                   -->
+                <li><a href="member"><i class="fa fa-thumbs-up"></i> <span> 직원관리</span></a></li>
+                <!--                   http://14.63.219.156/member                    -->
+                <li><a href="workplace"><i class="fa fa-square"></i> <span> 사무실관리</span></a></li>
+                <!--                  http://14.63.219.156/workplace                  -->
+
+
+
+                <!-- 근무기록조회 사이드바 -->
+                <li class="treeview">
+                    <a href="manageworks">
+                        <!-- http://14.63.219.156/manageworks -->
+                        <i class="fa fa-search"></i>
+                        <span> 근무기록조회</span>
+                        <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                  </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="d3chart1"><i class="fa fa-circle-o"></i>사무실이동현황</a></li>
+                        <!-- 14.63.219.156/d3chart1 -->
+                        <li><a href="d3chart2"><i class="fa fa-circle-o"></i>직원근무현황</a></li>
+                        <!-- 14.63.219.156/d3chart2 -->
+                    </ul>
+                </li>
+
+
+                <!-- 관리 사이드바-->
+                <li class="treeview">
+                    <a href="permissiom">
+                        <!-- 14.63.219.156/permission-->
+                        <i class="fa fa-user-plus"></i>
+                        <span> 관리</span>
+                        <span class="pull-right-container">
+                          <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="permission"><i class="fa fa-circle-o"></i>가입허가</a></li>
+                        <!-- 14.63.219.156/permission -->
+                        <li><a href="beacon"><i class="fa fa-circle-o"></i>비콘관리</a></li>
+                        <!-- 14.63.219.156/beacon -->
+                    </ul>
+                </li>
+            </ul>
+
+
+
+
+            <!-- /.sidebar-menu -->
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+
+
+        <!-- Main content -->
+        <section class="content">
+
+            <div class="container">
+
+                <div class="row">
+
+                    <div class="alert alert-info alert-dismissable" style="
+    width: 1022px;
+    margin-left: 0px;
+    margin-right: 0px;
+">
+                        <a class="panel-close close" data-dismiss="alert">×</a>
+
+                        정보를 입력해주세요
+                    </div>
+                    <!-- left column -->
+                    <div class="col-md-4 col-sm-6 col-xs-12" style="top: 82px;">
+                        <div class="text-center">
+                            <img src="http://lorempixel.com/200/200/people/9/" class="avatar img-circle img-thumbnail">
+
+                        </div>
+                    </div>
+                    <!-- edit form column -->
+                    <div class="col-md-8 col-sm-6 col-xs-12 personal-info">
+
+                        <!--14.63.219.156/profile?
+                        name=asd&employee_number=asd&workplace=&smartphone_address=&position=&password=&password=# -->
+                        <!-- 이건 프로필수정 페이지로 위에 값들은 데이터베이스의 identity에 있는 각각의 컬럼들의 값을 수정하는 모습이다
+                        name,employee_number,workplace,smartphone_address,position,password 가 필요함-->
+
+                        <form action="#" class="form-horizontal" role="form" style="margin-right:300px; margin-top:25px;" method ="post">
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">이름:</label>
+                                <div class="col-lg-8">
+                                    <input class="form-control" name="name"  type="text" maxlength="5">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">사원번호:</label>
+                                <div class="col-lg-8">
+                                    <input class="form-control" name="employee_number"  type="text" maxlength="10">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">회사명:</label>
+                                <div class="col-lg-8">
+                                    <input class="form-control" name="workplace" type="text" maxlength="10">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">스마트폰주소:</label>
+                                <div class="col-lg-8">
+                                    <input class="form-control" name="smartphone_address" type="text" maxlength="16">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">직급:</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" name="position"  type="text" maxlength="5">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">비밀번호:</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" name="password"  type="password" maxlength="10" >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">비밀번호확인:</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" name="password" type="password">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label"></label>
+                                <div class="col-md-8">
+                                    <input class="btn btn-primary" value="Save Changes" type="submit">
+                                    <span></span>
+                                    <input class="btn btn-default" value="Cancel" type="reset">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Main Footer -->
+    <footer class="main-footer">
+        <!-- To the right -->
+        <div class="pull-right hidden-xs">
+
+        </div>
+        <!-- Default to the left -->
+        <strong>IOT Project &copy;  <a href="#">207LAB</a></strong> of Suwon university
+    </footer>
+
+</div>
+<!-- ./wrapper -->
+<!-- REQUIRED JS SCRIPTS -->
+
+<!-- jQuery 2.2.3 -->
+<script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/app.min.js"></script>
+
+</body>
+</html>

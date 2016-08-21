@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="dist/css/skins/skin-blue.min.css">
 </head>
 
+
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
@@ -24,7 +25,7 @@
     <header class="main-header">
 
         <!-- Logo -->
-        <a href="home" class="logo">
+        <a href="dashboard" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini"><b>207LAB</b></span>
             <!-- logo for regular state and mobile devices -->
@@ -78,6 +79,7 @@
             </div>
         </nav>
     </header>
+
     <!-- Left side column. contains the logo and sidebar -->
     <aside class="main-sidebar">
 
@@ -103,28 +105,50 @@
                 <li class="header">Suwon university(회사이름)</li>
                 <!-- Optionally, you can add icons to the links -->
 
-                <li><a href="#"><i class="fa fa-user"></i> <span> 개인정보수정</span></a></li>
+                <li class="active"><a href="dashboard"><i class="fa fa-bell"></i> <span> 메인페이지</span></a></li>
+                <!--                   http://14.63.219.156/dashboard                 -->
+                <li><a href="profile"><i class="fa fa-user"></i> <span> 개인정보수정</span></a></li>
+                <!--                   http://14.63.219.156/profile                   -->
+                <li><a href="member"><i class="fa fa-thumbs-up"></i> <span> 직원관리</span></a></li>
+                <!--                   http://14.63.219.156/member                    -->
+                <li><a href="workplace"><i class="fa fa-square"></i> <span> 사무실관리</span></a></li>
+                <!--                  http://14.63.219.156/workplace                  -->
 
-                <li class=""><a href="#"><i class="fa fa-thumbs-up"></i> <span> 직원관리</span></a></li>
-
-                <li class=""><a href="#"><i class="fa fa-search"></i> <span> 근무기록조회</span></a></li>
-
-
-
-                <!-- chart sidebar -->
+                <!-- 근무기록조회 사이드바 -->
                 <li class="treeview">
-                    <a href="charts">
-                        <i class="fa fa-pie-chart"></i>
-                        <span> 그래프보기</span>
+                    <a href="manageworks">
+                        <!-- http://14.63.219.156/manageworks -->
+                        <i class="fa fa-search"></i>
+                        <span> 근무기록조회</span>
                         <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="chart"><i class="fa fa-circle-o"></i>첫번째</a></li>
-                        <li><a href="#"><i class="fa fa-circle-o"></i>두번째</a></li>
-                        <li><a href="#"><i class="fa fa-circle-o"></i>세번째</a></li>
+                        <li><a href="d3chart1"><i class="fa fa-circle-o"></i>사무실이동현황</a></li>
+                        <!-- 14.63.219.156/d3chart1 -->
+                        <li><a href="d3chart2"><i class="fa fa-circle-o"></i>직원근무현황</a></li>
+                        <!-- 14.63.219.156/d3chart2 -->
+                    </ul>
+                </li>
 
+
+
+                <!-- 관리 사이드바-->
+                <li class="treeview">
+                    <a href="permissiom">
+                        <!-- 14.63.219.156/permission-->
+                        <i class="fa fa-user-plus"></i>
+                        <span> 관리</span>
+                        <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="permission"><i class="fa fa-circle-o"></i>가입허가</a></li>
+                        <!-- 14.63.219.156/permission -->
+                        <li><a href="beacon"><i class="fa fa-circle-o"></i>비콘관리</a></li>
+                        <!-- 14.63.219.156/beacon -->
                     </ul>
                 </li>
             </ul>
@@ -137,7 +161,15 @@
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
 
+
+        <!-- 이부분에 d3차트를 포함하여 메인컨텐트를 만들거임-->
+        <section class="content">
+        </section>
+
+
+        <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
 
