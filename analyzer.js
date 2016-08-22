@@ -80,6 +80,16 @@ Analyzer.getCoordinateArray = function(json) {
     return coordinateArray;
 };
 
+Analyzer.getThresholdArray = function(json) {
+    var thresholdArray = [];
+
+    thresholdArray.push(parseInt(json.thresholdX));
+    thresholdArray.push(parseInt(json.thresholdY));
+    thresholdArray.push(parseInt(json.thresholdZ));
+
+    return thresholdArray;
+};
+
 Analyzer.getSignal = function(json) {
     return json.Signal;
 };

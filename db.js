@@ -42,7 +42,7 @@ var id_checkLoginName = function(employee_number, callback) {
         conn.query("SELECT count(*) cnt FROM identity WHERE employee_number=?", [employee_number], function(err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             var cnt = rows[0].cnt;
@@ -55,7 +55,7 @@ var id_checkLoginName = function(employee_number, callback) {
                 callback(valid);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -68,7 +68,7 @@ var id_checkLoginPassword = function(employee_number, password, callback) {
         conn.query("SELECT count(*) cnt FROM identity WHERE employee_number=? AND password=SHA2(?, 256)", [employee_number, password], function(err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             var cnt = rows[0].cnt;
@@ -81,7 +81,7 @@ var id_checkLoginPassword = function(employee_number, password, callback) {
                 callback(valid);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -94,7 +94,7 @@ var id_isAdmin = function(employee_number, password, callback) {
         conn.query("SELECT admin FROM identity WHERE employee_number=? AND password=SHA2(?, 256)", [employee_number, password], function(err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             var isAdmin = false;
@@ -105,7 +105,7 @@ var id_isAdmin = function(employee_number, password, callback) {
                 callback(isAdmin);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -118,7 +118,7 @@ var id_isPermitted = function(smartphone_address, employee_number, callback) {
         conn.query("SELECT permission FROM identity WHERE smartphone_address=? AND employee_number=?", [smartphone_address, employee_number], function(err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             var isPermitted = false;
@@ -129,7 +129,7 @@ var id_isPermitted = function(smartphone_address, employee_number, callback) {
                 callback(isPermitted);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -165,7 +165,7 @@ var id_getUserList = function(callback) {
         conn.query("SELECT * FROM identity", function(err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             if (typeof callback === "function") {
@@ -182,7 +182,7 @@ var id_getUserInfo = function(smartphone_address, callback) {
         conn.query("SELECT * FROM identity WHERE smartphone_address=?", [smartphone_address], function(err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             if (typeof callback === "function") {
@@ -200,7 +200,7 @@ var id_checkUserRegistered = function(smartphone_address, employee_number, callb
         conn.query("SELECT count(*) cnt FROM identity WHERE smartphone_address=? OR employee_number=?", [smartphone_address, employee_number], function(err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             var cnt = rows[0].cnt;
@@ -213,7 +213,7 @@ var id_checkUserRegistered = function(smartphone_address, employee_number, callb
                 callback(valid);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -227,14 +227,14 @@ var id_registerUser = function(smartphone_address, employee_number, name, passwo
             " VALUES (?, ?, ?, SHA2(?, 256), ?, ?, ?, ?)", [smartphone_address, employee_number, name, password, department, position, permission, admin], function (err) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             if (typeof callback === "function") {
                 callback(true);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -247,14 +247,14 @@ var id_modifyUser = function(smartphone_address, employee_number, modify_name, m
         conn.query("UPDATE identity SET name=?, password=SHA2(?, 256), department=?, position=?, admin=? WHERE smartphone_address=? AND employee_number=?", [modify_name, modify_password, modify_department, modify_position, modify_admin, smartphone_address, employee_number], function(err) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             if (typeof callback === "function") {
                 callback(true);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -267,14 +267,14 @@ var id_deleteUser = function(smartphone_address, employee_number, callback) {
         conn.query("DELETE FROM identity WHERE smartphone_address=? AND employee_number=?", [smartphone_address, employee_number], function (err) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             if (typeof callback === "function") {
                 callback(true);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -286,7 +286,7 @@ var id_getWorkplaceList = function(employee_number, admin, callback) {
         conn.query("SELECT * FROM workplace", [employee_number], function(err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             if (typeof callback === "function") {
@@ -303,7 +303,7 @@ var id_getWorkplaceInfo = function(name_workplace, location_workplace, callback)
         conn.query("SELECT * FROM workplace WHERE name_workplace=? AND location_workplace", [name_workplace, location_workplace], function(err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             if (typeof callback === "function") {
@@ -323,7 +323,7 @@ var id_getWorkplaceID = function(name_workplace, location_workplace, callback) {
                 conn.query("SELECT id_workplace FROM workplace WHERE name_workplace=? AND location_workplace=?", [name_workplace, location_workplace], function(err, rows) {
                     if (err) {
                         console.error(err);
-                        conn.release();
+                        if (conn.connected) conn.release();
                     } else {
                         if (typeof callback === "function") {
                             callback(rows[0].id_workplace);
@@ -346,7 +346,7 @@ var id_checkWorkplaceRegistered = function(name_workplace, location_workplace, c
         conn.query("SELECT count(*) cnt FROM workplace WHERE name_workplace=? AND location_workplace", [name_workplace, location_workplace], function(err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             var cnt = rows[0].cnt;
@@ -359,7 +359,7 @@ var id_checkWorkplaceRegistered = function(name_workplace, location_workplace, c
                 callback(valid);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -373,14 +373,14 @@ var id_registerWorkplace = function(name_workplace, location_workplace, callback
             " VALUES (?, ?, ?, ?, ?)", [name_workplace, location_workplace, 0, 0, 0], function (err) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             if (typeof callback === "function") {
                 callback(true);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -394,14 +394,14 @@ var id_modifyWorkplace = function(name_workplace, location_workplace, modify_nam
             conn.query("UPDATE workplace SET name_workplace=?, location_workplace=? WHERE id_workplace=?", [modify_name_workplace, modify_location_workplace, id_workplace], function(err) {
                 if (err) {
                     console.error(err);
-                    conn.release();
+                    if (conn.connected) conn.release();
                 }
 
                 if (typeof callback === "function") {
                     callback(true);
                 }
 
-                conn.release();
+                if (conn.connected) conn.release();
             });
         });
     });
@@ -415,14 +415,14 @@ var id_deleteWorkplace = function(name_workplace, location_workplace, callback) 
         conn.query("DELETE FROM workplace WHERE name_workplace=? AND location_workplace=?", [name_workplace, location_workplace], function (err) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             if (typeof callback === "function") {
                 callback(true);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -434,7 +434,7 @@ var id_getBeaconList = function(employee_number, admin, callback) {
         conn.query("SELECT * FROM beacon", [employee_number], function(err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             if (typeof callback === "function") {
@@ -451,7 +451,7 @@ var id_getBeaconInfo = function(beacon_address, callback) {
         conn.query("SELECT * FROM beacon WHERE beacon_address=?", [beacon_address], function(err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             if (typeof callback === "function") {
@@ -469,7 +469,7 @@ var id_getAvailableBeacon = function(callback) {
         conn.query("SELECT * FROM beacon WHERE id_workplace=-1", function (err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             var availableBeacon = new Array();
@@ -481,7 +481,7 @@ var id_getAvailableBeacon = function(callback) {
                 callback(availableBeacon);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -494,7 +494,7 @@ var id_checkBeaconRegistered = function(beacon_address, callback) {
         conn.query("SELECT count(*) cnt FROM beacon WHERE beacon_address=?", [beacon_address], function(err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             var cnt = rows[0].cnt;
@@ -507,7 +507,7 @@ var id_checkBeaconRegistered = function(beacon_address, callback) {
                 callback(valid);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -521,14 +521,14 @@ var id_registerBeacon = function(uuid, major, minor, beacon_address, callback) {
             " VALUES (?, ?, ?, ?, ?)", [uuid, major, minor, beacon_address, -1], function (err) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             if (typeof callback === "function") {
                 callback(true);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -541,14 +541,14 @@ var id_modifyBeacon = function(beacon_address, modify_uuid, modify_major, modify
         conn.query("UPDATE beacon SET UUID=?, major=?, minor=? WHERE beacon_addres=?", [modify_uuid, modify_major, modify_minor, beacon_address], function(err) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             if (typeof callback === "function") {
                 callback(true);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -561,14 +561,14 @@ var id_deleteBeacon = function(uuid, major, minor, beacon_address, callback) {
         conn.query("DELETE FROM beacon WHERE UUID=? AND major=? AND minor=? AND beacon_address=?", [uuid, major, minor, beacon_address], function (err) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             if (typeof callback === "function") {
                 callback(true);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -585,14 +585,14 @@ var id_getUserListCond = function(department, position, permission, admin, callb
         conn.query(sql, function(err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             if (typeof callback === "function") {
                 callback(rows);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -605,14 +605,14 @@ var id_getDepartmentList = function(callback) {
         conn.query("SELECT department FROM identity GROUP BY department", function(err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             if (typeof callback === "function") {
                 callback(rows);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -625,14 +625,14 @@ var id_getPositionList = function(callback) {
         conn.query("SELECT position FROM identity GROUP BY position", function(err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             if (typeof callback === "function") {
                 callback(rows);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -645,7 +645,7 @@ var id_getSmartphoneAddress = function(employee_number, callback) {
         conn.query("SELECT smartphone_address FROM identity WHERE employee_number=?", [employee_number], function(err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             var smartphone_address = rows[0].smartphone_address;
@@ -654,7 +654,7 @@ var id_getSmartphoneAddress = function(employee_number, callback) {
                 callback(smartphone_address);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -667,7 +667,7 @@ var id_checkAdmin = function(employee_number, smartphone_address, callback) {
         conn.query("SELECT admin FROM identity WHERE employee_number=? AND smartphone_address=?", [employee_number, smartphone_address], function(err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             var admin = false;
@@ -678,7 +678,7 @@ var id_checkAdmin = function(employee_number, smartphone_address, callback) {
                 callback(admin);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -694,14 +694,14 @@ var id_getCircumstance = function(date, smartphone_address, callback) {
         conn.query(sql, function(err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             if (typeof callback === "function") {
                 callback(rows);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -731,14 +731,14 @@ var soc_getWorkplaceName = function(id_workplace, callback) {
             , function(err, rows) {
                 if (err) {
                     console.error(err);
-                    conn.release();
+                    if (conn.connected) conn.release();
                 }
 
                 if (typeof callback === "function") {
                     callback(rows[0].name_workplace);
                 }
 
-                conn.release();
+                if (conn.connected) conn.release();
             });
     });
 };
@@ -771,14 +771,14 @@ var soc_getWorkplaceOfBeacons = function(beaconAddressArr, uuidArr, majorArr, mi
             , function(err, rows) {
                 if (err) {
                     console.error(err);
-                    conn.release();
+                    if (conn.connected) conn.release();
                 }
 
                 if (typeof callback === "function") {
                     callback(rows[0].id_workplace);
                 }
 
-                conn.release();
+                if (conn.connected) conn.release();
             });
     });
 };
@@ -807,14 +807,14 @@ var soc_getSmartphoneUserName = function(smartphone_address, callback) {
             , function(err, rows) {
                 if (err) {
                     console.error(err);
-                    conn.release();
+                    if (conn.connected) conn.release();
                 }
 
                 if (typeof callback === "function") {
                     callback(rows[0].name);
                 }
 
-                conn.release();
+                if (conn.connected) conn.release();
             });
     });
 };
@@ -828,14 +828,14 @@ var soc_getSmartphoneUserEmployeeNumber = function(smartphoneAddress, callback) 
             , function(err, rows) {
                 if (err) {
                     console.error(err);
-                    conn.release();
+                    if (conn.connected) conn.release();
                 }
 
                 if (typeof callback === "function") {
                     callback(rows[0].employee_number);
                 }
 
-                conn.release();
+                if (conn.connected) conn.release();
             });
     });
 };
@@ -851,7 +851,7 @@ var soc_registerCommute = function(smartphoneAddress, id_workplace, datetime, ca
                     callback(false);
                 }
 
-                conn.release();
+                if (conn.connected) conn.release();
 
             } else {
 
@@ -859,16 +859,17 @@ var soc_registerCommute = function(smartphoneAddress, id_workplace, datetime, ca
                     callback(true);
                 }
 
-                conn.release();
+                if (conn.connected) conn.release();
             }
         });
     });
 };
 
-var soc_RSSICalibration = function(scoordinateArr, id, name, datetime, callback) {
+var soc_RSSICalibration = function(scoordinateArr, thresholdArr, id, name, datetime, callback) {
     pool.getConnection(function(err, conn) {
-        conn.query("UPDATE workplace SET coordinateX=?, coordinateY=?, coordinateZ=? WHERE id_workplace=?"
-            , [coordinateArr[0], coordinateArr[1], coordinateArr[2], id], function(err) {
+        conn.query("UPDATE workplace SET coordinateX=?, coordinateY=?, coordinateZ=?, thresholdX=?, thresholdY=?, thresholdZ=?" +
+            " WHERE id_workplace=?"
+            , [coordinateArr[0], coordinateArr[1], coordinateArr[2], thresholdArr[0], thresholdArr[1], thresholdArr[2], id], function(err) {
                 if (err) {
                     console.error(err);
 
@@ -876,7 +877,7 @@ var soc_RSSICalibration = function(scoordinateArr, id, name, datetime, callback)
                         callback(false);
                     }
 
-                    conn.release();
+                    if (conn.connected) conn.release();
 
                 } else {
 
@@ -884,7 +885,7 @@ var soc_RSSICalibration = function(scoordinateArr, id, name, datetime, callback)
                         callback(true);
                     }
 
-                    conn.release();
+                    if (conn.connected) conn.release();
                 }
             });
     });
@@ -892,21 +893,21 @@ var soc_RSSICalibration = function(scoordinateArr, id, name, datetime, callback)
 
 var soc_getEssentialData = function(callback) {
     pool.getConnection(function(err, conn) {
-        conn.query("SELECT workplace.id_workplace, coordinateX, coordinateY, coordinateZ, "
+        conn.query("SELECT workplace.id_workplace, coordinateX, coordinateY, coordinateZ, thresholdX, thresholdY, thresholdZ, "
             + "GROUP_CONCAT(beacon.beacon_address SEPARATOR '-') AS beacon_address "
             + "FROM workplace, beacon WHERE workplace.id_workplace=beacon.id_workplace "
             + "AND workplace.beacon_set=1 "
             + "ORDER BY workplace.id_workplace", function(err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             if (typeof callback === "function") {
                 callback(rows);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -927,14 +928,14 @@ var soc_getBeaconMACAddress = function(callback) {
                     });
                 });
 
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             if (typeof callback === "function") {
                 callback(JSON.stringify(rows));
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -944,14 +945,14 @@ var soc_getRSSI = function(callback) {
         conn.query("SELECT id_workplace, coordinateX, coordinateY, coordinateZ FROM workplace", function(err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             if (typeof callback === "function") {
                 callback(JSON.stringify(rows));
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -961,7 +962,7 @@ var soc_amIRegistered = function(smartphone_address, datetime, callback) {
         conn.query("SELECT COUNT(*) AS cnt FROM identity WHERE smartphone_address=?", [smartphone_address], function(err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             var isRegistered = false;
@@ -972,7 +973,7 @@ var soc_amIRegistered = function(smartphone_address, datetime, callback) {
                 callback(isRegistered);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -988,14 +989,14 @@ var chart_getPopulationOfDepartments = function(callback) {
         conn.query(sql, function(err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             if (typeof callback === "function") {
                 callback(rows);
             }
 
-            conn.release();
+            if (conn.connected) conn.release();
         });
     });
 };
@@ -1071,7 +1072,7 @@ var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
     pool.getConnection(function(err, conn) {
         if (err) {
             console.error(err);
-            conn.release();
+            if (conn.connected) conn.release();
         }
 
         switch (args.length) {
@@ -1200,7 +1201,7 @@ var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
         conn.query(sql, function(err, rows) {
             if (err) {
                 console.error(err);
-                conn.release();
+                if (conn.connected) conn.release();
             }
 
             console.log(sql);
@@ -1213,9 +1214,7 @@ var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
                 callback(rows);
             }
 
-            if (conn.connected) {
-                conn.release();
-            }
+            if (conn.connected) conn.release();
         });
     });
 };

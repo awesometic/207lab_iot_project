@@ -113,12 +113,13 @@ io.on("connection", function(socket) {
             var majorArr = analyzer.getMajorArray(contentJson);
             var minorArr = analyzer.getMinorArray(contentJson);
             var coordinateArr = analyzer.getCoordinateArray(contentJson);
+            var thresholdArr = analyzer.getThresholdArray(contentJson);
 
             pool.soc_gatewayValidation(beaconAddressArr, uuidArr, majorArr, minorArr, function(id) {
                 if (id) {
                     pool.soc_smartphoneValidation(smartphoneAddress, function(name) {
                         if (name) {
-                            pool.soc_RSSICalibration(coordinateArr, id, name, currentTime.getCurrentDateTime(), function(valid) {
+                            pool.soc_RSSICalibration(coordinateArr, thresholdArr, id, name, currentTime.getCurrentDateTime(), function(valid) {
                                 if (valid) {
                                     var contentJsonString = "{ ";
                                     contentJsonString += "\"requestSuccess\":\"" + true + "\"";
@@ -158,7 +159,7 @@ io.on("connection", function(socket) {
                     pool.soc_getEssentialData(function (data) {
 
                         if (data) {
-                            socket.emit("data", analyzer.encryptSendJson(smartphoneRsaPublicKey, data));
+                            socket.emit("answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, data));
                         }
 
                         logger("socket").info("RequestData", "Request from user: \n" + smartphoneAddress + "\n\tSend success");
@@ -195,7 +196,7 @@ io.on("connection", function(socket) {
                                 contentJsonString += "\"employee_number\":\"" + employee_number + "\"";
                                 contentJsonString += " }";
 
-                                socket.emit("data", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
+                                socket.emit("answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
                                 logger("socket").info("amIRegistered", "Whether user registered or not:\n\tSend: " + employee_name + ", " + employee_number);
                             });
                         });
@@ -278,7 +279,7 @@ io.on("connection", function(socket) {
                     pool.soc_smartphoneValidation(smartphoneAddress, function (name) {
                         if (name != undefined) {
                             pool.chart_getPopulOfDepartment(function (chartData) {
-                                socket.emit("data", analyzer.encryptSendJson(smartphoneRsaPublicKey, chartData));
+                                socket.emit("answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, chartData));
                             });
                         } else {
                             var contentJsonString = "{ ";
