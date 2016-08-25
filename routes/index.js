@@ -37,16 +37,20 @@ router.get('/signup', function(req, res, next) {
 });
 
 router.get('/dashboard', function(req, res, next) {
-    var userid = req.session.userid;
-    var smartphone_address = req.session.smartphone_address;
-    var admin = req.session.admin;
+    var userEmployeeId = req.session.user_employee_id;
+    var userSmartphoneAddress = req.session.user_smartphone_address;
 
-    if (typeof userid != "undefined" || typeof smartphone_address != "undefined") {
-        res.render('dashboard', {
-            title: title,
-            userid: req.session.userid,
-            smartphone_address: req.session.smartphone_address,
-            admin: req.session.admin
+    if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
+        pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
+            pool.id_getCompanyName(function(companyName) {
+
+                res.render('dashboard', {
+                    title: title,
+                    userInfo: userInfoRow,
+                    companyName: companyName
+                });
+
+            });
         });
     } else {
         res.send("<script>location.href='/';</script>");
@@ -54,51 +58,129 @@ router.get('/dashboard', function(req, res, next) {
 });
 
 router.get('/profile', function(req, res, next) {
+    var userEmployeeId = req.session.user_employee_id;
+    var userSmartphoneAddress = req.session.user_smartphone_address;
 
-    res.render('profile', {
-        title: title
-    });
+    if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
+        pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
+            pool.id_getCompanyName(function(companyName) {
 
+                res.render('profile', {
+                    title: title,
+                    userInfo: userInfoRow,
+                    companyName: companyName
+                });
+
+            });
+        });
+    } else {
+        res.send("<script>location.href='/';</script>");
+    }
 });
 
 router.get('/member', function(req, res, next) {
+    var userEmployeeId = req.session.user_employee_id;
+    var userSmartphoneAddress = req.session.user_smartphone_address;
 
-    res.render('member', {
-        title: title
-    });
+    if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
+        pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
+            pool.id_getCompanyName(function(companyName) {
 
+                res.render('member', {
+                    title: title,
+                    userInfo: userInfoRow,
+                    companyName: companyName
+                });
+
+            });
+        });
+    } else {
+        res.send("<script>location.href='/';</script>");
+    }
 });
 
 router.get('/workplace', function(req, res, next) {
+    var userEmployeeId = req.session.user_employee_id;
+    var userSmartphoneAddress = req.session.user_smartphone_address;
 
-    res.render('workplace', {
-        title: title
-    });
+    if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
+        pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
+            pool.id_getCompanyName(function(companyName) {
 
+                res.render('workplace', {
+                    title: title,
+                    userInfo: userInfoRow,
+                    companyName: companyName
+                });
+
+            });
+        });
+    } else {
+        res.send("<script>location.href='/';</script>");
+    }
 });
 
 router.get('/beacon', function(req, res, next) {
+    var userEmployeeId = req.session.user_employee_id;
+    var userSmartphoneAddress = req.session.user_smartphone_address;
 
-    res.render('beacon', {
-        title: title
-    });
+    if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
+        pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
+            pool.id_getCompanyName(function(companyName) {
 
+                res.render('beacon', {
+                    title: title,
+                    userInfo: userInfoRow,
+                    companyName: companyName
+                });
+
+            });
+        });
+    } else {
+        res.send("<script>location.href='/';</script>");
+    }
 });
 
 router.get('/managework', function(req, res, next) {
+    var userEmployeeId = req.session.user_employee_id;
+    var userSmartphoneAddress = req.session.user_smartphone_address;
 
-    res.render('managework', {
-        title: title
-    });
+    if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
+        pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
+            pool.id_getCompanyName(function(companyName) {
 
+                res.render('managework', {
+                    title: title,
+                    userInfo: userInfoRow,
+                    companyName: companyName
+                });
+
+            });
+        });
+    } else {
+        res.send("<script>location.href='/';</script>");
+    }
 });
 
 router.get('/permission', function(req, res, next) {
+    var userEmployeeId = req.session.user_employee_id;
+    var userSmartphoneAddress = req.session.user_smartphone_address;
 
-    res.render('permission', {
-        title: title
-    });
+    if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
+        pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
+            pool.id_getCompanyName(function(companyName) {
 
+                res.render('permission', {
+                    title: title,
+                    userInfo: userInfoRow,
+                    companyName: companyName
+                });
+
+            });
+        });
+    } else {
+        res.send("<script>location.href='/';</script>");
+    }
 });
 
 router.get('/logout', function(req, res, next) {
@@ -110,19 +192,45 @@ router.get('/logout', function(req, res, next) {
 });
 
 router.get('/d3chart1', function(req, res, next) {
+    var userEmployeeId = req.session.user_employee_id;
+    var userSmartphoneAddress = req.session.user_smartphone_address;
 
-    res.render('d3chart1', {
-        title: title
-    });
+    if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
+        pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
+            pool.id_getCompanyName(function(companyName) {
 
+                res.render('d3chart1', {
+                    title: title,
+                    userInfo: userInfoRow,
+                    companyName: companyName
+                });
+
+            });
+        });
+    } else {
+        res.send("<script>location.href='/';</script>");
+    }
 });
 
 router.get('/d3chart2', function(req, res, next) {
+    var userEmployeeId = req.session.user_employee_id;
+    var userSmartphoneAddress = req.session.user_smartphone_address;
 
-    res.render('d3chart2', {
-        title: title
-    });
+    if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
+        pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
+            pool.id_getCompanyName(function(companyName) {
 
+                res.render('d3chart2', {
+                    title: title,
+                    userInfo: userInfoRow,
+                    companyName: companyName
+                });
+
+            });
+        });
+    } else {
+        res.send("<script>location.href='/';</script>");
+    }
 });
 
 /* POST */
@@ -141,9 +249,9 @@ router.post("/", function(req, res) {
         } else if (typeof valid !== "undefined") {
             // Login success
             pool.id_getSmartphoneAddress(signin_id, function (smartphone_address) {
-                req.session.userid = signin_id;
-                req.session.smartphone_address = smartphone_address;
-                req.session.admin = valid;
+                req.session.user_employee_id = signin_id;
+                req.session.user_smartphone_address = smartphone_address;
+                req.session.user_admin = valid;
                 req.session.cookie.expires = new Date(Date.now() + cookieExpires);
 
                 res.send("<script>location.href='/dashboard';</script>");
@@ -175,10 +283,30 @@ router.post('/signup', function(req, res, next) {
                         res.send("<script>alert('Server error'); history.go(-1);</script>");
                     }
                 });
-
             } else {
                 res.send("<script>alert('Already registered user identification!'); history.go(-1);</script>");
             }
+        });
+    }
+});
+
+router.post('/profile', function(req, res, next) {
+    var modified_password = req.body.password;
+    var modified_password_confirm = req.body.password_confirm;
+
+    if (modified_password.length != 0 && (modified_password != modified_password_confirm)) {
+        res.send("<script>alert('Check confirmation password!'); history.go(-1);</script>");
+    } else if (modified_password.length == 0) {
+        res.send("<script>alert('To change your password, fill out the form'); history.go(-1);</script>");
+    } else {
+        pool.id_getUserInfo(req.session.user_smartphone_address, function(userInfo) {
+            pool.id_modifyUser(req.session.user_smartphone_address, req.session.user_employee_id, userInfo.name, modified_password, userInfo.department, userInfo.position, userInfo.admin, function (valid) {
+                if (valid) {
+                    res.send("<script>alert('Modify Success!'); location.href='/dashboard';</script>");
+                } else {
+                    res.send("<script>alert('Server error'); history.go(-1);</script>");
+                }
+            });
         });
     }
 });

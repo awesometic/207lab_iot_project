@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Project_CM</title>
+    <title><%= title %></title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.6 -->
@@ -17,7 +17,6 @@
     <link rel="stylesheet" href="dist/css/skins/skin-blue.min.css">
 </head>
 
-
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
@@ -27,9 +26,9 @@
         <!-- Logo -->
         <a href="dashboard" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>207LAB</b></span>
+            <span class="logo-mini"><b><span class="glyphicon glyphicon-home"></span></b></span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b>Suwon univ</b></span>
+            <span class="logo-lg"><b><%= userInfo.department %></b></span>
         </a>
 
         <!-- Header Navbar -->
@@ -51,7 +50,7 @@
                             <!-- The user image in the navbar-->
                             <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
                             <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                            <span class="hidden-xs">이름 </span>
+                            <span class="hidden-xs"><%= userInfo.name %></span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- The user image in the menu -->
@@ -59,8 +58,9 @@
                                 <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                                 <p>
-                                    이름 - 직급(또는 부서)
-                                    <small>근무시작일</small>
+                                    <b><%= userInfo.name %></b> - <%= userInfo.department %>
+                                    <small><%= userInfo.position %></small>
+                                    <!-- <small>근무시작일</small> -->
                                 </p>
 
                             </li>
@@ -79,6 +79,7 @@
             </div>
         </nav>
     </header>
+
     <!-- Left side column. contains the logo and sidebar -->
     <aside class="main-sidebar">
 
@@ -91,17 +92,15 @@
                     <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
-                    <p>이름</p>
+                    <p><%= userInfo.name %></p>
                     <!-- Status -->
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>
             </div>
 
-
-
             <!-- Sidebar Menu -->
             <ul class="sidebar-menu">
-                <li class="header">Suwon university(회사이름)</li>
+                <li class="header text-center"><%= companyName %></li>
                 <!-- Optionally, you can add icons to the links -->
 
                 <li class=""><a href="dashboard"><i class="fa fa-bell"></i> <span> 메인페이지</span></a></li>
@@ -197,48 +196,56 @@
                         <!-- 이건 프로필수정 페이지로 위에 값들은 데이터베이스의 identity에 있는 각각의 컬럼들의 값을 수정하는 모습이다
                         name,employee_number,workplace,smartphone_address,position,password 가 필요함-->
 
-                        <form action="#" class="form-horizontal" role="form" style="margin-right:300px; margin-top:25px;" method ="post">
+                        <form class="form-horizontal" role="form" style="margin-right:300px; margin-top:25px;" method ="post">
                             <div class="form-group">
-                                <label class="col-lg-3 control-label">이름:</label>
+                                <label class="col-lg-3 control-label">이름</label>
                                 <div class="col-lg-8">
-                                    <input class="form-control" name="name"  type="text" maxlength="5">
+                                    <input class="form-control" name="name" type="text" maxlength="5" value="<%= userInfo.name %>" disabled>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-lg-3 control-label">사원번호:</label>
+                                <label class="col-lg-3 control-label">사원번호</label>
                                 <div class="col-lg-8">
-                                    <input class="form-control" name="employee_number"  type="text" maxlength="10">
+                                    <input class="form-control" name="employee_number"  type="text" maxlength="10" value="<%= userInfo.employee_number %>" disabled>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-lg-3 control-label">회사명:</label>
+                                <label class="col-lg-3 control-label">부서명</label>
                                 <div class="col-lg-8">
-                                    <input class="form-control" name="workplace" type="text" maxlength="10">
+                                    <input class="form-control" name="department" type="text" maxlength="10" value="<%= userInfo.department %>" disabled>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-lg-3 control-label">스마트폰주소:</label>
+                                <label class="col-lg-3 control-label">스마트폰주소</label>
                                 <div class="col-lg-8">
-                                    <input class="form-control" name="smartphone_address" type="text" maxlength="16">
+                                    <input class="form-control" name="smartphone_address" type="text" maxlength="16" value="<%= userInfo.smartphone_address %>" disabled>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-md-3 control-label">직급:</label>
+                                <label class="col-md-3 control-label">직급</label>
                                 <div class="col-md-8">
-                                    <input class="form-control" name="position"  type="text" maxlength="5">
+                                    <input class="form-control" name="position"  type="text" maxlength="5" value="<%= userInfo.position %>" disabled>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-md-3 control-label">비밀번호:</label>
+                                <label class="col-md-3 control-label">비밀번호</label>
                                 <div class="col-md-8">
-                                    <input class="form-control" name="password"  type="password" maxlength="10" >
+                                    <input class="form-control" name="password"  type="password" maxlength="10">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-md-3 control-label">비밀번호확인:</label>
+                                <label class="col-md-3 control-label">비밀번호확인</label>
                                 <div class="col-md-8">
-                                    <input class="form-control" name="password" type="password">
+                                    <input class="form-control" name="password_confirm" type="password">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">관리자 권한</label>
+                                <div class="col-md-8">
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="admin" <% if (userInfo.admin) { %> checked <% } %> disabled>관리자 권한을 부여하고 싶으면 체크하십시오</label>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">

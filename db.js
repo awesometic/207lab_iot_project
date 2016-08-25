@@ -244,18 +244,35 @@ var id_modifyUser = function(smartphone_address, employee_number, modify_name, m
         if (err)
             console.error(err);
 
-        conn.query("UPDATE identity SET name=?, password=SHA2(?, 256), department=?, position=?, admin=? WHERE smartphone_address=? AND employee_number=?", [modify_name, modify_password, modify_department, modify_position, modify_admin, smartphone_address, employee_number], function(err) {
-            if (err) {
-                console.error(err);
-                if (conn.connected) conn.release();
-            }
+        if (modify_password == null) {
+            conn.query("UPDATE identity SET name=?, department=?, position=?, admin=? WHERE smartphone_address=? AND employee_number=?",
+                [modify_name, modify_department, modify_position, modify_admin, smartphone_address, employee_number], function (err) {
+                    if (err) {
+                        console.error(err);
+                        if (conn.connected) conn.release();
+                    }
 
-            if (typeof callback === "function") {
-                callback(true);
-            }
+                    if (typeof callback === "function") {
+                        callback(true);
+                    }
 
-            if (conn.connected) conn.release();
-        });
+                    if (conn.connected) conn.release();
+            });
+        } else {
+            conn.query("UPDATE identity SET name=?, password=SHA2(?, 256), department=?, position=?, admin=? WHERE smartphone_address=? AND employee_number=?",
+                [modify_name, modify_password, modify_department, modify_position, modify_admin, smartphone_address, employee_number], function (err) {
+                    if (err) {
+                        console.error(err);
+                        if (conn.connected) conn.release();
+                    }
+
+                    if (typeof callback === "function") {
+                        callback(true);
+                    }
+
+                    if (conn.connected) conn.release();
+            });
+        }
     });
 };
 
@@ -705,6 +722,27 @@ var id_getCircumstance = function(date, smartphone_address, callback) {
         });
     });
 };
+
+var id_getCompanyName = function(callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("SELECT name FROM common", function(err, rows) {
+            if (err) {
+                console.error(err);
+                if (conn.connected) conn.release();
+            }
+
+            if (typeof callback === "function") {
+                callback(rows[0].name);
+            }
+
+            if (conn.connected) conn.release();
+        });
+    });
+};
+
 
 /* socket.js */
 var soc_gatewayValidation = function(beaconAddressArr, uuidArr, majorArr, minorArr, callback) {
@@ -1260,6 +1298,8 @@ module.exports.id_getSmartphoneAddress      = id_getSmartphoneAddress;
 module.exports.id_checkAdmin                = id_checkAdmin;
 
 module.exports.id_getCircumstance           = id_getCircumstance;
+
+module.exports.id_getCompanyName            = id_getCompanyName;
 
 /* socket.js */
 module.exports.soc_gatewayValidation        = soc_gatewayValidation;
