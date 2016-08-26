@@ -85,11 +85,13 @@ router.get('/member', function(req, res, next) {
     if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
         pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
             pool.id_getCompanyName(function(companyName) {
-
-                res.render('member', {
-                    title: title,
-                    userInfo: userInfoRow,
-                    companyName: companyName
+                pool.id_getUserList(function(userListRows) {
+                    res.render('member', {
+                        title: title,
+                        userInfo: userInfoRow,
+                        companyName: companyName,
+                        userListRows: userListRows
+                    });
                 });
 
             });
@@ -106,13 +108,14 @@ router.get('/workplace', function(req, res, next) {
     if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
         pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
             pool.id_getCompanyName(function(companyName) {
-
-                res.render('workplace', {
-                    title: title,
-                    userInfo: userInfoRow,
-                    companyName: companyName
+                pool.id_getWorkplaceList(function(workplaceListRows) {
+                    res.render('workplace', {
+                        title: title,
+                        userInfo: userInfoRow,
+                        companyName: companyName,
+                        workplaceListRows: workplaceListRows
+                    });
                 });
-
             });
         });
     } else {
@@ -127,13 +130,14 @@ router.get('/beacon', function(req, res, next) {
     if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
         pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
             pool.id_getCompanyName(function(companyName) {
-
-                res.render('beacon', {
-                    title: title,
-                    userInfo: userInfoRow,
-                    companyName: companyName
+                pool.id_getBeaconList(function(beaconListRows) {
+                    res.render('beacon', {
+                        title: title,
+                        userInfo: userInfoRow,
+                        companyName: companyName,
+                        beaconListRows: beaconListRows
+                    });
                 });
-
             });
         });
     } else {

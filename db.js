@@ -296,11 +296,11 @@ var id_deleteUser = function(smartphone_address, employee_number, callback) {
     });
 };
 
-var id_getWorkplaceList = function(employee_number, admin, callback) {
+var id_getWorkplaceList = function(callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
-        conn.query("SELECT * FROM workplace", [employee_number], function(err, rows) {
+        conn.query("SELECT * FROM workplace", function(err, rows) {
             if (err) {
                 console.error(err);
                 if (conn.connected) conn.release();
@@ -444,11 +444,13 @@ var id_deleteWorkplace = function(name_workplace, location_workplace, callback) 
     });
 };
 
-var id_getBeaconList = function(employee_number, admin, callback) {
+var id_getBeaconList = function(callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
-        conn.query("SELECT * FROM beacon", [employee_number], function(err, rows) {
+        conn.query("SELECT *, id_workplace," +
+            " (SELECT name_workplace FROM workplace WHERE beacon.id_workplace = workplace.id_workplace)" +
+            " AS name_workplace FROM beacon", function(err, rows) {
             if (err) {
                 console.error(err);
                 if (conn.connected) conn.release();

@@ -195,40 +195,21 @@
                                 <thead>
                                     <th>사무실이름</th>
                                     <th>사무실위치</th>
-                                    <th>설치된비콘</th>
+                                    <th>비콘 설치 여부</th>
                                     <th style="width: 46px;">수정</th>
                                 </thead>
                                 <tbody>
+                                <%
+                                if (workplaceListRows) {
+                                    for (var i = 0; i < workplaceListRows.length; i++) {
+                                %>
                                     <tr>
-                                        <td>Mohsin</td>
-                                        <td>Irshad</td>
-                                        <td>CB 106/107 Street # 11 Wah Cantt Islamabad Pakistan</td>
+                                        <td><%= workplaceListRows[i].name_workplace %></td>
+                                        <td><%= workplaceListRows[i].location_workplace %></td>
+                                        <td><% if (workplaceListRows[i].beacon_set == 1) { %><span class="glyphicon glyphicon-ok"></span><% } %></td>
                                         <td><button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></td>
                                     </tr>
-                                    <tr>
-                                        <td>Mohsin</td>
-                                        <td>Irshad</td>
-                                        <td>CB 106/107 Street # 11 Wah Cantt Islamabad Pakistan</td>
-                                        <td><button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Mohsin</td>
-                                        <td>Irshad</td>
-                                        <td>CB 106/107 Street # 11 Wah Cantt Islamabad Pakistan</td>
-                                        <td><button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Mohsin</td>
-                                        <td>Irshad</td>
-                                        <td>CB 106/107 Street # 11 Wah Cantt Islamabad Pakistan</td>
-                                        <td><button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Mohsin</td>
-                                        <td>Irshad</td>
-                                        <td>CB 106/107 Street # 11 Wah Cantt Islamabad Pakistan</td>
-                                        <td><button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></td>
-                                    </tr>
+                                <% } } %>
                                 </tbody>
                             </table>
 

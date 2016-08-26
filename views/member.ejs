@@ -200,11 +200,9 @@
                     <div class="col-md-12" style="margin-top:40px ;">
                         <div class="table-responsive">
 
-
                             <table id="mytable" class="table table-bordred table-striped" style="width:1000px; margin-left:30px ; ">
 
                                 <thead>
-
 
                                 <th>이름</th>
                                 <th>사원번호</th>
@@ -212,62 +210,21 @@
                                 <th>직급</th>
                                 <th style="width: 46px;">수정</th>
 
-
                                 </thead>
                                 <tbody>
 
+                                <%
+                                if (userListRows) {
+                                    for (var i = 0; i < userListRows.length; i++) {
+                                %>
                                 <tr>
-
-                                    <td>Mohsin</td>
-                                    <td>Irshad</td>
-                                    <td>CB 106/107 Street # 11 Wah Cantt Islamabad Pakistan</td>
-                                    <td>+923335586757</td>
+                                    <td><%= userListRows[i].name %></td>
+                                    <td><%= userListRows[i].employee_number %></td>
+                                    <td><%= userListRows[i].smartphone_address %></td>
+                                    <td><%= userListRows[i].position %></td>
                                     <td><button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></td>
                                 </tr>
-
-                                <tr>
-
-                                    <td>Mohsin</td>
-                                    <td>Irshad</td>
-                                    <td>CB 106/107 Street # 11 Wah Cantt Islamabad Pakistan</td>
-                                    <td>+923335586757</td>
-                                    <td><button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></td>
-                                </tr>
-
-
-                                <tr>
-
-                                    <td>Mohsin</td>
-                                    <td>Irshad</td>
-                                    <td>CB 106/107 Street # 11 Wah Cantt Islamabad Pakistan</td>
-                                    <td>+923335586757</td>
-                                    <td><button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></td>
-                                </tr>
-
-
-
-                                <tr>
-
-                                    <td>Mohsin</td>
-                                    <td>Irshad</td>
-                                    <td>CB 106/107 Street # 11 Wah Cantt Islamabad Pakistan</td>
-                                    <td>+923335586757</td>
-                                    <td><button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></td>
-                                </tr>
-
-
-                                <tr>
-
-                                    <td></td>
-                                    <td>Irshad</td>
-                                    <td>CB 106/107 Street # 11 Wah Cantt Islamabad Pakistan</td>
-                                    <td>+923335586757</td>
-                                    <td><button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></td>
-                                </tr>
-
-
-
-
+                                <% } } %>
 
                                 </tbody>
 
