@@ -174,12 +174,14 @@ router.get('/permission', function(req, res, next) {
         pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
             pool.id_getCompanyName(function(companyName) {
 
-                res.render('permission', {
-                    title: title,
-                    userInfo: userInfoRow,
-                    companyName: companyName
+                pool.id_getNotPermittedUserList(function(deniedUserListRows) {
+                    res.render('permission', {
+                        title: title,
+                        userInfo: userInfoRow,
+                        companyName: companyName,
+                        deniedUserListRows: deniedUserListRows
+                    });
                 });
-
             });
         });
     } else {

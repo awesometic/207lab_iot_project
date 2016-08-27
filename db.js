@@ -592,6 +592,26 @@ var id_deleteBeacon = function(uuid, major, minor, beacon_address, callback) {
     });
 };
 
+var id_getNotPermittedUserList = function(callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("SELECT * FROM identity WHERE permission = 0", function(err, rows) {
+            if (err) {
+                console.error(err);
+                if (conn.connected) conn.release();
+            }
+
+            if (typeof callback === "function") {
+                callback(rows);
+            }
+
+            if (conn.connected) conn.release();
+        });
+    });
+};
+
 var id_getUserListCond = function(department, position, permission, admin, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
@@ -599,7 +619,7 @@ var id_getUserListCond = function(department, position, permission, admin, callb
 
         var sql = "SELECT * FROM identity WHERE department LIKE " + conn.escape('%' + department + '%') +
             " AND position LIKE " + conn.escape('%' + position + '%') +
-            " AND permission=" + conn.escape(permission) + " AND admin=" + conn.escape(admin);
+            " AND permission=" + conn.escape(permission) + " AND admin = " + conn.escape(admin);
 
         conn.query(sql, function(err, rows) {
             if (err) {
@@ -1292,6 +1312,7 @@ module.exports.id_registerBeacon            = id_registerBeacon;
 module.exports.id_modifyBeacon              = id_modifyBeacon;
 module.exports.id_deleteBeacon              = id_deleteBeacon;
 
+module.exports.id_getNotPermittedUserList   = id_getNotPermittedUserList;
 module.exports.id_getUserListCond           = id_getUserListCond;
 module.exports.id_getDepartmentList         = id_getDepartmentList;
 module.exports.id_getPositionList           = id_getPositionList;
