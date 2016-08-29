@@ -12,9 +12,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="plugins/datatables/dataTables.bootstrap.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
     <link rel="stylesheet" href="dist/css/skins/skin-blue.min.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
@@ -153,119 +162,135 @@
         </section>
         <!-- /.sidebar -->
     </aside>
-
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-
         <!-- Content Header (Page header) -->
+        <section class="content-header">
+
+        </section>
 
         <!-- Main content -->
         <section class="content">
-
-            <!-- Your Page Content Here -->
-            <div class="container" style="margin-top:60px ;">
-                <div class="row">
-                    <div class="col-xs-8 col-xs-offset-2" style="margin-left:150px">
-                        <div class="input-group">
-                            <div class="input-group-btn search-panel">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                    <span id="search_concept">검색조건</span> <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#">이름</a></li>
-                                    <li><a href="#">사원번호</a></li>
-                                    <li><a href="#">직급</a></li>
-                                </ul>
-                            </div>
-                            <input type="hidden" name="search_param" value="all" id="search_param">
-                            <input type="text" class="form-control" name="x" placeholder="Search term...">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12" style="margin-top:40px ;">
-                        <div class="table-responsive">
-                            <table id="mytable" class="table table-bordred table-striped" style="width:1000px; margin-left:30px ; ">
-                                <thead>
-                                    <th>사무실이름</th>
-                                    <th>사무실위치</th>
-                                    <th>비콘 설치 여부</th>
-                                    <th style="width: 46px;">수정</th>
-                                </thead>
-                                <tbody>
-                                <%
-                                if (workplaceListRows) {
-                                    for (var i = 0; i < workplaceListRows.length; i++) {
-                                %>
-                                    <tr>
-                                        <td><%= workplaceListRows[i].name_workplace %></td>
-                                        <td><%= workplaceListRows[i].location_workplace %></td>
-                                        <td><% if (workplaceListRows[i].beacon_set == 1) { %><span class="glyphicon glyphicon-ok"></span><% } %></td>
-                                        <td><button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></td>
-                                    </tr>
-                                <% } } %>
-                                </tbody>
-                            </table>
-
-                            <div class="clearfix"></div>
-                            <ul class="pagination pull-right" style="margin-right: 500px; margin-top: 65px">
-                                <li class="disabled"><a href="#"><span class="glyphicon glyphicon-chevron-left"></span></a></li>
-                                <li class="active"><a href="#">1</a></li>
-                                <!-- routing -- member2-->
-                                <li><a href="#">2</a></li>
-                                <!-- routing -- member3-->
-                                <li><a href="#">3</a></li>
-                                <!-- routing -- member4-->
-                                <li><a href="#">4</a></li>
-                                <!-- routing -- member5-->
-                                <li><a href="#">5</a></li>
-                                <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span></a></li>
+            <div class="row">
+                <div class="col-xs-8 col-xs-offset-2" style="margin-left:150px">
+                    <div class="input-group">
+                        <div class="input-group-btn search-panel">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span id="search_concept">검색조건</span> <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">이름</a></li>
+                                <li><a href="#">사원번호</a></li>
+                                <li><a href="#">직급</a></li>
                             </ul>
                         </div>
+                        <input type="hidden" name="search_param" value="all" id="search_param">
+                        <input type="text" class="form-control" name="x" placeholder="Search term...">
+                        <span class="input-group-btn">
+                                <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                            </span>
                     </div>
                 </div>
-            </div> <!-- /.container -->
+            </div>
+
+            <div class="row">
+                <div id="workplace_table" class="col-xs-12" style="margin-top:40px ;">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped" cellspacing="0" width="100%">
+                            <thead>
+                            <th>번호</th>
+                            <th>이름</th>
+                            <th>위치</th>
+                            <th>위도</th>
+                            <th>경도</th>
+                            <th>비콘 설치 여부</th>
+                            <th>RSSI 조정 값</th>
+                            <th>RSSI 출퇴근 등록 범위</th>
+                            <th style="width: 46px;">수정</th>
+                            </thead>
+                            <tbody>
+                            <%
+                            if (workplaceListRows) {
+                            for (var i = 0; i < workplaceListRows.length; i++) {
+                            %>
+                            <tr>
+                                <input type="hidden" class="each_workplace_info_<%= i %>" value="<%= JSON.stringify(workplaceListRows[i]) %>">
+                                <td><%= workplaceListRows[i].id_workplace %></td>
+                                <td><%= workplaceListRows[i].name_workplace %></td>
+                                <td><%= workplaceListRows[i].location_workplace %></td>
+                                <td><%= workplaceListRows[i].latitude %></td>
+                                <td><%= workplaceListRows[i].longitude %></td>
+                                <td><% if (workplaceListRows[i].beacon_set == 1) { %><span class="glyphicon glyphicon-ok"></span><% } else { %>&nbsp;<% } %></td>
+                                <td>(<%= workplaceListRows[i].coordinateX %>, <%= workplaceListRows[i].coordinateY %>, <%= workplaceListRows[i].coordinateZ %>)</td>
+                                <td>(<%= workplaceListRows[i].thresholdX %>, <%= workplaceListRows[i].thresholdY %>, <%= workplaceListRows[i].thresholdZ %>)</td>
+                                <td><a class="open_modify_modal_button btn btn-primary btn-xs" role="dialog" title="<%= i %>"><span class="glyphicon glyphicon-pencil"></span></a></td>
+                            </tr>
+                            <% } } %>
+                            </tbody>
+                        </table>
+
+                        <div class="clearfix"></div>
+                        <ul class="pagination pull-right" style="margin-right: 500px; margin-top: 65px">
+                            <li class="disabled"><a href="#"><span class="glyphicon glyphicon-chevron-left"></span></a></li>
+                            <li class="active"><a href="#">1</a></li>
+                            <!-- routing -- member2-->
+                            <li><a href="#">2</a></li>
+                            <!-- routing -- member3-->
+                            <li><a href="#">3</a></li>
+                            <!-- routing -- member4-->
+                            <li><a href="#">4</a></li>
+                            <!-- routing -- member5-->
+                            <li><a href="#">5</a></li>
+                            <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span></a></li>
+                        </ul>
+                    </div>
+                    <div class="modal fade" id="modal_modify_form" tabindex="-1" role="dialog">
+                        <form class="form-horizontal" role="form" style="margin-right:300px; margin-top:25px;" method="post">
+
+                            <!--이 위에 액션에다가 라우팅 파일 설정하면됨 -->
+
+                            <div class="modal-dialog">
+                                <div class="modal-content" style="left:200px; top:100px;">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                                        <h4 class="modal-title custom_align" id="Heading">사업장정보를 수정하시겠습니까?</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group" >
+                                            <input id="input_modify_id_disabled" class="form-control " type="text" placeholder="번호" disabled>
+                                            <input id="input_modify_id" class="form-control " type="hidden" name="id">
+                                        </div>
+                                        <div class="form-group" >
+                                            <input id="input_modify_name" class="form-control " type="text" name="modified_name" placeholder="이름">
+                                        </div>
+                                        <div class="form-group" >
+                                            <input id="input_modify_location" class="form-control " type="text" name="modified_location" placeholder="위치">
+                                        </div>
+                                        <div class="form-group" >
+                                            <input id="input_modify_lat_lon" class="form-control " type="text" name="modified_lat_lon" placeholder="위도, 경도" disabled>
+                                        </div>
+                                        <div class="form-group" >
+                                            <input id="input_modify_rssi_coordinate_disabled" class="form-control " type="text" disabled>
+                                        </div>
+                                        <div class="form-group" >
+                                            <input id="input_modify_rssi_threshold_disabled" class="form-control " type="text" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer ">
+                                        <button type="submit" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span> 수정완료</button>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </form>
+                    </div>
+                    <!-- /.content -->
+                </div>
+                <!-- /.content-wrapper -->
+            </div>
         </section>
     </div>
-    <!-- /.content-wrapper -->
-
-    <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
-        <form action="#" class="form-horizontal" role="form" style="margin-right:300px; margin-top:25px;" method ="post">
-            <!--이 위에 액션에다가 라우팅 파일 설정하면됨 -->
-
-            <div class="modal-dialog">
-                <div class="modal-content" style="left:200px; top:100px;">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                        <h4 class="modal-title custom_align" id="Heading">사업장정보를 수정하시겠습니까?</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group" >
-                            <input class="form-control " type="text" name="name_workplace" placeholder="사무실이름">
-                        </div>
-                        <div class="form-group" >
-                            <input class="form-control " type="text" name="location_workplace" placeholder="사무실위치">
-                        </div>
-                        <div class="form-group" >
-                            <input class="form-control " type="text" name="beacon_set" placeholder="비콘등록여부">
-                        </div>
-                    </div>
-                    <div class="modal-footer ">
-                        <button type="submit" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span> 수정완료</button>
-                    </div>
-                </div>
-                <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
-        </form>
-    </div>
-    <!-- /.content -->
 
     <!-- Main Footer -->
     <footer class="main-footer">
@@ -276,30 +301,66 @@
         <!-- Default to the left -->
         <strong>IOT Project &copy;  <a href="#">207LAB</a></strong> of Suwon university
     </footer>
-
 </div>
-<!-- /.content-wrapper -->
 
 <!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
 <div class="control-sidebar-bg"></div>
-<!-- ./wrapper -->
 
 <!-- REQUIRED JS SCRIPTS -->
+<!-- jQuery 2.2.3 -->
 <script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
-<!-- Bootstrap 3.3.6 -->
-<script src="bootstrap/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="plugins/datatables/dataTables.bootstrap.min.js"></script>
 <!-- AdminLTE App -->
 <script src="dist/js/app.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="bootstrap/js/bootstrap.min.js"></script>
 <script>
 
-    $(document).ready(function(e){
+    $(document).ready(function() {
+
         $('.search-panel .dropdown-menu').find('a').click(function(e) {
             e.preventDefault();
-            var param = $(this).attr("href").replace("#","");
+            var param = $(this).attr("href").replace("#", "");
             var concept = $(this).text();
             $('.search-panel span#search_concept').text(concept);
             $('.input-group #search_param').val(param);
         });
+
+        var selectedWorkplaceInfo;
+
+        $('a.open_modify_modal_button').click(function() {
+            $('#modal_modify_form').modal('show');
+
+            var hiddenInputSelector = 'input.each_workplace_info_' + this.title;
+            selectedWorkplaceInfo = JSON.parse($(hiddenInputSelector).val());
+        });
+
+        $('#modal_modify_form').on('shown.bs.modal', function() {
+            var rssiCoordinate = '(' + selectedWorkplaceInfo.coordinateX + ', ' + selectedWorkplaceInfo.coordinateY + ', ' + selectedWorkplaceInfo.coordinateZ + ')';
+            var rssiThreshold = '(' + selectedWorkplaceInfo.thresholdX + ', ' + selectedWorkplaceInfo.thresholdY + ', ' + selectedWorkplaceInfo.thresholdZ + ')';
+
+            $('#input_modify_id_disabled').val(selectedWorkplaceInfo.id_workplace);
+            $('#input_modify_id').val(selectedWorkplaceInfo.id_workplace);
+            $('#input_modify_name').val(selectedWorkplaceInfo.id_workplace.name);
+            $('#input_modify_location').val(selectedWorkplaceInfo.location);
+            $('#input_modify_lat_lon').val('클릭하면 위도 경도를 선택할 수 있는 구글 맵으로 유도할 예정');
+            $('#input_modify_rssi_coordinate_disabled').val(rssiCoordinate);
+            $('#input_modify_rssi_threshold_disabled').val(rssiThreshold);
+        });
+
+        $('#modal_modify_form').on('hidden.bs.modal', function() {
+            $('#input_modify_id_disabled').val('');
+            $('#input_modify_id').val('');
+            $('#input_modify_name').val('');
+            $('#input_modify_location').val('');
+            $('#input_modify_lat_lon').val('클릭하면 위도 경도를 선택할 수 있는 구글 맵으로 유도할 예정');
+            $('#input_modify_rssi_coordinate_disabled').val('');
+            $('#input_modify_rssi_threshold_disabled').val('');
+        });
+
+        $("[data-toggle=tooltip]").tooltip();
     });
 
 </script>

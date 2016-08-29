@@ -257,7 +257,7 @@ var id_modifyUser = function(smartphone_address, employee_number, modify_name, m
                     }
 
                     if (conn.connected) conn.release();
-            });
+                });
         } else {
             conn.query("UPDATE identity SET name=?, password=SHA2(?, 256), department=?, position=?, admin=? WHERE smartphone_address=? AND employee_number=?",
                 [modify_name, modify_password, modify_department, modify_position, modify_admin, smartphone_address, employee_number], function (err) {
@@ -271,7 +271,7 @@ var id_modifyUser = function(smartphone_address, employee_number, modify_name, m
                     }
 
                     if (conn.connected) conn.release();
-            });
+                });
         }
     });
 };
@@ -313,11 +313,11 @@ var id_getWorkplaceList = function(callback) {
     });
 };
 
-var id_getWorkplaceInfo = function(name_workplace, location_workplace, callback) {
+var id_getWorkplaceInfo = function(id_workplace, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
-        conn.query("SELECT * FROM workplace WHERE name_workplace=? AND location_workplace", [name_workplace, location_workplace], function(err, rows) {
+        conn.query("SELECT * FROM workplace WHERE id_workplace=?", [id_workplace], function(err, rows) {
             if (err) {
                 console.error(err);
                 if (conn.connected) conn.release();
@@ -402,13 +402,25 @@ var id_registerWorkplace = function(name_workplace, location_workplace, callback
     });
 };
 
-var id_modifyWorkplace = function(name_workplace, location_workplace, modify_name_workplace, modify_location_workplace, callback) {
-    id_getWorkplaceID(name_workplace, location_workplace, function(id_workplace) {
-        pool.getConnection(function(err, conn) {
-            if (err)
-                console.error(err);
+var id_modifyWorkplace = function(id_workplace, modify_name_workplace, modify_location_workplace,
+                                  modify_coordinateX, modify_coordinateY, modify_coordinateZ,
+                                  modify_thresholdX, modify_thresholdY, modify_thresholdZ,
+                                  modify_latitude, modify_longitude, modify_beacon_set,
+                                  callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
 
-            conn.query("UPDATE workplace SET name_workplace=?, location_workplace=? WHERE id_workplace=?", [modify_name_workplace, modify_location_workplace, id_workplace], function(err) {
+        conn.query("UPDATE workplace SET name_workplace=?, location_workplace=?," +
+            "coordinateX=?, coordinateY=?, coordinateZ=?," +
+            "thresholdX=?, thresholdY=?, thresholdZ=?," +
+            "latitude=?, longitude=?, beacon_set=?" +
+            " WHERE id_workplace=?",
+            [modify_name_workplace, modify_location_workplace,
+                modify_coordinateX, modify_coordinateY, modify_coordinateZ,
+                modify_thresholdX, modify_thresholdY, modify_thresholdZ,
+                modify_latitude, modify_longitude, modify_beacon_set,
+                id_workplace], function(err) {
                 if (err) {
                     console.error(err);
                     if (conn.connected) conn.release();
@@ -420,7 +432,6 @@ var id_modifyWorkplace = function(name_workplace, location_workplace, modify_nam
 
                 if (conn.connected) conn.release();
             });
-        });
     });
 };
 

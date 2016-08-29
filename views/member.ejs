@@ -12,9 +12,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="plugins/datatables/dataTables.bootstrap.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
     <link rel="stylesheet" href="dist/css/skins/skin-blue.min.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
@@ -161,141 +170,129 @@
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
+        <section class="content-header">
 
+        </section>
 
         <!-- Main content -->
         <section class="content">
-
-            <!-- Your Page Content Here -->
-            <div class="container" style="margin-top:60px ;">
-                <div class="row">
-                    <div class="col-xs-8 col-xs-offset-2" style="margin-left:150px">
-                        <div class="input-group">
-                            <div class="input-group-btn search-panel">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                    <span id="search_concept">검색조건</span> <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#">이름</a></li>
-                                    <li><a href="#">사원번호</a></li>
-                                    <li><a href="#">직급</a></li>
-                                </ul>
-                            </div>
-                            <input type="hidden" name="search_param" value="all" id="search_param">
-                            <input type="text" class="form-control" name="x" placeholder="Search term...">
-                            <span class="input-group-btn">
-                     <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
-                 </span>
+            <div class="row">
+                <div class="col-xs-8 col-xs-offset-2" style="margin-left:150px">
+                    <div class="input-group">
+                        <div class="input-group-btn search-panel">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span id="search_concept">검색조건</span> <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">이름</a></li>
+                                <li><a href="#">사원번호</a></li>
+                                <li><a href="#">직급</a></li>
+                            </ul>
                         </div>
+                        <input type="hidden" name="search_param" value="all" id="search_param">
+                        <input type="text" class="form-control" name="x" placeholder="Search term...">
+                        <span class="input-group-btn">
+                                <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                            </span>
                     </div>
                 </div>
             </div>
 
+            <div class="row">
+                <div id="member_table" class="col-xs-12" style="margin-top:40px ;">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped" cellspacing="0" width="100%">
+                            <thead>
+                            <th>이름</th>
+                            <th>사원 번호</th>
+                            <th>블루투스 주소</th>
+                            <th>부서</th>
+                            <th>직급</th>
+                            <th>관리자 권한</th>
+                            <th style="width: 46px;">수정</th>
+                            </thead>
+                            <tbody>
+                            <%
+                            if (userListRows) {
+                            for (var i = 0; i < userListRows.length; i++) {
+                            %>
+                            <tr>
+                                <input type="hidden" class="each_user_info_<%= i %>" value="<%= JSON.stringify(userListRows[i]) %>">
+                                <td><%= userListRows[i].name %></td>
+                                <td><%= userListRows[i].employee_number %></td>
+                                <td><%= userListRows[i].smartphone_address %></td>
+                                <td><%= userListRows[i].department %></td>
+                                <td><%= userListRows[i].position %></td>
+                                <td><% if (userListRows[i].admin == 1) { %><span class="glyphicon glyphicon-ok"></span><% } else { %>&nbsp;<% } %></td>
+                                <td><a class="open_modify_modal_button btn btn-primary btn-xs" role="dialog" title="<%= i %>"><span class="glyphicon glyphicon-pencil"></span></a></td>
+                            </tr>
+                            <% } } %>
+                            </tbody>
+                        </table>
 
+                        <div class="clearfix"></div>
+                        <ul class="pagination pull-right" style="margin-right: 500px; margin-top: 65px">
+                            <li class="disabled"><a href="#"><span class="glyphicon glyphicon-chevron-left"></span></a></li>
+                            <li class="active"><a href="#">1</a></li>
+                            <!-- routing -- member2-->
+                            <li><a href="#">2</a></li>
+                            <!-- routing -- member3-->
+                            <li><a href="#">3</a></li>
+                            <!-- routing -- member4-->
+                            <li><a href="#">4</a></li>
+                            <!-- routing -- member5-->
+                            <li><a href="#">5</a></li>
+                            <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span></a></li>
+                        </ul>
 
-            <div class="container">
-                <div class="row">
+                    </div>
 
+                    <div class="modal fade" id="modal_modify_form" tabindex="-1" role="dialog">
+                        <form class="form-horizontal" role="form" style="margin-right:300px; margin-top:25px;" method="post">
 
-                    <div class="col-md-12" style="margin-top:40px ;">
-                        <div class="table-responsive">
+                            <!--이 위에 액션에다가 라우팅 파일 설정하면됨 -->
 
-                            <table id="mytable" class="table table-bordred table-striped" style="width:1000px; margin-left:30px ; ">
-
-                                <thead>
-
-                                <th>이름</th>
-                                <th>사원번호</th>
-                                <th>스마트폰주소</th>
-                                <th>직급</th>
-                                <th style="width: 46px;">수정</th>
-
-                                </thead>
-                                <tbody>
-
-                                <%
-                                if (userListRows) {
-                                    for (var i = 0; i < userListRows.length; i++) {
-                                %>
-                                <tr>
-                                    <td><%= userListRows[i].name %></td>
-                                    <td><%= userListRows[i].employee_number %></td>
-                                    <td><%= userListRows[i].smartphone_address %></td>
-                                    <td><%= userListRows[i].position %></td>
-                                    <td><button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></td>
-                                </tr>
-                                <% } } %>
-
-                                </tbody>
-
-                            </table>
-
-
-                            <div class="clearfix"></div>
-                            <ul class="pagination pull-right" style="margin-right: 500px; margin-top: 65px">
-                                <li class="disabled"><a href="#"><span class="glyphicon glyphicon-chevron-left"></span></a></li>
-                                <li class="active"><a href="#">1</a></li>
-                                <!-- routing -- member2-->
-                                <li><a href="#">2</a></li>
-                                <!-- routing -- member3-->
-                                <li><a href="#">3</a></li>
-                                <!-- routing -- member4-->
-                                <li><a href="#">4</a></li>
-                                <!-- routing -- member5-->
-                                <li><a href="#">5</a></li>
-                                <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span></a></li>
-                            </ul>
-
-                        </div>
-
-
-
-                        <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
-                            <form action="#" class="form-horizontal" role="form" style="margin-right:300px; margin-top:25px;" method ="post">
-
-                                <!--이 위에 액션에다가 라우팅 파일 설정하면됨 -->
-
-
-                                <div class="modal-dialog">
-                                    <div class="modal-content" style="left:200px; top:100px;">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                                            <h4 class="modal-title custom_align" id="Heading">근로자 정보를 수정하시겠습니까?</h4>
+                            <div class="modal-dialog">
+                                <div class="modal-content" style="left:200px; top:100px;">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                                        <h4 class="modal-title custom_align" id="Heading">근로자 정보를 수정하시겠습니까?</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group" >
+                                            <input id="input_modify_name" class="form-control " type="text" name="modified_name" placeholder="이름">
                                         </div>
-                                        <div class="modal-body">
-                                            <div class="form-group" >
-                                                <input class="form-control " type="text" name="name" placeholder="이름">
-                                            </div>
-                                            <div class="form-group" >
 
-                                                <input class="form-control " type="text" name="employee_number" placeholder="사원번호">
-                                            </div>
-
-                                            <div class="form-group" >
-
-                                                <input class="form-control " type="text" name="smartphone_address" placeholder="스마트폰주소">
-                                            </div>
-
-                                            <div class="form-group" >
-
-                                                <input class="form-control " type="text" name="position"  placeholder="직급">
-                                            </div>
-
-
+                                        <div class="form-group" >
+                                            <input id="input_modify_employee_number_disabled" class="form-control " type="text" disabled>
+                                            <input id="input_modify_employee_number" class="form-control " type="hidden" name="employee_number">
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="submit" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span> 수정완료</button>
+
+                                        <div class="form-group" >
+                                            <input id="input_modify_smartphone_address_disabled" class="form-control " type="text" disabled>
+                                            <input id="input_modify_smartphone_address" class="form-control " type="hidden" name="smartphone_address">
+                                        </div>
+
+                                        <div class="form-group" >
+                                            <input id="input_modify_department" class="form-control " type="text" name="modified_department"  placeholder="부서">
+                                        </div>
+
+                                        <div class="form-group" >
+                                            <input id="input_modify_position" class="form-control " type="text" name="modified_position"  placeholder="직급">
                                         </div>
                                     </div>
-                                    <!-- /.modal-content -->
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span>수정완료</button>
+                                    </div>
                                 </div>
-                                <!-- /.modal-dialog -->
-                            </form>
-                        </div>
-                        <!-- /.content -->
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </form>
                     </div>
-                    <!-- /.content-wrapper -->
+                    <!-- /.content -->
                 </div>
+                <!-- /.content-wrapper -->
             </div>
         </section>
     </div>
@@ -317,44 +314,56 @@
 <!-- REQUIRED JS SCRIPTS -->
 <!-- jQuery 2.2.3 -->
 <script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
-
+<!-- DataTables -->
+<script src="plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="plugins/datatables/dataTables.bootstrap.min.js"></script>
 <!-- AdminLTE App -->
 <script src="dist/js/app.min.js"></script>
-<script src="//rawgithub.com/stidges/jquery-searchable/master/dist/jquery.searchable-1.0.0.min.js"></script>
-<script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="bootstrap/js/bootstrap.min.js"></script>
 <script>
 
-    $(document).ready(function(e){
+    $(document).ready(function() {
+
         $('.search-panel .dropdown-menu').find('a').click(function(e) {
             e.preventDefault();
-            var param = $(this).attr("href").replace("#","");
+            var param = $(this).attr("href").replace("#", "");
             var concept = $(this).text();
             $('.search-panel span#search_concept').text(concept);
             $('.input-group #search_param').val(param);
         });
-    });
 
-</script>
+        var selectedUserInfo;
 
-<script>
+        $('a.open_modify_modal_button').click(function() {
+            $('#modal_modify_form').modal('show');
 
-    $(document).ready(function(){
-        $("#mytable #checkall").click(function () {
-            if ($("#mytable #checkall").is(':checked')) {
-                $("#mytable input[type=checkbox]").each(function () {
-                    $(this).prop("checked", true);
-                });
+            var hiddenInputSelector = 'input.each_user_info_' + this.title;
+            selectedUserInfo = JSON.parse($(hiddenInputSelector).val());
+        });
 
-            } else {
-                $("#mytable input[type=checkbox]").each(function () {
-                    $(this).prop("checked", false);
-                });
-            }
+        $('#modal_modify_form').on('shown.bs.modal', function() {
+            $('#input_modify_name').val(selectedUserInfo.name);
+            $('#input_modify_employee_number_disabled').val(selectedUserInfo.employee_number);
+            $('#input_modify_employee_number').val(selectedUserInfo.employee_number);
+            $('#input_modify_smartphone_address_disabled').val(selectedUserInfo.smartphone_address);
+            $('#input_modify_smartphone_address').val(selectedUserInfo.smartphone_address);
+            $('#input_modify_department').val(selectedUserInfo.department);
+            $('#input_modify_position').val(selectedUserInfo.position);
+        });
+
+        $('#modal_modify_form').on('hidden.bs.modal', function() {
+            $('#input_modify_name').val('');
+            $('#input_modify_employee_number_disabled').val('');
+            $('#input_modify_employee_number').val('');
+            $('#input_modify_smartphone_address_disabled').val('');
+            $('#input_modify_smartphone_address').val('');
+            $('#input_modify_department').val('');
+            $('#input_modify_position').val('');
         });
 
         $("[data-toggle=tooltip]").tooltip();
     });
-
 
 </script>
 </body>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Project_CM</title>
+    <title><%= title %></title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.6 -->
@@ -12,10 +12,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="plugins/datatables/dataTables.bootstrap.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
     <link rel="stylesheet" href="dist/css/skins/skin-blue.min.css">
 
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
@@ -27,9 +35,9 @@
         <!-- Logo -->
         <a href="dashboard" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>207LAB</b></span>
+            <span class="logo-mini"><b><span class="glyphicon glyphicon-home"></span></b></span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b>Suwon univ</b></span>
+            <span class="logo-lg"><b><%= userInfo.department %></b></span>
         </a>
 
         <!-- Header Navbar -->
@@ -51,7 +59,7 @@
                             <!-- The user image in the navbar-->
                             <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
                             <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                            <span class="hidden-xs">이름 </span>
+                            <span class="hidden-xs"><%= userInfo.name %></span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- The user image in the menu -->
@@ -59,8 +67,9 @@
                                 <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                                 <p>
-                                    이름 - 직급(또는 부서)
-                                    <small>근무시작일</small>
+                                    <b><%= userInfo.name %></b> - <%= userInfo.department %>
+                                    <small><%= userInfo.position %></small>
+                                    <!-- <small>근무시작일</small> -->
                                 </p>
 
                             </li>
@@ -79,6 +88,7 @@
             </div>
         </nav>
     </header>
+
     <!-- Left side column. contains the logo and sidebar -->
     <aside class="main-sidebar">
 
@@ -91,25 +101,23 @@
                     <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
-                    <p>이름</p>
+                    <p><%= userInfo.name %></p>
                     <!-- Status -->
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>
             </div>
 
-
             <!-- Sidebar Menu -->
             <ul class="sidebar-menu">
-                <li class="header">Suwon university(회사이름)</li>
+                <li class="header text-center"><%= companyName %></li>
                 <!-- Optionally, you can add icons to the links -->
 
-                <li><a href="dashboard"><i class="fa fa-bell"></i> <span> 메인페이지</span></a></li>
+                <li class=""><a href="dashboard"><i class="fa fa-bell"></i> <span> 메인페이지</span></a></li>
                 <!--                   http://14.63.219.156/dashboard                 -->
                 <li><a href="profile"><i class="fa fa-user"></i> <span> 개인정보수정</span></a></li>
                 <!--                   http://14.63.219.156/profile                   -->
-                <li><a href="member"><i class="fa fa-thumbs-up"></i> <span> 직원관리</span></a></li>
+                <li class=""><a href="member"><i class="fa fa-thumbs-up"></i> <span> 직원관리</span></a></li>
                 <!--                   http://14.63.219.156/member                    -->
-
                 <li><a href="workplace"><i class="fa fa-square"></i> <span> 사무실관리</span></a></li>
                 <!--                  http://14.63.219.156/workplace                  -->
 
@@ -122,8 +130,8 @@
                         <i class="fa fa-search"></i>
                         <span> 근무기록조회</span>
                         <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
                     </a>
                     <ul class="treeview-menu">
                         <li><a href="d3chart1"><i class="fa fa-circle-o"></i>사무실이동현황</a></li>
@@ -142,13 +150,13 @@
                         <i class="fa fa-user-plus"></i>
                         <span> 관리</span>
                         <span class="pull-right-container">
-            <i class="fa fa-angle-left pull-right"></i>
-          </span>
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
                     </a>
                     <ul class="treeview-menu">
                         <li><a href="permission"><i class="fa fa-circle-o"></i>가입허가</a></li>
                         <!-- 14.63.219.156/permission -->
-                        <li><a href="beacon"><i class="fa fa-circle-o"></i>비콘관리</a></li>
+                        <li class="active"><a href="beacon"><i class="fa fa-circle-o"></i>비콘관리</a></li>
                         <!-- 14.63.219.156/beacon -->
                     </ul>
                 </li>
@@ -162,63 +170,46 @@
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
+        <section class="content-header">
 
+        </section>
 
         <!-- Main content -->
         <section class="content">
-
-            <!-- Your Page Content Here -->
-
-
-
-            <div class="container" style="margin-top:60px ;">
-                <div class="row">
-                    <div class="col-xs-8 col-xs-offset-2" style="margin-left:150px">
-                        <div class="input-group">
-                            <div class="input-group-btn search-panel">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                    <span id="search_concept">검색조건</span> <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#">이름</a></li>
-                                    <li><a href="#">사원번호</a></li>
-                                    <li><a href="#">직급</a></li>
-                                </ul>
-                            </div>
-                            <input type="hidden" name="search_param" value="all" id="search_param">
-                            <input type="text" class="form-control" name="x" placeholder="Search term...">
-                            <span class="input-group-btn">
-                     <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
-                 </span>
+            <div class="row">
+                <div class="col-xs-8 col-xs-offset-2" style="margin-left:150px">
+                    <div class="input-group">
+                        <div class="input-group-btn search-panel">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span id="search_concept">검색조건</span> <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">이름</a></li>
+                                <li><a href="#">사원번호</a></li>
+                                <li><a href="#">직급</a></li>
+                            </ul>
                         </div>
+                        <input type="hidden" name="search_param" value="all" id="search_param">
+                        <input type="text" class="form-control" name="x" placeholder="Search term...">
+                        <span class="input-group-btn">
+                                <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                            </span>
                     </div>
                 </div>
             </div>
 
-
-
-            <div class="container">
-                <div class="row">
-
-
-                    <div class="col-md-12" style="margin-top:40px ;">
-                        <div class="table-responsive">
-
-
-                            <table id="mytable" class="table table-bordred table-striped" style="width:1000px ;">
-
-                                <thead>
-
-
+            <div class="row">
+                <div id="member_table" class="col-xs-12" style="margin-top:40px ;">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped" cellspacing="0" width="100%">
+                            <thead>
                                 <th>비콘 주소</th>
                                 <th>비콘 데이터</th>
                                 <th>위치</th>
                                 <th style="width: 46px;">수정</th>
                                 <th style="width: 51px;">삭제</th>
-
-                                </thead>
-                                <tbody>
-
+                            </thead>
+                            <tbody>
                                 <%
                                 if (beaconListRows) {
                                     for (var i = 0; i < beaconListRows.length; i++) {
@@ -377,23 +368,24 @@
         <!-- Default to the left -->
         <strong>IOT Project &copy;  <a href="#">207LAB</a></strong> of Suwon university
     </footer>
-
+</div>
 
     <!-- /.control-sidebar -->
     <!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
     <div class="control-sidebar-bg"></div>
-</div>
-<!-- ./wrapper -->
 
 <!-- REQUIRED JS SCRIPTS -->
 <!-- jQuery 2.2.3 -->
 <script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- DataTables -->
+<script src="plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="plugins/datatables/dataTables.bootstrap.min.js"></script>
 <!-- AdminLTE App -->
 <script src="dist/js/app.min.js"></script>
-<script src="//rawgithub.com/stidges/jquery-searchable/master/dist/jquery.searchable-1.0.0.min.js"></script>
-<script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="bootstrap/js/bootstrap.min.js"></script>
 <script>
-    $(document).ready(function(e){
+    $(document).ready(function(){
         $('.search-panel .dropdown-menu').find('a').click(function(e) {
             e.preventDefault();
             var param = $(this).attr("href").replace("#","");
@@ -402,28 +394,6 @@
             $('.input-group #search_param').val(param);
         });
     });
-
-</script>
-<script>
-
-    $(document).ready(function(){
-        $("#mytable #checkall").click(function () {
-            if ($("#mytable #checkall").is(':checked')) {
-                $("#mytable input[type=checkbox]").each(function () {
-                    $(this).prop("checked", true);
-                });
-
-            } else {
-                $("#mytable input[type=checkbox]").each(function () {
-                    $(this).prop("checked", false);
-                });
-            }
-        });
-
-        $("[data-toggle=tooltip]").tooltip();
-    });
-
-
 </script>
 </body>
 </html>

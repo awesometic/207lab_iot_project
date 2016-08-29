@@ -317,4 +317,91 @@ router.post('/profile', function(req, res, next) {
     }
 });
 
+router.post('/member', function(req, res, next) {
+    var modified_name = req.body.modified_name;
+    var selected_employee_number = req.body.employee_number;
+    var selected_smartphone_address = req.body.smartphone_address;
+    var modified_department = req.body.modified_department;
+    var modified_position = req.body.modified_position;
+
+    if (typeof selected_employee_number === 'undefined' || typeof selected_smartphone_address === 'undefined') {
+        res.send("<script>alert('Cannot find any user information'); history.go(-1);</script>");
+    } else {
+        pool.id_getUserInfo(selected_smartphone_address, function(userInfo) {
+            if (typeof modified_name === 'undefined')
+                modified_name = userInfo.name;
+            if (typeof modified_department === 'undefined')
+                modified_department = userInfo.department;
+            if (typeof modified_position === 'undefined')
+                modified_position = userInfo.position;
+
+            pool.id_modifyUser(selected_smartphone_address, selected_employee_number, modified_name, null,
+                modified_department, modified_position, userInfo.admin, function (valid) {
+                if (valid) {
+                    res.send("<script>alert('Modify Success!'); location.href='/member';</script>");
+                } else {
+                    res.send("<script>alert('Server error'); history.go(-1);</script>");
+                }
+            });
+        });
+    }
+});
+
+router.post('/workplace', function(req, res, next) {
+    var selected_id_workplace = req.body.id;
+    var modified_name = req.body.modified_name;
+    var modified_location = req.body.modified_location;
+
+    if (typeof selected_id_workplace === 'undefined') {
+        res.send("<script>alert('Cannot find any workplace information'); history.go(-1);</script>");
+    } else {
+        pool.id_getWorkplaceInfo(selected_id_workplace, function(workplaceInfo) {
+            if (typeof modified_name === 'undefined')
+                modified_name = workplaceInfo.name;
+            if (typeof modified_location === 'undefined')
+                modified_location = workplaceInfo.department;
+
+            pool.id_modifyWorkplace(selected_id_workplace, modified_name, modified_location,
+                workplaceInfo.coordinateX, workplaceInfo.coordinateY, workplaceInfo.coordinateZ,
+                workplaceInfo.thresholdX, workplaceInfo.thresholdY, workplaceInfo.thresholdZ,
+                workplaceInfo.latitude, workplaceInfo.longitude, workplaceInfo.beacon_set, function (valid) {
+                if (valid) {
+                    res.send("<script>alert('Modify Success!'); location.href='/workplace';</script>");
+                } else {
+                    res.send("<script>alert('Server error'); history.go(-1);</script>");
+                }
+            });
+        });
+    }
+});
+
+router.post('/beacon', function(req, res, next) {
+    var selected_id_workplace = req.body.id;
+    var modified_name = req.body.modified_name;
+    var modified_location = req.body.modified_location;
+
+    if (typeof selected_id_workplace === 'undefined') {
+        res.send("<script>alert('Cannot find any workplace information'); history.go(-1);</script>");
+    } else {
+        pool.id_getWorkplaceInfo(selected_id_workplace, function(workplaceInfo) {
+            if (typeof modified_name === 'undefined')
+                modified_name = workplaceInfo.name;
+            if (typeof modified_location === 'undefined')
+                modified_location = workplaceInfo.department;
+
+            pool.id_modifyWorkplace(selected_id_workplace, modified_name, modified_location,
+                workplaceInfo.coordinateX, workplaceInfo.coordinateY, workplaceInfo.coordinateZ,
+                workplaceInfo.thresholdX, workplaceInfo.thresholdY, workplaceInfo.thresholdZ,
+                workplaceInfo.latitude, workplaceInfo.longitude, workplaceInfo.beacon_set, function (valid) {
+                    if (valid) {
+                        res.send("<script>alert('Modify Success!'); location.href='/beacon';</script>");
+                    } else {
+                        res.send("<script>alert('Server error'); history.go(-1);</script>");
+                    }
+                });
+        });
+    }
+});
+
+
 module.exports = router;
