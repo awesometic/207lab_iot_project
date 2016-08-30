@@ -74,7 +74,7 @@
                                 </thead>
                                 <tbody>
                                 <%
-                                if (userListRows) {
+                                if (typeof userListRows !== 'undefined') {
                                 for (var i = 0; i < userListRows.length; i++) {
                                 if (userListRows[i].permission) {
                                 %>
