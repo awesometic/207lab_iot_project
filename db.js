@@ -317,6 +317,7 @@ var id_getWorkplaceInfo = function(id_workplace, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
+
         conn.query("SELECT * FROM workplace WHERE id_workplace=?", [id_workplace], function(err, rows) {
             if (err) {
                 console.error(err);
@@ -354,40 +355,17 @@ var id_getWorkplaceID = function(name_workplace, location_workplace, callback) {
     });
 };
 
-/* What makes each workplace unique? */
-var id_checkWorkplaceRegistered = function(name_workplace, location_workplace, callback) {
+var id_registerWorkplace = function(name_workplace, location_workplace, latitude, longitude, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
 
-        conn.query("SELECT count(*) cnt FROM workplace WHERE name_workplace=? AND location_workplace", [name_workplace, location_workplace], function(err, rows) {
-            if (err) {
-                console.error(err);
-                if (conn.connected) conn.release();
-            }
-
-            var cnt = rows[0].cnt;
-            var valid = true;
-
-            if (cnt > 0)
-                valid = false;
-
-            if (typeof callback === "function") {
-                callback(valid);
-            }
-
-            if (conn.connected) conn.release();
-        });
-    });
-};
-
-var id_registerWorkplace = function(name_workplace, location_workplace, callback) {
-    pool.getConnection(function(err, conn) {
-        if (err)
-            console.error(err);
-
-        conn.query("INSERT INTO workplace (name_workplace, location_workplace, coordinateX, coordinateY, coordinateZ)" +
-            " VALUES (?, ?, ?, ?, ?)", [name_workplace, location_workplace, 0, 0, 0], function (err) {
+        conn.query("INSERT INTO workplace (name_workplace, location_workplace," +
+            " coordinateX, coordinateY, coordinateZ," +
+            " thresholdX, thresholdY, thresholdZ," +
+            " latitude, longitude)" +
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [name_workplace, location_workplace, 0, 0, 0, 0, 0, 0, latitude, longitude], function (err) {
             if (err) {
                 console.error(err);
                 if (conn.connected) conn.release();
@@ -435,12 +413,12 @@ var id_modifyWorkplace = function(id_workplace, modify_name_workplace, modify_lo
     });
 };
 
-var id_deleteWorkplace = function(name_workplace, location_workplace, callback) {
+var id_deleteWorkplace = function(id_workplace, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
 
-        conn.query("DELETE FROM workplace WHERE name_workplace=? AND location_workplace=?", [name_workplace, location_workplace], function (err) {
+        conn.query("DELETE FROM workplace WHERE id_workplace=?", [id_workplace], function (err) {
             if (err) {
                 console.error(err);
                 if (conn.connected) conn.release();
@@ -542,7 +520,7 @@ var id_checkBeaconRegistered = function(beacon_address, callback) {
     });
 };
 
-var id_registerBeacon = function(uuid, major, minor, beacon_address, callback) {
+var id_registerBeacon = function(beacon_address, uuid, major, minor, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -568,7 +546,7 @@ var id_modifyBeacon = function(beacon_address, modify_uuid, modify_major, modify
         if (err)
             console.error(err);
 
-        conn.query("UPDATE beacon SET UUID=?, major=?, minor=? WHERE beacon_addres=?", [modify_uuid, modify_major, modify_minor, beacon_address], function(err) {
+        conn.query("UPDATE beacon SET UUID=?, major=?, minor=? WHERE beacon_address=?", [modify_uuid, modify_major, modify_minor, beacon_address], function(err) {
             if (err) {
                 console.error(err);
                 if (conn.connected) conn.release();
@@ -583,12 +561,12 @@ var id_modifyBeacon = function(beacon_address, modify_uuid, modify_major, modify
     });
 };
 
-var id_deleteBeacon = function(uuid, major, minor, beacon_address, callback) {
+var id_deleteBeacon = function(beacon_address, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
 
-        conn.query("DELETE FROM beacon WHERE UUID=? AND major=? AND minor=? AND beacon_address=?", [uuid, major, minor, beacon_address], function (err) {
+        conn.query("DELETE FROM beacon WHERE beacon_address=?", [beacon_address], function (err) {
             if (err) {
                 console.error(err);
                 if (conn.connected) conn.release();
@@ -1310,7 +1288,6 @@ module.exports.id_deleteUser                = id_deleteUser;
 module.exports.id_getWorkplaceList          = id_getWorkplaceList;
 module.exports.id_getWorkplaceInfo          = id_getWorkplaceInfo;
 module.exports.id_getWorkplaceID            = id_getWorkplaceID;
-module.exports.id_checkWorkplaceRegistered  = id_checkWorkplaceRegistered;
 module.exports.id_registerWorkplace         = id_registerWorkplace;
 module.exports.id_modifyWorkplace           = id_modifyWorkplace;
 module.exports.id_deleteWorkplace           = id_deleteWorkplace;

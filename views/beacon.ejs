@@ -16,7 +16,9 @@
     <link rel="stylesheet" href="plugins/datatables/dataTables.bootstrap.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
-    <link rel="stylesheet" href="dist/css/skins/skin-blue.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -25,355 +27,206 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
-    <!-- Main Header -->
-    <header class="main-header">
+    <% include nav.ejs %>
 
-        <!-- Logo -->
-        <a href="dashboard" class="logo">
-            <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b><span class="glyphicon glyphicon-home"></span></b></span>
-            <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b><%= userInfo.department %></b></span>
-        </a>
+    <% include sidenav.ejs %>
 
-        <!-- Header Navbar -->
-        <nav class="navbar navbar-static-top" role="navigation">
-            <!-- Sidebar toggle button-->
-            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-                <span class="sr-only">Toggle navigation</span>
-            </a>
-
-
-            <!-- Navbar Right Menu -->
-            <div class="navbar-custom-menu">
-                <ul class="nav navbar-nav">
-
-                    <!-- left-head side picture part -->
-                    <li class="dropdown user user-menu">
-                        <!-- Menu Toggle Button -->
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <!-- The user image in the navbar-->
-                            <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-                            <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                            <span class="hidden-xs"><%= userInfo.name %></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <!-- The user image in the menu -->
-                            <li class="user-header">
-                                <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-
-                                <p>
-                                    <b><%= userInfo.name %></b> - <%= userInfo.department %>
-                                    <small><%= userInfo.position %></small>
-                                    <!-- <small>근무시작일</small> -->
-                                </p>
-
-                            </li>
-
-                            <!-- Menu Footer-->
-                            <li class="user-footer">
-                                <div class="pull-right">
-                                    <a href="logout" class="btn btn-default btn-flat">로그아웃</a>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                    <!-- Control Sidebar Toggle Button -->
-
-                </ul>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Left side column. contains the logo and sidebar -->
-    <aside class="main-sidebar">
-
-        <!-- sidebar: style can be found in sidebar.less -->
-        <section class="sidebar">
-
-            <!-- Sidebar user panel (optional) -->
-            <div class="user-panel">
-                <div class="pull-left image">
-                    <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-                </div>
-                <div class="pull-left info">
-                    <p><%= userInfo.name %></p>
-                    <!-- Status -->
-                    <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-                </div>
-            </div>
-
-            <!-- Sidebar Menu -->
-            <ul class="sidebar-menu">
-                <li class="header text-center"><%= companyName %></li>
-                <!-- Optionally, you can add icons to the links -->
-
-                <li class=""><a href="dashboard"><i class="fa fa-bell"></i> <span> 메인페이지</span></a></li>
-                <!--                   http://14.63.219.156/dashboard                 -->
-                <li><a href="profile"><i class="fa fa-user"></i> <span> 개인정보수정</span></a></li>
-                <!--                   http://14.63.219.156/profile                   -->
-                <li class=""><a href="member"><i class="fa fa-thumbs-up"></i> <span> 직원관리</span></a></li>
-                <!--                   http://14.63.219.156/member                    -->
-                <li><a href="workplace"><i class="fa fa-square"></i> <span> 사무실관리</span></a></li>
-                <!--                  http://14.63.219.156/workplace                  -->
-
-
-
-                <!-- 근무기록조회 사이드바 -->
-                <li class="treeview">
-                    <a href="manageworks">
-                        <!-- http://14.63.219.156/manageworks -->
-                        <i class="fa fa-search"></i>
-                        <span> 근무기록조회</span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="d3chart1"><i class="fa fa-circle-o"></i>사무실이동현황</a></li>
-                        <!-- 14.63.219.156/d3chart1 -->
-                        <li><a href="d3chart2"><i class="fa fa-circle-o"></i>직원근무현황</a></li>
-                        <!-- 14.63.219.156/d3chart2 -->
-                    </ul>
-                </li>
-
-
-
-                <!-- 관리 사이드바-->
-                <li class="treeview">
-                    <a href="permissiom">
-                        <!-- 14.63.219.156/permission-->
-                        <i class="fa fa-user-plus"></i>
-                        <span> 관리</span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="permission"><i class="fa fa-circle-o"></i>가입허가</a></li>
-                        <!-- 14.63.219.156/permission -->
-                        <li class="active"><a href="beacon"><i class="fa fa-circle-o"></i>비콘관리</a></li>
-                        <!-- 14.63.219.156/beacon -->
-                    </ul>
-                </li>
-            </ul>
-
-
-            <!-- /.sidebar-menu -->
-        </section>
-        <!-- /.sidebar -->
-    </aside>
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-
+            <h1>
+                비콘 관리
+                <small>각 비콘의 정보를 열람 및 수정</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="dashboard"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+                <li><a href="#">관리</a></li>
+                <li class="active">비콘 관리</li>
+            </ol>
         </section>
 
         <!-- Main content -->
         <section class="content">
             <div class="row">
-                <div class="col-xs-8 col-xs-offset-2" style="margin-left:150px">
-                    <div class="input-group">
-                        <div class="input-group-btn search-panel">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                <span id="search_concept">검색조건</span> <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">이름</a></li>
-                                <li><a href="#">사원번호</a></li>
-                                <li><a href="#">직급</a></li>
-                            </ul>
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">비콘 목록</h3>
+                            <a id="open_add_modal_button" class="btn btn-success btn-md pull-right">비콘 추가</a>
                         </div>
-                        <input type="hidden" name="search_param" value="all" id="search_param">
-                        <input type="text" class="form-control" name="x" placeholder="Search term...">
-                        <span class="input-group-btn">
-                                <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
-                            </span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div id="member_table" class="col-xs-12" style="margin-top:40px ;">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped" cellspacing="0" width="100%">
-                            <thead>
-                                <th>비콘 주소</th>
-                                <th>비콘 데이터</th>
-                                <th>위치</th>
-                                <th style="width: 46px;">수정</th>
-                                <th style="width: 51px;">삭제</th>
-                            </thead>
-                            <tbody>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="beacon_table" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>블루투스 주소</th>
+                                    <th>UUID</th>
+                                    <th>Major</th>
+                                    <th>Minor</th>
+                                    <th>사무실 고유 번호</th>
+                                    <th>사무실 이름</th>
+                                    <th>수정</th>
+                                    <th>삭제</th>
+                                </tr>
+                                </thead>
+                                <tbody>
                                 <%
                                 if (beaconListRows) {
-                                    for (var i = 0; i < beaconListRows.length; i++) {
+                                for (var i = 0; i < beaconListRows.length; i++) {
                                 %>
                                 <tr>
+                                    <input type="hidden" class="each_beacon_info_<%= i %>" value="<%= JSON.stringify(beaconListRows[i]) %>">
                                     <td><%= beaconListRows[i].beacon_address %></td>
-                                    <td><%= beaconListRows[i].UUID %><%= beaconListRows[i].major %><%= beaconListRows[i].minor %></td>
+                                    <td><%= beaconListRows[i].UUID %></td>
+                                    <td><%= beaconListRows[i].major %></td>
+                                    <td><%= beaconListRows[i].minor %></td>
+                                    <td><% if (beaconListRows[i].id_workplace == -1) { %> <% } else { %><%= beaconListRows[i].id_workplace %><% } %></td>
                                     <td><%= beaconListRows[i].name_workplace %></td>
-                                    <td><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></p></td>
-                                    <td><p data-placement="top" data-toggle="tooltip" title="Delete"><button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" data-target="#delete" ><span class="glyphicon glyphicon-trash"></span></button></p></td>
+                                    <td><a class="open_modify_modal_button btn btn-primary btn-xs" role="dialog" title="<%= i %>"><span class="glyphicon glyphicon-pencil"></span></a></td>
+                                    <td><a class="open_delete_modal_button btn btn-danger btn-xs" role="dialog" title="<%= i %>"><span class="glyphicon glyphicon-trash"></span></a></td>
                                 </tr>
                                 <% } } %>
-
                                 </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>블루투스 주소</th>
+                                    <th>UUID</th>
+                                    <th>Major</th>
+                                    <th>Minor</th>
+                                    <th>사무실 고유 번호</th>
+                                    <th>사무실 이름</th>
+                                    <th>수정</th>
+                                    <th>삭제</th>
+                                </tr>
+                                </tfoot>
                             </table>
-                            <!-- 비콘추가 버튼 -->
-                            <button class="btn btn-success" style="margin-left: 905px; height: 32px;"  data-title="create" data-toggle="modal" data-target="#create" >비콘추가</button>
-                            <div class="clearfix"></div>
-                            <ul class="pagination pull-right" style="margin-right: 500px; margin-top: 65px">
-                                <li class="disabled"><a href="#"><span class="glyphicon glyphicon-chevron-left"></span></a></li>
-                                <li class="active"><a href="#">1</a></li>
-                                <!-- routing  member2-->
-                                <li><a href="#">2</a></li>
-                                <!-- routing  member3-->
-                                <li><a href="#">3</a></li>
-                                <!-- routing  member4-->
-                                <li><a href="#">4</a></li>
-                                <!-- routing  member5-->
-                                <li><a href="#">5</a></li>
-                                <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span></a></li>
-                            </ul>
                         </div>
+                        <!-- /.box-body -->
                     </div>
+                    <!-- /.box -->
                 </div>
+                <!-- /.col -->
             </div>
-
-            <form action="#" method="post">
-                <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                                <h4 class="modal-title custom_align" id="Heading"> 비콘정보를 수정하시겠습니까?</h4>
-                            </div>
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <input class="form-control " type="text" name="id_beacon" placeholder="index">
-                                </div>
-                                <div class="form-group">
-
-                                    <input class="form-control " type="text" name="beacon_address" placeholder="비콘주소">
-                                </div>
-
-                                <div class="form-group">
-
-                                    <input class="form-control " type="text" name="id_workplace" placeholder="위치">
-                                </div>
-
-                            </div>
-                            <div class="modal-footer ">
-                                <button type="submit" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span> 수정완료</button>
-                            </div>
-                        </div>
-                        <!-- /.modal-content -->
-                    </div>
-                    <!-- /.modal-dialog -->
-                </div>
-            </form>
-
-            <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
-                <form action="#" class="form-horizontal" role="form" style="margin-right:300px; margin-top:25px;" method ="post">
-
-                    <div class="modal-dialog">
-                        <div class="modal-content" style="height: 300px; left:200px; top:100px;">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                                <h4 class="modal-title custom_align" id="Heading">비콘을 삭제하시겠습니까?</h4>
-                            </div>
-                            <div class="modal-body">
-
-                                <input class="form-control " type="hidden" name="id_beacon">
-                            </div>
-                            <div class="form-group" >
-
-                                <input class="form-control" type="hidden"  name="beacon_address">
-                            </div>
-
-                            <div class="form-group" >
-
-                                <input class="form-control" type="hidden"  name="id_workplace">
-                            </div>
-
-                            <div class="form-group" >
-
-
-
-                                <div class="alert alert-danger" style="margin-left:50px; width:532px;"> 복구할수없을지도 모릅니다. 그래도 삭제하시겠습니까?</div>
-
-                            </div>
-                            <div class="modal-footer ">
-                                <button type="submit" class="btn btn-success" ><span class="glyphicon glyphicon-ok-sign"></span> 네</button>
-                                <button type="reset" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> 아니요</button>
-                            </div>
-                        </div>
-                        <!-- /.modal-content -->
-                    </div>
-                    <!-- /.modal-dialog -->
-                </form>
-            </div>
-
-
-            <form action="#" method="post">
-                <!-- 새로운 비콘추가를 라우팅하는 곳을 쓰면된다
-              id_beacon, beacon_address, id_workplace-->
-                <div class="modal fade" id="create" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                                <h4 class="modal-title custom_align" id="Heading">새로운 비콘을 추가하시겠습니까?</h4>
-                            </div>
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <input class="form-control " type="text" placeholder="index" name="id_beacon">
-                                </div>
-                                <div class="form-group">
-
-                                    <input class="form-control " type="text" placeholder="비콘주소" name="beacon_address">
-                                </div>
-
-                                <div class="form-group">
-
-                                    <input class="form-control " type="text" placeholder="위치" name="id_workplace">
-                                </div>
-
-                            </div>
-                            <div class="modal-footer ">
-                                <button type="submit" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span> 추가하기</button>
-                            </div>
-                        </div>
-                        <!-- /.modal-content -->
-                    </div>
-                    <!-- /.modal-dialog -->
-                </div>
-            </form>
+            <!-- /.row -->
         </section>
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
-    <!-- Main Footer -->
-    <footer class="main-footer">
-        <!-- To the right -->
-        <div class="pull-right hidden-xs">
 
+    <div id="modal_add_form" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <form class="form-horizontal" role="form" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title text-center">비콘 추가</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="beacon_control_flag" value="add">
+                        <div class="form-group">
+                            <input id="input_add_beacon_address" class="form-control" type="text" name="beacon_address" placeholder="블루투스 주소">
+                        </div>
+                        <div class="form-group">
+                            <input id="input_add_uuid" class="form-control" type="text" name="uuid" placeholder="UUID">
+                        </div>
+                        <div class="form-group">
+                            <input id="input_add_major" class="form-control" type="text" name="major" placeholder="Major">
+                        </div>
+                        <div class="form-group">
+                            <input id="input_add_minor" class="form-control" type="text" name="minor" placeholder="Minor">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success btn-lg btn-block"><span class="glyphicon glyphicon-ok-sign"></span> 저장</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </form>
+            <!-- /.form-horizontal -->
         </div>
-        <!-- Default to the left -->
-        <strong>IOT Project &copy;  <a href="#">207LAB</a></strong> of Suwon university
-    </footer>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+    <div id="modal_modify_form" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <form class="form-horizontal" role="form" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title text-center">비콘 정보 수정</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="beacon_control_flag" value="modify">
+                        <div class="form-group">
+                            <input id="input_modify_beacon_address_disabled" class="form-control" type="text" placeholder="블루투스 주소" disabled>
+                            <input id="input_modify_beacon_address" class="form-control" type="hidden" name="beacon_address">
+                        </div>
+                        <div class="form-group">
+                            <input id="input_modify_uuid" class="form-control" type="text" name="uuid" placeholder="UUID">
+                        </div>
+                        <div class="form-group">
+                            <input id="input_modify_major" class="form-control" type="text" name="major" placeholder="Major">
+                        </div>
+                        <div class="form-group">
+                            <input id="input_modify_minor" class="form-control" type="text" name="minor" placeholder="Minor">
+                        </div>
+                        <div class="form-group">
+                            <input id="input_modify_id_workplace_disabled" class="form-control" type="text" placeholder="사무실 고유 번호" disabled>
+                            <input id="input_modify_id_workplace" class="form-control" type="hidden" name="id_workplace">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block"><span class="glyphicon glyphicon-ok-sign"></span> 저장</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </form>
+            <!-- /.form-horizontal -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+    <div id="modal_delete_form" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <form class="form-horizontal" role="form" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title text-center">비콘 삭제</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-center">
+                            <input type="hidden" name="beacon_control_flag" value="delete">
+                            <input id="deleted_beacon_address" type="hidden" name="beacon_address">
+                            <h3>되돌릴 수 없습니다</h3><br>
+                            <small>그래도 삭제하시겠습니까?</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger btn-lg btn-block"><span class="glyphicon glyphicon-ok-sign"></span> 삭제</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </form>
+            <!-- /.form-horizontal -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+    <% include footer.ejs %>
+
 </div>
-
-    <!-- /.control-sidebar -->
-    <!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
-    <div class="control-sidebar-bg"></div>
-
+<!-- ./wrapper -->
 <!-- REQUIRED JS SCRIPTS -->
 <!-- jQuery 2.2.3 -->
 <script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
@@ -385,15 +238,66 @@
 <!-- Bootstrap 3.3.6 -->
 <script src="bootstrap/js/bootstrap.min.js"></script>
 <script>
+
     $(document).ready(function(){
-        $('.search-panel .dropdown-menu').find('a').click(function(e) {
-            e.preventDefault();
-            var param = $(this).attr("href").replace("#","");
-            var concept = $(this).text();
-            $('.search-panel span#search_concept').text(concept);
-            $('.input-group #search_param').val(param);
+        $('#beacon_table').DataTable();
+
+
+        $('#open_add_modal_button').click(function() {
+            $('#modal_add_form').modal('show');
+        });
+
+        $('#modal_add_form').on('hidden.bs.modal', function() {
+            $('#input_add_beacon_address_disabled').val('');
+            $('#input_add_beacon_address').val('');
+            $('#input_add_uuid').val('');
+            $('#input_add_major').val('');
+            $('#input_add_minor').val('');
+            $('#input_add_id_workplace_disabled').val('');
+            $('#input_add_id_workplace').val('');
+        });
+
+        var selectedBeaconInfo;
+
+        $('a.open_modify_modal_button').click(function() {
+            $('#modal_modify_form').modal('show');
+
+            var hiddenInputSelector = 'input.each_beacon_info_' + this.title;
+            selectedBeaconInfo = JSON.parse($(hiddenInputSelector).val());
+        });
+
+        $('#modal_modify_form').on('shown.bs.modal', function() {
+            $('#input_modify_beacon_address_disabled').val(selectedBeaconInfo.beacon_address);
+            $('#input_modify_beacon_address').val(selectedBeaconInfo.beacon_address);
+            $('#input_modify_uuid').val(selectedBeaconInfo.UUID);
+            $('#input_modify_major').val(selectedBeaconInfo.major);
+            $('#input_modify_minor').val(selectedBeaconInfo.minor);
+            $('#input_modify_id_workplace_disabled').val(selectedBeaconInfo.id_workplace);
+            $('#input_modify_id_workplace').val(selectedBeaconInfo.id_workplace);
+        });
+
+        $('#modal_modify_form').on('hidden.bs.modal', function() {
+            $('#input_modify_beacon_address_disabled').val('');
+            $('#input_modify_beacon_address').val('');
+            $('#input_modify_uuid').val('');
+            $('#input_modify_major').val('');
+            $('#input_modify_minor').val('');
+            $('#input_modify_id_workplace_disabled').val('');
+            $('#input_modify_id_workplace').val('');
+        });
+
+        $('a.open_delete_modal_button').click(function() {
+            $('#modal_delete_form').modal('show');
+
+            var hiddenInputSelector = 'input.each_beacon_info_' + this.title;
+            selectedBeaconInfo = JSON.parse($(hiddenInputSelector).val());
+        });
+
+        $('#modal_delete_form').on('shown.bs.modal', function() {
+            $('#deleted_beacon_address').val(selectedBeaconInfo.beacon_address);
         });
     });
+
 </script>
 </body>
 </html>

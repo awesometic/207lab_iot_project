@@ -1,0 +1,63 @@
+<!-- Left side column. contains the logo and sidebar -->
+<aside class="main-sidebar">
+
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel">
+            <div class="pull-left image">
+                <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+            </div>
+            <div class="pull-left info">
+                <p><%= userInfo.name %></p>
+                <!-- Status -->
+                <a href="#"><i class="fa fa-circle text-success"></i>Online</a>
+            </div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <ul class="sidebar-menu">
+            <li class="header text-center"><%= companyName %></li>
+            <!-- Optionally, you can add icons to the links -->
+
+            <li class=""><a href="dashboard"><i class="fa fa-bell"></i><span> 메인 페이지</span></a></li>
+            <li><a href="profile"><i class="fa fa-user"></i><span> 개인 정보</span></a></li>
+
+            <!-- 근무기록조회 사이드바 -->
+            <li class="treeview">
+                <a href="manageworks">
+                    <!-- http://14.63.219.156/manageworks -->
+                    <i class="fa fa-search"></i>
+                    <span> 근무 기록 조회</span>
+                    <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="d3chart1"><i class="fa fa-circle-o"></i> 사무실 이동 현황</a></li>
+                    <li><a href="d3chart2"><i class="fa fa-circle-o"></i> 직원 근무 현황</a></li>
+                </ul>
+            </li>
+
+            <% if (userInfo.admin) { %>
+            <!-- 관리 사이드바-->
+            <!-- Add "active" class to <li> tag when it selected, it needs jquery -->
+            <li class="treeview">
+                <a href="permission">
+                    <i class="fa fa-user-plus"></i><span> 관리</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="member"><i class="fa fa-thumbs-up"></i><span> 직원</span></a></li>
+                    <li><a href="workplace"><i class="fa fa-square"></i><span> 사무실</span></a></li>
+                    <li><a href="beacon"><i class="fa fa-signal"></i> 비콘</a></li>
+                    <li><a href="permission"><i class="fa fa-circle-o"></i> 가입 허가</a></li>
+                </ul>
+            </li>
+            <% } %>
+        </ul>
+
+        <!-- /.sidebar-menu -->
+    </section>
+    <!-- /.sidebar -->
+</aside>

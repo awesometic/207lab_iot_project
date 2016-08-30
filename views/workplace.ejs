@@ -16,7 +16,9 @@
     <link rel="stylesheet" href="plugins/datatables/dataTables.bootstrap.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
-    <link rel="stylesheet" href="dist/css/skins/skin-blue.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -25,287 +27,211 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
-    <!-- Main Header -->
-    <header class="main-header">
+    <% include nav.ejs %>
 
-        <!-- Logo -->
-        <a href="dashboard" class="logo">
-            <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b><span class="glyphicon glyphicon-home"></span></b></span>
-            <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b><%= userInfo.department %></b></span>
-        </a>
+    <% include sidenav.ejs %>
 
-        <!-- Header Navbar -->
-        <nav class="navbar navbar-static-top" role="navigation">
-            <!-- Sidebar toggle button-->
-            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-                <span class="sr-only">Toggle navigation</span>
-            </a>
-
-
-            <!-- Navbar Right Menu -->
-            <div class="navbar-custom-menu">
-                <ul class="nav navbar-nav">
-
-                    <!-- left-head side picture part -->
-                    <li class="dropdown user user-menu">
-                        <!-- Menu Toggle Button -->
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <!-- The user image in the navbar-->
-                            <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-                            <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                            <span class="hidden-xs"><%= userInfo.name %></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <!-- The user image in the menu -->
-                            <li class="user-header">
-                                <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-
-                                <p>
-                                    <b><%= userInfo.name %></b> - <%= userInfo.department %>
-                                    <small><%= userInfo.position %></small>
-                                    <!-- <small>근무시작일</small> -->
-                                </p>
-
-                            </li>
-
-                            <!-- Menu Footer-->
-                            <li class="user-footer">
-                                <div class="pull-right">
-                                    <a href="logout" class="btn btn-default btn-flat">로그아웃</a>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                    <!-- Control Sidebar Toggle Button -->
-
-                </ul>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Left side column. contains the logo and sidebar -->
-    <aside class="main-sidebar">
-
-        <!-- sidebar: style can be found in sidebar.less -->
-        <section class="sidebar">
-
-            <!-- Sidebar user panel (optional) -->
-            <div class="user-panel">
-                <div class="pull-left image">
-                    <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-                </div>
-                <div class="pull-left info">
-                    <p><%= userInfo.name %></p>
-                    <!-- Status -->
-                    <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-                </div>
-            </div>
-
-            <!-- Sidebar Menu -->
-            <ul class="sidebar-menu">
-                <li class="header text-center"><%= companyName %></li>
-                <!-- Optionally, you can add icons to the links -->
-
-                <li class=""><a href="dashboard"><i class="fa fa-bell"></i> <span> 메인페이지</span></a></li>
-                <!--                   http://14.63.219.156/dashboard                 -->
-                <li><a href="profile"><i class="fa fa-user"></i> <span> 개인정보수정</span></a></li>
-                <!--                   http://14.63.219.156/profile                   -->
-                <li class=""><a href="member"><i class="fa fa-thumbs-up"></i> <span> 직원관리</span></a></li>
-                <!--                   http://14.63.219.156/member                    -->
-                <li class="active"><a href="workplace"><i class="fa fa-square"></i> <span> 사무실관리</span></a></li>
-                <!--                  http://14.63.219.156/workplace                  -->
-
-                <!-- 근무기록조회 사이드바 -->
-                <li class="treeview">
-                    <a href="manageworks">
-                        <!-- http://14.63.219.156/manageworks -->
-                        <i class="fa fa-search"></i>
-                        <span> 근무기록조회</span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="d3chart1"><i class="fa fa-circle-o"></i>사무실이동현황</a></li>
-                        <!-- 14.63.219.156/d3chart1 -->
-                        <li><a href="d3chart2"><i class="fa fa-circle-o"></i>직원근무현황</a></li>
-                        <!-- 14.63.219.156/d3chart2 -->
-                    </ul>
-                </li>
-
-                <!-- 관리 사이드바-->
-                <li class="treeview">
-                    <a href="permissiom">
-                        <!-- 14.63.219.156/permission-->
-                        <i class="fa fa-user-plus"></i>
-                        <span> 관리</span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="permission"><i class="fa fa-circle-o"></i>가입허가</a></li>
-                        <!-- 14.63.219.156/permission -->
-                        <li><a href="beacon"><i class="fa fa-circle-o"></i>비콘관리</a></li>
-                        <!-- 14.63.219.156/beacon -->
-                    </ul>
-                </li>
-            </ul>
-
-            <!-- /.sidebar-menu -->
-        </section>
-        <!-- /.sidebar -->
-    </aside>
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-
+            <h1>
+                사무실 관리
+                <small>각 사무실의 정보를 열람 및 수정</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="dashboard"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+                <li><a href="#">관리</a></li>
+                <li class="active">사무실 관리</li>
+            </ol>
         </section>
 
         <!-- Main content -->
         <section class="content">
             <div class="row">
-                <div class="col-xs-8 col-xs-offset-2" style="margin-left:150px">
-                    <div class="input-group">
-                        <div class="input-group-btn search-panel">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                <span id="search_concept">검색조건</span> <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">이름</a></li>
-                                <li><a href="#">사원번호</a></li>
-                                <li><a href="#">직급</a></li>
-                            </ul>
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">사무실 목록</h3>
+                            <a id="open_add_modal_button" class="btn btn-success btn-md pull-right">사무실 추가</a>
                         </div>
-                        <input type="hidden" name="search_param" value="all" id="search_param">
-                        <input type="text" class="form-control" name="x" placeholder="Search term...">
-                        <span class="input-group-btn">
-                                <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
-                            </span>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="workplace_table" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>번호</th>
+                                    <th>이름</th>
+                                    <th>위치</th>
+                                    <th>위도</th>
+                                    <th>경도</th>
+                                    <th>비콘 설치 여부</th>
+                                    <th>RSSI 조정 값</th>
+                                    <th>RSSI 출퇴근 등록 범위</th>
+                                    <th>수정</th>
+                                    <th>삭제</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <%
+                                if (workplaceListRows) {
+                                for (var i = 0; i < workplaceListRows.length; i++) {
+                                %>
+                                <tr>
+                                    <input type="hidden" class="each_workplace_info_<%= i %>" value="<%= JSON.stringify(workplaceListRows[i]) %>">
+                                    <td><%= workplaceListRows[i].id_workplace %></td>
+                                    <td><%= workplaceListRows[i].name_workplace %></td>
+                                    <td><%= workplaceListRows[i].location_workplace %></td>
+                                    <td><%= workplaceListRows[i].latitude %></td>
+                                    <td><%= workplaceListRows[i].longitude %></td>
+                                    <td><% if (workplaceListRows[i].beacon_set == 1) { %><span class="glyphicon glyphicon-ok"></span><% } else { %>&nbsp;<% } %></td>
+                                    <td>(<%= workplaceListRows[i].coordinateX %>, <%= workplaceListRows[i].coordinateY %>, <%= workplaceListRows[i].coordinateZ %>)</td>
+                                    <td>(<%= workplaceListRows[i].thresholdX %>, <%= workplaceListRows[i].thresholdY %>, <%= workplaceListRows[i].thresholdZ %>)</td>
+                                    <td><a class="open_modify_modal_button btn btn-primary btn-xs" role="dialog" title="<%= i %>"><span class="glyphicon glyphicon-pencil"></span></a></td>
+                                    <td><a class="open_delete_modal_button btn btn-danger btn-xs" role="dialog" title="<%= i %>"><span class="glyphicon glyphicon-trash"></span></a></td>
+                                </tr>
+                                <% } } %>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>번호</th>
+                                    <th>이름</th>
+                                    <th>위치</th>
+                                    <th>위도</th>
+                                    <th>경도</th>
+                                    <th>비콘 설치 여부</th>
+                                    <th>RSSI 조정 값</th>
+                                    <th>RSSI 출퇴근 등록 범위</th>
+                                    <th>수정</th>
+                                    <th>삭제</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
                     </div>
+                    <!-- /.box -->
                 </div>
+                <!-- /.col -->
             </div>
-
-            <div class="row">
-                <div id="workplace_table" class="col-xs-12" style="margin-top:40px ;">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped" cellspacing="0" width="100%">
-                            <thead>
-                            <th>번호</th>
-                            <th>이름</th>
-                            <th>위치</th>
-                            <th>위도</th>
-                            <th>경도</th>
-                            <th>비콘 설치 여부</th>
-                            <th>RSSI 조정 값</th>
-                            <th>RSSI 출퇴근 등록 범위</th>
-                            <th style="width: 46px;">수정</th>
-                            </thead>
-                            <tbody>
-                            <%
-                            if (workplaceListRows) {
-                            for (var i = 0; i < workplaceListRows.length; i++) {
-                            %>
-                            <tr>
-                                <input type="hidden" class="each_workplace_info_<%= i %>" value="<%= JSON.stringify(workplaceListRows[i]) %>">
-                                <td><%= workplaceListRows[i].id_workplace %></td>
-                                <td><%= workplaceListRows[i].name_workplace %></td>
-                                <td><%= workplaceListRows[i].location_workplace %></td>
-                                <td><%= workplaceListRows[i].latitude %></td>
-                                <td><%= workplaceListRows[i].longitude %></td>
-                                <td><% if (workplaceListRows[i].beacon_set == 1) { %><span class="glyphicon glyphicon-ok"></span><% } else { %>&nbsp;<% } %></td>
-                                <td>(<%= workplaceListRows[i].coordinateX %>, <%= workplaceListRows[i].coordinateY %>, <%= workplaceListRows[i].coordinateZ %>)</td>
-                                <td>(<%= workplaceListRows[i].thresholdX %>, <%= workplaceListRows[i].thresholdY %>, <%= workplaceListRows[i].thresholdZ %>)</td>
-                                <td><a class="open_modify_modal_button btn btn-primary btn-xs" role="dialog" title="<%= i %>"><span class="glyphicon glyphicon-pencil"></span></a></td>
-                            </tr>
-                            <% } } %>
-                            </tbody>
-                        </table>
-
-                        <div class="clearfix"></div>
-                        <ul class="pagination pull-right" style="margin-right: 500px; margin-top: 65px">
-                            <li class="disabled"><a href="#"><span class="glyphicon glyphicon-chevron-left"></span></a></li>
-                            <li class="active"><a href="#">1</a></li>
-                            <!-- routing -- member2-->
-                            <li><a href="#">2</a></li>
-                            <!-- routing -- member3-->
-                            <li><a href="#">3</a></li>
-                            <!-- routing -- member4-->
-                            <li><a href="#">4</a></li>
-                            <!-- routing -- member5-->
-                            <li><a href="#">5</a></li>
-                            <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span></a></li>
-                        </ul>
-                    </div>
-                    <div class="modal fade" id="modal_modify_form" tabindex="-1" role="dialog">
-                        <form class="form-horizontal" role="form" style="margin-right:300px; margin-top:25px;" method="post">
-
-                            <!--이 위에 액션에다가 라우팅 파일 설정하면됨 -->
-
-                            <div class="modal-dialog">
-                                <div class="modal-content" style="left:200px; top:100px;">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                                        <h4 class="modal-title custom_align" id="Heading">사업장정보를 수정하시겠습니까?</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="form-group" >
-                                            <input id="input_modify_id_disabled" class="form-control " type="text" placeholder="번호" disabled>
-                                            <input id="input_modify_id" class="form-control " type="hidden" name="id">
-                                        </div>
-                                        <div class="form-group" >
-                                            <input id="input_modify_name" class="form-control " type="text" name="modified_name" placeholder="이름">
-                                        </div>
-                                        <div class="form-group" >
-                                            <input id="input_modify_location" class="form-control " type="text" name="modified_location" placeholder="위치">
-                                        </div>
-                                        <div class="form-group" >
-                                            <input id="input_modify_lat_lon" class="form-control " type="text" name="modified_lat_lon" placeholder="위도, 경도" disabled>
-                                        </div>
-                                        <div class="form-group" >
-                                            <input id="input_modify_rssi_coordinate_disabled" class="form-control " type="text" disabled>
-                                        </div>
-                                        <div class="form-group" >
-                                            <input id="input_modify_rssi_threshold_disabled" class="form-control " type="text" disabled>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer ">
-                                        <button type="submit" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span> 수정완료</button>
-                                    </div>
-                                </div>
-                                <!-- /.modal-content -->
-                            </div>
-                            <!-- /.modal-dialog -->
-                        </form>
-                    </div>
-                    <!-- /.content -->
-                </div>
-                <!-- /.content-wrapper -->
-            </div>
+            <!-- /.row -->
         </section>
+        <!-- /.content -->
     </div>
+    <!-- /.content-wrapper -->
 
-    <!-- Main Footer -->
-    <footer class="main-footer">
-        <!-- To the right -->
-        <div class="pull-right hidden-xs">
-
+    <div id="modal_add_form" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <form class="form-horizontal" role="form" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title text-center">사무실 추가</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="workplace_control_flag" value="add">
+                        <div class="form-group" >
+                            <input id="input_add_name" class="form-control " type="text" name="name_workplace" placeholder="이름">
+                        </div>
+                        <div class="form-group" >
+                            <input id="input_add_location" class="form-control " type="text" name="location_workplace" placeholder="위치">
+                        </div>
+                        <div class="form-group" >
+                            <input id="input_add_lat_lon" class="form-control " type="text" name="lat_lon" placeholder="위도, 경도" disabled>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success btn-lg btn-block"><span class="glyphicon glyphicon-ok-sign"></span> 저장</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </form>
+            <!-- /.form-horizontal -->
         </div>
-        <!-- Default to the left -->
-        <strong>IOT Project &copy;  <a href="#">207LAB</a></strong> of Suwon university
-    </footer>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+    <div id="modal_modify_form" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <form class="form-horizontal" role="form" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title text-center">사무실 정보 수정</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="workplace_control_flag" value="modify">
+                        <div class="form-group" >
+                            <input id="input_modify_id_disabled" class="form-control " type="text" placeholder="번호" disabled>
+                            <input id="input_modify_id" class="form-control " type="hidden" name="id">
+                        </div>
+                        <div class="form-group" >
+                            <input id="input_modify_name" class="form-control " type="text" name="modified_name" placeholder="이름">
+                        </div>
+                        <div class="form-group" >
+                            <input id="input_modify_location" class="form-control " type="text" name="modified_location" placeholder="위치">
+                        </div>
+                        <div class="form-group" >
+                            <input id="input_modify_lat_lon" class="form-control " type="text" name="modified_lat_lon" placeholder="위도, 경도" disabled>
+                        </div>
+                        <div class="form-group" >
+                            <input id="input_modify_rssi_coordinate_disabled" class="form-control " type="text" disabled>
+                        </div>
+                        <div class="form-group" >
+                            <input id="input_modify_rssi_threshold_disabled" class="form-control " type="text" disabled>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block"><span class="glyphicon glyphicon-ok-sign"></span> 저장</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </form>
+            <!-- /.form-horizontal -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+    <div id="modal_delete_form" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <form class="form-horizontal" role="form" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title text-center">사무실 삭제</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-center">
+                            <input type="hidden" name="workplace_control_flag" value="delete">
+                            <input id="deleted_workplace_id" type="hidden" name="id_workplace">
+                            <h3>되돌릴 수 없습니다</h3><br>
+                            <small>그래도 삭제하시겠습니까?</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger btn-lg btn-block"><span class="glyphicon glyphicon-ok-sign"></span> 삭제</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </form>
+            <!-- /.form-horizontal -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+    <% include footer.ejs %>
+
 </div>
-
-<!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
-<div class="control-sidebar-bg"></div>
-
+<!-- ./wrapper -->
 <!-- REQUIRED JS SCRIPTS -->
 <!-- jQuery 2.2.3 -->
 <script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
@@ -319,13 +245,16 @@
 <script>
 
     $(document).ready(function() {
+        $('#workplace_table').DataTable();
 
-        $('.search-panel .dropdown-menu').find('a').click(function(e) {
-            e.preventDefault();
-            var param = $(this).attr("href").replace("#", "");
-            var concept = $(this).text();
-            $('.search-panel span#search_concept').text(concept);
-            $('.input-group #search_param').val(param);
+        $('#open_add_modal_button').click(function() {
+            $('#modal_add_form').modal('show');
+        });
+
+        $('#modal_add_form').on('hidden.bs.modal', function() {
+            $('#input_add_name').val('');
+            $('#input_add_location').val('');
+            $('#input_add_lat_lon').val('클릭하면 위도 경도를 선택할 수 있는 구글 맵으로 유도할 예정');
         });
 
         var selectedWorkplaceInfo;
@@ -343,8 +272,8 @@
 
             $('#input_modify_id_disabled').val(selectedWorkplaceInfo.id_workplace);
             $('#input_modify_id').val(selectedWorkplaceInfo.id_workplace);
-            $('#input_modify_name').val(selectedWorkplaceInfo.id_workplace.name);
-            $('#input_modify_location').val(selectedWorkplaceInfo.location);
+            $('#input_modify_name').val(selectedWorkplaceInfo.name_workplace);
+            $('#input_modify_location').val(selectedWorkplaceInfo.location_workplace);
             $('#input_modify_lat_lon').val('클릭하면 위도 경도를 선택할 수 있는 구글 맵으로 유도할 예정');
             $('#input_modify_rssi_coordinate_disabled').val(rssiCoordinate);
             $('#input_modify_rssi_threshold_disabled').val(rssiThreshold);
@@ -360,7 +289,16 @@
             $('#input_modify_rssi_threshold_disabled').val('');
         });
 
-        $("[data-toggle=tooltip]").tooltip();
+        $('a.open_delete_modal_button').click(function() {
+            $('#modal_delete_form').modal('show');
+
+            var hiddenInputSelector = 'input.each_workplace_info_' + this.title;
+            selectedWorkplaceInfo = JSON.parse($(hiddenInputSelector).val());
+        });
+
+        $('#modal_delete_form').on('shown.bs.modal', function() {
+            $('#deleted_workplace_id').val(selectedWorkplaceInfo.id_workplace);
+        });
     });
 
 </script>
