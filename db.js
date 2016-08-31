@@ -296,6 +296,34 @@ var id_deleteUser = function(smartphone_address, employee_number, callback) {
     });
 };
 
+var id_permitUsers = function(smartphone_address_arr, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        var sql = "UPDATE SET identity permission = 1 WHERE ";
+        for (var i = 0; i < smartphone_address_arr.length; i++) {
+            sql += "smartphone_address" + conn.escape(smartphone_address_arr[i]);
+
+            if (i != smartphone_address_arr.length - 1)
+                sql += " AND ";
+        }
+
+        conn.query(sql, function (err) {
+            if (err) {
+                console.error(err);
+                if (conn.connected) conn.release();
+            }
+
+            if (typeof callback === "function") {
+                callback(true);
+            }
+
+            if (conn.connected) conn.release();
+        });
+    });
+};
+
 var id_getWorkplaceList = function(callback) {
     pool.getConnection(function(err, conn) {
         if (err)
@@ -366,17 +394,17 @@ var id_registerWorkplace = function(name_workplace, location_workplace, latitude
             " latitude, longitude)" +
             " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [name_workplace, location_workplace, 0, 0, 0, 0, 0, 0, latitude, longitude], function (err) {
-            if (err) {
-                console.error(err);
+                if (err) {
+                    console.error(err);
+                    if (conn.connected) conn.release();
+                }
+
+                if (typeof callback === "function") {
+                    callback(true);
+                }
+
                 if (conn.connected) conn.release();
-            }
-
-            if (typeof callback === "function") {
-                callback(true);
-            }
-
-            if (conn.connected) conn.release();
-        });
+            });
     });
 };
 
@@ -914,7 +942,7 @@ var soc_registerCommute = function(smartphoneAddress, id_workplace, datetime, ca
     });
 };
 
-var soc_RSSICalibration = function(scoordinateArr, thresholdArr, id, name, datetime, callback) {
+var soc_RSSICalibration = function(coordinateArr, thresholdArr, id, name, datetime, callback) {
     pool.getConnection(function(err, conn) {
         conn.query("UPDATE workplace SET coordinateX=?, coordinateY=?, coordinateZ=?, thresholdX=?, thresholdY=?, thresholdZ=?" +
             " WHERE id_workplace=?"
@@ -942,7 +970,8 @@ var soc_RSSICalibration = function(scoordinateArr, thresholdArr, id, name, datet
 
 var soc_getEssentialData = function(callback) {
     pool.getConnection(function(err, conn) {
-        conn.query("SELECT workplace.id_workplace, coordinateX, coordinateY, coordinateZ, thresholdX, thresholdY, thresholdZ, "
+        conn.query("SELECT workplace.id_workplace, coordinateX, coordinateY, coordinateZ, "
+            + "thresholdX, thresholdY, thresholdZ, "
             + "GROUP_CONCAT(beacon.beacon_address SEPARATOR '-') AS beacon_address "
             + "FROM workplace, beacon WHERE workplace.id_workplace=beacon.id_workplace "
             + "AND workplace.beacon_set=1 "
@@ -1284,6 +1313,7 @@ module.exports.id_checkUserRegistered       = id_checkUserRegistered;
 module.exports.id_registerUser              = id_registerUser;
 module.exports.id_modifyUser                = id_modifyUser;
 module.exports.id_deleteUser                = id_deleteUser;
+module.exports.id_permitUsers               = id_permitUsers;
 
 module.exports.id_getWorkplaceList          = id_getWorkplaceList;
 module.exports.id_getWorkplaceInfo          = id_getWorkplaceInfo;

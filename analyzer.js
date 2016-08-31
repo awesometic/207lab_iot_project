@@ -83,9 +83,9 @@ Analyzer.getCoordinateArray = function(json) {
 Analyzer.getThresholdArray = function(json) {
     var thresholdArray = [];
 
-    thresholdArray.push(parseInt(json.thresholdX));
-    thresholdArray.push(parseInt(json.thresholdY));
-    thresholdArray.push(parseInt(json.thresholdZ));
+    thresholdArray.push(parseInt(json.ThresholdX));
+    thresholdArray.push(parseInt(json.ThresholdY));
+    thresholdArray.push(parseInt(json.ThresholdZ));
 
     return thresholdArray;
 };
