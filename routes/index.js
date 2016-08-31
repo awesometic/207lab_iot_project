@@ -31,14 +31,13 @@ router.get('/dashboard', function(req, res, next) {
 
     if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
         pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
-            pool.id_getCompanyName(function(companyName) {
 
+            pool.id_getCompanyName(function (companyName) {
                 res.render('dashboard', {
                     title: title,
                     userInfo: userInfoRow,
                     companyName: companyName
                 });
-
             });
         });
     } else {
@@ -191,16 +190,20 @@ router.get('/d3chart1', function(req, res, next) {
     var userSmartphoneAddress = req.session.user_smartphone_address;
 
     if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
-        pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
-            pool.id_getCompanyName(function(companyName) {
+        pool.id_getUserInfo(userSmartphoneAddress, function (userInfoRow) {
+            if (userInfoRow.permission == 0) {
+                res.send("<script>alert('서비스 이용 권한이 없습니다'); location.href='/';</script>");
+            } else {
+                pool.id_getCompanyName(function (companyName) {
 
-                res.render('d3chart1', {
-                    title: title,
-                    userInfo: userInfoRow,
-                    companyName: companyName
+                    res.render('d3chart1', {
+                        title: title,
+                        userInfo: userInfoRow,
+                        companyName: companyName
+                    });
+
                 });
-
-            });
+            }
         });
     } else {
         res.send("<script>location.href='/';</script>");
@@ -213,15 +216,19 @@ router.get('/d3chart2', function(req, res, next) {
 
     if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
         pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
-            pool.id_getCompanyName(function(companyName) {
+            if (userInfoRow.permission == 0) {
+                res.send("<script>alert('서비스 이용 권한이 없습니다'); location.href='/';</script>");
+            } else {
+                pool.id_getCompanyName(function (companyName) {
 
-                res.render('d3chart2', {
-                    title: title,
-                    userInfo: userInfoRow,
-                    companyName: companyName
+                    res.render('d3chart2', {
+                        title: title,
+                        userInfo: userInfoRow,
+                        companyName: companyName
+                    });
+
                 });
-
-            });
+            }
         });
     } else {
         res.send("<script>location.href='/';</script>");
@@ -355,12 +362,12 @@ router.post('/member', function(req, res, next) {
                 pool.id_getUserInfo(deleted_smartphone_address, function(userInfo) {
 
                     pool.id_deleteUser(deleted_smartphone_address, userInfo.employee_number, function (valid) {
-                            if (valid) {
-                                res.send("<script>alert('Delete Success!'); location.href='/member';</script>");
-                            } else {
-                                res.send("<script>alert('Server error'); history.go(-1);</script>");
-                            }
-                        });
+                        if (valid) {
+                            res.send("<script>alert('Delete Success!'); location.href='/member';</script>");
+                        } else {
+                            res.send("<script>alert('Server error'); history.go(-1);</script>");
+                        }
+                    });
                 });
             }
             break;
@@ -434,12 +441,12 @@ router.post('/workplace', function(req, res, next) {
                 pool.id_getWorkplaceInfo(deleted_id_workplace, function(workplaceInfo) {
 
                     pool.id_deleteWorkplace(deleted_id_workplace, function (valid) {
-                            if (valid) {
-                                res.send("<script>alert('Delete Success!'); location.href='/workplace';</script>");
-                            } else {
-                                res.send("<script>alert('Server error'); history.go(-1);</script>");
-                            }
-                        });
+                        if (valid) {
+                            res.send("<script>alert('Delete Success!'); location.href='/workplace';</script>");
+                        } else {
+                            res.send("<script>alert('Server error'); history.go(-1);</script>");
+                        }
+                    });
                 });
             }
             break;
