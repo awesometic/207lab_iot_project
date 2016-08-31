@@ -139,16 +139,20 @@ router.get('/commute_table', function(req, res, next) {
 
     if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
         pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
-            pool.id_getCompanyName(function(companyName) {
-                pool.chart_getCircumstanceTable(function(circumstanceListRows) {
-                    res.render('commute_table', {
-                        title: title,
-                        userInfo: userInfoRow,
-                        companyName: companyName,
-                        circumstanceListRows: circumstanceListRows
+            if (userInfoRow.permission == 0) {
+                res.send("<script>alert('서비스 이용 권한이 없습니다'); location.href='/';</script>");
+            } else {
+                pool.id_getCompanyName(function (companyName) {
+                    pool.chart_getCircumstanceTable(function (circumstanceListRows) {
+                        res.render('commute_table', {
+                            title: title,
+                            userInfo: userInfoRow,
+                            companyName: companyName,
+                            circumstanceListRows: circumstanceListRows
+                        });
                     });
                 });
-            });
+            }
         });
     } else {
         res.send("<script>location.href='/';</script>");
