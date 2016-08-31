@@ -133,20 +133,21 @@ router.get('/beacon', function(req, res, next) {
     }
 });
 
-router.get('/managework', function(req, res, next) {
+router.get('/commute_table', function(req, res, next) {
     var userEmployeeId = req.session.user_employee_id;
     var userSmartphoneAddress = req.session.user_smartphone_address;
 
     if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
         pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
             pool.id_getCompanyName(function(companyName) {
-
-                res.render('managework', {
-                    title: title,
-                    userInfo: userInfoRow,
-                    companyName: companyName
+                pool.chart_getCircumstanceTable(function(circumstanceListRows) {
+                    res.render('commute_table', {
+                        title: title,
+                        userInfo: userInfoRow,
+                        companyName: companyName,
+                        circumstanceListRows: circumstanceListRows
+                    });
                 });
-
             });
         });
     } else {

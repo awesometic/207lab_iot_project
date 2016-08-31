@@ -1128,7 +1128,11 @@ var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
     var startDatetime; // 0000-00-00 00:00:00
     var endDatetime;
 
-    var sql = "SELECT DATE_FORMAT(datetime, '%Y-%m-%d %H:%i:%s') as datetime, id_workplace, smartphone_address FROM circumstance";
+    var sql = "SELECT DATE_FORMAT(datetime, '%Y-%m-%d %H:%i:%s') AS datetime" +
+        ", id_workplace, smartphone_address" +
+        ", (SELECT name_workplace FROM workplace WHERE circumstance.id_workplace = workplace.id_workplace) AS name_workplace" +
+        ", (SELECT name FROM identity WHERE circumstance.smartphone_address = identity.smartphone_address) AS name_user" +
+        " FROM circumstance";
 
     var args = [];
     for (var i = 0; i < arguments.length; i++) {
@@ -1276,16 +1280,12 @@ var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
                 break;
         }
 
+        sql += " ORDER BY datetime DESC";
+
         conn.query(sql, function(err, rows) {
             if (err) {
                 console.error(err);
                 if (conn.connected) conn.release();
-            }
-
-            console.log(sql);
-            if (typeof rows[0].datetime !== 'undefined') {
-                console.log(rows[0].datetime);
-                console.log(rows[rows.length - 1].datetime);
             }
 
             if (typeof callback === "function") {
