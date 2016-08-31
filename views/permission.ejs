@@ -63,7 +63,7 @@
                             <table id="member_table" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
-                                    <th><input type="checkbox" id="checkall" /></th>
+                                    <th><input type="checkbox" id="checkall"></th>
                                     <th>이름</th>
                                     <th>사원 번호</th>
                                     <th>블루투스 주소</th>
@@ -75,23 +75,25 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <%
-                                if (typeof deniedUserListRows !== 'undefined') {
-                                for (var i = 0; i < deniedUserListRows.length; i++) {
-                                %>
-                                <tr>
-                                    <input type="hidden" class="each_user_info_<%= i %>" value="<%= JSON.stringify(deniedUserListRows[i]) %>">
-                                    <td><input type="checkbox"></td>
-                                    <td><%= deniedUserListRows[i].name %></td>
-                                    <td><%= deniedUserListRows[i].employee_number %></td>
-                                    <td><%= deniedUserListRows[i].smartphone_address %></td>
-                                    <td><%= deniedUserListRows[i].department %></td>
-                                    <td><%= deniedUserListRows[i].position %></td>
-                                    <td><% if (deniedUserListRows[i].admin == 1) { %><span class="glyphicon glyphicon-ok"></span><% } else { %>&nbsp;<% } %></td>
-                                    <td><a class="open_modify_modal_button btn btn-primary btn-xs" role="dialog" title="<%= i %>"><span class="glyphicon glyphicon-pencil"></span></a></td>
-                                    <td><a class="open_delete_modal_button btn btn-danger btn-xs" role="dialog" title="<%= i %>"><span class="glyphicon glyphicon-trash"></span></a></td>
-                                </tr>
-                                <% } } %>
+                                <form>
+                                    <%
+                                    if (typeof deniedUserListRows !== 'undefined') {
+                                    for (var i = 0; i < deniedUserListRows.length; i++) {
+                                    %>
+                                    <tr>
+                                        <input type="hidden" class="each_user_info_<%= i %>" value="<%= JSON.stringify(deniedUserListRows[i]) %>">
+                                        <td><input type="checkbox" name="checkbox_permit" value="<%= i %>"></td>
+                                        <td><%= deniedUserListRows[i].name %></td>
+                                        <td><%= deniedUserListRows[i].employee_number %></td>
+                                        <td><%= deniedUserListRows[i].smartphone_address %></td>
+                                        <td><%= deniedUserListRows[i].department %></td>
+                                        <td><%= deniedUserListRows[i].position %></td>
+                                        <td><% if (deniedUserListRows[i].admin == 1) { %><span class="glyphicon glyphicon-ok"></span><% } else { %>&nbsp;<% } %></td>
+                                        <td><a class="open_modify_modal_button btn btn-primary btn-xs" role="dialog" title="<%= i %>"><span class="glyphicon glyphicon-pencil"></span></a></td>
+                                        <td><a class="open_delete_modal_button btn btn-danger btn-xs" role="dialog" title="<%= i %>"><span class="glyphicon glyphicon-trash"></span></a></td>
+                                    </tr>
+                                    <% } } %>
+                                </form>
                                 </tbody>
                                 <tfoot>
                                 <tr>
@@ -274,6 +276,38 @@
                     $(this).prop("checked", false);
                 });
             }
+        });
+
+        $("#permit_send").click(function() {
+            var toGivePermissionUsers = [];
+
+            $(":checkbox[name='checkbox_permit']:checked").each(function(index, value) {
+                var hiddenInputSelector = 'input.each_user_info_' + this.value;
+                var toGivePermissionUserInfo = JSON.parse($(hiddenInputSelector).val());
+
+                toGivePermissionUsers.push(toGivePermissionUserInfo.smartphone_address);
+            }).promise().done(function() {
+
+                if (toGivePermissionUsers.length != 0) {
+                    var toGivePermissionUserJsonArrStr = "[ ";
+                    for (var i = 0; i < toGivePermissionUsers.length; i++) {
+                        toGivePermissionUserJsonArrStr += "{ \"smartphone_address\":\"" + toGivePermissionUsers[i] + "\" }";
+
+                        if (i != toGivePermissionUsers.length - 1) {
+                            toGivePermissionUserJsonArrStr += ", ";
+                        }
+                    }
+                    toGivePermissionUserJsonArrStr += " ]";
+                }
+
+                $.post('/permission', {
+                    user_control_flag: 'permit',
+                    toGivePermissionUsersJsonArrStr: toGivePermissionUserJsonArrStr
+                }).done(function(data) {
+                    data = data.replace("\<script\>", "").replace("\<\/script\>", "");
+                    jQuery.globalEval(data);
+                });
+            });
         });
     });
 

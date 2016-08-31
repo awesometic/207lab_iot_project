@@ -588,6 +588,27 @@ router.post('/permission', function(req, res, next) {
             }
             break;
 
+        case "permit":
+            if (typeof req.body.toGivePermissionUsersJsonArrStr === 'undefined') {
+                res.send("<script>alert('No users checked'); location.href='/permission';</script>");
+            } else {
+                var toGivePermissionUsersJsonArr = JSON.parse(req.body.toGivePermissionUsersJsonArrStr);
+
+                var toGivePermissionUsersArr = [];
+                for (var i = 0; i < toGivePermissionUsersJsonArr.length; i++) {
+                    toGivePermissionUsersArr.push(toGivePermissionUsersJsonArr[i].smartphone_address);
+                }
+
+                pool.id_permitUsers(toGivePermissionUsersArr, function(valid) {
+                    if (valid) {
+                        res.send("<script>alert('Modify Success!'); location.href='/permission';</script>");
+                    } else {
+                        res.send("<script>alert('Server error'); history.go(-1);</script>");
+                    }
+                });
+            }
+            break;
+
         default:
             res.send("<script>alert('Server error'); history.go(-1);</script>");
             break;

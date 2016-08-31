@@ -301,12 +301,12 @@ var id_permitUsers = function(smartphone_address_arr, callback) {
         if (err)
             console.error(err);
 
-        var sql = "UPDATE SET identity permission = 1 WHERE ";
+        var sql = "UPDATE identity SET permission = 1 WHERE ";
         for (var i = 0; i < smartphone_address_arr.length; i++) {
-            sql += "smartphone_address" + conn.escape(smartphone_address_arr[i]);
+            sql += "smartphone_address = " + conn.escape(smartphone_address_arr[i]);
 
             if (i != smartphone_address_arr.length - 1)
-                sql += " AND ";
+                sql += " OR ";
         }
 
         conn.query(sql, function (err) {
