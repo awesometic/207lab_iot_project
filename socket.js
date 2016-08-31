@@ -98,7 +98,10 @@ io.on("connection", function(socket) {
      SmartphoneAddress: '00:00:00:00:00:00',
      CoordinateX: '-00',
      CoordinateY: '-00',
-     CoordinateZ: '-00'
+     CoordinateZ: '-00',
+     ThresholdX: '-00',
+     ThresholdY: '-00',
+     ThresholdX: '-00'
      }
      */
     socket.on("calibration", function(data) {
@@ -127,8 +130,9 @@ io.on("connection", function(socket) {
 
                                     socket.emit("answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
                                     logger("socket").info("Calibration", "New calibration data: \n\tRegister success");
+                                } else {
+                                    logger("socket").info("Calibration", "New calibration data: \n\tRegister fail: Database connection problem");
                                 }
-                                logger("socket").info("Calibration", "New calibration data: \n\tRegister fail: Database connection problem");
                             });
                         } else {
                             logger("socket").info("Calibration", "New calibration data: \n\tRegister fail: Unverified smartphone");
@@ -160,9 +164,11 @@ io.on("connection", function(socket) {
 
                         if (data) {
                             socket.emit("answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, data));
+                            logger("socket").info("RequestData", "Request from user: \n" + smartphoneAddress + "\n\tSend success");
+                        } else {
+                            logger("socket").info("RequestData", "Request from user: \n" + smartphoneAddress + "\n\tSend fail");
                         }
 
-                        logger("socket").info("RequestData", "Request from user: \n" + smartphoneAddress + "\n\tSend success");
                     });
                 } else {
                     logger("socket").info("RequestData", "Request from user: \n" + smartphoneAddress + "\n\tSend fail: Unverified smartphone");
