@@ -285,7 +285,13 @@
                 var hiddenInputSelector = 'input.each_user_info_' + this.value;
                 var toGivePermissionUserInfo = JSON.parse($(hiddenInputSelector).val());
 
-                toGivePermissionUsers.push(toGivePermissionUserInfo.smartphone_address);
+                if (toGivePermissionUserInfo.smartphone_address.toString() == "NO DATA") {
+                    alert('Cannot give permission to the user who didn\'nt register the smartphone bluetooth address');
+
+                    throw "stop";
+                } else {
+                    toGivePermissionUsers.push(toGivePermissionUserInfo.smartphone_address);
+                }
             }).promise().done(function() {
 
                 if (toGivePermissionUsers.length != 0) {

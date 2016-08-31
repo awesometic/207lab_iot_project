@@ -10,18 +10,48 @@ var cookieExpires = 3600000;
 /* GET */
 var title = "Suwon Univ. 207 Lab - IoT Project";
 router.get('/', function(req, res, next) {
+    var userEmployeeId = req.session.user_employee_id;
+    var userSmartphoneAddress = req.session.user_smartphone_address;
 
-    res.render('index', {
-        title: title
-    });
+    if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
+        pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
+
+            pool.id_getCompanyName(function (companyName) {
+                res.render('dashboard', {
+                    title: title,
+                    userInfo: userInfoRow,
+                    companyName: companyName
+                });
+            });
+        });
+    } else {
+        res.render('index', {
+            title: title
+        });
+    }
 
 });
 
 router.get('/signup', function(req, res, next) {
+    var userEmployeeId = req.session.user_employee_id;
+    var userSmartphoneAddress = req.session.user_smartphone_address;
 
-    res.render('signup', {
-        title: title
-    });
+    if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
+        pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
+
+            pool.id_getCompanyName(function (companyName) {
+                res.render('dashboard', {
+                    title: title,
+                    userInfo: userInfoRow,
+                    companyName: companyName
+                });
+            });
+        });
+    } else {
+        res.render('signup', {
+            title: title
+        });
+    }
 
 });
 
@@ -133,32 +163,6 @@ router.get('/beacon', function(req, res, next) {
     }
 });
 
-router.get('/commute_table', function(req, res, next) {
-    var userEmployeeId = req.session.user_employee_id;
-    var userSmartphoneAddress = req.session.user_smartphone_address;
-
-    if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
-        pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
-            if (userInfoRow.permission == 0) {
-                res.send("<script>alert('서비스 이용 권한이 없습니다'); location.href='/';</script>");
-            } else {
-                pool.id_getCompanyName(function (companyName) {
-                    pool.chart_getCircumstanceTable(function (circumstanceListRows) {
-                        res.render('commute_table', {
-                            title: title,
-                            userInfo: userInfoRow,
-                            companyName: companyName,
-                            circumstanceListRows: circumstanceListRows
-                        });
-                    });
-                });
-            }
-        });
-    } else {
-        res.send("<script>location.href='/';</script>");
-    }
-});
-
 router.get('/permission', function(req, res, next) {
     var userEmployeeId = req.session.user_employee_id;
     var userSmartphoneAddress = req.session.user_smartphone_address;
@@ -180,14 +184,6 @@ router.get('/permission', function(req, res, next) {
     } else {
         res.send("<script>location.href='/';</script>");
     }
-});
-
-router.get('/logout', function(req, res, next) {
-    req.session.destroy(function(err) {
-        if (err)
-            console.error("err", err);
-        res.send("<script> location.href='/';</script>");
-    });
 });
 
 router.get('/d3chart1', function(req, res, next) {
@@ -240,6 +236,40 @@ router.get('/d3chart2', function(req, res, next) {
     }
 });
 
+router.get('/commute_table', function(req, res, next) {
+    var userEmployeeId = req.session.user_employee_id;
+    var userSmartphoneAddress = req.session.user_smartphone_address;
+
+    if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
+        pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
+            if (userInfoRow.permission == 0) {
+                res.send("<script>alert('서비스 이용 권한이 없습니다'); location.href='/';</script>");
+            } else {
+                pool.id_getCompanyName(function (companyName) {
+                    pool.chart_getCircumstanceTable(function (circumstanceListRows) {
+                        res.render('commute_table', {
+                            title: title,
+                            userInfo: userInfoRow,
+                            companyName: companyName,
+                            circumstanceListRows: circumstanceListRows
+                        });
+                    });
+                });
+            }
+        });
+    } else {
+        res.send("<script>location.href='/';</script>");
+    }
+});
+
+router.get('/logout', function(req, res, next) {
+    req.session.destroy(function(err) {
+        if (err)
+            console.error("err", err);
+        res.send("<script> location.href='/';</script>");
+    });
+});
+
 /* POST */
 router.post("/", function(req, res) {
     var signin_id = req.body.signin_id;
@@ -276,7 +306,7 @@ router.post('/signup', function(req, res, next) {
     var signup_name = req.body.signup_name;
     var signup_department = req.body.signup_department;
     var signup_position = req.body.signup_position;
-    var signup_smartphone_address = req.body.signup_smartphone_address;
+    var signup_smartphone_address = "NO DATA";
 
     if (signup_pw != signup_pw_confirm) {
         res.send("<script>alert('Check confirmation password!'); history.go(-1);</script>");
