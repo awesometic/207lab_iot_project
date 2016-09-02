@@ -186,6 +186,27 @@ router.get('/permission', function(req, res, next) {
     }
 });
 
+router.get('/service_management', function(req, res, next) {
+    var userEmployeeId = req.session.user_employee_id;
+    var userSmartphoneAddress = req.session.user_smartphone_address;
+
+    if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
+        pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
+            pool.id_getCompanyName(function(companyName) {
+
+                res.render('service_management', {
+                    title: title,
+                    userInfo: userInfoRow,
+                    companyName: companyName
+                });
+
+            });
+        });
+    } else {
+        res.send("<script>location.href='/';</script>");
+    }
+});
+
 router.get('/d3chart1', function(req, res, next) {
     var userEmployeeId = req.session.user_employee_id;
     var userSmartphoneAddress = req.session.user_smartphone_address;
