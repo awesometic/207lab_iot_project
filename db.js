@@ -1106,7 +1106,7 @@ var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
     var endDatetime;
 
     var sql = "SELECT DATE_FORMAT(datetime, '%Y-%m-%d %H:%i:%s') AS datetime" +
-        ", id_workplace, smartphone_address" +
+        ", id_workplace, smartphone_address, commute_status" +
         ", (SELECT name_workplace FROM workplace WHERE circumstance.id_workplace = workplace.id_workplace) AS name_workplace" +
         ", (SELECT name FROM identity WHERE circumstance.smartphone_address = identity.smartphone_address) AS name_user" +
         " FROM circumstance";
