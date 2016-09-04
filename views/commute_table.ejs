@@ -67,6 +67,7 @@
                                     <th>사무실 이름</th>
                                     <th>스마트폰 블루투스 주소</th>
                                     <th>스마트폰 사용자 이름</th>
+                                    <th>출퇴근 정보</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -80,6 +81,7 @@
                                     <td><%= circumstanceListRows[i].name_workplace %> </td>
                                     <td><%= circumstanceListRows[i].smartphone_address %></td>
                                     <td><%= circumstanceListRows[i].name_user %> </td>
+                                    <td><% if (circumstanceListRows[i].commute_status == 1) { %>출근<% } else { %>퇴근<% } %></td>
                                 </tr>
                                 <% } } %>
                                 </tbody>
@@ -90,6 +92,7 @@
                                     <th>사무실 이름</th>
                                     <th>스마트폰 블루투스 주소</th>
                                     <th>스마트폰 사용자 이름</th>
+                                    <th>출퇴근 정보</th>
                                 </tr>
                                 </tfoot>
                             </table>
