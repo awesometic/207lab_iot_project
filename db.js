@@ -1315,8 +1315,6 @@ module.exports.id_getPositionList           = id_getPositionList;
 module.exports.id_getSmartphoneAddress      = id_getSmartphoneAddress;
 module.exports.id_checkAdmin                = id_checkAdmin;
 
-module.exports.id_getCircumstance           = id_getCircumstance;
-
 module.exports.id_getCompanyName            = id_getCompanyName;
 
 /* socket.js */
