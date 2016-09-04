@@ -71,7 +71,7 @@ io.on("connection", function(socket) {
                                     contentJsonString += "\"requestSuccess\":\"" + true + "\"";
                                     contentJsonString += " }";
 
-                                    socket.emit("answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
+                                    socket.emit("circumstance_answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
                                     logger("socket").info("Circumstance", "New commute record: \n\tRegister success - " + commuteStatus);
                                 } else {
                                     logger("socket").info("Circumstance", "New commute record: \n\tRegister fail: Database connection problem");
@@ -129,7 +129,7 @@ io.on("connection", function(socket) {
                                     contentJsonString += "\"requestSuccess\":\"" + true + "\"";
                                     contentJsonString += " }";
 
-                                    socket.emit("answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
+                                    socket.emit("calibration_answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
                                     logger("socket").info("Calibration", "New calibration data: \n\tRegister success");
                                 } else {
                                     logger("socket").info("Calibration", "New calibration data: \n\tRegister fail: Database connection problem");
@@ -164,7 +164,7 @@ io.on("connection", function(socket) {
                     pool.soc_getEssentialData(function (data) {
 
                         if (data) {
-                            socket.emit("answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, data));
+                            socket.emit("requestEssentialData_answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, data));
                             logger("socket").info("RequestData", "Request from user: \n" + smartphoneAddress + "\n\tSend success");
                         } else {
                             logger("socket").info("RequestData", "Request from user: \n" + smartphoneAddress + "\n\tSend fail");
@@ -203,7 +203,7 @@ io.on("connection", function(socket) {
                                 contentJsonString += "\"employee_number\":\"" + employee_number + "\"";
                                 contentJsonString += " }";
 
-                                socket.emit("answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
+                                socket.emit("amIRegistered_answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
                                 logger("socket").info("amIRegistered", "Whether user registered or not:\n\tSend: " + employee_name + ", " + employee_number);
                             });
                         });
@@ -251,13 +251,13 @@ io.on("connection", function(socket) {
                     contentJsonString += "\"requestSuccess\":\"" + true + "\"";
                     contentJsonString += " }";
 
-                    socket.emit("answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
+                    socket.emit("signupRequest_answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
                     logger("socket").info("signupRequest", "New sign-up request: \n" + smartphone_address + "\t" + employee_number + "\t" + name + "\n\tRegister Success");
                 } else {
                     contentJsonString += "\"requestSuccess\":\"" + true + "\"";
                     contentJsonString += " }";
 
-                    socket.emit("answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
+                    socket.emit("signupRequest_answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
                     logger("socket").info("signupRequest", "New sign-up request: \n" + smartphone_address + "\t" + employee_number + "\t" + name + "\n\tRegister Fail");
                 }
             });
@@ -286,7 +286,7 @@ io.on("connection", function(socket) {
                     pool.soc_smartphoneValidation(smartphoneAddress, function (name) {
                         if (name != undefined) {
                             pool.chart_getPopulOfDepartment(function (chartData) {
-                                socket.emit("answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, chartData));
+                                socket.emit("requestChartData_answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, chartData));
                             });
                         } else {
                             var contentJsonString = "{ ";
