@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
     <!-- DataTables -->
     <link rel="stylesheet" href="plugins/datatables/dataTables.bootstrap.css">
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
@@ -56,6 +58,19 @@
                     <div class="box">
                         <div class="box-header">
                             <h3 class="box-title">출퇴근 기록 테이블</h3>
+                            <div class="pull-right">
+                                <!-- Date and time range -->
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <button type="button" class="btn btn-default pull-right" id="date_range_picker">
+                                            <span><i class="fa fa-calendar"></i> 날짜 및 시간 범위 설정</span>
+                                            <i class="fa fa-caret-down"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- /.form group -->
+                            </div>
+                            <!-- /.pull-right -->
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
@@ -119,6 +134,9 @@
 <!-- DataTables -->
 <script src="plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- date-range-picker -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
+<script src="plugins/daterangepicker/daterangepicker.js"></script>
 <!-- AdminLTE App -->
 <script src="dist/js/app.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
@@ -127,6 +145,64 @@
 
     $(document).ready(function() {
         $('#commute_table').DataTable();
+
+        $('#date_range_picker').daterangepicker({
+                    locale: {
+                        "format": "YYYY/MM/DD",
+                        "separator": " - ",
+                        "applyLabel": "적용",
+                        "cancelLabel": "취소",
+                        "fromLabel": "From",
+                        "toLabel": "To",
+                        "customRangeLabel": "Custom",
+                        "weekLabel": "W",
+                        "daysOfWeek": [
+                            "일",
+                            "월",
+                            "화",
+                            "수",
+                            "목",
+                            "금",
+                            "토"
+                        ],
+                        "monthNames": [
+                            "1월",
+                            "2월",
+                            "3월",
+                            "4월",
+                            "5월",
+                            "6월",
+                            "7월",
+                            "8월",
+                            "9월",
+                            "10월",
+                            "11월",
+                            "12"
+                        ],
+                        "firstDay": 1
+                    },
+                    ranges: {
+                        '오늘': [moment(), moment()],
+                        '어제': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                        '최근 7 일': [moment().subtract(6, 'days'), moment()],
+                        '최근 30 일': [moment().subtract(29, 'days'), moment()],
+                        '이번 달': [moment().startOf('month'), moment().endOf('month')],
+                        '지난 달': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                    },
+                    startDate: moment().subtract(29, 'days'),
+                    endDate: moment()
+                },
+                function (start, end) {
+                    $('#date_range_picker span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                }
+        );
+
+        $('#date_range_picker').on('apply.daterangepicker', function(ev, picker) {
+            var searchStartDate = picker.startDate.format('YYYY-MM-DD') + ' 00:00:00';
+            var searchEndDate = picker.endDate.format('YYYY-MM-DD') + ' 23:59:59';
+
+            $(location).attr('href', '?start_date=' + searchStartDate + '&end_date=' + searchEndDate);
+        });
     });
 
 </script>

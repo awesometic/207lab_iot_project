@@ -267,14 +267,28 @@ router.get('/commute_table', function(req, res, next) {
                 res.send("<script>alert('서비스 이용 권한이 없습니다'); location.href='/';</script>");
             } else {
                 pool.id_getCompanyName(function (companyName) {
-                    pool.chart_getCircumstanceTable(function (circumstanceListRows) {
-                        res.render('commute_table', {
-                            title: title,
-                            userInfo: userInfoRow,
-                            companyName: companyName,
-                            circumstanceListRows: circumstanceListRows
+                    if (typeof req.query.start_date !== 'undefined' && typeof req.query.end_date !== 'undefined') {
+                        var startDate = req.query.start_date;
+                        var endDate = req.query.end_date;
+
+                        pool.chart_getCircumstanceTable(startDate, endDate, function (circumstanceListRows) {
+                            res.render('commute_table', {
+                                title: title,
+                                userInfo: userInfoRow,
+                                companyName: companyName,
+                                circumstanceListRows: circumstanceListRows
+                            });
                         });
-                    });
+                    } else {
+                        pool.chart_getCircumstanceTable(function (circumstanceListRows) {
+                            res.render('commute_table', {
+                                title: title,
+                                userInfo: userInfoRow,
+                                companyName: companyName,
+                                circumstanceListRows: circumstanceListRows
+                            });
+                        });
+                    }
                 });
             }
         });
