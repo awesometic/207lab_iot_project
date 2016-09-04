@@ -123,7 +123,7 @@ Analyzer.getAdmin = function(json) {
 };
 
 Analyzer.getCommuteStatus = function(json) {
-    return (json.Commute == true) ? 1 : 0;
+    return (json.Commute == "true") ? 1 : 0;
 };
 
 Analyzer.extractContentFromReceivedJson = function(json) {
