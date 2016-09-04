@@ -59,12 +59,13 @@ io.on("connection", function(socket) {
             var uuidArr = analyzer.getUuidArray(contentJson);
             var majorArr = analyzer.getMajorArray(contentJson);
             var minorArr = analyzer.getMinorArray(contentJson);
+            var commuteStatus = analyzer.getCommuteStatus(contentJson);
 
             pool.soc_gatewayValidation(beaconAddressArr, uuidArr, majorArr, minorArr, function (id) {
                 if (id) {
                     pool.soc_smartphoneValidation(smartphoneAddress, function (name) {
                         if (name) {
-                            pool.soc_registerCommute(smartphoneAddress, id, currentTime.getCurrentDateTime(), function (valid) {
+                            pool.soc_registerCommute(smartphoneAddress, id, commuteStatus, currentTime.getCurrentDateTime(), function (valid) {
                                 if (valid) {
                                     var contentJsonString = "{ ";
                                     contentJsonString += "\"requestSuccess\":\"" + true + "\"";

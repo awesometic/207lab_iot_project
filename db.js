@@ -739,29 +739,6 @@ var id_checkAdmin = function(employee_number, smartphone_address, callback) {
     });
 };
 
-var id_getCircumstance = function(date, smartphone_address, callback) {
-    pool.getConnection(function(err, conn) {
-        if (err)
-            console.error(err);
-
-        var sql = "SELECT * FROM circumstance WHERE smartphone_address=" + conn.escape(smartphone_address) +
-            " AND datetime LIKE " + conn.escape(date + '%') + " ORDER BY datetime DESC LIMIT 20";
-
-        conn.query(sql, function(err, rows) {
-            if (err) {
-                console.error(err);
-                if (conn.connected) conn.release();
-            }
-
-            if (typeof callback === "function") {
-                callback(rows);
-            }
-
-            if (conn.connected) conn.release();
-        });
-    });
-};
-
 var id_getCompanyName = function(callback) {
     pool.getConnection(function(err, conn) {
         if (err)
@@ -917,10 +894,10 @@ var soc_getSmartphoneUserEmployeeNumber = function(smartphoneAddress, callback) 
     });
 };
 
-var soc_registerCommute = function(smartphoneAddress, id_workplace, datetime, callback) {
+var soc_registerCommute = function(smartphoneAddress, id_workplace, commuteStatus, datetime, callback) {
     pool.getConnection(function(err, conn) {
-        conn.query("INSERT INTO circumstance (datetime, id_workplace, smartphone_address)" +
-            "VALUES (?, ?, ?)", [datetime, id_workplace, smartphoneAddress], function(err) {
+        conn.query("INSERT INTO circumstance (datetime, id_workplace, smartphone_address, commute_status)" +
+            "VALUES (?, ?, ?, ?)", [datetime, id_workplace, smartphoneAddress, commuteStatus], function(err) {
             if (err) {
                 console.error(err);
 

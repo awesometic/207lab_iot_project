@@ -122,6 +122,10 @@ Analyzer.getAdmin = function(json) {
     return json.Admin;
 };
 
+Analyzer.getCommuteStatus = function(json) {
+    return (json.Commute == true) ? 1 : 0;
+};
+
 Analyzer.extractContentFromReceivedJson = function(json) {
     var dataKeyIvJson = JSON.parse(rsa.decrypt(json.aesKeyIv));
 
