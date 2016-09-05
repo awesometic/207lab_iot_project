@@ -106,6 +106,10 @@
                             </table>
                         </div>
                         <!-- /.box-body -->
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
                     </div>
                     <!-- /.box -->
                 </div>
@@ -242,6 +246,7 @@
     $(document).ready(function(){
         $('#beacon_table').DataTable();
 
+        $('div.pageload_effect').hide();
 
         $('#open_add_modal_button').click(function() {
             $('#modal_add_form').modal('show');

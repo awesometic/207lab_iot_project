@@ -53,15 +53,23 @@
         <section class="content">
             <div class="row">
                 <div class="col-xs-12">
-                    <div class="box">
-                        <div class="box-header">
-                            Nothing to show you yet
+                    <div class="box box-info">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Nothing to show you yet</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div>
+                            <!-- /.box-tools -->
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
                             Nothing to show you yet
                         </div>
                         <!-- /.box-body -->
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
                     </div>
                     <!-- /.box -->
                 </div>
@@ -86,8 +94,8 @@
 <script src="bootstrap/js/bootstrap.min.js"></script>
 <script>
 
-    $(document).ready(function(){
-
+    $(document).ready(function() {
+        $('div.pageload_effect').hide();
     });
 
 </script>

@@ -114,6 +114,10 @@
                             </table>
                         </div>
                         <!-- /.box-body -->
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
                     </div>
                     <!-- /.box -->
                 </div>
@@ -218,6 +222,8 @@
 
     $(document).ready(function() {
         $('#member_table').DataTable();
+
+        $('div.pageload_effect').hide();
 
         var selectedUserInfo;
 
