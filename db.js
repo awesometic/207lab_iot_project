@@ -112,7 +112,7 @@ var id_isPermitted = function(smartphone_address, employee_number, callback) {
         if (err)
             console.error(err);
 
-        conn.query("SELECT permission FROM identity WHERE smartphone_address=? AND employee_number=?", [smartphone_address, employee_number], function(err, rows) {
+        conn.query("SELECT permission_level FROM identity WHERE smartphone_address=? AND employee_number=?", [smartphone_address, employee_number], function(err, rows) {
             conn.release();
 
             if (err) {
@@ -120,7 +120,7 @@ var id_isPermitted = function(smartphone_address, employee_number, callback) {
             }
 
             var isPermitted = false;
-            if (rows[0].permission)
+            if (rows[0].permission_level)
                 isPermitted = true;
 
             if (typeof callback === "function") {
@@ -215,13 +215,13 @@ var id_checkUserRegistered = function(smartphone_address, employee_number, callb
     });
 };
 
-var id_registerUser = function(smartphone_address, employee_number, name, password, department, position, permission, admin, callback) {
+var id_registerUser = function(smartphone_address, employee_number, name, password, department, position, permission_level, admin, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
 
-        conn.query("INSERT INTO identity (smartphone_address, employee_number, name, password, department, position, permission, admin)" +
-            " VALUES (?, ?, ?, SHA2(?, 256), ?, ?, ?, ?)", [smartphone_address, employee_number, name, password, department, position, permission, admin], function (err) {
+        conn.query("INSERT INTO identity (smartphone_address, employee_number, name, password, department, position, permission_level, admin)" +
+            " VALUES (?, ?, ?, SHA2(?, 256), ?, ?, ?, ?)", [smartphone_address, employee_number, name, password, department, position, permission_level, admin], function (err) {
             conn.release();
 
             if (err) {
@@ -294,7 +294,7 @@ var id_permitUsers = function(smartphone_address_arr, callback) {
         if (err)
             console.error(err);
 
-        var sql = "UPDATE identity SET permission = 1 WHERE ";
+        var sql = "UPDATE identity SET permission_level = 1 WHERE ";
         for (var i = 0; i < smartphone_address_arr.length; i++) {
             sql += "smartphone_address = " + conn.escape(smartphone_address_arr[i]);
 
@@ -603,7 +603,7 @@ var id_getNotPermittedUserList = function(callback) {
         if (err)
             console.error(err);
 
-        conn.query("SELECT * FROM identity WHERE permission = 0", function(err, rows) {
+        conn.query("SELECT * FROM identity WHERE permission_level = 0", function(err, rows) {
             conn.release();
 
             if (err) {
@@ -617,14 +617,14 @@ var id_getNotPermittedUserList = function(callback) {
     });
 };
 
-var id_getUserListCond = function(department, position, permission, admin, callback) {
+var id_getUserListCond = function(department, position, permission_level, admin, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
 
         var sql = "SELECT * FROM identity WHERE department LIKE " + conn.escape('%' + department + '%') +
             " AND position LIKE " + conn.escape('%' + position + '%') +
-            " AND permission=" + conn.escape(permission) + " AND admin = " + conn.escape(admin);
+            " AND permission_level =" + conn.escape(permission_level) + " AND admin = " + conn.escape(admin);
 
         conn.query(sql, function(err, rows) {
             conn.release();
@@ -727,7 +727,7 @@ var id_getCompanyName = function(callback) {
         if (err)
             console.error(err);
 
-        conn.query("SELECT name FROM common", function(err, rows) {
+        conn.query("SELECT company_name FROM common", function(err, rows) {
             conn.release();
 
             if (err) {
@@ -735,7 +735,64 @@ var id_getCompanyName = function(callback) {
             }
 
             if (typeof callback === "function") {
-                callback(rows[0].name);
+                callback(rows[0].company_name);
+            }
+        });
+    });
+};
+
+var id_getMaxPermissionLevel = function(callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("SELECT max_permission_level FROM common", function(err, rows) {
+            conn.release();
+
+            if (err) {
+                console.error(err);
+            }
+
+            if (typeof callback === "function") {
+                callback(rows[0].max_permission_level);
+            }
+        });
+    });
+};
+
+var id_getWorkStartTime = function(callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("SELECT work_start_time FROM common", function(err, rows) {
+            conn.release();
+
+            if (err) {
+                console.error(err);
+            }
+
+            if (typeof callback === "function") {
+                callback(rows[0].work_start_time);
+            }
+        });
+    });
+};
+
+var id_getWorkEndTime = function(callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("SELECT work_end_time FROM common", function(err, rows) {
+            conn.release();
+
+            if (err) {
+                console.error(err);
+            }
+
+            if (typeof callback === "function") {
+                callback(rows[0].work_end_time);
             }
         });
     });
@@ -1281,6 +1338,9 @@ module.exports.id_getSmartphoneAddress      = id_getSmartphoneAddress;
 module.exports.id_checkAdmin                = id_checkAdmin;
 
 module.exports.id_getCompanyName            = id_getCompanyName;
+module.exports.id_getMaxPermissionLevel     = id_getMaxPermissionLevel;
+module.exports.id_getWorkStartTime          = id_getWorkStartTime;
+module.exports.id_getWorkEndTime            = id_getWorkEndTime;
 
 /* socket.js */
 module.exports.soc_gatewayValidation        = soc_gatewayValidation;

@@ -70,6 +70,7 @@
                                     <th>부서</th>
                                     <th>직급</th>
                                     <th>관리자 권한</th>
+                                    <th>권한 레벨</th>
                                     <th>수정</th>
                                     <th>삭제</th>
                                 </tr>
@@ -89,6 +90,7 @@
                                         <td><%= deniedUserListRows[i].department %></td>
                                         <td><%= deniedUserListRows[i].position %></td>
                                         <td><% if (deniedUserListRows[i].admin == 1) { %><span class="glyphicon glyphicon-ok"></span><% } else { %>&nbsp;<% } %></td>
+                                        <td><%= deniedUserListRows[i].permission_level %></td>
                                         <td><a class="open_modify_modal_button btn btn-primary btn-xs" role="dialog" title="<%= i %>"><span class="glyphicon glyphicon-pencil"></span></a></td>
                                         <td><a class="open_delete_modal_button btn btn-danger btn-xs" role="dialog" title="<%= i %>"><span class="glyphicon glyphicon-trash"></span></a></td>
                                     </tr>
@@ -104,6 +106,7 @@
                                     <th>부서</th>
                                     <th>직급</th>
                                     <th>관리자 권한</th>
+                                    <th>권한 레벨</th>
                                     <th>수정</th>
                                     <th>삭제</th>
                                 </tr>
@@ -285,13 +288,7 @@
                 var hiddenInputSelector = 'input.each_user_info_' + this.value;
                 var toGivePermissionUserInfo = JSON.parse($(hiddenInputSelector).val());
 
-                if (toGivePermissionUserInfo.smartphone_address.toString() == "NO DATA") {
-                    alert('Cannot give permission to the user who didn\'t register the smartphone bluetooth address');
-
-                    throw "stop";
-                } else {
-                    toGivePermissionUsers.push(toGivePermissionUserInfo.smartphone_address);
-                }
+                toGivePermissionUsers.push(toGivePermissionUserInfo.smartphone_address);
             }).promise().done(function() {
 
                 if (toGivePermissionUsers.length != 0) {

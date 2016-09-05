@@ -32,29 +32,6 @@ router.get('/', function(req, res, next) {
 
 });
 
-router.get('/signup', function(req, res, next) {
-    var userEmployeeId = req.session.user_employee_id;
-    var userSmartphoneAddress = req.session.user_smartphone_address;
-
-    if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
-        pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
-
-            pool.id_getCompanyName(function (companyName) {
-                res.render('dashboard', {
-                    title: title,
-                    userInfo: userInfoRow,
-                    companyName: companyName
-                });
-            });
-        });
-    } else {
-        res.render('signup', {
-            title: title
-        });
-    }
-
-});
-
 router.get('/dashboard', function(req, res, next) {
     var userEmployeeId = req.session.user_employee_id;
     var userSmartphoneAddress = req.session.user_smartphone_address;
@@ -213,7 +190,7 @@ router.get('/d3chart1', function(req, res, next) {
 
     if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
         pool.id_getUserInfo(userSmartphoneAddress, function (userInfoRow) {
-            if (userInfoRow.permission == 0) {
+            if (userInfoRow.permission_level == 0) {
                 res.send("<script>alert('서비스 이용 권한이 없습니다'); location.href='/';</script>");
             } else {
                 pool.id_getCompanyName(function (companyName) {
@@ -238,7 +215,7 @@ router.get('/d3chart2', function(req, res, next) {
 
     if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
         pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
-            if (userInfoRow.permission == 0) {
+            if (userInfoRow.permission_level == 0) {
                 res.send("<script>alert('서비스 이용 권한이 없습니다'); location.href='/';</script>");
             } else {
                 pool.id_getCompanyName(function (companyName) {
@@ -263,7 +240,7 @@ router.get('/commute_table', function(req, res, next) {
 
     if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
         pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
-            if (userInfoRow.permission == 0) {
+            if (userInfoRow.permission_level == 0) {
                 res.send("<script>alert('서비스 이용 권한이 없습니다'); location.href='/';</script>");
             } else {
                 pool.id_getCompanyName(function (companyName) {
@@ -334,34 +311,6 @@ router.post("/", function(req, res) {
     });
 });
 
-router.post('/signup', function(req, res, next) {
-    var signup_id = req.body.signup_id;
-    var signup_pw = req.body.signup_pw;
-    var signup_pw_confirm = req.body.signup_pw_confirm;
-    var signup_name = req.body.signup_name;
-    var signup_department = req.body.signup_department;
-    var signup_position = req.body.signup_position;
-    var signup_smartphone_address = "NO DATA";
-
-    if (signup_pw != signup_pw_confirm) {
-        res.send("<script>alert('Check confirmation password!'); history.go(-1);</script>");
-    } else {
-        pool.id_checkUserRegistered(signup_smartphone_address, signup_id, function (valid) {
-            if (valid) {
-                pool.id_registerUser(signup_smartphone_address, signup_id, signup_name, signup_pw, signup_department, signup_position, 0, 0, function (valid) {
-                    if (valid) {
-                        res.send("<script>alert('Register success!'); location.href='/';</script>");
-                    } else {
-                        res.send("<script>alert('Server error'); history.go(-1);</script>");
-                    }
-                });
-            } else {
-                res.send("<script>alert('Already registered user identification!'); history.go(-1);</script>");
-            }
-        });
-    }
-});
-
 router.post('/profile', function(req, res, next) {
     var modified_password = req.body.password;
     var modified_password_confirm = req.body.password_confirm;
@@ -387,6 +336,29 @@ router.post('/member', function(req, res, next) {
     var controlFlag = req.body.user_control_flag;
 
     switch (controlFlag) {
+        case "add":
+            var signup_id = req.body.employee_number;
+            var signup_pw = "NO DATA";
+            var signup_name = req.body.name;
+            var signup_smartphone_address = req.body.smartphone_address;
+            var signup_department = req.body.department;
+            var signup_position = req.body.position;
+
+            pool.id_checkUserRegistered(signup_smartphone_address, signup_id, function (valid) {
+                if (valid) {
+                    pool.id_registerUser(signup_smartphone_address, signup_id, signup_name, signup_pw, signup_department, signup_position, 0, 0, function (valid) {
+                        if (valid) {
+                            res.send("<script>alert('Register success!'); location.href='/member';</script>");
+                        } else {
+                            res.send("<script>alert('Server error'); history.go(-1);</script>");
+                        }
+                    });
+                } else {
+                    res.send("<script>alert('Already registered user identification!'); history.go(-1);</script>");
+                }
+            });
+            break;
+
         case "modify":
             var modified_name = req.body.modified_name;
             var selected_employee_number = req.body.employee_number;
