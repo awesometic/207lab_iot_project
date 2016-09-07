@@ -163,14 +163,14 @@ router.get('/permission', function(req, res, next) {
     }
 });
 
-router.get('/position_and_department', function(req, res, next) {
+router.get('/position_department', function(req, res, next) {
     var userEmployeeId = req.session.user_employee_id;
     var userSmartphoneAddress = req.session.user_smartphone_address;
 
     if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
         pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
             pool.id_getCompanyName(function(companyName) {
-                res.render('position_and_department', {
+                res.render('position_department', {
                     title: title,
                     userInfo: userInfoRow,
                     companyName: companyName
