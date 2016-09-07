@@ -69,6 +69,7 @@
                                     <li><a href="#">Projects <span class="pull-right badge bg-blue">0</span></a></li>
                                     <li><a href="#">Tasks <span class="pull-right badge bg-aqua">0</span></a></li>
                                     <li><a href="#">Completed Projects <span class="pull-right badge bg-green">0</span></a></li>
+                                    <li><a href="#">emergency <span class="pull-right badge bg-red">0</span></a></li>
 
                                 </ul>
                             </div>
@@ -104,14 +105,14 @@
                     </div>
 
 
-                    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                    <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
                         <div class="panel panel-info">
                             <div class="panel-heading">
                                 <h1 class="panel-title">Information</h1>
                             </div>
                             <div class="panel-body">
                                 <div class="row">
-                                    <div class="col-md-2 col-lg-2" align="center">  </div>
+                                    <div class="col-md-10 col-lg-10" align="center">  </div>
 
                                     <!--<div class="col-xs-10 col-sm-10 hidden-md hidden-lg"> <br>
                                       <dl>
@@ -125,7 +126,8 @@
                                         <dd>Male</dd>
                                       </dl>
                                     </div>-->
-                                    <div class=" col-md-7 col-lg-7">
+
+                                    <div class="col-md-12 col-lg-12 text-center">
                                         <table class="table table-user-information">
                                             <tbody>
                                             <tr>
@@ -160,31 +162,35 @@
                                             </tbody>
                                         </table>
 
-                                        <a href="#" class="btn btn-primary">My Sales Performance</a>
-                                        <a href="#" class="btn btn-primary">Team Sales Performance</a>
+                                        <a href="commute_table" class="btn btn-primary">See worktime</a>
+                                        <a href="d3chart1" class="btn btn-primary">See Performance</a>
                                     </div>
                                 </div>
                             </div>
                             <div class="panel-footer">
                                 <a data-original-title="Broadcast Message" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-envelope"></i></a>
                                 <span class="pull-right">
-                                    <a href="edit.html" data-original-title="Edit this user" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
-                                    <a data-original-title="Remove this user" data-toggle="tooltip" type="button" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
-                                </span>
+                           <a id="open_add_modal_button" data-original-title="Edit this user" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+                           <a data-original-title="Remove this user" data-toggle="tooltip" type="button" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
+                       </span>
                             </div>
-
                         </div>
                     </div>
+
                 </div>
             </div>
-        </section>
-
-        <!-- /.content -->
     </div>
 
-    <!-- /.content-wrapper -->
+</div>
 
-    <% include footer.ejs %>
+</section>
+
+<!-- /.content -->
+</div>
+
+<!-- /.content-wrapper -->
+
+<% include footer.ejs %>
 
 </div>
 <!-- ./wrapper -->
@@ -199,6 +205,76 @@
 
     $(document).ready(function(){
 
+    });
+
+</script>
+<script>
+
+    $(document).ready(function() {
+        $('#member_table').DataTable();
+
+        $('div.pageload_effect').hide();
+
+        $('#open_add_modal_button').click(function() {
+            $('#modal_add_form').modal('show');
+        });
+
+        $('#modal_add_form').on('hidden.bs.modal', function() {
+            $('#input_add_name').val('');
+            $('#input_add_employee_number').val('');
+            $('#input_add_smartphone_address').val('');
+            $('#input_add_department').val('');
+            $('#input_add_position').val('');
+        });
+
+        var selectedUserInfo;
+
+        $('a.open_modify_modal_button').click(function() {
+            $('#modal_modify_form').modal('show');
+
+            var hiddenInputSelector = 'input.each_user_info_' + this.title;
+            selectedUserInfo = JSON.parse($(hiddenInputSelector).val());
+        });
+
+        $('#modal_modify_form').on('shown.bs.modal', function() {
+            $('#input_modify_name').val(selectedUserInfo.name);
+            $('#input_modify_employee_number_disabled').val(selectedUserInfo.employee_number);
+            $('#input_modify_employee_number').val(selectedUserInfo.employee_number);
+            $('#input_modify_smartphone_address_disabled').val(selectedUserInfo.smartphone_address);
+            $('#input_modify_smartphone_address').val(selectedUserInfo.smartphone_address);
+            $('#input_modify_department').val(selectedUserInfo.department);
+            $('#input_modify_position').val(selectedUserInfo.position);
+            $('#input_modify_admin').val(selectedUserInfo.admin);
+
+            if (selectedUserInfo.admin)
+                $('#input_modify_admin').prop('checked', true);
+            else
+                $('#input_modify_admin').prop('checked', false);
+        });
+
+        $('#modal_modify_form').on('hidden.bs.modal', function() {
+            $('#input_modify_name').val('');
+            $('#input_modify_employee_number_disabled').val('');
+            $('#input_modify_employee_number').val('');
+            $('#input_modify_smartphone_address_disabled').val('');
+            $('#input_modify_smartphone_address').val('');
+            $('#input_modify_department').val('');
+            $('#input_modify_position').val('');
+            $('#input_modify_admin').val('');
+
+            $('#input_modify_admin').prop('checked', false);
+        });
+
+        $('a.open_delete_modal_button').click(function() {
+            $('#modal_delete_form').modal('show');
+
+            var hiddenInputSelector = 'input.each_user_info_' + this.title;
+            selectedUserInfo = JSON.parse($(hiddenInputSelector).val());
+        });
+
+        $('#modal_delete_form').on('shown.bs.modal', function() {
+            $('#deleted_smartphone_address').val(selectedUserInfo.smartphone_address);
+        });
     });
 
 </script>
