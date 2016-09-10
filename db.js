@@ -741,6 +741,25 @@ var id_getCompanyName = function(callback) {
     });
 };
 
+var id_editCompanyName = function(company_name, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("UPDATE common SET company_name = ?",[company_name], function(err, rows) {
+            conn.release();
+
+            if (err) {
+                console.error(err);
+            }
+
+            if (typeof callback === "function") {
+                callback(true);
+            }
+        });
+    });
+};
+
 var id_getMaxPermissionLevel = function(callback) {
     pool.getConnection(function(err, conn) {
         if (err)
@@ -793,6 +812,26 @@ var id_getWorkEndTime = function(callback) {
 
             if (typeof callback === "function") {
                 callback(rows[0].work_end_time);
+            }
+        });
+    });
+};
+
+var id_editWorkStartEndTime = function(work_start_time, work_end_time, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("UPDATE common SET work_start_time = ?, work_end_time = ?"
+            ,[work_start_time, work_end_time], function(err, rows) {
+            conn.release();
+
+            if (err) {
+                console.error(err);
+            }
+
+            if (typeof callback === "function") {
+                callback(true);
             }
         });
     });
@@ -1338,9 +1377,11 @@ module.exports.id_getSmartphoneAddress      = id_getSmartphoneAddress;
 module.exports.id_checkAdmin                = id_checkAdmin;
 
 module.exports.id_getCompanyName            = id_getCompanyName;
+module.exports.id_editCompanyName           = id_editCompanyName;
 module.exports.id_getMaxPermissionLevel     = id_getMaxPermissionLevel;
 module.exports.id_getWorkStartTime          = id_getWorkStartTime;
 module.exports.id_getWorkEndTime            = id_getWorkEndTime;
+module.exports.id_editWorkStartEndTime      = id_editWorkStartEndTime;
 
 /* socket.js */
 module.exports.soc_gatewayValidation        = soc_gatewayValidation;

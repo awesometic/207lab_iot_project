@@ -189,13 +189,17 @@ router.get('/service_environment', function(req, res, next) {
     if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
         pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
             pool.id_getCompanyName(function(companyName) {
-
-                res.render('service_environment', {
-                    title: title,
-                    userInfo: userInfoRow,
-                    companyName: companyName
+                pool.id_getWorkStartTime(function(workStartTime) {
+                   pool.id_getWorkEndTime(function(workEndTime) {
+                       res.render('service_environment', {
+                           title: title,
+                           userInfo: userInfoRow,
+                           companyName: companyName,
+                           workStartTime: workStartTime,
+                           workEndTime: workEndTime
+                       });
+                   });
                 });
-
             });
         });
     } else {
@@ -675,6 +679,49 @@ router.post('/permission', function(req, res, next) {
             break;
     }
 
+});
+
+router.post('/service_environment', function(req, res, next) {
+    var controlFlag = req.body.control_flag;
+    var smartphoneAddress = req.body.smartphone_address;
+
+    pool.id_getUserInfo(smartphoneAddress, function(userInfo) {
+        if (userInfo.admin) {
+            switch (controlFlag) {
+                case "company_name":
+                    var newCompanyName = req.body.new_company_name;
+
+                    pool.id_editCompanyName(newCompanyName, function(valid) {
+
+                        if (valid) {
+                            res.send("<script>alert('Modify Success!'); location.href='/service_environment';</script>");
+                        } else {
+                            res.send("<script>alert('Server error'); location.href='/service_environment';</script>");
+                        }
+                    });
+                    break;
+
+                case "work_start_end_time":
+                    var workStartTime = req.body.work_start_time;
+                    var workEndTime = req.body.work_end_time;
+
+                    pool.id_editWorkStartEndTime(workStartTime, workEndTime, function(valid) {
+                        if (valid) {
+                            res.send("<script>alert('Modify Success!'); location.href='/service_environment';</script>");
+                        } else {
+                            res.send("<script>alert('Server error'); location.href='/service_environment';</script>");
+                        }
+                    });
+                    break;
+
+                default:
+                    res.send("<script>alert('Server error'); history.go(-1);</script>");
+                    break;
+            }
+        } else {
+            res.send("<script>alert('권한이 없습니다!'); history.go(-1);</script>");
+        }
+    });
 });
 
 module.exports = router;
