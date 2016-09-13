@@ -55,17 +55,14 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">reserved</h3>
-                            <div class="box-tools pull-right">
-                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                            </div>
+                            <h3 class="box-title">공지사항</h3>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
                             <div class="alert alert-warning alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                                 <h4><i class="icon fa fa-warning"></i> 읽어보세요!</h4>
-                                reserved
+                                직책 및 부서를 설정하기 위한 장소입니다.<br>
+                                신중히 입력해 주세요.
                             </div>
                         </div>
                         <!-- /.box-body -->
@@ -76,7 +73,7 @@
                 <div class="col-sm-6">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">reserved</h3>
+                            <h3 class="box-title">부서 목록</h3>
                             <div class="box-tools pull-right">
                                 <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             </div>
@@ -84,10 +81,50 @@
                         <!-- /.box-header -->
                         <form method="post">
                             <div class="box-body">
-
+                                <table id="department_table" class="table table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>이름</th>
+                                        <th>인원 수</th>
+                                        <th>수정</th>
+                                        <th>삭제</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <%
+                                    if (typeof departmentListRows !== 'undefined') {
+                                    for (var i = 0; i < departmentListRows.length; i++) {
+                                    %>
+                                    <tr>
+                                        <input type="hidden" class="each_department_info_<%= i %>" value="<%= JSON.stringify(departmentListRows[i]) %>">
+                                        <td><%= departmentListRows[i].department %></td>
+                                        <td><%= departmentListRows[i].population %></td>
+                                        <td><a class="open_modify_department_popover btn btn-primary btn-xs" title="<%= i %>"><span class="glyphicon glyphicon-pencil"></span></a></td>
+                                        <td><a class="open_delete_department_popover btn btn-danger btn-xs" title="<%= i %>"><span class="glyphicon glyphicon-trash"></span></a></td>
+                                    </tr>
+                                    <% } } %>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <th>이름</th>
+                                        <th>인원 수</th>
+                                        <th>수정</th>
+                                        <th>삭제</th>
+                                    </tr>
+                                    </tfoot>
+                                </table>
                             </div>
                             <!-- /.box-body -->
+                            <div class="box-footer">
+                                <a id="open_add_department_popover" class="btn btn-success btn-md pull-left">부서 추가</a>
+                                <input class="btn btn-primary pull-right" type="submit" value="저장">
+                            </div>
+                            <!-- /.box-footer -->
                         </form>
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
                     </div>
                     <!-- /.box -->
                 </div>
@@ -95,19 +132,62 @@
                 <div class="col-sm-6">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">reserved</h3>
+                            <h3 class="box-title">직급 목록</h3>
                             <div class="box-tools pull-right">
                                 <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             </div>
                         </div>
                         <!-- /.box-header -->
-                        <div class="box-body">
-
+                        <form method="post">
+                            <div class="box-body">
+                                <table id="position_table" class="table table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>이름</th>
+                                        <th>인원 수</th>
+                                        <th>수정</th>
+                                        <th>삭제</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <%
+                                    if (typeof positionListRows !== 'undefined') {
+                                    for (var i = 0; i < positionListRows.length; i++) {
+                                    %>
+                                    <tr>
+                                        <input type="hidden" class="each_position_info_<%= i %>" value="<%= JSON.stringify(positionListRows[i]) %>">
+                                        <td><%= positionListRows[i].position %></td>
+                                        <td><%= positionListRows[i].population %></td>
+                                        <td><a class="open_modify_position_popover btn btn-primary btn-xs" title="<%= i %>"><span class="glyphicon glyphicon-pencil"></span></a></td>
+                                        <td><a class="open_delete_position_popover btn btn-danger btn-xs" title="<%= i %>"><span class="glyphicon glyphicon-trash"></span></a></td>
+                                    </tr>
+                                    <% } } %>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <th>이름</th>
+                                        <th>인원 수</th>
+                                        <th>수정</th>
+                                        <th>삭제</th>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <!-- /.box-body -->
+                            <div class="box-footer">
+                                <a id="open_add_position_popover" class="btn btn-success btn-md pull-left">직급 추가</a>
+                                <input class="btn btn-primary pull-right" type="submit" value="저장">
+                            </div>
+                            <!-- /.box-footer -->
+                        </form>
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
                         </div>
-                        <!-- /.box-body -->
+                        <!-- /.pageload_effect -->
                     </div>
                     <!-- /.box -->
                 </div>
+
                 <!-- /.col -->
             </div>
             <!-- /.row -->
@@ -152,7 +232,55 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
+    
+    <div id="add_department_popover_header" class="hide">
+        header test
+    </div>
 
+    <div id="add_department_popover_content" class="hide">
+        content test
+    </div>
+
+    <div id="modify_department_popover_header" class="hide">
+
+    </div>
+
+    <div id="modify_department_popover_content" class="hide">
+
+    </div>
+
+    <div id="delete_department_popover_header" class="hide">
+
+    </div>
+
+    <div id="delete_department_popover_content" class="hide">
+
+    </div>
+
+    <div id="add_position_popover_header" class="hide">
+
+    </div>
+
+    <div id="add_position_popover_content" class="hide">
+
+    </div>
+
+    <div id="modify_position_popover_header" class="hide">
+
+    </div>
+
+    <div id="modify_position_popover_content" class="hide">
+
+    </div>
+
+    <div id="delete_position_popover_header" class="hide">
+
+    </div>
+
+    <div id="delete_position_popover_content" class="hide">
+
+    </div>
+        
     <% include footer.ejs %>
 
 </div>
@@ -170,7 +298,45 @@
 <script>
 
     $(document).ready(function() {
+        $('#department_table').DataTable();
+        $('#position_table').DataTable();
 
+        $('div.pageload_effect').hide();
+
+        $('#open_add_department_popover').popover(
+                {
+                    title: function() {
+                        return $('#add_department_popover_header').html();
+                    },
+                    content: function() {
+                        return $('#add_department_popover_content').html();
+                    },
+                    trigger: "click"
+                });
+        $('.open_modify_department_popover').popover(
+                {
+                    title: function() {
+                        return $('#modify_department_popover_header').html();
+                    },
+                    content: function() {
+                        return $('#modify_department_popover_content').html();
+                    },
+                    trigger: "click"
+                });
+        $('.open_delete_department_popover').popover(
+                {
+                    title: function() {
+                        return $('#delete_department_popover_header').html();
+                    },
+                    content: function() {
+                        return $('#delete_department_popover_content').html();
+                    },
+                    trigger: "click"
+                });
+
+        $('#open_add_position_popover').popover({title: "직급 추가", content: "", trigger: "click"});
+        $('.open_modify_position_popover').popover({title: "직급명 수정", content: "", trigger: "click"});
+        $('.open_delete_position_popover').popover({title: "수정", content: "", trigger: "click"});
     });
 
 </script>

@@ -645,7 +645,8 @@ var id_getDepartmentList = function(callback) {
         if (err)
             console.error(err);
 
-        conn.query("SELECT department FROM identity GROUP BY department", function(err, rows) {
+        conn.query("SELECT department, COUNT(department) AS population" +
+            " FROM identity GROUP BY department", function(err, rows) {
             conn.release();
 
             if (err) {
@@ -664,7 +665,8 @@ var id_getPositionList = function(callback) {
         if (err)
             console.error(err);
 
-        conn.query("SELECT position FROM identity GROUP BY position", function(err, rows) {
+        conn.query("SELECT position, COUNT(position) AS population" +
+            " FROM identity GROUP BY position", function(err, rows) {
             conn.release();
 
             if (err) {
