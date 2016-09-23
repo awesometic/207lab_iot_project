@@ -19,6 +19,31 @@
     <!-- AdminLTE Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
+    <style>
+        rect.bordered {
+            stroke: #E6E6E6;
+            stroke-width:2px;
+        }
+
+        text.mono {
+            font-size: 9pt;
+            font-family: Consolas, courier;
+            fill: #aaa;
+        }
+
+        text.axis-workweek {
+            fill: #000;
+        }
+
+        text.axis-worktime {
+            fill: #000;
+        }
+    </style>
+    <script src="http://d3js.org/d3.v3.js"></script>
+
+    <!-- 간트 차트 씨에스에스 시작-->
+    <!--<link type="text/css" href="d3chart/info1.css" rel="stylesheet" >
+    <!-- 간트 차트 씨에스에스 종료-->
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -52,10 +77,10 @@
         <!-- Main content -->
         <section class="content">
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="box box-info">
                         <div class="box-header with-border">
-                            <h3 class="box-title">Nothing to show you yet</h3>
+                            <h3 class="box-title">heatmapchart</h3>
                             <div class="box-tools pull-right">
                                 <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             </div>
@@ -63,7 +88,9 @@
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            Nothing to show you yet
+                            <div id="chart"></div>
+                            <div id="dataset-picker">
+                            </div>
                         </div>
                         <!-- /.box-body -->
                         <div class="overlay pageload_effect">
@@ -76,6 +103,36 @@
                 <!-- /.col -->
             </div>
             <!-- /.row -->
+
+
+
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="box box-info">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">heatmapchart</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div>
+                            <!-- /.box-tools -->
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+
+                            <!--<svg class ="chart"></svg>-->
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+
+
         </section>
         <!-- /.content -->
     </div>
@@ -86,8 +143,156 @@
 </div>
 <!-- ./wrapper -->
 <!-- REQUIRED JS SCRIPTS -->
+
 <!-- jQuery 2.2.3 -->
 <script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- heatmap d3.js-->
+<script type="text/javascript">
+    var margin = { top: 50, right: 0, bottom: 100, left: 30 },
+            width = 960 - margin.left - margin.right,
+            height = 300 - margin.top - margin.bottom,
+            gridSize = Math.floor(width / 24),
+            legendElementWidth = gridSize*2,
+            buckets = 10,
+            colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58","#081000"], // alternatively colorbrewer.YlGnBu[9]
+            teams = ["A", "B", "C"],
+            times = ["1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a", "12a", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p", "10p", "11p", "12p"];
+    datasets = ["data1.tsv", "data2.tsv", "data3.tsv"];
+
+    var total = [30, 20, 25]; //total population of each teams
+
+    var svg = d3.select("#chart").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    var teamLabels = svg.selectAll(".teamLabel")
+            .data(teams)
+            .enter().append("text")
+            .text(function (d) { return d; })
+            .attr("x", 0)
+            .attr("y", function (d, i) { return i * gridSize; })
+            .style("text-anchor", "end")
+            .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
+            .attr("class", function (d, i) { return ((i >= 0 && i <= 4) ? "teamLabel mono axis axis-workweek" : "teamLabel mono axis"); });
+
+    var timeLabels = svg.selectAll(".timeLabel")
+            .data(times)
+            .enter().append("text")
+            .text(function(d) { return d; })
+            .attr("x", function(d, i) { return i * gridSize; })
+            .attr("y", 0)
+            .style("text-anchor", "middle")
+            .attr("transform", "translate(" + gridSize / 2 + ", -6)")
+            .attr("class", function(d, i) { return ((i >= 7 && i <= 16) ? "timeLabel mono axis axis-worktime" : "timeLabel mono axis"); });
+
+
+    var n = 3;
+
+    var heatmapChart = function(tsvFile) {
+        d3.tsv(tsvFile,
+                function(d) {
+                    return {
+                        team: +d.team,
+                        hour: +d.hour,
+                        population: +d.population
+                    };
+                },
+                function(error, data) {
+                    var colorScale = d3.scale.quantile()
+                            .domain([0, buckets - 1, d3.max(data, function (d) { return d.population/total[n-1]*100; })])
+                            .range(colors);
+
+                    var cards = svg.selectAll(".hour")
+                            .data(data, function(d) {return d.team+':'+d.hour;});
+
+                    cards.append("title");
+
+                    cards.enter().append("rect")
+                            .attr("x", function(d) { return (d.hour - 1) * gridSize; })
+                            .attr("y", function(d) { return (d.team - 1) * gridSize; })
+                            .attr("rx", 4)
+                            .attr("ry", 4)
+                            .attr("class", "hour bordered")
+                            .attr("width", gridSize)
+                            .attr("height", gridSize)
+                            .style("fill", colors[0]);
+
+                    cards.transition().duration(1000)
+                            .style("fill", function(d) { return colorScale(d.population/total[n-1]*100); });
+
+                    cards.select("title").text(function(d) { return d.population/total[n-1]*100; });
+
+                    cards.exit().remove();
+
+                    var legend = svg.selectAll(".legend")
+                            .data([0].concat(colorScale.quantiles()), function(d) { return d; });
+
+                    legend.enter().append("g")
+                            .attr("class", "legend");
+
+                    legend.append("rect")
+                            .attr("x", function(d, i) { return legendElementWidth * i; })
+                            .attr("y", height)
+                            .attr("width", legendElementWidth)
+                            .attr("height", gridSize / 2)
+                            .style("fill", function(d, i) { return colors[i]; });
+
+                    legend.append("text")
+                            .attr("class", "mono")
+                            .text(function(d) { return Math.round(d); })
+                            .attr("x", function(d, i) { return legendElementWidth * i; })
+                            .attr("y", height + gridSize);
+
+                    legend.exit().remove();
+
+                });
+    };
+
+    heatmapChart(datasets[datasets.length-1]);
+
+    var datasetpicker = d3.select("#dataset-picker").selectAll(".dataset-button")
+            .data(datasets);
+
+    /*datasetpicker.enter()
+     .append("input")
+     .attr("value", function(d){ return "Dataset " + d })
+     .attr("type", "button")
+     .attr("class", "dataset-button")
+     .on("click", function(d) {
+     heatmapChart(d);
+     });*/
+    function nextClick() {
+        if(n < datasets.length) {
+            n++;
+            heatmapChart("data" + n + ".tsv");
+        }
+        else {
+            alert("no data");
+        }
+    }
+    function previousClick() {
+        if(n > 1) {
+            n--;
+            heatmapChart("data" + n + ".tsv");
+        }
+        else {
+            alert("no data");
+        }
+    }
+    window.focus();
+    d3.select(window).on("keydown", function() {
+        var date_after;
+        switch (d3.event.keyCode) {
+            case 37:
+                previousClick(); break;
+            case 39:
+                nextClick(); break;
+        }
+    });
+
+</script>
 <!-- AdminLTE App -->
 <script src="dist/js/app.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
@@ -99,5 +304,11 @@
     });
 
 </script>
+<!--gantt chart start-
+<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+<script type="text/javascript" src="http://static.mentful.com/gantt-chart-d3v2.js"></script>
+<script type="text/javascript" src="d3chart/info1gantt.js"></script>
+<script type="text/javascript" src="d3chart/info1.js"></script>
+gantt chart finish -->
 </body>
 </html>
