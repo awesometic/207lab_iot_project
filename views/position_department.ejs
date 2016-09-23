@@ -79,48 +79,45 @@
                             </div>
                         </div>
                         <!-- /.box-header -->
-                        <form method="post">
-                            <div class="box-body">
-                                <table id="department_table" class="table table-bordered table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th>이름</th>
-                                        <th>인원 수</th>
-                                        <th>수정</th>
-                                        <th>삭제</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <%
-                                    if (typeof departmentListRows !== 'undefined') {
-                                    for (var i = 0; i < departmentListRows.length; i++) {
-                                    %>
-                                    <tr>
-                                        <input type="hidden" class="each_department_info_<%= i %>" value="<%= JSON.stringify(departmentListRows[i]) %>">
-                                        <td><%= departmentListRows[i].department %></td>
-                                        <td><%= departmentListRows[i].population %></td>
-                                        <td><a class="open_modify_department_popover btn btn-primary btn-xs" title="<%= i %>"><span class="glyphicon glyphicon-pencil"></span></a></td>
-                                        <td><a class="open_delete_department_popover btn btn-danger btn-xs" title="<%= i %>"><span class="glyphicon glyphicon-trash"></span></a></td>
-                                    </tr>
-                                    <% } } %>
-                                    </tbody>
-                                    <tfoot>
-                                    <tr>
-                                        <th>이름</th>
-                                        <th>인원 수</th>
-                                        <th>수정</th>
-                                        <th>삭제</th>
-                                    </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                            <!-- /.box-body -->
-                            <div class="box-footer">
-                                <a id="open_add_department_popover" class="btn btn-success btn-md pull-left">부서 추가</a>
-                                <input class="btn btn-primary pull-right" type="submit" value="저장">
-                            </div>
-                            <!-- /.box-footer -->
-                        </form>
+                        <div class="box-body">
+                            <table id="department_table" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>인원 수</th>
+                                    <th>수정</th>
+                                    <th>삭제</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <%
+                                if (typeof departmentListRows !== 'undefined') {
+                                for (var i = 0; i < departmentListRows.length; i++) {
+                                %>
+                                <tr>
+                                    <input type="hidden" class="each_department_info_<%= i %>" value="<%= JSON.stringify(departmentListRows[i]) %>">
+                                    <td><%= departmentListRows[i].name %></td>
+                                    <td><%= departmentListRows[i].population %></td>
+                                    <td><a class="open_modify_department_modal btn btn-primary btn-xs" title="<%= i %>"><span class="glyphicon glyphicon-pencil"></span></a></td>
+                                    <td><a class="open_delete_department_modal btn btn-danger btn-xs" title="<%= i %>"><span class="glyphicon glyphicon-trash"></span></a></td>
+                                </tr>
+                                <% } } %>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>인원 수</th>
+                                    <th>수정</th>
+                                    <th>삭제</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer">
+                            <a id="open_add_department_modal" class="btn btn-success btn-md pull-right">부서 추가</a>
+                        </div>
+                        <!-- /.box-footer -->
                         <div class="overlay pageload_effect">
                             <i class="fa fa-refresh fa-spin"></i>
                         </div>
@@ -138,48 +135,45 @@
                             </div>
                         </div>
                         <!-- /.box-header -->
-                        <form method="post">
-                            <div class="box-body">
-                                <table id="position_table" class="table table-bordered table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th>이름</th>
-                                        <th>인원 수</th>
-                                        <th>수정</th>
-                                        <th>삭제</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <%
-                                    if (typeof positionListRows !== 'undefined') {
-                                    for (var i = 0; i < positionListRows.length; i++) {
-                                    %>
-                                    <tr>
-                                        <input type="hidden" class="each_position_info_<%= i %>" value="<%= JSON.stringify(positionListRows[i]) %>">
-                                        <td><%= positionListRows[i].position %></td>
-                                        <td><%= positionListRows[i].population %></td>
-                                        <td><a class="open_modify_position_popover btn btn-primary btn-xs" title="<%= i %>"><span class="glyphicon glyphicon-pencil"></span></a></td>
-                                        <td><a class="open_delete_position_popover btn btn-danger btn-xs" title="<%= i %>"><span class="glyphicon glyphicon-trash"></span></a></td>
-                                    </tr>
-                                    <% } } %>
-                                    </tbody>
-                                    <tfoot>
-                                    <tr>
-                                        <th>이름</th>
-                                        <th>인원 수</th>
-                                        <th>수정</th>
-                                        <th>삭제</th>
-                                    </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                            <!-- /.box-body -->
-                            <div class="box-footer">
-                                <a id="open_add_position_popover" class="btn btn-success btn-md pull-left">직급 추가</a>
-                                <input class="btn btn-primary pull-right" type="submit" value="저장">
-                            </div>
-                            <!-- /.box-footer -->
-                        </form>
+                        <div class="box-body">
+                            <table id="position_table" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>인원 수</th>
+                                    <th>수정</th>
+                                    <th>삭제</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <%
+                                if (typeof positionListRows !== 'undefined') {
+                                for (var i = 0; i < positionListRows.length; i++) {
+                                %>
+                                <tr>
+                                    <input type="hidden" class="each_position_info_<%= i %>" value="<%= JSON.stringify(positionListRows[i]) %>">
+                                    <td><%= positionListRows[i].name %></td>
+                                    <td><%= positionListRows[i].population %></td>
+                                    <td><a class="open_modify_position_modal btn btn-primary btn-xs" title="<%= i %>"><span class="glyphicon glyphicon-pencil"></span></a></td>
+                                    <td><a class="open_delete_position_modal btn btn-danger btn-xs" title="<%= i %>"><span class="glyphicon glyphicon-trash"></span></a></td>
+                                </tr>
+                                <% } } %>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>인원 수</th>
+                                    <th>수정</th>
+                                    <th>삭제</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer">
+                            <a id="open_add_position_modal" class="btn btn-success btn-md pull-right">직급 추가</a>
+                        </div>
+                        <!-- /.box-footer -->
                         <div class="overlay pageload_effect">
                             <i class="fa fa-refresh fa-spin"></i>
                         </div>
@@ -232,55 +226,181 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
-    
-    <div id="add_department_popover_header" class="hide">
-        header test
+
+    <div id="modal_department_add_form" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <form class="form-horizontal" role="form" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title text-center">부서 추가</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="control_flag" value="department_add">
+                        <input type="hidden" name="smartphone_address" value="<%= userInfo.smartphone_address %>">
+                        <div class="form-group" >
+                            <input id="input_department_add_name" class="form-control " type="text" name="department_name" placeholder="이름">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success btn-lg btn-block"><span class="glyphicon glyphicon-ok-sign"></span> 저장</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </form>
+            <!-- /.form-horizontal -->
+        </div>
+        <!-- /.modal-dialog -->
     </div>
+    <!-- /.modal -->
 
-    <div id="add_department_popover_content" class="hide">
-        content test
+    <div id="modal_department_modify_form" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <form class="form-horizontal" role="form" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title text-center">부서 수정</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="control_flag" value="department_modify">
+                        <input type="hidden" name="smartphone_address" value="<%= userInfo.smartphone_address %>">
+                        <input id="modified_id_department" type="hidden" name="id_department">
+                        <div class="form-group" >
+                            <input id="input_department_modify_name" class="form-control " type="text" name="department_name" placeholder="이름">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block"><span class="glyphicon glyphicon-ok-sign"></span> 저장</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </form>
+            <!-- /.form-horizontal -->
+        </div>
+        <!-- /.modal-dialog -->
     </div>
+    <!-- /.modal -->
 
-    <div id="modify_department_popover_header" class="hide">
-
+    <div id="modal_department_delete_form" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <form class="form-horizontal" role="form" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title text-center">부서 삭제</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-center">
+                            <input type="hidden" name="control_flag" value="department_delete">
+                            <input type="hidden" name="smartphone_address" value="<%= userInfo.smartphone_address %>">
+                            <input id="deleted_id_department" type="hidden" name="id_department">
+                            <h3>되돌릴 수 없습니다</h3><br>
+                            <small>그래도 삭제하시겠습니까?</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger btn-lg btn-block"><span class="glyphicon glyphicon-ok-sign"></span> 삭제</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </form>
+            <!-- /.form-horizontal -->
+        </div>
+        <!-- /.modal-dialog -->
     </div>
+    <!-- /.modal -->
 
-    <div id="modify_department_popover_content" class="hide">
-
+    <div id="modal_position_add_form" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <form class="form-horizontal" role="form" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title text-center">직급 추가</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="control_flag" value="position_add">
+                        <input type="hidden" name="smartphone_address" value="<%= userInfo.smartphone_address %>">
+                        <div class="form-group" >
+                            <input id="input_position_add_name" class="form-control " type="text" name="position_name" placeholder="이름">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success btn-lg btn-block"><span class="glyphicon glyphicon-ok-sign"></span> 저장</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </form>
+            <!-- /.form-horizontal -->
+        </div>
+        <!-- /.modal-dialog -->
     </div>
+    <!-- /.modal -->
 
-    <div id="delete_department_popover_header" class="hide">
-
+    <div id="modal_position_modify_form" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <form class="form-horizontal" role="form" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title text-center">직급 수정</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="control_flag" value="position_modify">
+                        <input type="hidden" name="smartphone_address" value="<%= userInfo.smartphone_address %>">
+                        <input id="modified_id_position" type="hidden" name="id_position">
+                        <div class="form-group" >
+                            <input id="input_position_modify_name" class="form-control " type="text" name="position_name" placeholder="이름">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block"><span class="glyphicon glyphicon-ok-sign"></span> 저장</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </form>
+            <!-- /.form-horizontal -->
+        </div>
+        <!-- /.modal-dialog -->
     </div>
+    <!-- /.modal -->
 
-    <div id="delete_department_popover_content" class="hide">
-
+    <div id="modal_position_delete_form" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <form class="form-horizontal" role="form" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title text-center">직급 삭제</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-center">
+                            <input type="hidden" name="control_flag" value="position_delete">
+                            <input type="hidden" name="smartphone_address" value="<%= userInfo.smartphone_address %>">
+                            <input id="deleted_id_position" type="hidden" name="id_position">
+                            <h3>되돌릴 수 없습니다</h3><br>
+                            <small>그래도 삭제하시겠습니까?</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger btn-lg btn-block"><span class="glyphicon glyphicon-ok-sign"></span> 삭제</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </form>
+            <!-- /.form-horizontal -->
+        </div>
+        <!-- /.modal-dialog -->
     </div>
+    <!-- /.modal -->
 
-    <div id="add_position_popover_header" class="hide">
-
-    </div>
-
-    <div id="add_position_popover_content" class="hide">
-
-    </div>
-
-    <div id="modify_position_popover_header" class="hide">
-
-    </div>
-
-    <div id="modify_position_popover_content" class="hide">
-
-    </div>
-
-    <div id="delete_position_popover_header" class="hide">
-
-    </div>
-
-    <div id="delete_position_popover_content" class="hide">
-
-    </div>
-        
     <% include footer.ejs %>
 
 </div>
@@ -303,42 +423,85 @@
 
         $('div.pageload_effect').hide();
 
-        $('#open_add_department_popover').popover(
-                {
-                    title: function() {
-                        return $('#add_department_popover_header').html();
-                    },
-                    content: function() {
-                        return $('#add_department_popover_content').html();
-                    },
-                    trigger: "click"
-                });
-        $('.open_modify_department_popover').popover(
-                {
-                    title: function() {
-                        return $('#modify_department_popover_header').html();
-                    },
-                    content: function() {
-                        return $('#modify_department_popover_content').html();
-                    },
-                    trigger: "click"
-                });
-        $('.open_delete_department_popover').popover(
-                {
-                    title: function() {
-                        return $('#delete_department_popover_header').html();
-                    },
-                    content: function() {
-                        return $('#delete_department_popover_content').html();
-                    },
-                    trigger: "click"
-                });
+        $('#open_add_department_modal').click(function() {
+            $('#modal_department_add_form').modal('show');
+        });
 
-        $('#open_add_position_popover').popover({title: "직급 추가", content: "", trigger: "click"});
-        $('.open_modify_position_popover').popover({title: "직급명 수정", content: "", trigger: "click"});
-        $('.open_delete_position_popover').popover({title: "수정", content: "", trigger: "click"});
+        $('#modal_department_add_form').on('hidden.bs.modal', function() {
+            $('#input_add_department').val('');
+        });
+
+        var selectedDepartmentInfo;
+
+        $('a.open_modify_department_modal').click(function() {
+            $('#modal_department_modify_form').modal('show');
+
+            var hiddenInputSelector = 'input.each_department_info_' + this.title;
+            selectedDepartmentInfo = JSON.parse($(hiddenInputSelector).val());
+        });
+
+        $('#modal_department_modify_form').on('shown.bs.modal', function() {
+            $('#modified_id_department').val(selectedDepartmentInfo.id);
+        });
+
+        $('#modal_department_modify_form').on('hidden.bs.modal', function() {
+            $('#modified_id_department').val('');
+            $('#input_department_modify_name').val('');
+        });
+
+        $('a.open_delete_department_modal').click(function() {
+            $('#modal_department_delete_form').modal('show');
+
+            var hiddenInputSelector = 'input.each_department_info_' + this.title;
+            selectedDepartmentInfo = JSON.parse($(hiddenInputSelector).val());
+        });
+
+        $('#modal_department_delete_form').on('shown.bs.modal', function() {
+            $('#deleted_id_department').val(selectedDepartmentInfo.id);
+        });
+
+        $('#open_add_position_modal').click(function() {
+            $('#modal_position_add_form').modal('show');
+        });
+
+        $('#modal_position_add_form').on('hidden.bs.modal', function() {
+            $('#input_add_position').val('');
+        });
+
+        var selectedPositionInfo;
+
+        $('a.open_modify_position_modal').click(function() {
+            $('#modal_position_modify_form').modal('show');
+
+            var hiddenInputSelector = 'input.each_position_info_' + this.title;
+            selectedPositionInfo = JSON.parse($(hiddenInputSelector).val());
+        });
+
+        $('#modal_position_modify_form').on('shown.bs.modal', function() {
+            $('#modified_id_position').val(selectedPositionInfo.id);
+        });
+
+        $('#modal_position_modify_form').on('hidden.bs.modal', function() {
+            $('#modified_id_position').val('');
+            $('#input_position_modify_name').val('');
+        });
+
+        $('a.open_delete_position_modal').click(function() {
+            $('#modal_position_delete_form').modal('show');
+
+            var hiddenInputSelector = 'input.each_position_info_' + this.title;
+            selectedPositionInfo = JSON.parse($(hiddenInputSelector).val());
+        });
+
+        $('#modal_position_delete_form').on('shown.bs.modal', function() {
+            $('#deleted_id_position').val(selectedPositionInfo.id);
+        });
+
+        $('#modal_position_delete_form').on('hidden.bs.modal', function() {
+            $('#deleted_id_position').val('');
+        });
     });
-
+    
 </script>
 </body>
 </html>

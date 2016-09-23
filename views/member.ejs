@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
     <!-- DataTables -->
     <link rel="stylesheet" href="plugins/datatables/dataTables.bootstrap.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="../../plugins/select2/select2.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
@@ -69,7 +71,6 @@
                                     <th>부서</th>
                                     <th>직급</th>
                                     <th>관리자 권한</th>
-                                    <th>권한 레벨</th>
                                     <th>수정</th>
                                     <th>삭제</th>
                                 </tr>
@@ -101,7 +102,6 @@
                                     <th>부서</th>
                                     <th>직급</th>
                                     <th>관리자 권한</th>
-                                    <th>권한 레벨</th>
                                     <th>수정</th>
                                     <th>삭제</th>
                                 </tr>
@@ -146,10 +146,26 @@
                             <input id="input_add_smartphone_address" class="form-control" type="text" name="smartphone_address" placeholder="블루투스 주소">
                         </div>
                         <div class="form-group" >
-                            <input id="input_add_department" class="form-control" type="text" name="department"  placeholder="부서">
+                            <label>부서 선택</label>
+                            <select class="form-control select2" name="department" style="width: 100%;">
+                                <%
+                                if (typeof departmentListRows !== 'undefined') {
+                                for (var i = 0; i < departmentListRows.length; i++) {
+                                %>
+                                <option value="<%= departmentListRows[i].id %>"><%= departmentListRows[i].name %></option>
+                                <% } } %>
+                            </select>
                         </div>
                         <div class="form-group" >
-                            <input id="input_add_position" class="form-control" type="text" name="position"  placeholder="직급">
+                            <label>직급 선택</label>
+                            <select class="form-control select2" name="position" style="width: 100%;">
+                                <%
+                                if (typeof positionListRows !== 'undefined') {
+                                for (var i = 0; i < positionListRows.length; i++) {
+                                %>
+                                <option value="<%= positionListRows[i].id %>"><%= positionListRows[i].name %></option>
+                                <% } } %>
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -176,7 +192,7 @@
                     <div class="modal-body">
                         <input type="hidden" name="user_control_flag" value="modify">
                         <div class="form-group" >
-                            <input id="input_modify_name" class="form-control" type="text" name="modified_name" placeholder="이름">
+                            <input id="input_modify_name" class="form-control" type="text" name="name" placeholder="이름">
                         </div>
                         <div class="form-group" >
                             <input id="input_modify_employee_number_disabled" class="form-control" type="text" disabled>
@@ -187,14 +203,30 @@
                             <input id="input_modify_smartphone_address" class="form-control" type="hidden" name="smartphone_address">
                         </div>
                         <div class="form-group" >
-                            <input id="input_modify_department" class="form-control" type="text" name="modified_department"  placeholder="부서">
+                            <label>부서 선택</label>
+                            <select class="form-control select2 select_department" name="department" style="width: 100%;">
+                                <%
+                                if (typeof departmentListRows !== 'undefined') {
+                                for (var i = 0; i < departmentListRows.length; i++) {
+                                %>
+                                <option value="<%= departmentListRows[i].id %>"><%= departmentListRows[i].name %></option>
+                                <% } } %>
+                            </select>
                         </div>
                         <div class="form-group" >
-                            <input id="input_modify_position" class="form-control" type="text" name="modified_position"  placeholder="직급">
+                            <label>직급 선택</label>
+                            <select class="form-control select2 select_position" name="position" style="width: 100%;">
+                                <%
+                                if (typeof positionListRows !== 'undefined') {
+                                for (var i = 0; i < positionListRows.length; i++) {
+                                %>
+                                <option value="<%= positionListRows[i].id %>"><%= positionListRows[i].name %></option>
+                                <% } } %>
+                            </select>
                         </div>
                         <div class="form-group" >
                             <div class="checkbox">
-                                <label><input id="input_modify_admin" type="checkbox" name="modified_admin">관리자 권한</label>
+                                <label><input id="input_modify_admin" type="checkbox" name="admin">관리자 권한</label>
                             </div>
                         </div>
                     </div>
@@ -249,6 +281,8 @@
 <!-- DataTables -->
 <script src="plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- Select2 -->
+<script src="../../plugins/select2/select2.full.min.js"></script>
 <!-- AdminLTE App -->
 <script src="dist/js/app.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
@@ -257,6 +291,10 @@
 
     $(document).ready(function() {
         $('#member_table').DataTable();
+        $(".select2").select2({
+            placeholder: "눌러서 선택하세요",
+            allowClear: true
+        });
 
         $('div.pageload_effect').hide();
 
@@ -268,8 +306,6 @@
             $('#input_add_name').val('');
             $('#input_add_employee_number').val('');
             $('#input_add_smartphone_address').val('');
-            $('#input_add_department').val('');
-            $('#input_add_position').val('');
         });
 
         var selectedUserInfo;
@@ -287,14 +323,15 @@
             $('#input_modify_employee_number').val(selectedUserInfo.employee_number);
             $('#input_modify_smartphone_address_disabled').val(selectedUserInfo.smartphone_address);
             $('#input_modify_smartphone_address').val(selectedUserInfo.smartphone_address);
-            $('#input_modify_department').val(selectedUserInfo.department);
-            $('#input_modify_position').val(selectedUserInfo.position);
             $('#input_modify_admin').val(selectedUserInfo.admin);
 
             if (selectedUserInfo.admin)
                 $('#input_modify_admin').prop('checked', true);
             else
                 $('#input_modify_admin').prop('checked', false);
+
+            var currentUsersDepartmentId = selectedUserInfo.id_department;
+            var currentUsersPositionId = selectedUserInfo.id_position;
         });
 
         $('#modal_modify_form').on('hidden.bs.modal', function() {
@@ -303,8 +340,6 @@
             $('#input_modify_employee_number').val('');
             $('#input_modify_smartphone_address_disabled').val('');
             $('#input_modify_smartphone_address').val('');
-            $('#input_modify_department').val('');
-            $('#input_modify_position').val('');
             $('#input_modify_admin').val('');
 
             $('#input_modify_admin').prop('checked', false);

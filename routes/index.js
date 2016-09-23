@@ -81,14 +81,19 @@ router.get('/member', function(req, res, next) {
         pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
             pool.id_getCompanyName(function(companyName) {
                 pool.id_getUserList(function(userListRows) {
-                    res.render('member', {
-                        title: title,
-                        userInfo: userInfoRow,
-                        companyName: companyName,
-                        userListRows: userListRows
+                    pool.id_getDepartmentList(function(departmentListRows) {
+                        pool.id_getPositionList(function(positionListRows) {
+                            res.render('member', {
+                                title: title,
+                                userInfo: userInfoRow,
+                                companyName: companyName,
+                                userListRows: userListRows,
+                                departmentListRows: departmentListRows,
+                                positionListRows: positionListRows
+                            });
+                        });
                     });
                 });
-
             });
         });
     } else {
@@ -147,7 +152,6 @@ router.get('/permission', function(req, res, next) {
     if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
         pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
             pool.id_getCompanyName(function(companyName) {
-
                 pool.id_getNotPermittedUserList(function(deniedUserListRows) {
                     res.render('permission', {
                         title: title,
@@ -219,7 +223,7 @@ router.get('/d3chart1', function(req, res, next) {
 
     if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
         pool.id_getUserInfo(userSmartphoneAddress, function (userInfoRow) {
-            if (userInfoRow.permission_level == 0) {
+            if (userInfoRow.permission == 0) {
                 res.send("<script>alert('서비스 이용 권한이 없습니다'); location.href='/';</script>");
             } else {
                 pool.id_getCompanyName(function (companyName) {
@@ -244,7 +248,7 @@ router.get('/d3chart2', function(req, res, next) {
 
     if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
         pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
-            if (userInfoRow.permission_level == 0) {
+            if (userInfoRow.permission == 0) {
                 res.send("<script>alert('서비스 이용 권한이 없습니다'); location.href='/';</script>");
             } else {
                 pool.id_getCompanyName(function (companyName) {
@@ -269,7 +273,7 @@ router.get('/commute_table', function(req, res, next) {
 
     if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
         pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
-            if (userInfoRow.permission_level == 0) {
+            if (userInfoRow.permission == 0) {
                 res.send("<script>alert('서비스 이용 권한이 없습니다'); location.href='/';</script>");
             } else {
                 pool.id_getCompanyName(function (companyName) {
@@ -389,12 +393,12 @@ router.post('/member', function(req, res, next) {
             break;
 
         case "modify":
-            var modified_name = req.body.modified_name;
+            var modified_name = req.body.name;
             var selected_employee_number = req.body.employee_number;
             var selected_smartphone_address = req.body.smartphone_address;
-            var modified_department = req.body.modified_department;
-            var modified_position = req.body.modified_position;
-            var modified_admin = req.body.modified_admin;
+            var modified_department = req.body.department;
+            var modified_position = req.body.position;
+            var modified_admin = req.body.admin;
 
             if (typeof selected_employee_number === 'undefined' || typeof selected_smartphone_address === 'undefined') {
                 res.send("<script>alert('Cannot find any user information'); history.go(-1);</script>");
@@ -694,29 +698,84 @@ router.post('/position_department', function(req, res, next) {
     pool.id_getUserInfo(smartphoneAddress, function(userInfo) {
         if (userInfo.admin) {
             switch (controlFlag) {
-                case "company_name":
-                    var newCompanyName = req.body.new_company_name;
+                case "department_add":
+                    var name = req.body.department_name;
 
-                    pool.id_editCompanyName(newCompanyName, function(valid) {
+                    pool.id_addDepartment(name, function(valid) {
                         if (valid) {
-                            res.send("<script>alert('Modify Success!'); location.href='/service_environment';</script>");
+                            res.send("<script>alert('Add Success!'); location.href='/position_department';</script>");
                         } else {
-                            res.send("<script>alert('Server error'); location.href='/service_environment';</script>");
+                            res.send("<script>alert('Server error'); history.go(-1);</script>");
                         }
                     });
+
                     break;
 
-                case "work_start_end_time":
-                    var workStartTime = req.body.work_start_time;
-                    var workEndTime = req.body.work_end_time;
+                case "department_modify":
+                    var id = req.body.id_department;
+                    var name = req.body.department_name;
 
-                    pool.id_editWorkStartEndTime(workStartTime, workEndTime, function(valid) {
+                    pool.id_modifyDepartment(id, name, function(valid) {
                         if (valid) {
-                            res.send("<script>alert('Modify Success!'); location.href='/service_environment';</script>");
+                            res.send("<script>alert('Modify Success!'); location.href='/position_department';</script>");
                         } else {
-                            res.send("<script>alert('Server error'); location.href='/service_environment';</script>");
+                            res.send("<script>alert('Server error'); history.go(-1);</script>");
                         }
                     });
+                    
+                    break;
+
+                case "department_delete":
+                    var id = req.body.id_department;
+
+                    pool.id_deleteDepartment(id, function(valid) {
+                        if (valid) {
+                            res.send("<script>alert('Delete Success!'); location.href='/position_department';</script>");
+                        } else {
+                            res.send("<script>alert('Server error'); history.go(-1);</script>");
+                        }
+                    });
+
+                    break;
+
+                case "position_add":
+                    var name = req.body.position_name;
+
+                    pool.id_addPosition(name, function(valid) {
+                        if (valid) {
+                            res.send("<script>alert('Add Success!'); location.href='/position_department';</script>");
+                        } else {
+                            res.send("<script>alert('Server error'); history.go(-1);</script>");
+                        }
+                    });
+
+                    break;
+
+                case "position_modify":
+                    var id = req.body.id_position;
+                    var name = req.body.position_name;
+
+                    pool.id_modifyPosition(id, name, function(valid) {
+                        if (valid) {
+                            res.send("<script>alert('Modify Success!'); location.href='/position_department';</script>");
+                        } else {
+                            res.send("<script>alert('Server error'); history.go(-1);</script>");
+                        }
+                    });
+
+                    break;
+
+                case "position_delete":
+                    var id = req.body.id_position;
+
+                    pool.id_deletePosition(id, function(valid) {
+                        if (valid) {
+                            res.send("<script>alert('Delete Success!'); location.href='/position_department';</script>");
+                        } else {
+                            res.send("<script>alert('Server error'); history.go(-1);</script>");
+                        }
+                    });
+
                     break;
 
                 default:

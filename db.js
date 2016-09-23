@@ -112,7 +112,7 @@ var id_isPermitted = function(smartphone_address, employee_number, callback) {
         if (err)
             console.error(err);
 
-        conn.query("SELECT permission_level FROM identity WHERE smartphone_address=? AND employee_number=?", [smartphone_address, employee_number], function(err, rows) {
+        conn.query("SELECT permission FROM identity WHERE smartphone_address=? AND employee_number=?", [smartphone_address, employee_number], function(err, rows) {
             conn.release();
 
             if (err) {
@@ -120,7 +120,7 @@ var id_isPermitted = function(smartphone_address, employee_number, callback) {
             }
 
             var isPermitted = false;
-            if (rows[0].permission_level)
+            if (rows[0].permission)
                 isPermitted = true;
 
             if (typeof callback === "function") {
@@ -158,7 +158,10 @@ var id_getUserList = function(callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
-        conn.query("SELECT * FROM identity", function(err, rows) {
+        conn.query("SELECT smartphone_address, employee_number, name, id_department, id_position," +
+            " (SELECT name FROM department WHERE identity.id_department = department.id) AS department," +
+            " (SELECT name FROM position WHERE identity.id_position = position.id) AS position, " +
+            " admin FROM identity", function(err, rows) {
             conn.release();
 
             if (err) {
@@ -176,7 +179,10 @@ var id_getUserInfo = function(smartphone_address, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
-        conn.query("SELECT * FROM identity WHERE smartphone_address=?", [smartphone_address], function(err, rows) {
+        conn.query("SELECT smartphone_address, employee_number, name, id_department, id_position," +
+            " (SELECT name FROM department WHERE identity.id_department = department.id) AS department," +
+            " (SELECT name FROM position WHERE identity.id_position = position.id) AS position, " +
+            " admin FROM identity WHERE smartphone_address = ?", [smartphone_address], function(err, rows) {
             conn.release();
 
             if (err) {
@@ -215,13 +221,13 @@ var id_checkUserRegistered = function(smartphone_address, employee_number, callb
     });
 };
 
-var id_registerUser = function(smartphone_address, employee_number, name, password, department, position, permission_level, admin, callback) {
+var id_registerUser = function(smartphone_address, employee_number, name, password, id_department, id_position, permission, admin, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
 
-        conn.query("INSERT INTO identity (smartphone_address, employee_number, name, password, department, position, permission_level, admin)" +
-            " VALUES (?, ?, ?, SHA2(?, 256), ?, ?, ?, ?)", [smartphone_address, employee_number, name, password, department, position, permission_level, admin], function (err) {
+        conn.query("INSERT INTO identity (smartphone_address, employee_number, name, password, id_department, id_position, permission, admin)" +
+            " VALUES (?, ?, ?, SHA2(?, 256), ?, ?, ?, ?)", [smartphone_address, employee_number, name, password, id_department, id_position, permission, admin], function (err) {
             conn.release();
 
             if (err) {
@@ -235,14 +241,14 @@ var id_registerUser = function(smartphone_address, employee_number, name, passwo
     });
 };
 
-var id_modifyUser = function(smartphone_address, employee_number, modify_name, modify_password, modify_department, modify_position, modify_admin, callback) {
+var id_modifyUser = function(smartphone_address, employee_number, modify_name, modify_password, modify_id_department, modify_id_position, modify_admin, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
 
         if (modify_password == null) {
-            conn.query("UPDATE identity SET name=?, department=?, position=?, admin=? WHERE smartphone_address=? AND employee_number=?",
-                [modify_name, modify_department, modify_position, modify_admin, smartphone_address, employee_number], function (err) {
+            conn.query("UPDATE identity SET name=?, id_department=?, id_position=?, admin=? WHERE smartphone_address=? AND employee_number=?",
+                [modify_name, modify_id_department, modify_id_position, modify_admin, smartphone_address, employee_number], function (err) {
                     conn.release();
 
                     if (err) {
@@ -254,8 +260,8 @@ var id_modifyUser = function(smartphone_address, employee_number, modify_name, m
                     }
                 });
         } else {
-            conn.query("UPDATE identity SET name=?, password=SHA2(?, 256), department=?, position=?, admin=? WHERE smartphone_address=? AND employee_number=?",
-                [modify_name, modify_password, modify_department, modify_position, modify_admin, smartphone_address, employee_number], function (err) {
+            conn.query("UPDATE identity SET name=?, password=SHA2(?, 256), id_department=?, id_position=?, admin=? WHERE smartphone_address=? AND employee_number=?",
+                [modify_name, modify_password, modify_id_department, modify_id_position, modify_admin, smartphone_address, employee_number], function (err) {
                     conn.release();
 
                     if (err) {
@@ -294,7 +300,7 @@ var id_permitUsers = function(smartphone_address_arr, callback) {
         if (err)
             console.error(err);
 
-        var sql = "UPDATE identity SET permission_level = 1 WHERE ";
+        var sql = "UPDATE identity SET permission = 1 WHERE ";
         for (var i = 0; i < smartphone_address_arr.length; i++) {
             sql += "smartphone_address = " + conn.escape(smartphone_address_arr[i]);
 
@@ -603,7 +609,7 @@ var id_getNotPermittedUserList = function(callback) {
         if (err)
             console.error(err);
 
-        conn.query("SELECT * FROM identity WHERE permission_level = 0", function(err, rows) {
+        conn.query("SELECT * FROM identity WHERE permission = 0", function(err, rows) {
             conn.release();
 
             if (err) {
@@ -617,6 +623,7 @@ var id_getNotPermittedUserList = function(callback) {
     });
 };
 
+// TODO: need to edit. not working for now yet.
 var id_getUserListCond = function(department, position, permission_level, admin, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
@@ -645,8 +652,9 @@ var id_getDepartmentList = function(callback) {
         if (err)
             console.error(err);
 
-        conn.query("SELECT department, COUNT(department) AS population" +
-            " FROM identity GROUP BY department", function(err, rows) {
+        conn.query("SELECT department.id, department.name, COUNT(identity.id_department) AS population" +
+            " FROM department LEFT JOIN identity ON department.id = identity.id_department" +
+            " GROUP BY department.name ORDER BY population DESC", function(err, rows) {
             conn.release();
 
             if (err) {
@@ -660,13 +668,71 @@ var id_getDepartmentList = function(callback) {
     });
 };
 
+var id_addDepartment = function(name, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+        
+        conn.query("INSERT INTO department (name) VALUES (?)", [name], function(err, rows) {
+            conn.release();
+            
+            if (err) {
+                console.error(err);
+            }
+            
+            if (typeof callback === "function") {
+                callback(true);
+            }
+        });
+    });
+};
+
+var id_modifyDepartment = function(id, name, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("UPDATE department SET name = ? WHERE id = ?", [name, id], function(err, rows) {
+            conn.release();
+
+            if (err) {
+                console.error(err);
+            }
+
+            if (typeof callback === "function") {
+                callback(true);
+            }
+        });
+    });
+};
+
+var id_deleteDepartment = function(id, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("DELETE FROM department WHERE id = ?", [id], function(err, rows) {
+            conn.release();
+            
+            if (err) {
+                console.error(err);
+            }
+            
+            if (typeof callback === "function") {
+                callback(true);
+            }
+        });
+    });
+};
+
 var id_getPositionList = function(callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
 
-        conn.query("SELECT position, COUNT(position) AS population" +
-            " FROM identity GROUP BY position", function(err, rows) {
+        conn.query("SELECT position.id, position.name, COUNT(identity.id_position) AS population" +
+            " FROM position LEFT JOIN identity ON position.id = identity.id_position" +
+            " GROUP BY position.name ORDER BY position.permission_level DESC", function(err, rows) {
             conn.release();
 
             if (err) {
@@ -675,6 +741,63 @@ var id_getPositionList = function(callback) {
 
             if (typeof callback === "function") {
                 callback(rows);
+            }
+        });
+    });
+};
+
+var id_addPosition = function(name, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("INSERT INTO `position` (name, permission_level) VALUES (?, 0)", [name], function(err, rows) {
+            conn.release();
+
+            if (err) {
+                console.error(err);
+            }
+
+            if (typeof callback === "function") {
+                callback(true);
+            }
+        });
+    });
+};
+
+var id_modifyPosition = function(id, name, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("UPDATE position SET name = ? WHERE id = ?", [name, id], function(err, rows) {
+            conn.release();
+
+            if (err) {
+                console.error(err);
+            }
+
+            if (typeof callback === "function") {
+                callback(true);
+            }
+        });
+    });
+};
+
+var id_deletePosition = function(id, callback) {
+    pool.getConnection(function(err, conn) {
+        if (err)
+            console.error(err);
+
+        conn.query("DELETE FROM position WHERE id = ?", [id], function(err, rows) {
+            conn.release();
+
+            if (err) {
+                console.error(err);
+            }
+
+            if (typeof callback === "function") {
+                callback(true);
             }
         });
     });
@@ -757,25 +880,6 @@ var id_editCompanyName = function(company_name, callback) {
 
             if (typeof callback === "function") {
                 callback(true);
-            }
-        });
-    });
-};
-
-var id_getMaxPermissionLevel = function(callback) {
-    pool.getConnection(function(err, conn) {
-        if (err)
-            console.error(err);
-
-        conn.query("SELECT max_permission_level FROM common", function(err, rows) {
-            conn.release();
-
-            if (err) {
-                console.error(err);
-            }
-
-            if (typeof callback === "function") {
-                callback(rows[0].max_permission_level);
             }
         });
     });
@@ -973,7 +1077,7 @@ var soc_getSmartphoneUserEmployeeNumber = function(smartphoneAddress, callback) 
 var soc_registerCommute = function(smartphoneAddress, id_workplace, commuteStatus, datetime, callback) {
     pool.getConnection(function(err, conn) {
         conn.query("INSERT INTO circumstance (datetime, id_workplace, smartphone_address, commute_status)" +
-            "VALUES (?, ?, ?, ?)", [datetime, id_workplace, smartphoneAddress, commuteStatus], function(err) {
+            " VALUES (?, ?, ?, ?)", [datetime, id_workplace, smartphoneAddress, commuteStatus], function(err) {
             conn.release();
 
             if (err) {
@@ -1105,7 +1209,9 @@ var chart_getPopulationOfDepartments = function(callback) {
         if (err)
             console.error(err);
 
-        var sql = "SELECT department, COUNT(*) as count FROM identity GROUP BY department";
+        var sql = "SELECT department.name AS department, COUNT(identity.id_department) AS count" +
+            " FROM department, identity WHERE department.id = identity.id_department" +
+            " GROUP BY identity.id_department";
 
         conn.query(sql, function(err, rows) {
             conn.release();
@@ -1372,15 +1478,21 @@ module.exports.id_deleteBeacon              = id_deleteBeacon;
 
 module.exports.id_getNotPermittedUserList   = id_getNotPermittedUserList;
 module.exports.id_getUserListCond           = id_getUserListCond;
+
 module.exports.id_getDepartmentList         = id_getDepartmentList;
+module.exports.id_addDepartment             = id_addDepartment;
+module.exports.id_modifyDepartment          = id_modifyDepartment;
+module.exports.id_deleteDepartment          = id_deleteDepartment;
 module.exports.id_getPositionList           = id_getPositionList;
+module.exports.id_addPosition               = id_addPosition;
+module.exports.id_modifyPosition            = id_modifyPosition;
+module.exports.id_deletePosition            = id_deletePosition;
 
 module.exports.id_getSmartphoneAddress      = id_getSmartphoneAddress;
 module.exports.id_checkAdmin                = id_checkAdmin;
 
 module.exports.id_getCompanyName            = id_getCompanyName;
 module.exports.id_editCompanyName           = id_editCompanyName;
-module.exports.id_getMaxPermissionLevel     = id_getMaxPermissionLevel;
 module.exports.id_getWorkStartTime          = id_getWorkStartTime;
 module.exports.id_getWorkEndTime            = id_getWorkEndTime;
 module.exports.id_editWorkStartEndTime      = id_editWorkStartEndTime;
