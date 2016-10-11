@@ -13,6 +13,8 @@ var getCurrentDate = function() {
 
     if (currentMonth < 10)
         str_currentMonth = '0' + currentMonth;
+    else
+        str_currentMonth = currentMonth;
 
     return new Date().getFullYear() + "-" + str_currentMonth + "-" + localtime.dayOfMonth;
 };
@@ -25,6 +27,8 @@ var getCurrentDateTime = function() {
 
     if (currentMonth < 10)
         str_currentMonth = '0' + currentMonth;
+    else
+        str_currentMonth = currentMonth;
 
     return new Date().getFullYear() + "-" + str_currentMonth + "-" + localtime.dayOfMonth
         + " " + localtime.hours + ":" + localtime.minutes + ":" + localtime.seconds;
