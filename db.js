@@ -1546,12 +1546,12 @@ var chart_getTodayComeInTime = function(arg1, callback) {
                 resultJson = JSON.parse(resultJsonString);
 
                 chart_getCircumstanceTable(smartphone_address, currentTime.getCurrentDate(), function(circumstanceRows) {
-                    for (var i = 0; i < circumstanceRows.length; i++) {
-                        if (circumstanceRows[i].commute_status != 1)
-                            delete circumstanceRows[i];
-                    }
-
                     var lastIndex = circumstanceRows.length - 1;
+
+                    for (var i = 0; i < circumstanceRows.length; i++) {
+                        if (circumstanceRows[i].commute_status == 1)
+                            lastIndex = i;
+                    }
 
                     resultJson.userList[0].todayComeInTime = circumstanceRows[lastIndex].datetime;
                     resultJson.userList[0].id_workplace = circumstanceRows[lastIndex].id_workplace;
@@ -1582,18 +1582,15 @@ var chart_getTodayComeInTime = function(arg1, callback) {
                 resultJson = JSON.parse(resultJsonString);
 
                 chart_getCircumstanceTable(currentTime.getCurrentDate(), function (circumstanceRows) {
-                    for (var i = 0; i < circumstanceRows.length; i++) {
-                        if (circumstanceRows[i].commute_status != 1)
-                            delete circumstanceRows[i];
-                    }
-
                     // Need to modify below to improve performance
                     for (var i = 0; i < circumstanceRows.length; i++) {
                         for (var j = 0; j < resultJson.length; j++) {
                             if (resultJson.userList[j].smartphone_address == circumstanceRows[i].smartphone_address) {
-                                resultJson.userList[j].todayComeInTime = circumstanceRows[i].datetime;
-                                resultJson.userList[j].id_workplace = circumstanceRows[i].id_workplace;
-                                resultJson.userList[j].name_workplace = circumstanceRows[i].name_workplace;
+                                if (circumstanceRows[i].commute_status == 1) {
+                                    resultJson.userList[j].todayComeInTime = circumstanceRows[i].datetime;
+                                    resultJson.userList[j].id_workplace = circumstanceRows[i].id_workplace;
+                                    resultJson.userList[j].name_workplace = circumstanceRows[i].name_workplace;
+                                }
                             }
                         }
                     }
@@ -1654,14 +1651,16 @@ var chart_getTodayComeOutTime = function(arg1, callback) {
                 resultJson = JSON.parse(resultJsonString);
 
                 chart_getCircumstanceTable(smartphone_address, currentTime.getCurrentDate(), function(circumstanceRows) {
-                    for (var i = 0; i < circumstanceRows.length; i++) {
-                        if (circumstanceRows[i].commute_status != 0)
-                            delete circumstanceRows[i];
+                    var firstIndex = 0;
+
+                    for (var i = circumstanceRows.length - 1; i >= 0; i--) {
+                        if (circumstanceRows[i].commute_status == 0)
+                            firstIndex = i;
                     }
 
-                    resultJson.userList[0].todayComeOutTime = circumstanceRows[0].datetime;
-                    resultJson.userList[0].id_workplace = circumstanceRows[0].id_workplace;
-                    resultJson.userList[0].name_workplace = circumstanceRows[0].name_workplace;
+                    resultJson.userList[0].todayComeOutTime = circumstanceRows[firstIndex].datetime;
+                    resultJson.userList[0].id_workplace = circumstanceRows[firstIndex].id_workplace;
+                    resultJson.userList[0].name_workplace = circumstanceRows[firstIndex].name_workplace;
 
                     if (typeof callback === "function") {
                         callback(resultJson);
@@ -1688,18 +1687,15 @@ var chart_getTodayComeOutTime = function(arg1, callback) {
                 resultJson = JSON.parse(resultJsonString);
 
                 chart_getCircumstanceTable(currentTime.getCurrentDate(), function (circumstanceRows) {
-                    for (var i = 0; i < circumstanceRows.length; i++) {
-                        if (circumstanceRows[i].commute_status != 0)
-                            delete circumstanceRows[i];
-                    }
-
                     // Need to modify below to improve performance
                     for (var i = circumstanceRows.length - 1; i >= 0; i--) {
                         for (var j = 0; j < resultJson.userList.length; j++) {
                             if (resultJson.userList[j].smartphone_address == circumstanceRows[i].smartphone_address) {
-                                resultJson.userList[j].todayComeOutTime = circumstanceRows[i].datetime;
-                                resultJson.userList[j].id_workplace = circumstanceRows[i].id_workplace;
-                                resultJson.userList[j].name_workplace = circumstanceRows[i].name_workplace;
+                                if (circumstanceRows[i].commute_status == 0) {
+                                    resultJson.userList[j].todayComeOutTime = circumstanceRows[i].datetime;
+                                    resultJson.userList[j].id_workplace = circumstanceRows[i].id_workplace;
+                                    resultJson.userList[j].name_workplace = circumstanceRows[i].name_workplace;
+                                }
                             }
                         }
                     }
