@@ -1317,9 +1317,13 @@ var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
                         sql += " WHERE smartphone_address = " + conn.escape(smartphone_address);
                         break;
 
+                    case 10:
                     case 19:
                     case 39:
-                        startDatetime= currentTime.convertCurrentTimezoneDateTime(args[0]);
+                        if (args[0].length != 10)
+                            startDatetime = currentTime.convertCurrentTimezoneDateTime(args[0]);
+                        else
+                            startDatetime = args[0];
 
                         sql += " WHERE datetime >= " + conn.escape(startDatetime);
                         break;
@@ -1340,9 +1344,14 @@ var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
                         smartphone_address = args[0];
 
                         switch (args[1].length) {
+                            case 10:
                             case 19:
                             case 39:
-                                startDatetime = currentTime.convertCurrentTimezoneDateTime(args[1]);
+                                if (args[1].length != 10)
+                                    startDatetime = currentTime.convertCurrentTimezoneDateTime(args[1]);
+                                else
+                                    startDatetime = args[1];
+
                                 sql += " WHERE smartphone_address = " + conn.escape(smartphone_address) +
                                     " AND datetime >= "  + conn.escape(startDatetime);
                                 break;
@@ -1355,10 +1364,18 @@ var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
                         }
                         break;
 
+                    case 10:
                     case 19:
                     case 39:
-                        startDatetime = currentTime.convertCurrentTimezoneDateTime(args[0]);
-                        endDatetime = currentTime.convertCurrentTimezoneDateTime(args[1]);
+                        if (args[0].length != 10)
+                            startDatetime = currentTime.convertCurrentTimezoneDateTime(args[0]);
+                        else
+                            startDatetime = args[0];
+
+                        if (args[1].length != 10)
+                            endDatetime = currentTime.convertCurrentTimezoneDateTime(args[1]);
+                        else
+                            endDatetime = args[1];
 
                         sql += " WHERE datetime >= " + conn.escape(startDatetime) +
                             " AND datetime <= " + conn.escape(endDatetime);
@@ -1366,7 +1383,12 @@ var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
 
                     default:
                         id_workplace = args[0];
-                        startDatetime = currentTime.convertCurrentTimezoneDateTime(args[1]);
+
+                        if (args[1].length != 10)
+                            startDatetime = currentTime.convertCurrentTimezoneDateTime(args[1]);
+                        else
+                            startDatetime = args[1];
+
                         sql += " WHERE id_workplace = " + conn.escape(id_workplace) +
                             " AND datetime >= " + conn.escape(startDatetime);
                         break;
@@ -1383,17 +1405,31 @@ var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
                         smartphone_address = args[0];
 
                         switch (args[1].length) {
+                            case 10:
                             case 19:
                             case 39:
-                                startDatetime = currentTime.convertCurrentTimezoneDateTime(args[1]);
-                                endDatetime = currentTime.convertCurrentTimezoneDateTime(args[2]);
+                                if (args[0].length != 10)
+                                    startDatetime = currentTime.convertCurrentTimezoneDateTime(args[1]);
+                                else
+                                    startDatetime = args[1];
+
+                                if (args[1].length != 10)
+                                    endDatetime = currentTime.convertCurrentTimezoneDateTime(args[2]);
+                                else
+                                    endDatetime = args[2];
+
                                 sql += " WHERE smartphone_address = " + conn.escape(smartphone_address) +
                                     " AND datetime >= " + conn.escape(startDatetime) + " AND datetime <= " + conn.escape(endDatetime);
                                 break;
 
                             default:
                                 id_workplace = args[1];
-                                startDatetime = currentTime.convertCurrentTimezoneDateTime(args[2]);
+
+                                if (args[0].length != 10)
+                                    startDatetime = currentTime.convertCurrentTimezoneDateTime(args[2]);
+                                else
+                                    startDatetime = args[2];
+
                                 sql += " WHERE smartphone_address = " + conn.escape(smartphone_address) +
                                     "AND id_workplace = " + conn.escape(id_workplace) + " AND datetime >= " + conn.escape(startDatetime);
                                 break;
@@ -1402,8 +1438,17 @@ var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
 
                     default:
                         id_workplace = args[0];
-                        startDatetime = currentTime.convertCurrentTimezoneDateTime(args[1]);
-                        endDatetime = currentTime.convertCurrentTimezoneDateTime(args[2]);
+
+                        if (args[0].length != 10)
+                            startDatetime = currentTime.convertCurrentTimezoneDateTime(args[1]);
+                        else
+                            startDatetime = args[1];
+
+                        if (args[1].length != 10)
+                            endDatetime = currentTime.convertCurrentTimezoneDateTime(args[2]);
+                        else
+                            endDatetime = args[2];
+
                         sql += " WHERE id_workplace = " + conn.escape(id_workplace) +
                             " AND datetime >= " + conn.escape(startDatetime) + " AND datetime <= " + conn.escape(endDatetime);
                         break;
@@ -1418,8 +1463,16 @@ var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
 
                 smartphone_address = args[0];
                 id_workplace = args[1];
-                startDatetime = currentTime.convertCurrentTimezoneDateTime(args[2]);
-                endDatetime = currentTime.convertCurrentTimezoneDateTime(args[3]);
+
+                if (args[0].length != 10)
+                    startDatetime = currentTime.convertCurrentTimezoneDateTime(args[2]);
+                else
+                    startDatetime = args[2];
+
+                if (args[1].length != 10)
+                    endDatetime = currentTime.convertCurrentTimezoneDateTime(args[3]);
+                else
+                    endDatetime = args[3];
 
                 sql += " WHERE smartphone_address = " + conn.escape(smartphone_address) +
                     " AND id_workplace = " + conn.escape(id_workplace) +
