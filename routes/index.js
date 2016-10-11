@@ -175,15 +175,15 @@ router.get('/position_department', function(req, res, next) {
         pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
             pool.id_getCompanyName(function(companyName) {
                 pool.id_getDepartmentList(function(departmentListRows) {
-                   pool.id_getPositionList(function(positionListRows) {
-                       res.render('position_department', {
-                           title: title,
-                           userInfo: userInfoRow,
-                           companyName: companyName,
-                           departmentListRows: departmentListRows,
-                           positionListRows: positionListRows
-                       });
-                   });
+                    pool.id_getPositionList(function(positionListRows) {
+                        res.render('position_department', {
+                            title: title,
+                            userInfo: userInfoRow,
+                            companyName: companyName,
+                            departmentListRows: departmentListRows,
+                            positionListRows: positionListRows
+                        });
+                    });
                 });
             });
         });
@@ -307,6 +307,45 @@ router.get('/commute_table', function(req, res, next) {
     }
 });
 
+router.get('/commit_result_test_page', function(req, res, next) {
+    var userEmployeeId = req.session.user_employee_id;
+    var userSmartphoneAddress = req.session.user_smartphone_address;
+
+    var oneMonthAgoDate = new Date();
+    oneMonthAgoDate.setMonth(oneMonthAgoDate.getMonth() - 1);
+    oneMonthAgoDate.setHours(0, 0, 0);
+
+    var todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59);
+
+    if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
+        pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
+            if (userInfoRow.permission == 0) {
+                res.send("<script>alert('서비스 이용 권한이 없습니다'); location.href='/';</script>");
+            } else {
+                pool.id_getCompanyName(function(companyName) {
+                    pool.chart_getTodayComeInTime(function(allTodayComeInTime) {
+                        pool.chart_getTodayComeOutTime(function(allTodayComeOutTime) {
+                            pool.chart_getTodayWorkTime(function(allTodayWorkTime) {
+                                res.render('commit_result_test_page', {
+                                    title: title,
+                                    userInfo: userInfoRow,
+                                    companyName: companyName,
+                                    allTodayComeInTime: allTodayComeInTime,
+                                    allTodayComeOutTime: allTodayComeOutTime,
+                                    allTodayWorkingTime: allTodayWorkTime
+                                });
+                            });
+                        });
+                    });
+                });
+            }
+        });
+    } else {
+        res.send("<script>location.href='/';</script>");
+    }
+});
+
 router.get('/logout', function(req, res, next) {
     req.session.destroy(function(err) {
         if (err)
@@ -330,6 +369,7 @@ router.post("/", function(req, res) {
             res.send("<script>alert('Check your password!'); history.go(-1);</script>");
         } else if (typeof valid !== "undefined") {
             // Login success
+
             pool.id_getSmartphoneAddress(signin_id, function (smartphone_address) {
                 req.session.user_employee_id = signin_id;
                 req.session.user_smartphone_address = smartphone_address;
@@ -722,7 +762,7 @@ router.post('/position_department', function(req, res, next) {
                             res.send("<script>alert('Server error'); history.go(-1);</script>");
                         }
                     });
-                    
+
                     break;
 
                 case "department_delete":

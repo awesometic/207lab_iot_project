@@ -672,14 +672,14 @@ var id_addDepartment = function(name, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
-        
+
         conn.query("INSERT INTO department (name) VALUES (?)", [name], function(err, rows) {
             conn.release();
-            
+
             if (err) {
                 console.error(err);
             }
-            
+
             if (typeof callback === "function") {
                 callback(true);
             }
@@ -713,11 +713,11 @@ var id_deleteDepartment = function(id, callback) {
 
         conn.query("DELETE FROM department WHERE id = ?", [id], function(err, rows) {
             conn.release();
-            
+
             if (err) {
                 console.error(err);
             }
-            
+
             if (typeof callback === "function") {
                 callback(true);
             }
@@ -930,16 +930,16 @@ var id_editWorkStartEndTime = function(work_start_time, work_end_time, callback)
 
         conn.query("UPDATE common SET work_start_time = ?, work_end_time = ?"
             ,[work_start_time, work_end_time], function(err, rows) {
-            conn.release();
+                conn.release();
 
-            if (err) {
-                console.error(err);
-            }
+                if (err) {
+                    console.error(err);
+                }
 
-            if (typeof callback === "function") {
-                callback(true);
-            }
-        });
+                if (typeof callback === "function") {
+                    callback(true);
+                }
+            });
     });
 };
 
@@ -1273,7 +1273,7 @@ var chart_getPopulationOfDepartments = function(callback) {
 var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
     var smartphone_address; // 00:00:00:00:00:00
     var id_workplace;
-    var startDatetime; // 0000-00-00 00:00:00
+    var startDatetime;
     var endDatetime;
 
     var sql = "SELECT DATE_FORMAT(datetime, '%Y-%m-%d %H:%i:%s') AS datetime" +
@@ -1318,7 +1318,8 @@ var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
                         break;
 
                     case 19:
-                        startDatetime= currentTime.getCurrentTimezoneDateTime(args[0]);
+                    case 39:
+                        startDatetime= currentTime.convertCurrentTimezoneDateTime(args[0]);
 
                         sql += " WHERE datetime >= " + conn.escape(startDatetime);
                         break;
@@ -1340,7 +1341,8 @@ var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
 
                         switch (args[1].length) {
                             case 19:
-                                startDatetime = currentTime.getCurrentTimezoneDateTime(args[1]);
+                            case 39:
+                                startDatetime = currentTime.convertCurrentTimezoneDateTime(args[1]);
                                 sql += " WHERE smartphone_address = " + conn.escape(smartphone_address) +
                                     " AND datetime >= "  + conn.escape(startDatetime);
                                 break;
@@ -1354,8 +1356,9 @@ var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
                         break;
 
                     case 19:
-                        startDatetime = currentTime.getCurrentTimezoneDateTime(args[0]);
-                        endDatetime = currentTime.getCurrentTimezoneDateTime(args[1]);
+                    case 39:
+                        startDatetime = currentTime.convertCurrentTimezoneDateTime(args[0]);
+                        endDatetime = currentTime.convertCurrentTimezoneDateTime(args[1]);
 
                         sql += " WHERE datetime >= " + conn.escape(startDatetime) +
                             " AND datetime <= " + conn.escape(endDatetime);
@@ -1363,7 +1366,7 @@ var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
 
                     default:
                         id_workplace = args[0];
-                        startDatetime = currentTime.getCurrentTimezoneDateTime(args[1]);
+                        startDatetime = currentTime.convertCurrentTimezoneDateTime(args[1]);
                         sql += " WHERE id_workplace = " + conn.escape(id_workplace) +
                             " AND datetime >= " + conn.escape(startDatetime);
                         break;
@@ -1381,15 +1384,16 @@ var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
 
                         switch (args[1].length) {
                             case 19:
-                                startDatetime = currentTime.getCurrentTimezoneDateTime(args[1]);
-                                endDatetime = currentTime.getCurrentTimezoneDateTime(args[2]);
+                            case 39:
+                                startDatetime = currentTime.convertCurrentTimezoneDateTime(args[1]);
+                                endDatetime = currentTime.convertCurrentTimezoneDateTime(args[2]);
                                 sql += " WHERE smartphone_address = " + conn.escape(smartphone_address) +
                                     " AND datetime >= " + conn.escape(startDatetime) + " AND datetime <= " + conn.escape(endDatetime);
                                 break;
 
                             default:
                                 id_workplace = args[1];
-                                startDatetime = currentTime.getCurrentTimezoneDateTime(args[2]);
+                                startDatetime = currentTime.convertCurrentTimezoneDateTime(args[2]);
                                 sql += " WHERE smartphone_address = " + conn.escape(smartphone_address) +
                                     "AND id_workplace = " + conn.escape(id_workplace) + " AND datetime >= " + conn.escape(startDatetime);
                                 break;
@@ -1398,8 +1402,8 @@ var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
 
                     default:
                         id_workplace = args[0];
-                        startDatetime = currentTime.getCurrentTimezoneDateTime(args[1]);
-                        endDatetime = currentTime.getCurrentTimezoneDateTime(args[2]);
+                        startDatetime = currentTime.convertCurrentTimezoneDateTime(args[1]);
+                        endDatetime = currentTime.convertCurrentTimezoneDateTime(args[2]);
                         sql += " WHERE id_workplace = " + conn.escape(id_workplace) +
                             " AND datetime >= " + conn.escape(startDatetime) + " AND datetime <= " + conn.escape(endDatetime);
                         break;
@@ -1414,8 +1418,8 @@ var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
 
                 smartphone_address = args[0];
                 id_workplace = args[1];
-                startDatetime = currentTime.getCurrentTimezoneDateTime(args[2]);
-                endDatetime = currentTime.getCurrentTimezoneDateTime(args[3]);
+                startDatetime = currentTime.convertCurrentTimezoneDateTime(args[2]);
+                endDatetime = currentTime.convertCurrentTimezoneDateTime(args[3]);
 
                 sql += " WHERE smartphone_address = " + conn.escape(smartphone_address) +
                     " AND id_workplace = " + conn.escape(id_workplace) +
@@ -1441,6 +1445,447 @@ var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
             }
         });
     });
+};
+
+/**
+ * Cannot evaluate by each workplace yet
+ * Just shows you first come in to somewhere workplace datetime
+ * @param arg1 will be smartphone address of specific user (option)
+ * @param callback
+ */
+var chart_getTodayComeInTime = function(arg1, callback) {
+    var smartphone_address; // 00:00:00:00:00:00
+
+    var args = [];
+    for (var i = 0; i < arguments.length; i++) {
+        args.push(arguments[i]);
+    }
+
+    callback = args.pop();
+
+    if (args.length > 0) arg1 = args.shift(); else arg1 = null;
+
+    if (arg1 != null) args.push(arg1);
+
+    var resultJsonString = '{ "userList" : [';
+    var resultJson;
+
+    id_getUserList(function(userListRows) {
+        switch (args.length) {
+            case 1:
+                smartphone_address = String(args[0]);
+
+                for (var i = 0; i < userListRows.length; i++) {
+                    if (smartphone_address == userListRows[i].smartphone_address) {
+                        resultJsonString += '{';
+                        resultJsonString += '"todayComeInTime":"' + 'NO DATA' + '",';
+                        resultJsonString += '"id_workplace":"' + 'NO DATA' + '",';
+                        resultJsonString += '"smartphone_address":"' + userListRows[i].smartphone_address + '",';
+                        resultJsonString += '"name_workplace":"' + 'NO DATA' + '",';
+                        resultJsonString += '"name_user":"' + userListRows[i].name + '"';
+                        resultJsonString += '}';
+
+                        break;
+                    }
+                }
+
+                resultJsonString += "]}";
+                resultJson = JSON.parse(resultJsonString);
+
+                chart_getCircumstanceTable(smartphone_address, currentTime.getCurrentDateTime(), function(circumstanceRows) {
+                    for (var i = 0; i < circumstanceRows.length; i++) {
+                        if (circumstanceRows[i].commute_status != 1)
+                            delete circumstanceRows[i];
+                    }
+
+                    var lastIndex = circumstanceRows.length - 1;
+
+                    resultJson.userList[0].todayComeInTime = circumstanceRows[lastIndex].datetime;
+                    resultJson.userList[0].id_workplace = circumstanceRows[lastIndex].id_workplace;
+                    resultJson.userList[0].name_workplace = circumstanceRows[lastIndex].name_workplace;
+
+                    if (typeof callback === "function") {
+                        callback(resultJson);
+                    }
+                });
+
+                break;
+
+            default:
+                for (var i = 0; i < userListRows.length; i++) {
+                    resultJsonString += '{';
+                    resultJsonString += '"todayComeInTime":"' + 'NO DATA' + '",';
+                    resultJsonString += '"id_workplace":"' + 'NO DATA' + '",';
+                    resultJsonString += '"smartphone_address":"' + userListRows[i].smartphone_address + '",';
+                    resultJsonString += '"name_workplace":"' + 'NO DATA' + '",';
+                    resultJsonString += '"name_user":"' + userListRows[i].name + '"';
+                    resultJsonString += '}';
+
+                    if (i < userListRows.length - 1)
+                        resultJsonString += ',';
+                }
+
+                resultJsonString += ']}';
+                resultJson = JSON.parse(resultJsonString);
+
+                chart_getCircumstanceTable(currentTime.getCurrentDateTime(), function (circumstanceRows) {
+                    for (var i = 0; i < circumstanceRows.length; i++) {
+                        if (circumstanceRows[i].commute_status != 1)
+                            delete circumstanceRows[i];
+                    }
+
+                    // Need to modify below to improve performance
+                    for (var i = 0; i < circumstanceRows.length; i++) {
+                        for (var j = 0; j < resultJson.length; j++) {
+                            if (resultJson.userList[j].smartphone_address == circumstanceRows[i].smartphone_address) {
+                                resultJson.userList[i].todayComeInTime = circumstanceRows[i].datetime;
+                                resultJson.userList[i].id_workplace = circumstanceRows[i].id_workplace;
+                                resultJson.userList[i].name_workplace = circumstanceRows[i].name_workplace;
+                            }
+                        }
+                    }
+
+                    if (typeof callback === "function") {
+                        callback(resultJson);
+                    }
+                });
+
+                break;
+        }
+    });
+};
+
+/**
+ * Cannot evaluate by each workplace yet
+ * Just shows you last come out to somewhere workplace datetime
+ * @param arg1 will be smartphone address of specific user (option)
+ * @param callback
+ */
+var chart_getTodayComeOutTime = function(arg1, callback) {
+    var smartphone_address; // 00:00:00:00:00:00
+
+    var args = [];
+    for (var i = 0; i < arguments.length; i++) {
+        args.push(arguments[i]);
+    }
+
+    callback = args.pop();
+
+    if (args.length > 0) arg1 = args.shift(); else arg1 = null;
+
+    if (arg1 != null) args.push(arg1);
+
+    var resultJsonString = '{ "userList" : [';
+    var resultJson;
+
+    id_getUserList(function(userListRows) {
+        switch (args.length) {
+            case 1:
+                smartphone_address = String(args[0]);
+
+                for (var i = 0; i < userListRows.length; i++) {
+                    if (smartphone_address == userListRows[i].smartphone_address) {
+                        resultJsonString += '{';
+                        resultJsonString += '"todayComeOutTime":"' + 'NO DATA' + '",';
+                        resultJsonString += '"id_workplace":"' + 'NO DATA' + '",';
+                        resultJsonString += '"smartphone_address":"' + userListRows[i].smartphone_address + '",';
+                        resultJsonString += '"name_workplace":"' + 'NO DATA' + '",';
+                        resultJsonString += '"name_user":"' + userListRows[i].name + '"';
+                        resultJsonString += '}';
+
+                        break;
+                    }
+                }
+
+                resultJsonString += ']}';
+                resultJson = JSON.parse(resultJsonString);
+
+                chart_getCircumstanceTable(smartphone_address, currentTime.getCurrentDateTime(), function(circumstanceRows) {
+                    for (var i = 0; i < circumstanceRows.length; i++) {
+                        if (circumstanceRows[i].commute_status != 0)
+                            delete circumstanceRows[i];
+                    }
+
+                    resultJson.userList[0].todayComeOutTime = circumstanceRows[0].datetime;
+                    resultJson.userList[0].id_workplace = circumstanceRows[0].id_workplace;
+                    resultJson.userList[0].name_workplace = circumstanceRows[0].name_workplace;
+
+                    if (typeof callback === "function") {
+                        callback(resultJson);
+                    }
+                });
+
+                break;
+
+            default:
+                for (var i = 0; i < userListRows.length; i++) {
+                    resultJsonString += '{';
+                    resultJsonString += '"todayComeOutTime":"' + 'NO DATA' + '",';
+                    resultJsonString += '"id_workplace":"' + 'NO DATA' + '",';
+                    resultJsonString += '"smartphone_address":"' + userListRows[i].smartphone_address + '",';
+                    resultJsonString += '"name_workplace":"' + 'NO DATA' + '",';
+                    resultJsonString += '"name_user":"' + userListRows[i].name + '"';
+                    resultJsonString += '}';
+
+                    if (i < userListRows.length - 1)
+                        resultJsonString += ',';
+                }
+
+                resultJsonString += ']}';
+                resultJson = JSON.parse(resultJsonString);
+
+                chart_getCircumstanceTable(currentTime.getCurrentDateTime(), function (circumstanceRows) {
+                    for (var i = 0; i < circumstanceRows.length; i++) {
+                        if (circumstanceRows[i].commute_status != 0)
+                            delete circumstanceRows[i];
+                    }
+
+                    // Need to modify below to improve performance
+                    for (var i = circumstanceRows.length - 1; i >= 0; i--) {
+                        for (var j = 0; j < resultJson.userList.length; j++) {
+                            if (resultJson.userList[j].smartphone_address == circumstanceRows[i].smartphone_address) {
+                                resultJson.userList[i].todayComeOutTime = circumstanceRows[i].datetime;
+                                resultJson.userList[i].id_workplace = circumstanceRows[i].id_workplace;
+                                resultJson.userList[i].name_workplace = circumstanceRows[i].name_workplace;
+                            }
+                        }
+                    }
+
+                    if (typeof callback === "function") {
+                        callback(resultJson);
+                    }
+                });
+
+                break;
+        }
+    });
+};
+
+/**
+ * Evaluating by each workplace not functioning yet
+ * Only involves today total working time for now
+ * @param arg1 will be smartphone address of specific user (option)
+ * @param callback
+ */
+var chart_getTodayWorkTime = function(arg1, callback) {
+    var smartphone_address; // 00:00:00:00:00:00
+
+    var args = [];
+    for (var i = 0; i < arguments.length; i++) {
+        args.push(arguments[i]);
+    }
+
+    callback = args.pop();
+
+    if (args.length > 0) arg1 = args.shift(); else arg1 = null;
+
+    if (arg1 != null) args.push(arg1);
+
+    var resultJsonString = '{ "userList" : [';
+    var resultJson;
+
+    id_getUserList(function(userListRows) {
+        id_getWorkplaceList(function(workplaceListRows) {
+            switch (args.length) {
+                case 1:
+                    smartphone_address = String(args[0]);
+
+                    for (var i = 0; i < userListRows.length; i++) {
+                        if (smartphone_address == userListRows[i].smartphone_address) {
+                            resultJsonString += '{';
+                            resultJsonString += '"todayWorkingTime":"' + 'UNAVAILABLE' + '",';
+                            resultJsonString += '"smartphone_address":"' + userListRows[i].smartphone_address + '",';
+                            resultJsonString += '"name_user":"' + userListRows[i].name + '",';
+                            resultJsonString += '"workplaceList" : [';
+
+                            for (var j = 0; j < workplaceListRows.length; j++) {
+                                resultJsonString += '{';
+                                resultJsonString += '"id_workplace":"' + workplaceListRows[j].id_workplace + '",';
+                                resultJsonString += '"name_workplace":"' + workplaceListRows[j].name_workplace + '",';
+                                resultJsonString += '"todayWorkingTime":"' + 'UNAVAILABLE' + '"';
+                                resultJsonString += '}';
+
+                                if (j < workplaceListRows.length - 1)
+                                    resultJsonString += ',';
+                            }
+
+                            resultJsonString += ']}';
+
+                            break;
+                        }
+                    }
+
+                    resultJsonString += ']}';
+                    resultJson = JSON.parse(resultJsonString);
+
+                    chart_getTodayComeInTime(smartphone_address, function(todayComeInTime) {
+                        chart_getTodayComeOutTime(smartphone_address, function(todayComeOutTime) {
+                            if (todayComeInTime.userList[0].todayComeInTime != "NO DATA"
+                                && todayComeOutTime.userList[0].todayComeOutTime != "NO DATA") {
+                                var comeInTime = new Date(todayComeInTime.userList[0].todayComeInTime);
+                                var comeOutTime = new Date(todayComeOutTime.userList[0].todayComeOutTime);
+
+                                resultJson.userList[0].todayWorkingTime = (comeOutTime.getTime() - comeInTime.getTime()) / 1000;
+                            }
+
+                            if (typeof callback === "function") {
+                                callback(resultJson);
+                            }
+                        });
+                    });
+
+                    break;
+
+                default:
+                    for (var i = 0; i < userListRows.length; i++) {
+                        resultJsonString += '{';
+                        resultJsonString += '"todayWorkingTime":"' + 'UNAVAILABLE' + '",';
+                        resultJsonString += '"smartphone_address":"' + userListRows[i].smartphone_address + '",';
+                        resultJsonString += '"name_user":"' + userListRows[i].name + '",';
+                        resultJsonString += '"workplaceList" : [';
+
+                        for (var j = 0; j < workplaceListRows.length; j++) {
+                            resultJsonString += '{';
+                            resultJsonString += '"id_workplace":"' + workplaceListRows[j].id_workplace + '",';
+                            resultJsonString += '"name_workplace":"' + workplaceListRows[j].name_workplace + '",';
+                            resultJsonString += '"todayWorkingTime":"' + 'UNAVAILABLE' + '"';
+                            resultJsonString += '}';
+
+                            if (j < workplaceListRows.length - 1)
+                                resultJsonString += ',';
+                        }
+
+                        resultJsonString += ']}';
+
+                        if (i < userListRows.length - 1)
+                            resultJsonString += ',';
+                    }
+
+                    resultJsonString += ']}';
+                    resultJson = JSON.parse(resultJsonString);
+
+                    chart_getTodayComeInTime(function(todayComeInTime) {
+                        chart_getTodayComeOutTime(function(todayComeOutTime) {
+                            for (var i = 0; i < todayComeInTime.userList.length; i++) {
+                                if (todayComeInTime.userList[i].todayComeInTime != "NO DATA"
+                                    && todayComeOutTime.userList[i].todayComeOutTime != "NO DATA") {
+                                    var comeInTime = new Date(todayComeInTime.userList[i].todayComeInTime);
+                                    var comeOutTime = new Date(todayComeOutTime.userList[i].todayComeOutTime);
+
+                                    resultJson.userList[i].todayWorkingTime = (comeOutTime.getTime() - comeInTime.getTime()) / 1000;
+                                }
+                            }
+
+                            if (typeof callback === "function") {
+                                callback(resultJson);
+                            }
+                        });
+                    });
+
+                    break;
+            }
+        });
+    });
+};
+
+/**
+ * To get average come to work time at specific period
+ * The sequence of each parameters is important due to setting up period if it's needed
+ * @param arg1 will be start date
+ * @param arg2 will be end date (option)
+ * @param arg3 will be smartphone address of specific user (option)
+ * @param callback
+ */
+var chart_getAvgComeInTime = function(arg1, arg2, arg3, callback) {
+    var startDatetime;
+    var endDatetime;
+    var smartphone_address; // 00:00:00:00:00:00
+
+    var sql = "SELECT DATE_FORMAT(datetime, '%Y-%m-%d %H:%i:%s') AS datetime" +
+        ", id_workplace, smartphone_address, commute_status" +
+        " FROM circumstance";
+
+    var args = [];
+    for (var i = 0; i < arguments.length; i++) {
+        args.push(arguments[i]);
+    }
+
+    callback = args.pop();
+
+    if (args.length > 0) arg1 = args.shift(); else arg1 = null;
+    if (args.length > 0) arg2 = args.shift(); else arg2 = null;
+    if (args.length > 0) arg3 = args.shift(); else arg3 = null;
+
+    if (arg1 != null) args.push(arg1);
+    if (arg2 != null) args.push(arg2);
+    if (arg3 != null) args.push(arg3);
+
+    pool.getConnection(function(err, conn) {
+        if (err) {
+            console.error(err);
+        }
+
+        switch (args.length) {
+            case 1:
+                args[0] = String(args[0]);
+                startDatetime = currentTime.convertCurrentTimezoneDateTime(args[0]);
+
+                break;
+
+            case 2:
+                args[0] = String(args[0]);
+                args[1] = String(args[1]);
+
+                break;
+
+            case 3:
+                args[0] = String(args[0]);
+                args[1] = String(args[1]);
+                args[2] = String(args[2]);
+
+                break;
+
+            default:
+
+                break;
+        }
+
+        conn.query(sql, function (err, rows) {
+            conn.release();
+
+            if (err) {
+                console.error(err);
+            }
+
+            if (typeof callback === "function") {
+                callback(rows);
+            }
+        });
+    });
+};
+
+/**
+ * To get average come out of work time at specific period
+ * The sequence of each parameters is important due to setting up period if it's needed
+ * @param arg1 will be start date
+ * @param arg2 will be end date (option)
+ * @param arg3 will be smartphone address of specific user (option)
+ * @param callback
+ */
+var chart_getAvgComeOutTime = function(arg1, arg2, arg3, callback) {
+
+};
+
+/**
+ * To get average time on work at specific period
+ * The sequence of each parameters is important due to setting up period if it's needed
+ * @param arg1 will be start date
+ * @param arg2 will be end date (option)
+ * @param arg3 will be smartphone address of specific user (option)
+ * @param callback
+ */
+var chart_getAvgWorkTime = function(arg1, arg2, arg3, callback) {
+
 };
 
 /* Exports */
@@ -1516,3 +1961,9 @@ module.exports.soc_amIRegistered            = soc_amIRegistered;
 /* Chart */
 module.exports.chart_getPopulOfDepartment   = chart_getPopulationOfDepartments;
 module.exports.chart_getCircumstanceTable   = chart_getCircumstanceTable;
+module.exports.chart_getTodayComeInTime     = chart_getTodayComeInTime;
+module.exports.chart_getTodayComeOutTime    = chart_getTodayComeOutTime;
+module.exports.chart_getTodayWorkTime       = chart_getTodayWorkTime;
+module.exports.chart_getAvgComeInTime       = chart_getAvgComeInTime;
+module.exports.chart_getAvgComeOutTime      = chart_getAvgComeOutTime;
+module.exports.chart_getAvgWorkTime         = chart_getAvgWorkTime;

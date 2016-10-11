@@ -71,7 +71,9 @@ io.on("connection", function(socket) {
                                     contentJsonString += "\"requestSuccess\":\"" + true + "\"";
                                     contentJsonString += " }";
 
-                                    socket.emit("circumstance_answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
+                                    socket.emit("circumstance_answer",
+                                        analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
+
                                     logger("socket").info("Circumstance", "New commute record: \n\tRegister success - " + commuteStatus);
                                 } else {
                                     logger("socket").info("Circumstance", "New commute record: \n\tRegister fail: Database connection problem");

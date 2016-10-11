@@ -41,12 +41,13 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                환경 설정
-                <small>IoT 기반 출퇴근 현황 관리 서비스의 전반적 환경 설정</small>
+                출퇴근 현황 테스트
+                <small>출퇴근 현황 테스트 페이지</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="dashboard"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-                <li class="active">환경 설정</li>
+                <li><a href="#"> 근무 기록 조회</a></li>
+                <li class="active"> 출퇴근 현황 테스트</li>
             </ol>
         </section>
 
@@ -66,8 +67,8 @@
                             <div class="alert alert-warning alert-dismissible">
                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                                 <h4><i class="icon fa fa-warning"></i> 읽어보세요!</h4>
-                                서비스 전반적인 설정을 위한 장소입니다.<br>
-                                신중히 입력해 주세요.
+                                출퇴근 현황을 임시로 보여주기 위한 테스트 페이지입니다.<br>
+                                이 정보들이 차트 형식으로 시각화되어 표시될 것입니다.
                             </div>
                         </div>
                         <!-- /.box-body -->
@@ -75,88 +76,64 @@
                     <!-- /.box -->
                 </div>
                 <!-- /.col -->
-                <div class="col-sm-6">
+                <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">기업 정보</h3>
-                            <div class="box-tools pull-right">
-                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                            </div>
+                            <h3 class="box-title">출퇴근 현황</h3>
+                            <small> - 평균 값은 지난 한 달 근태 현황에 대한 평균입니다.</small>
                         </div>
                         <!-- /.box-header -->
-                        <form method="post">
-                            <input type="hidden" name="control_flag" value="company_name">
-                            <input type="hidden" name="smartphone_address" value="<%= userInfo.smartphone_address %>">
-                            <div class="box-body">
-                                <div class="form-group">
-                                    <label>기업체 또는 조직 이름</label>
-                                    <input type="text" class="form-control" name="new_company_name" placeholder="<%= companyName %>">
-                                </div>
-                            </div>
-                            <!-- /.box-body -->
-                            <div class="box-footer">
-                                <input class="btn btn-primary pull-right" type="submit" value="저장">
-                            </div>
-                            <!-- /.box-footer -->
-                        </form>
-                    </div>
-                    <!-- /.box -->
-                </div>
-                <!-- /.col -->
-                <div class="col-sm-6">
-                    <div class="box">
-                        <div class="box-header">
-                            <h3 class="box-title">출퇴근 시간 설정</h3>
-                            <div class="box-tools pull-right">
-                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                            </div>
+                        <div class="box-body">
+                            <table id="commit_table" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>스마트폰 주소</th>
+                                    <th>오늘 출근 시간</th>
+                                    <th>오늘 퇴근 시간</th>
+                                    <th>오늘 일 한 시간</th>
+                                    <th>평균 출근 시간</th>
+                                    <th>평균 퇴근 시간</th>
+                                    <th>평균 일 한 시간</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <%
+                                if (typeof allTodayComeInTime !== 'undefined' && typeof allTodayComeOutTime !== 'undefined'
+                                        && typeof allTodayWorkingTime !== 'undefined') {
+                                for (var i = 0; i < allTodayComeInTime.userList.length; i++) {
+                                %>
+                                <tr>
+                                    <td><%= allTodayComeInTime.userList[i].name_user %></td>
+                                    <td><%= allTodayComeInTime.userList[i].smartphone_address %></td>
+                                    <td><%= allTodayComeInTime.userList[i].todayComeInTime %></td>
+                                    <td><%= allTodayComeOutTime.userList[i].todayComeOutTime %></td>
+                                    <td><%= allTodayWorkingTime.userList[i].todayWorkingTime %></td>
+                                    <td>.</td>
+                                    <td>.</td>
+                                    <td>.</td>
+                                </tr>
+                                <% } } %>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>스마트폰 주소</th>
+                                    <th>오늘 출근 시간</th>
+                                    <th>오늘 퇴근 시간</th>
+                                    <th>오늘 일 한 시간</th>
+                                    <th>평균 출근 시간</th>
+                                    <th>평균 퇴근 시간</th>
+                                    <th>평균 일 한 시간</th>
+                                </tr>
+                                </tfoot>
+                            </table>
                         </div>
-                        <!-- /.box-header -->
-                        <form method="post">
-                            <input type="hidden" name="control_flag" value="work_start_end_time">
-                            <input type="hidden" name="smartphone_address" value="<%= userInfo.smartphone_address %>">
-                            <div class="box-body">
-                                <div class="form-group">
-                                    <!-- time Picker -->
-                                    <div class="bootstrap-timepicker">
-                                        <div class="form-group">
-                                            <label>출근 시간</label>
-                                            <div class="input-group">
-                                                <input type="hidden" id="hidden_current_work_start_time" value="<%= workStartTime %>">
-                                                <input type="text" id="timepicker_work_start_time" class="form-control timepicker" name="work_start_time">
-                                                <div class="input-group-addon">
-                                                    <i class="fa fa-clock-o"></i>
-                                                </div>
-                                            </div>
-                                            <!-- /.input group -->
-                                        </div>
-                                        <!-- /.form group -->
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <!-- time Picker -->
-                                    <div class="bootstrap-timepicker">
-                                        <div class="form-group">
-                                            <label>퇴근 시간</label>
-                                            <div class="input-group">
-                                                <input type="hidden" id="hidden_current_work_end_time" value="<%= workEndTime %>">
-                                                <input type="text" id="timepicker_work_end_time" class="form-control timepicker" name="work_end_time">
-                                                <div class="input-group-addon">
-                                                    <i class="fa fa-clock-o"></i>
-                                                </div>
-                                            </div>
-                                            <!-- /.input group -->
-                                        </div>
-                                        <!-- /.form group -->
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /.box-body -->
-                            <div class="box-footer">
-                                <input class="btn btn-primary pull-right" type="submit" value="저장">
-                            </div>
-                            <!-- /.box-footer -->
-                        </form>
+                        <!-- /.box-body -->
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
                     </div>
                     <!-- /.box -->
                 </div>
@@ -224,20 +201,9 @@
 <script>
 
     $(document).ready(function() {
-        //Timepicker
-        $("#timepicker_work_start_time").timepicker({
-            minuteStep: 1,
-            showMeridian: false,
-            defaultTime: $("#hidden_current_work_start_time").val(),
-            showInputs: false
-        });
+        $('#commit_table').DataTable();
 
-        $("#timepicker_work_end_time").timepicker({
-            minuteStep: 1,
-            showMeridian: false,
-            defaultTime: $("#hidden_current_work_end_time").val(),
-            showInputs: false
-        });
+        $('div.pageload_effect').hide();
     });
 
 </script>
