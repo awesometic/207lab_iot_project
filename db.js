@@ -1489,10 +1489,10 @@ var chart_getTodayComeInTime = function(arg1, callback) {
                     }
                 }
 
-                resultJsonString += "]}";
+                resultJsonString += ']}';
                 resultJson = JSON.parse(resultJsonString);
 
-                chart_getCircumstanceTable(smartphone_address, currentTime.getCurrentDateTime(), function(circumstanceRows) {
+                chart_getCircumstanceTable(smartphone_address, currentTime.getCurrentDate(), function(circumstanceRows) {
                     for (var i = 0; i < circumstanceRows.length; i++) {
                         if (circumstanceRows[i].commute_status != 1)
                             delete circumstanceRows[i];
@@ -1528,7 +1528,7 @@ var chart_getTodayComeInTime = function(arg1, callback) {
                 resultJsonString += ']}';
                 resultJson = JSON.parse(resultJsonString);
 
-                chart_getCircumstanceTable(currentTime.getCurrentDateTime(), function (circumstanceRows) {
+                chart_getCircumstanceTable(currentTime.getCurrentDate(), function (circumstanceRows) {
                     for (var i = 0; i < circumstanceRows.length; i++) {
                         if (circumstanceRows[i].commute_status != 1)
                             delete circumstanceRows[i];
@@ -1538,9 +1538,9 @@ var chart_getTodayComeInTime = function(arg1, callback) {
                     for (var i = 0; i < circumstanceRows.length; i++) {
                         for (var j = 0; j < resultJson.length; j++) {
                             if (resultJson.userList[j].smartphone_address == circumstanceRows[i].smartphone_address) {
-                                resultJson.userList[i].todayComeInTime = circumstanceRows[i].datetime;
-                                resultJson.userList[i].id_workplace = circumstanceRows[i].id_workplace;
-                                resultJson.userList[i].name_workplace = circumstanceRows[i].name_workplace;
+                                resultJson.userList[j].todayComeInTime = circumstanceRows[i].datetime;
+                                resultJson.userList[j].id_workplace = circumstanceRows[i].id_workplace;
+                                resultJson.userList[j].name_workplace = circumstanceRows[i].name_workplace;
                             }
                         }
                     }
@@ -1600,7 +1600,7 @@ var chart_getTodayComeOutTime = function(arg1, callback) {
                 resultJsonString += ']}';
                 resultJson = JSON.parse(resultJsonString);
 
-                chart_getCircumstanceTable(smartphone_address, currentTime.getCurrentDateTime(), function(circumstanceRows) {
+                chart_getCircumstanceTable(smartphone_address, currentTime.getCurrentDate(), function(circumstanceRows) {
                     for (var i = 0; i < circumstanceRows.length; i++) {
                         if (circumstanceRows[i].commute_status != 0)
                             delete circumstanceRows[i];
@@ -1634,7 +1634,7 @@ var chart_getTodayComeOutTime = function(arg1, callback) {
                 resultJsonString += ']}';
                 resultJson = JSON.parse(resultJsonString);
 
-                chart_getCircumstanceTable(currentTime.getCurrentDateTime(), function (circumstanceRows) {
+                chart_getCircumstanceTable(currentTime.getCurrentDate(), function (circumstanceRows) {
                     for (var i = 0; i < circumstanceRows.length; i++) {
                         if (circumstanceRows[i].commute_status != 0)
                             delete circumstanceRows[i];
@@ -1644,9 +1644,9 @@ var chart_getTodayComeOutTime = function(arg1, callback) {
                     for (var i = circumstanceRows.length - 1; i >= 0; i--) {
                         for (var j = 0; j < resultJson.userList.length; j++) {
                             if (resultJson.userList[j].smartphone_address == circumstanceRows[i].smartphone_address) {
-                                resultJson.userList[i].todayComeOutTime = circumstanceRows[i].datetime;
-                                resultJson.userList[i].id_workplace = circumstanceRows[i].id_workplace;
-                                resultJson.userList[i].name_workplace = circumstanceRows[i].name_workplace;
+                                resultJson.userList[j].todayComeOutTime = circumstanceRows[i].datetime;
+                                resultJson.userList[j].id_workplace = circumstanceRows[i].id_workplace;
+                                resultJson.userList[j].name_workplace = circumstanceRows[i].name_workplace;
                             }
                         }
                     }
