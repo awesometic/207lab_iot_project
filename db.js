@@ -1584,7 +1584,7 @@ var chart_getTodayComeInTime = function(arg1, callback) {
                 chart_getCircumstanceTable(currentTime.getCurrentDate(), function (circumstanceRows) {
                     // Need to modify below to improve performance
                     for (var i = 0; i < circumstanceRows.length; i++) {
-                        for (var j = 0; j < resultJson.length; j++) {
+                        for (var j = 0; j < resultJson.userList.length; j++) {
                             if (resultJson.userList[j].smartphone_address == circumstanceRows[i].smartphone_address) {
                                 if (circumstanceRows[i].commute_status == 1) {
                                     resultJson.userList[j].todayComeInTime = circumstanceRows[i].datetime;

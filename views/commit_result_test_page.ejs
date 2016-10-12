@@ -108,7 +108,21 @@
                                     <td><%= allTodayComeInTime.userList[i].smartphone_address %></td>
                                     <td><%= allTodayComeInTime.userList[i].todayComeInTime %></td>
                                     <td><%= allTodayComeOutTime.userList[i].todayComeOutTime %></td>
+                                    <%
+                                        if (allTodayWorkingTime.userList[i].todayWorkingTime != 'UNAVAILABLE') {
+                                            var totalWorkingTimeSec = allTodayWorkingTime.userList[i].todayWorkingTime;
+                                            var workingTimeSec = Math.floor(totalWorkingTimeSec % 60);
+                                            var workingTimeMin = Math.floor(totalWorkingTimeSec / 60);
+                                            var workingTimeHour = Math.floor(totalWorkingTimeSec / 3600);
+                                    %>
+                                    <td><%= workingTimeHour %> 시간 <%= workingTimeMin %> 분 <%= workingTimeSec %> 초</td>
+                                    <%
+                                        } else {
+                                    %>
                                     <td><%= allTodayWorkingTime.userList[i].todayWorkingTime %></td>
+                                    <%
+                                        }
+                                    %>
                                     <td>.</td>
                                     <td>.</td>
                                     <td>.</td>
