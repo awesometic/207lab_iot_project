@@ -445,7 +445,7 @@ router.post('/member', function(req, res, next) {
 
             pool.id_checkUserRegistered(signup_smartphone_address, signup_id, function (valid) {
                 if (valid) {
-                    pool.id_registerUser(signup_smartphone_address, signup_id, signup_name, signup_pw, signup_department, signup_position, 0, 0, function (valid) {
+                    pool.id_registerUser(signup_smartphone_address, signup_id, signup_name, signup_pw, signup_department, signup_position, 0, function (valid) {
                         if (valid) {
                             res.send("<script>alert('Register success!'); location.href='/member';</script>");
                         } else {
