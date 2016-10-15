@@ -100,32 +100,59 @@
                                 <tbody>
                                 <%
                                 if (typeof allTodayComeInTime !== 'undefined' && typeof allTodayComeOutTime !== 'undefined'
-                                        && typeof allTodayWorkingTime !== 'undefined') {
+                                        && typeof allTodayWorkingTime !== 'undefined' && typeof allAvgComeInTime !== 'undefined'
+                                        && typeof allAvgComeOutTime !== 'undefined' && typeof allAvgWorkingTime !== 'undefined') {
                                 for (var i = 0; i < allTodayComeInTime.userList.length; i++) {
                                 %>
                                 <tr>
                                     <td><%= allTodayComeInTime.userList[i].name_user %></td>
                                     <td><%= allTodayComeInTime.userList[i].smartphone_address %></td>
-                                    <td><%= allTodayComeInTime.userList[i].todayComeInTime %></td>
-                                    <td><%= allTodayComeOutTime.userList[i].todayComeOutTime %></td>
+
+                                    <!-- 오늘 출근 시간 -->
+                                    <% if (allTodayComeInTime.userList[i].todayComeInTime == 'NO DATA') { %>
+                                    <td><%= allTodayComeInTime.userList[i].todayComeInTime; %></td>
+                                    <% } else { %>
+                                    <td><%= allTodayComeInTime.userList[i].todayComeInTime.split(' ')[1] %></td>
+                                    <% } %>
+
+                                    <!-- 오늘 퇴근 시간 -->
+                                    <% if (allTodayComeOutTime.userList[i].todayComeOutTime == 'NO DATA') { %>
+                                    <td><%= allTodayComeOutTime.userList[i].todayComeOutTime; %></td>
+                                    <% } else { %>
+                                    <td><%= allTodayComeOutTime.userList[i].todayComeOutTime.split(' ')[1] %></td>
+                                    <% } %>
+
+                                    <!-- 오늘 일 한 시간 -->
                                     <%
-                                        if (allTodayWorkingTime.userList[i].todayWorkingTime != 'UNAVAILABLE') {
-                                            var totalWorkingTimeSec = allTodayWorkingTime.userList[i].todayWorkingTime;
-                                            var workingTimeSec = Math.floor(totalWorkingTimeSec % 60);
-                                            var workingTimeMin = Math.floor(totalWorkingTimeSec / 60);
-                                            var workingTimeHour = Math.floor(totalWorkingTimeSec / 3600);
+                                    if (allTodayWorkingTime.userList[i].todayWorkingTime != 'UNAVAILABLE') {
+                                        var totalWorkingTimeSec = allTodayWorkingTime.userList[i].todayWorkingTime;
+                                        var workingTimeSec = Math.floor(totalWorkingTimeSec % 60);
+                                        var workingTimeMin = Math.floor(totalWorkingTimeSec / 60) % 60;
+                                        var workingTimeHour = Math.floor(totalWorkingTimeSec / 3600);
                                     %>
                                     <td><%= workingTimeHour %> 시간 <%= workingTimeMin %> 분 <%= workingTimeSec %> 초</td>
-                                    <%
-                                        } else {
-                                    %>
+                                    <% } else { %>
                                     <td><%= allTodayWorkingTime.userList[i].todayWorkingTime %></td>
+                                    <% } %>
+
+                                    <!-- 평균 출근 시간 -->
+                                    <td><%= allAvgComeInTime.userList[i].avgComeInTime %></td>
+
+                                    <!-- 평균 퇴근 시간 -->
+                                    <td><%= allAvgComeOutTime.userList[i].avgComeOutTime %></td>
+
+                                    <!-- 평균 일 한 시간 -->
                                     <%
-                                        }
+                                    if (allAvgWorkingTime.userList[i].avgWorkingTime != 'UNAVAILABLE') {
+                                        var totalWorkingTimeSec = allAvgWorkingTime.userList[i].avgWorkingTime;
+                                        var workingTimeSec = Math.floor(totalWorkingTimeSec % 60);
+                                        var workingTimeMin = Math.floor(totalWorkingTimeSec / 60) % 60;
+                                        var workingTimeHour = Math.floor(totalWorkingTimeSec / 3600);
                                     %>
-                                    <td>.</td>
-                                    <td>.</td>
-                                    <td>.</td>
+                                    <td><%= workingTimeHour %> 시간 <%= workingTimeMin %> 분 <%= workingTimeSec %> 초</td>
+                                    <% } else { %>
+                                    <td><%= allAvgWorkingTime.userList[i].avgWorkingTime %></td>
+                                    <% } %>
                                 </tr>
                                 <% } } %>
                                 </tbody>

@@ -315,8 +315,8 @@ router.get('/commit_result_test_page', function(req, res, next) {
     oneMonthAgoDate.setMonth(oneMonthAgoDate.getMonth() - 1);
     oneMonthAgoDate.setHours(0, 0, 0);
 
-    var todayEnd = new Date();
-    todayEnd.setHours(23, 59, 59);
+    var todayEndDate = new Date();
+    todayEndDate.setHours(23, 59, 59);
 
     if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
         pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
@@ -326,14 +326,23 @@ router.get('/commit_result_test_page', function(req, res, next) {
                 pool.id_getCompanyName(function(companyName) {
                     pool.chart_getTodayComeInTime(function(allTodayComeInTime) {
                         pool.chart_getTodayComeOutTime(function(allTodayComeOutTime) {
-                            pool.chart_getTodayWorkTime(function(allTodayWorkTime) {
-                                res.render('commit_result_test_page', {
-                                    title: title,
-                                    userInfo: userInfoRow,
-                                    companyName: companyName,
-                                    allTodayComeInTime: allTodayComeInTime,
-                                    allTodayComeOutTime: allTodayComeOutTime,
-                                    allTodayWorkingTime: allTodayWorkTime
+                            pool.chart_getTodayWorkTime(function(allTodayWorkingTime) {
+                                pool.chart_getAvgComeInTime(oneMonthAgoDate, todayEndDate, function(allAvgComeInTime) {
+                                    pool.chart_getAvgComeOutTime(oneMonthAgoDate, todayEndDate, function(allAvgComeOutTime) {
+                                        pool.chart_getAvgWorkTime(oneMonthAgoDate, todayEndDate, function(allAvgWorkingTime) {
+                                            res.render('commit_result_test_page', {
+                                                title: title,
+                                                userInfo: userInfoRow,
+                                                companyName: companyName,
+                                                allTodayComeInTime: allTodayComeInTime,
+                                                allTodayComeOutTime: allTodayComeOutTime,
+                                                allTodayWorkingTime: allTodayWorkingTime,
+                                                allAvgComeInTime: allAvgComeInTime,
+                                                allAvgComeOutTime: allAvgComeOutTime,
+                                                allAvgWorkingTime: allAvgWorkingTime
+                                            });
+                                        });
+                                    });
                                 });
                             });
                         });
