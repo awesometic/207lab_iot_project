@@ -2619,8 +2619,6 @@ var chart_getAvgWorkTime = function(arg1, arg2, arg3, callback) {
                                 }
                             }
 
-                            console.log(resultJson);
-
                             if (typeof callback === "function") {
                                 callback(resultJson);
                             }

@@ -15,7 +15,6 @@ router.get('/', function(req, res, next) {
 
     if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
         pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
-
             pool.id_getCompanyName(function (companyName) {
                 res.render('dashboard', {
                     title: title,
@@ -38,34 +37,12 @@ router.get('/dashboard', function(req, res, next) {
 
     if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
         pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
-
             pool.id_getCompanyName(function (companyName) {
                 res.render('dashboard', {
                     title: title,
                     userInfo: userInfoRow,
                     companyName: companyName
                 });
-            });
-        });
-    } else {
-        res.send("<script>location.href='/';</script>");
-    }
-});
-
-router.get('/profile', function(req, res, next) {
-    var userEmployeeId = req.session.user_employee_id;
-    var userSmartphoneAddress = req.session.user_smartphone_address;
-
-    if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
-        pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
-            pool.id_getCompanyName(function(companyName) {
-
-                res.render('profile', {
-                    title: title,
-                    userInfo: userInfoRow,
-                    companyName: companyName
-                });
-
             });
         });
     } else {
@@ -361,6 +338,46 @@ router.get('/logout', function(req, res, next) {
             console.error("err", err);
         res.send("<script> location.href='/';</script>");
     });
+});
+
+router.get('/dashboard_deprecated', function(req, res, next) {
+    var userEmployeeId = req.session.user_employee_id;
+    var userSmartphoneAddress = req.session.user_smartphone_address;
+
+    if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
+        pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
+            pool.id_getCompanyName(function (companyName) {
+                res.render('dashboard_deprecated', {
+                    title: title,
+                    userInfo: userInfoRow,
+                    companyName: companyName
+                });
+            });
+        });
+    } else {
+        res.send("<script>location.href='/';</script>");
+    }
+});
+
+router.get('/profile_deprecated', function(req, res, next) {
+    var userEmployeeId = req.session.user_employee_id;
+    var userSmartphoneAddress = req.session.user_smartphone_address;
+
+    if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
+        pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
+            pool.id_getCompanyName(function(companyName) {
+
+                res.render('profile_deprecated', {
+                    title: title,
+                    userInfo: userInfoRow,
+                    companyName: companyName
+                });
+
+            });
+        });
+    } else {
+        res.send("<script>location.href='/';</script>");
+    }
 });
 
 /* POST */
