@@ -71,7 +71,8 @@
 <!-- iCheck -->
 <script src="../../plugins/iCheck/icheck.min.js"></script>
 <script>
-    $(function () {
+
+    $(document).ready(function() {
         $('input').iCheck({
             checkboxClass: 'icheckbox_square-blue',
             radioClass: 'iradio_square-blue',
@@ -79,9 +80,10 @@
         });
 
         $('[data-toggle="popover"]').popover({
-            content: "스마트폰에 앱을 설치하신 후, 해당 앱을 통해 가입 신청을 하실 수 있습니다."
+            content: "스마트폰에 앱을 설치하신 후, 해당 앱을 통해 가입 신청 및 관리자의 가입 허가 후 서비스를 이용하실 수 있습니다."
         });
     });
+
 </script>
 </body>
 </html>
