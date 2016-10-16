@@ -24,6 +24,7 @@
             <li class=""><a href="dashboard"><i class="fa fa-bell"></i><span> 요약 정보</span></a></li>
             <!--<li><a href="profile"><i class="fa fa-user"></i><span> 개인 정보</span></a></li>-->
 
+            <% if (userInfo.permission) { %>
             <!-- 근무기록조회 사이드바 -->
             <li class="treeview">
                 <a href="#">
@@ -60,7 +61,7 @@
                 </ul>
             </li>
             <li class=""><a href="service_environment"><i class="fa fa-cog"></i><span> 환경 설정</span></a></li>
-            <% } %>
+            <% } } %>
         </ul>
 
         <!-- /.sidebar-menu -->

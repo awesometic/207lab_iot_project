@@ -161,7 +161,7 @@ var id_getUserList = function(callback) {
         conn.query("SELECT smartphone_address, employee_number, name, id_department, id_position," +
             " (SELECT name FROM department WHERE identity.id_department = department.id) AS department," +
             " (SELECT name FROM position WHERE identity.id_position = position.id) AS position, " +
-            " admin FROM identity", function(err, rows) {
+            " permission, admin FROM identity", function(err, rows) {
             conn.release();
 
             if (err) {
@@ -182,7 +182,7 @@ var id_getUserInfo = function(smartphone_address, callback) {
         conn.query("SELECT smartphone_address, employee_number, name, id_department, id_position," +
             " (SELECT name FROM department WHERE identity.id_department = department.id) AS department," +
             " (SELECT name FROM position WHERE identity.id_position = position.id) AS position, " +
-            " admin FROM identity WHERE smartphone_address = ?", [smartphone_address], function(err, rows) {
+            " permission, admin FROM identity WHERE smartphone_address = ?", [smartphone_address], function(err, rows) {
             conn.release();
 
             if (err) {
