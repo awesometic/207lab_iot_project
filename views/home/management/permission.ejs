@@ -7,20 +7,18 @@
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.6 -->
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
     <!-- DataTables -->
-    <link rel="stylesheet" href="plugins/datatables/dataTables.bootstrap.css">
-    <!-- Select2 -->
-    <link rel="stylesheet" href="../../plugins/select2/select2.min.css">
+    <link rel="stylesheet" href="../../plugins/datatables/dataTables.bootstrap.css">
     <!-- Theme style -->
-    <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../../dist/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. -->
-    <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="../../dist/css/skins/_all-skins.min.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -32,22 +30,22 @@
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
-    <% include nav.ejs %>
+    <% include ../../nav.ejs %>
 
-    <% include sidenav.ejs %>
+    <% include ../../sidenav.ejs %>
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                직원 관리
-                <small>각 직원의 정보를 열람 및 수정</small>
+                가입 허가
+                <small>가입 신청을 한 직원들의 서비스 사용 허가</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
                 <li><a href="#">관리</a></li>
-                <li class="active">직원 관리</li>
+                <li class="active">가입 허가</li>
             </ol>
         </section>
 
@@ -58,49 +56,57 @@
                     <div class="box">
                         <div class="box-header">
                             <h3 class="box-title">직원 목록</h3>
-                            <a id="open_add_modal_button" class="btn btn-success btn-md pull-right">직원 추가</a>
+                            <a id="permit_send" class="btn btn-success btn-md pull-right">가입 허가</a>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
                             <table id="member_table" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
+                                    <th><input type="checkbox" id="checkall"></th>
                                     <th>이름</th>
                                     <th>사원 번호</th>
                                     <th>블루투스 주소</th>
                                     <th>부서</th>
                                     <th>직급</th>
                                     <th>관리자 권한</th>
+                                    <th>권한 레벨</th>
                                     <th>수정</th>
                                     <th>삭제</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <%
-                                if (typeof userListRows !== 'undefined') {
-                                for (var i = 0; i < userListRows.length; i++) {
-                                %>
-                                <tr>
-                                    <input type="hidden" class="each_user_info_<%= i %>" value="<%= JSON.stringify(userListRows[i]) %>">
-                                    <td><%= userListRows[i].name %></td>
-                                    <td><%= userListRows[i].employee_number %></td>
-                                    <td><%= userListRows[i].smartphone_address %></td>
-                                    <td><%= userListRows[i].department %></td>
-                                    <td><%= userListRows[i].position %></td>
-                                    <td><% if (userListRows[i].admin == 1) { %><span class="glyphicon glyphicon-ok"></span><% } else { %>&nbsp;<% } %></td>
-                                    <td><a class="open_modify_modal_button btn btn-primary btn-xs" role="dialog" title="<%= i %>"><span class="glyphicon glyphicon-pencil"></span></a></td>
-                                    <td><a class="open_delete_modal_button btn btn-danger btn-xs" role="dialog" title="<%= i %>"><span class="glyphicon glyphicon-trash"></span></a></td>
-                                </tr>
-                                <% } } %>
+                                <form>
+                                    <%
+                                    if (typeof deniedUserListRows !== 'undefined') {
+                                    for (var i = 0; i < deniedUserListRows.length; i++) {
+                                    %>
+                                    <tr>
+                                        <input type="hidden" class="each_user_info_<%= i %>" value="<%= JSON.stringify(deniedUserListRows[i]) %>">
+                                        <td><input type="checkbox" name="checkbox_permit" value="<%= i %>"></td>
+                                        <td><%= deniedUserListRows[i].name %></td>
+                                        <td><%= deniedUserListRows[i].employee_number %></td>
+                                        <td><%= deniedUserListRows[i].smartphone_address %></td>
+                                        <td><%= deniedUserListRows[i].department %></td>
+                                        <td><%= deniedUserListRows[i].position %></td>
+                                        <td><% if (deniedUserListRows[i].admin == 1) { %><span class="glyphicon glyphicon-ok"></span><% } else { %>&nbsp;<% } %></td>
+                                        <td><%= deniedUserListRows[i].permission_level %></td>
+                                        <td><a class="open_modify_modal_button btn btn-primary btn-xs" role="dialog" title="<%= i %>"><span class="glyphicon glyphicon-pencil"></span></a></td>
+                                        <td><a class="open_delete_modal_button btn btn-danger btn-xs" role="dialog" title="<%= i %>"><span class="glyphicon glyphicon-trash"></span></a></td>
+                                    </tr>
+                                    <% } } %>
+                                </form>
                                 </tbody>
                                 <tfoot>
                                 <tr>
+                                    <th> </th>
                                     <th>이름</th>
                                     <th>사원 번호</th>
                                     <th>블루투스 주소</th>
                                     <th>부서</th>
                                     <th>직급</th>
                                     <th>관리자 권한</th>
+                                    <th>권한 레벨</th>
                                     <th>수정</th>
                                     <th>삭제</th>
                                 </tr>
@@ -123,62 +129,6 @@
     </div>
     <!-- /.content-wrapper -->
 
-    <div id="modal_add_form" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <form class="form-horizontal" role="form" method="post">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title text-center">직원 직접 추가</h4>
-                        <small>직원을 직접 추가할 경우,<br>스마트폰 블루투스 주소를 정확히 입력하셔야 합니다</small>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" name="user_control_flag" value="add">
-                        <div class="form-group" >
-                            <input id="input_add_name" class="form-control" type="text" name="name" placeholder="이름">
-                        </div>
-                        <div class="form-group" >
-                            <input id="input_add_employee_number" class="form-control" type="text" name="employee_number" placeholder="사원 번호">
-                        </div>
-                        <div class="form-group" >
-                            <input id="input_add_smartphone_address" class="form-control" type="text" name="smartphone_address" placeholder="블루투스 주소">
-                        </div>
-                        <div class="form-group" >
-                            <label>부서 선택</label>
-                            <select class="form-control select2" name="department" style="width: 100%;">
-                                <%
-                                if (typeof departmentListRows !== 'undefined') {
-                                for (var i = 0; i < departmentListRows.length; i++) {
-                                %>
-                                <option value="<%= departmentListRows[i].id %>"><%= departmentListRows[i].name %></option>
-                                <% } } %>
-                            </select>
-                        </div>
-                        <div class="form-group" >
-                            <label>직급 선택</label>
-                            <select class="form-control select2" name="position" style="width: 100%;">
-                                <%
-                                if (typeof positionListRows !== 'undefined') {
-                                for (var i = 0; i < positionListRows.length; i++) {
-                                %>
-                                <option value="<%= positionListRows[i].id %>"><%= positionListRows[i].name %></option>
-                                <% } } %>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success btn-lg btn-block"><span class="glyphicon glyphicon-ok-sign"></span> 저장</button>
-                    </div>
-                </div>
-                <!-- /.modal-content -->
-            </form>
-            <!-- /.form-horizontal -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal -->
-
     <div id="modal_modify_form" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <form class="form-horizontal" role="form" method="post">
@@ -191,7 +141,7 @@
                     <div class="modal-body">
                         <input type="hidden" name="user_control_flag" value="modify">
                         <div class="form-group" >
-                            <input id="input_modify_name" class="form-control" type="text" name="name" placeholder="이름">
+                            <input id="input_modify_name" class="form-control" type="text" name="modified_name" placeholder="이름">
                         </div>
                         <div class="form-group" >
                             <input id="input_modify_employee_number_disabled" class="form-control" type="text" disabled>
@@ -202,30 +152,14 @@
                             <input id="input_modify_smartphone_address" class="form-control" type="hidden" name="smartphone_address">
                         </div>
                         <div class="form-group" >
-                            <label>부서 선택</label>
-                            <select class="form-control select2 select_department" name="department" style="width: 100%;">
-                                <%
-                                if (typeof departmentListRows !== 'undefined') {
-                                for (var i = 0; i < departmentListRows.length; i++) {
-                                %>
-                                <option value="<%= departmentListRows[i].id %>"><%= departmentListRows[i].name %></option>
-                                <% } } %>
-                            </select>
+                            <input id="input_modify_department" class="form-control" type="text" name="modified_department"  placeholder="부서">
                         </div>
                         <div class="form-group" >
-                            <label>직급 선택</label>
-                            <select class="form-control select2 select_position" name="position" style="width: 100%;">
-                                <%
-                                if (typeof positionListRows !== 'undefined') {
-                                for (var i = 0; i < positionListRows.length; i++) {
-                                %>
-                                <option value="<%= positionListRows[i].id %>"><%= positionListRows[i].name %></option>
-                                <% } } %>
-                            </select>
+                            <input id="input_modify_position" class="form-control" type="text" name="modified_position"  placeholder="직급">
                         </div>
                         <div class="form-group" >
                             <div class="checkbox">
-                                <label><input id="input_modify_admin" type="checkbox" name="admin">관리자 권한</label>
+                                <label><input id="input_modify_admin" type="checkbox" name="modified_admin">관리자 권한</label>
                             </div>
                         </div>
                     </div>
@@ -270,42 +204,26 @@
     </div>
     <!-- /.modal -->
 
-    <% include footer.ejs %>
+    <% include ../../footer.ejs %>
 
 </div>
 <!-- ./wrapper -->
 <!-- REQUIRED JS SCRIPTS -->
 <!-- jQuery 2.2.3 -->
-<script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="../../plugins/jQuery/jquery-2.2.3.min.js"></script>
 <!-- DataTables -->
-<script src="plugins/datatables/jquery.dataTables.min.js"></script>
-<script src="plugins/datatables/dataTables.bootstrap.min.js"></script>
-<!-- Select2 -->
-<script src="../../plugins/select2/select2.full.min.js"></script>
+<script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables/dataTables.bootstrap.min.js"></script>
 <!-- AdminLTE App -->
-<script src="dist/js/app.min.js"></script>
+<script src="../../dist/js/app.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
-<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="../../bootstrap/js/bootstrap.min.js"></script>
 <script>
 
     $(document).ready(function() {
         $('#member_table').DataTable();
-        $(".select2").select2({
-            placeholder: "눌러서 선택하세요",
-            allowClear: true
-        });
 
         $('div.pageload_effect').hide();
-
-        $('#open_add_modal_button').click(function() {
-            $('#modal_add_form').modal('show');
-        });
-
-        $('#modal_add_form').on('hidden.bs.modal', function() {
-            $('#input_add_name').val('');
-            $('#input_add_employee_number').val('');
-            $('#input_add_smartphone_address').val('');
-        });
 
         var selectedUserInfo;
 
@@ -322,15 +240,14 @@
             $('#input_modify_employee_number').val(selectedUserInfo.employee_number);
             $('#input_modify_smartphone_address_disabled').val(selectedUserInfo.smartphone_address);
             $('#input_modify_smartphone_address').val(selectedUserInfo.smartphone_address);
+            $('#input_modify_department').val(selectedUserInfo.department);
+            $('#input_modify_position').val(selectedUserInfo.position);
             $('#input_modify_admin').val(selectedUserInfo.admin);
 
             if (selectedUserInfo.admin)
                 $('#input_modify_admin').prop('checked', true);
             else
                 $('#input_modify_admin').prop('checked', false);
-
-            var currentUsersDepartmentId = selectedUserInfo.id_department;
-            var currentUsersPositionId = selectedUserInfo.id_position;
         });
 
         $('#modal_modify_form').on('hidden.bs.modal', function() {
@@ -339,6 +256,8 @@
             $('#input_modify_employee_number').val('');
             $('#input_modify_smartphone_address_disabled').val('');
             $('#input_modify_smartphone_address').val('');
+            $('#input_modify_department').val('');
+            $('#input_modify_position').val('');
             $('#input_modify_admin').val('');
 
             $('#input_modify_admin').prop('checked', false);
@@ -353,6 +272,51 @@
 
         $('#modal_delete_form').on('shown.bs.modal', function() {
             $('#deleted_smartphone_address').val(selectedUserInfo.smartphone_address);
+        });
+
+        $("#member_table #checkall").click(function () {
+            if ($("#member_table #checkall").is(':checked')) {
+                $("#member_table input[type=checkbox]").each(function () {
+                    $(this).prop("checked", true);
+                });
+
+            } else {
+                $("#member_table input[type=checkbox]").each(function () {
+                    $(this).prop("checked", false);
+                });
+            }
+        });
+
+        $("#permit_send").click(function() {
+            var toGivePermissionUsers = [];
+
+            $(":checkbox[name='checkbox_permit']:checked").each(function(index, value) {
+                var hiddenInputSelector = 'input.each_user_info_' + this.value;
+                var toGivePermissionUserInfo = JSON.parse($(hiddenInputSelector).val());
+
+                toGivePermissionUsers.push(toGivePermissionUserInfo.smartphone_address);
+            }).promise().done(function() {
+
+                if (toGivePermissionUsers.length != 0) {
+                    var toGivePermissionUserJsonArrStr = "[ ";
+                    for (var i = 0; i < toGivePermissionUsers.length; i++) {
+                        toGivePermissionUserJsonArrStr += "{ \"smartphone_address\":\"" + toGivePermissionUsers[i] + "\" }";
+
+                        if (i != toGivePermissionUsers.length - 1) {
+                            toGivePermissionUserJsonArrStr += ", ";
+                        }
+                    }
+                    toGivePermissionUserJsonArrStr += " ]";
+                }
+
+                $.post('/management/permission', {
+                    user_control_flag: 'permit',
+                    toGivePermissionUsersJsonArrStr: toGivePermissionUserJsonArrStr
+                }).done(function(data) {
+                    data = data.replace("\<script\>", "").replace("\<\/script\>", "");
+                    jQuery.globalEval(data);
+                });
+            });
         });
     });
 

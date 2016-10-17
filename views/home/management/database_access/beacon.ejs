@@ -7,18 +7,20 @@
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.6 -->
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../bootstrap/css/bootstrap.min.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
     <!-- DataTables -->
-    <link rel="stylesheet" href="plugins/datatables/dataTables.bootstrap.css">
+    <link rel="stylesheet" href="../../../plugins/datatables/dataTables.bootstrap.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="../../../plugins/select2/select2.min.css">
     <!-- Theme style -->
-    <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../../../dist/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. -->
-    <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="../../../dist/css/skins/_all-skins.min.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -30,9 +32,9 @@
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
-    <% include nav.ejs %>
+    <% include ../../../nav.ejs %>
 
-    <% include sidenav.ejs %>
+    <% include ../../../sidenav.ejs %>
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -84,8 +86,13 @@
                                     <td><%= beaconListRows[i].UUID %></td>
                                     <td><%= beaconListRows[i].major %></td>
                                     <td><%= beaconListRows[i].minor %></td>
-                                    <td><% if (beaconListRows[i].id_workplace == -1) { %> <% } else { %><%= beaconListRows[i].id_workplace %><% } %></td>
+                                    <% if (beaconListRows[i].id_workplace == -1) { %>
+                                    <td>미정</td>
+                                    <td>미정</td>
+                                    <% } else { %>
+                                    <td><%= beaconListRows[i].id_workplace %></td>
                                     <td><%= beaconListRows[i].name_workplace %></td>
+                                    <% } %>
                                     <td><a class="open_modify_modal_button btn btn-primary btn-xs" role="dialog" title="<%= i %>"><span class="glyphicon glyphicon-pencil"></span></a></td>
                                     <td><a class="open_delete_modal_button btn btn-danger btn-xs" role="dialog" title="<%= i %>"><span class="glyphicon glyphicon-trash"></span></a></td>
                                 </tr>
@@ -132,6 +139,18 @@
                     </div>
                     <div class="modal-body">
                         <input type="hidden" name="beacon_control_flag" value="add">
+                        <div class="form-group" >
+                            <label>장소 선택</label>
+                            <select class="form-control select2" name="id_workplace" style="width: 100%;">
+                                <option value="-1">미정</option>
+                                <%
+                                if (typeof workplaceListRows !== 'undefined') {
+                                for (var i = 0; i < workplaceListRows.length; i++) { if (workplaceListRows[i].beacon_set == 0) {
+                                %>
+                                <option value="<%= workplaceListRows[i].id_workplace %>"><%= workplaceListRows[i].name_workplace %> at <%= workplaceListRows[i].location_workplace %></option>
+                                <% } } } %>
+                            </select>
+                        </div>
                         <div class="form-group">
                             <input id="input_add_beacon_address" class="form-control" type="text" name="beacon_address" placeholder="블루투스 주소">
                         </div>
@@ -168,6 +187,18 @@
                     </div>
                     <div class="modal-body">
                         <input type="hidden" name="beacon_control_flag" value="modify">
+                        <div class="form-group" >
+                            <label>사무실 선택</label>
+                            <select class="form-control select2" name="modified_id_workplace" style="width: 100%;">
+                                <option value="-1">미정</option>
+                                <%
+                                if (typeof workplaceListRows !== 'undefined') {
+                                for (var i = 0; i < workplaceListRows.length; i++) { if (workplaceListRows[i].beacon_set == 0) {
+                                %>
+                                <option value="<%= workplaceListRows[i].id_workplace %>"><%= workplaceListRows[i].name_workplace %> at <%= workplaceListRows[i].location_workplace %></option>
+                                <% } } } %>
+                            </select>
+                        </div>
                         <div class="form-group">
                             <input id="input_modify_beacon_address_disabled" class="form-control" type="text" placeholder="블루투스 주소" disabled>
                             <input id="input_modify_beacon_address" class="form-control" type="hidden" name="beacon_address">
@@ -227,29 +258,39 @@
     </div>
     <!-- /.modal -->
 
-    <% include footer.ejs %>
+    <% include ../../../footer.ejs %>
 
 </div>
 <!-- ./wrapper -->
 <!-- REQUIRED JS SCRIPTS -->
 <!-- jQuery 2.2.3 -->
-<script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="../../../plugins/jQuery/jquery-2.2.3.min.js"></script>
 <!-- DataTables -->
-<script src="plugins/datatables/jquery.dataTables.min.js"></script>
-<script src="plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="../../../plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="../../../plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- Select2 -->
+<script src="../../../plugins/select2/select2.full.min.js"></script>
 <!-- AdminLTE App -->
-<script src="dist/js/app.min.js"></script>
+<script src="../../../dist/js/app.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
-<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="../../../bootstrap/js/bootstrap.min.js"></script>
 <script>
 
     $(document).ready(function(){
         $('#beacon_table').DataTable();
+        $(".select2").select2({
+            placeholder: "눌러서 선택하세요",
+            allowClear: true
+        });
 
         $('div.pageload_effect').hide();
 
         $('#open_add_modal_button').click(function() {
             $('#modal_add_form').modal('show');
+        });
+
+        $('#modal_add_form').on('shown.bs.modal', function() {
+            $('.select2').val('').trigger('change');
         });
 
         $('#modal_add_form').on('hidden.bs.modal', function() {
@@ -260,6 +301,7 @@
             $('#input_add_minor').val('');
             $('#input_add_id_workplace_disabled').val('');
             $('#input_add_id_workplace').val('');
+            $('.select2').val('').trigger('change');
         });
 
         var selectedBeaconInfo;
@@ -279,6 +321,7 @@
             $('#input_modify_minor').val(selectedBeaconInfo.minor);
             $('#input_modify_id_workplace_disabled').val(selectedBeaconInfo.id_workplace);
             $('#input_modify_id_workplace').val(selectedBeaconInfo.id_workplace);
+            $('.select2').val('').trigger('change');
         });
 
         $('#modal_modify_form').on('hidden.bs.modal', function() {
@@ -289,6 +332,7 @@
             $('#input_modify_minor').val('');
             $('#input_modify_id_workplace_disabled').val('');
             $('#input_modify_id_workplace').val('');
+            $('.select2').val('').trigger('change');
         });
 
         $('a.open_delete_modal_button').click(function() {

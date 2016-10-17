@@ -326,7 +326,7 @@ var id_getWorkplaceList = function(callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
-        conn.query("SELECT * FROM workplace", function(err, rows) {
+        conn.query("SELECT * FROM workplace WHERE id_workplace > 0", function(err, rows) {
             conn.release();
 
             if (err) {
@@ -356,31 +356,6 @@ var id_getWorkplaceInfo = function(id_workplace, callback) {
                 callback(rows[0]);
             }
         });
-    });
-};
-
-var id_getWorkplaceID = function(name_workplace, location_workplace, callback) {
-    id_checkWorkplaceRegistered(name_workplace, location_workplace, function(valid) {
-        if (valid) {
-            pool.getConnection(function(err, conn) {
-                if (err)
-                    console.error(err);
-
-                conn.query("SELECT id_workplace FROM workplace WHERE name_workplace=? AND location_workplace=?", [name_workplace, location_workplace], function(err, rows) {
-                    conn.release();
-
-                    if (err) {
-                        console.error(err);
-                    } else {
-                        if (typeof callback === "function") {
-                            callback(rows[0].id_workplace);
-                        }
-                    }
-                });
-            });
-        } else {
-
-        }
     });
 };
 
@@ -546,13 +521,13 @@ var id_checkBeaconRegistered = function(beacon_address, callback) {
     });
 };
 
-var id_registerBeacon = function(beacon_address, uuid, major, minor, callback) {
+var id_registerBeacon = function(beacon_address, uuid, major, minor, id_workplace, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
 
         conn.query("INSERT INTO beacon (UUID, major, minor, beacon_address, id_workplace)" +
-            " VALUES (?, ?, ?, ?, ?)", [uuid, major, minor, beacon_address, -1], function (err) {
+            " VALUES (?, ?, ?, ?, ?)", [uuid, major, minor, beacon_address, id_workplace], function (err) {
             conn.release();
 
             if (err) {
@@ -566,22 +541,23 @@ var id_registerBeacon = function(beacon_address, uuid, major, minor, callback) {
     });
 };
 
-var id_modifyBeacon = function(beacon_address, modify_uuid, modify_major, modify_minor, callback) {
+var id_modifyBeacon = function(beacon_address, modify_uuid, modify_major, modify_minor, modified_id_workplace, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
 
-        conn.query("UPDATE beacon SET UUID=?, major=?, minor=? WHERE beacon_address=?", [modify_uuid, modify_major, modify_minor, beacon_address], function(err) {
-            conn.release();
+        conn.query("UPDATE beacon SET UUID=?, major=?, minor=?, id_workplace=? WHERE beacon_address=?",
+            [modify_uuid, modify_major, modify_minor, modified_id_workplace, beacon_address], function(err) {
+                conn.release();
 
-            if (err) {
-                console.error(err);
-            }
+                if (err) {
+                    console.error(err);
+                }
 
-            if (typeof callback === "function") {
-                callback(true);
-            }
-        });
+                if (typeof callback === "function") {
+                    callback(true);
+                }
+            });
     });
 };
 
@@ -982,7 +958,7 @@ var soc_getWorkplaceName = function(id_workplace, callback) {
 
 var soc_getWorkplaceOfBeacons = function(beaconAddressArr, uuidArr, majorArr, minorArr, callback) {
     pool.getConnection(function(err, conn) {
-        /* Needs better query than it */
+        /* Needs change to better query than it if there would be */
         /* Check whether each beacon exists in the beacon table */
         conn.query("SELECT IF ((SELECT COUNT(*) AS cnt FROM beacon WHERE "
             + "(beacon_address=? AND UUID=? AND major=? AND minor=?) OR "
@@ -1014,6 +990,24 @@ var soc_getWorkplaceOfBeacons = function(beaconAddressArr, uuidArr, majorArr, mi
 
                 if (typeof callback === "function") {
                     callback(rows[0].id_workplace);
+                }
+            });
+    });
+};
+
+var soc_getBeaconsCountOfWorkplace = function(id_workplace, callback) {
+    pool.getConnection(function(err, conn) {
+        conn.query("SELECT COUNT(beacon.id_workplace) AS count" +
+            " FROM workplace, beacon WHERE beacon.id_workplace = workplace.id_workplace AND workplace.id_workplace=?"
+            , [id_workplace], function(err, rows) {
+                conn.release();
+
+                if (err) {
+                    console.error(err);
+                }
+
+                if (typeof callback === "function") {
+                    callback(rows[0].count);
                 }
             });
     });
@@ -1147,17 +1141,7 @@ var soc_getBeaconMACAddress = function(callback) {
             conn.release();
 
             if (err) {
-                console.error(err);$(document).ready(function() {
-
-                    $("#login-open-modal").click(function(){
-                        $("#login-join-modal").modal();
-                    });
-
-                    $("#main-beacon-list").ready(function() {
-
-                        $("#main-beacon-list").html()
-                    });
-                });
+                console.error(err);
             }
 
             if (typeof callback === "function") {
@@ -2511,7 +2495,7 @@ var chart_getAvgWorkTime = function(arg1, arg2, arg3, callback) {
 
     var resultJsonString = '{ "userList" : [';
     var resultJson;
-    
+
     id_getUserList(function(userListRows) {
         id_getWorkplaceList(function(workplaceListRows) {
             switch (args.length) {
@@ -2565,7 +2549,7 @@ var chart_getAvgWorkTime = function(arg1, arg2, arg3, callback) {
                     });
 
                     break;
-                
+
                 case 2:
                     args[0] = String(args[0]);
                     args[1] = String(args[1]);
@@ -2624,9 +2608,9 @@ var chart_getAvgWorkTime = function(arg1, arg2, arg3, callback) {
                             }
                         });
                     });
-                    
+
                     break;
-                
+
                 case 3:
                     args[0] = String(args[0]);
                     args[1] = String(args[1]);
@@ -2664,7 +2648,7 @@ var chart_getAvgWorkTime = function(arg1, arg2, arg3, callback) {
                             }
 
                             resultJsonString += ']}';
-                            
+
                             break;
                         }
                     }
@@ -2689,7 +2673,7 @@ var chart_getAvgWorkTime = function(arg1, arg2, arg3, callback) {
                             }
                         });
                     });
-                    
+
                     break;
 
                 default:
@@ -2764,7 +2748,6 @@ module.exports.id_permitUsers               = id_permitUsers;
 
 module.exports.id_getWorkplaceList          = id_getWorkplaceList;
 module.exports.id_getWorkplaceInfo          = id_getWorkplaceInfo;
-module.exports.id_getWorkplaceID            = id_getWorkplaceID;
 module.exports.id_registerWorkplace         = id_registerWorkplace;
 module.exports.id_modifyWorkplace           = id_modifyWorkplace;
 module.exports.id_deleteWorkplace           = id_deleteWorkplace;
@@ -2802,6 +2785,7 @@ module.exports.id_editWorkStartEndTime      = id_editWorkStartEndTime;
 module.exports.soc_gatewayValidation        = soc_gatewayValidation;
 module.exports.soc_smartphoneValidation     = soc_smartphoneValidation;
 module.exports.soc_getWorkplaceOfBeacons    = soc_getWorkplaceOfBeacons;
+module.exports.soc_getBeaconsCountOfWorkplace    = soc_getBeaconsCountOfWorkplace;
 module.exports.soc_getWorkplaceName         = soc_getWorkplaceName;
 module.exports.soc_getSmartphoneUserName    = soc_getSmartphoneUserName;
 module.exports.soc_getSmartphoneUserENum    = soc_getSmartphoneUserEmployeeNumber;

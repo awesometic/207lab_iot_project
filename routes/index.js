@@ -8,35 +8,15 @@ var logger = require("../logger");
 // session will be expired in 1 hour
 var cookieExpires = 3600000;
 
-/* GET */
 var title = 'Suwon Univ. 207 Lab - "Janus" IoT Project';
+
+/* GET */
 router.get('/', function(req, res, next) {
     var employee_number = req.session.user_employee_id;
     var smartphone_address = req.session.user_smartphone_address;
 
     if (typeof employee_number != 'undefined' || typeof smartphone_address != 'undefined') {
-        async.waterfall([
-            function (callback) {
-                pool.id_getUserInfo(smartphone_address, function (userInfo) {
-                    callback(null, userInfo);
-                });
-            },
-            function (userInfo, callback) {
-                pool.id_getCompanyName(function (companyName) {
-                    callback(null, userInfo, companyName);
-                });
-            }
-        ], function (err, userInfo, companyName) {
-            if (err) {
-                console.log(err);
-            } else {
-                res.render('dashboard', {
-                    title: title,
-                    userInfo: userInfo,
-                    companyName: companyName
-                });
-            }
-        });
+        res.send("<script>location.href='/dashboard';</script>");
     } else {
         res.render('index', {
             title: title
@@ -64,7 +44,7 @@ router.get('/dashboard', function(req, res, next) {
             if (err) {
                 console.log(err);
             } else {
-                res.render('dashboard', {
+                res.render('home/dashboard', {
                     title: title,
                     userInfo: userInfo,
                     companyName: companyName
@@ -76,7 +56,7 @@ router.get('/dashboard', function(req, res, next) {
     }
 });
 
-router.get('/member', function(req, res, next) {
+router.get('/management/database_access/member', function(req, res, next) {
     var employee_number = req.session.user_employee_id;
     var smartphone_address = req.session.user_smartphone_address;
 
@@ -117,7 +97,7 @@ router.get('/member', function(req, res, next) {
             } else if (err) {
                 console.log(err);
             } else {
-                res.render('member', {
+                res.render('home/management/database_access/member', {
                     title: title,
                     userInfo: userInfo,
                     companyName: companyName,
@@ -132,7 +112,7 @@ router.get('/member', function(req, res, next) {
     }
 });
 
-router.get('/workplace', function(req, res, next) {
+router.get('/management/database_access/workplace', function(req, res, next) {
     var employee_number = req.session.user_employee_id;
     var smartphone_address = req.session.user_smartphone_address;
 
@@ -163,7 +143,7 @@ router.get('/workplace', function(req, res, next) {
             } else if (err) {
                 console.log(err);
             } else {
-                res.render('workplace', {
+                res.render('home/management/database_access/workplace', {
                     title: title,
                     userInfo: userInfo,
                     companyName: companyName,
@@ -176,7 +156,7 @@ router.get('/workplace', function(req, res, next) {
     }
 });
 
-router.get('/beacon', function(req, res, next) {
+router.get('/management/database_access/beacon', function(req, res, next) {
     var employee_number = req.session.user_employee_id;
     var smartphone_address = req.session.user_smartphone_address;
 
@@ -200,18 +180,24 @@ router.get('/beacon', function(req, res, next) {
                 pool.id_getBeaconList(function (beaconListRows) {
                     callback(null, userInfo, companyName, beaconListRows);
                 });
+            },
+            function (userInfo, companyName, beaconListRows, callback) {
+                pool.id_getWorkplaceList(function (workplaceListRows) {
+                    callback(null, userInfo, companyName, beaconListRows, workplaceListRows);
+                });
             }
-        ], function (err, userInfo, companyName, beaconListRows) {
+        ], function (err, userInfo, companyName, beaconListRows, workplaceListRows) {
             if (err == 'NOT PERMITTED') {
                 res.send("<script>alert('서비스 이용 권한이 없습니다'); location.href='/';</script>");
             } else if (err) {
                 console.log(err);
             } else {
-                res.render('workplace', {
+                res.render('home/management/database_access/beacon', {
                     title: title,
                     userInfo: userInfo,
                     companyName: companyName,
-                    beaconListRows: beaconListRows
+                    beaconListRows: beaconListRows,
+                    workplaceListRows: workplaceListRows
                 });
             }
         });
@@ -220,7 +206,7 @@ router.get('/beacon', function(req, res, next) {
     }
 });
 
-router.get('/permission', function(req, res, next) {
+router.get('/management/permission', function(req, res, next) {
     var employee_number = req.session.user_employee_id;
     var smartphone_address = req.session.user_smartphone_address;
 
@@ -251,7 +237,7 @@ router.get('/permission', function(req, res, next) {
             } else if (err) {
                 console.log(err);
             } else {
-                res.render('permission', {
+                res.render('home/management/permission', {
                     title: title,
                     userInfo: userInfo,
                     companyName: companyName,
@@ -264,7 +250,7 @@ router.get('/permission', function(req, res, next) {
     }
 });
 
-router.get('/position_department', function(req, res, next) {
+router.get('/management/position_department', function(req, res, next) {
     var employee_number = req.session.user_employee_id;
     var smartphone_address = req.session.user_smartphone_address;
 
@@ -300,7 +286,7 @@ router.get('/position_department', function(req, res, next) {
             } else if (err) {
                 console.log(err);
             } else {
-                res.render('position_department', {
+                res.render('home/management/position_department', {
                     title: title,
                     userInfo: userInfo,
                     companyName: companyName,
@@ -350,7 +336,7 @@ router.get('/service_environment', function(req, res, next) {
             } else if (err) {
                 console.log(err);
             } else {
-                res.render('service_environment', {
+                res.render('home/service_environment', {
                     title: title,
                     userInfo: userInfo,
                     companyName: companyName,
@@ -364,7 +350,7 @@ router.get('/service_environment', function(req, res, next) {
     }
 });
 
-router.get('/d3chart1', function(req, res, next) {
+router.get('/circumstance/d3chart1', function(req, res, next) {
     var employee_number = req.session.user_employee_id;
     var smartphone_address = req.session.user_smartphone_address;
 
@@ -390,7 +376,7 @@ router.get('/d3chart1', function(req, res, next) {
             } else if (err) {
                 console.log(err);
             } else {
-                res.render('d3chart1', {
+                res.render('home/circumstance/d3chart1', {
                     title: title,
                     userInfo: userInfo,
                     companyName: companyName
@@ -402,7 +388,7 @@ router.get('/d3chart1', function(req, res, next) {
     }
 });
 
-router.get('/d3chart2', function(req, res, next) {
+router.get('/circumstance/d3chart2', function(req, res, next) {
     var employee_number = req.session.user_employee_id;
     var smartphone_address = req.session.user_smartphone_address;
 
@@ -428,7 +414,7 @@ router.get('/d3chart2', function(req, res, next) {
             } else if (err) {
                 console.log(err);
             } else {
-                res.render('d3chart2', {
+                res.render('home/circumstance/d3chart2', {
                     title: title,
                     userInfo: userInfo,
                     companyName: companyName
@@ -440,7 +426,7 @@ router.get('/d3chart2', function(req, res, next) {
     }
 });
 
-router.get('/commute_table', function(req, res, next) {
+router.get('/management/database_access/commute_table', function(req, res, next) {
     var employee_number = req.session.user_employee_id;
     var smartphone_address = req.session.user_smartphone_address;
 
@@ -480,7 +466,7 @@ router.get('/commute_table', function(req, res, next) {
             } else if (err) {
                 console.log(err);
             } else {
-                res.render('commute_table', {
+                res.render('home/management/database_access/commute_table', {
                     title: title,
                     userInfo: userInfo,
                     companyName: companyName,
@@ -493,7 +479,7 @@ router.get('/commute_table', function(req, res, next) {
     }
 });
 
-router.get('/commit_result_test_page', function(req, res, next) {
+router.get('/circumstance/commute_result', function(req, res, next) {
     var employee_number = req.session.user_employee_id;
     var smartphone_address = req.session.user_smartphone_address;
 
@@ -556,7 +542,7 @@ router.get('/commit_result_test_page', function(req, res, next) {
             } else if (err) {
                 console.log(err);
             } else {
-                res.render('commit_result_test_page', {
+                res.render('home/circumstance/commute_result', {
                     title: title,
                     userInfo: userInfo,
                     companyName: companyName,
@@ -652,34 +638,34 @@ router.post("/", function(req, res) {
     });
 });
 
-router.post('/profile', function(req, res, next) {
-    var modified_password = req.body.password;
-    var modified_password_confirm = req.body.password_confirm;
+// router.post('/home/dashboard', function(req, res, next) {
+//     var modified_password = req.body.password;
+//     var modified_password_confirm = req.body.password_confirm;
+//
+//     if (modified_password.length != 0 && (modified_password != modified_password_confirm)) {
+//         res.send("<script>alert('Check confirmation password!'); history.go(-1);</script>");
+//     } else if (modified_password.length == 0) {
+//         res.send("<script>alert('To change your password, fill out the form'); history.go(-1);</script>");
+//     } else {
+//         pool.id_getUserInfo(req.session.user_smartphone_address, function(userInfo) {
+//             pool.id_modifyUser(req.session.user_smartphone_address, req.session.user_employee_id, userInfo.name, modified_password, userInfo.department, userInfo.position, userInfo.admin, function (valid) {
+//                 if (valid) {
+//                     res.send("<script>alert('Modify Success!'); location.href='home/dashboard';</script>");
+//                 } else {
+//                     res.send("<script>alert('Server error'); history.go(-1);</script>");
+//                 }
+//             });
+//         });
+//     }
+// });
 
-    if (modified_password.length != 0 && (modified_password != modified_password_confirm)) {
-        res.send("<script>alert('Check confirmation password!'); history.go(-1);</script>");
-    } else if (modified_password.length == 0) {
-        res.send("<script>alert('To change your password, fill out the form'); history.go(-1);</script>");
-    } else {
-        pool.id_getUserInfo(req.session.user_smartphone_address, function(userInfo) {
-            pool.id_modifyUser(req.session.user_smartphone_address, req.session.user_employee_id, userInfo.name, modified_password, userInfo.department, userInfo.position, userInfo.admin, function (valid) {
-                if (valid) {
-                    res.send("<script>alert('Modify Success!'); location.href='/dashboard';</script>");
-                } else {
-                    res.send("<script>alert('Server error'); history.go(-1);</script>");
-                }
-            });
-        });
-    }
-});
-
-router.post('/member', function(req, res, next) {
+router.post('/management/database_access/member', function(req, res, next) {
     var controlFlag = req.body.user_control_flag;
 
     switch (controlFlag) {
         case "add":
             var signup_id = req.body.employee_number;
-            var signup_pw = "NO DATA";
+            var signup_pw = req.body.employee_number;
             var signup_name = req.body.name;
             var signup_smartphone_address = req.body.smartphone_address;
             var signup_department = req.body.department;
@@ -687,9 +673,9 @@ router.post('/member', function(req, res, next) {
 
             pool.id_checkUserRegistered(signup_smartphone_address, signup_id, function (valid) {
                 if (valid) {
-                    pool.id_registerUser(signup_smartphone_address, signup_id, signup_name, signup_pw, signup_department, signup_position, 0, function (valid) {
+                    pool.id_registerUser(signup_smartphone_address, signup_id, signup_name, signup_pw, signup_department, signup_position, 0, 0, function (valid) {
                         if (valid) {
-                            res.send("<script>alert('Register success!'); location.href='/member';</script>");
+                            res.send("<script>alert('Register success!'); location.href='/management/database_access/member';</script>");
                         } else {
                             res.send("<script>alert('Server error'); history.go(-1);</script>");
                         }
@@ -727,7 +713,7 @@ router.post('/member', function(req, res, next) {
                     pool.id_modifyUser(selected_smartphone_address, selected_employee_number, modified_name, null,
                         modified_department, modified_position, modified_admin, function (valid) {
                             if (valid) {
-                                res.send("<script>alert('Modify Success!'); location.href='/member';</script>");
+                                res.send("<script>alert('Modify Success!'); location.href='/management/database_access/member';</script>");
                             } else {
                                 res.send("<script>alert('Server error'); history.go(-1);</script>");
                             }
@@ -746,7 +732,7 @@ router.post('/member', function(req, res, next) {
 
                     pool.id_deleteUser(deleted_smartphone_address, userInfo.employee_number, function (valid) {
                         if (valid) {
-                            res.send("<script>alert('Delete Success!'); location.href='/member';</script>");
+                            res.send("<script>alert('Delete Success!'); location.href='/management/database_access/member';</script>");
                         } else {
                             res.send("<script>alert('Server error'); history.go(-1);</script>");
                         }
@@ -762,7 +748,7 @@ router.post('/member', function(req, res, next) {
 
 });
 
-router.post('/workplace', function(req, res, next) {
+router.post('/management/database_access/workplace', function(req, res, next) {
     var controlFlag = req.body.workplace_control_flag;
 
     switch (controlFlag) {
@@ -779,7 +765,7 @@ router.post('/workplace', function(req, res, next) {
 
             pool.id_registerWorkplace(name_workplace, location_workplace, latitude, longitude, function(valid) {
                 if (valid) {
-                    res.send("<script>alert('Add Success!'); location.href='/workplace';</script>");
+                    res.send("<script>alert('Add Success!'); location.href='/management/database_access/workplace';</script>");
                 } else {
                     res.send("<script>alert('Server error'); history.go(-1);</script>");
                 }
@@ -806,7 +792,7 @@ router.post('/workplace', function(req, res, next) {
                         workplaceInfo.thresholdX, workplaceInfo.thresholdY, workplaceInfo.thresholdZ,
                         workplaceInfo.latitude, workplaceInfo.longitude, workplaceInfo.beacon_set, function (valid) {
                             if (valid) {
-                                res.send("<script>alert('Modify Success!'); location.href='/workplace';</script>");
+                                res.send("<script>alert('Modify Success!'); location.href='/management/database_access/workplace';</script>");
                             } else {
                                 res.send("<script>alert('Server error'); history.go(-1);</script>");
                             }
@@ -821,15 +807,18 @@ router.post('/workplace', function(req, res, next) {
             if (typeof deleted_id_workplace === 'undefined') {
                 res.send("<script>alert('Cannot find any workplace information'); history.go(-1);</script>");
             } else {
-                pool.id_getWorkplaceInfo(deleted_id_workplace, function(workplaceInfo) {
-
-                    pool.id_deleteWorkplace(deleted_id_workplace, function (valid) {
-                        if (valid) {
-                            res.send("<script>alert('Delete Success!'); location.href='/workplace';</script>");
-                        } else {
-                            res.send("<script>alert('Server error'); history.go(-1);</script>");
-                        }
-                    });
+                pool.id_getWorkplaceInfo(deleted_id_workplace, function (workplaceInfo) {
+                    if (workplaceInfo.beacon_set == 0) {
+                        pool.id_deleteWorkplace(deleted_id_workplace, function (valid) {
+                            if (valid) {
+                                res.send("<script>alert('Delete Success!'); location.href='/management/database_access/workplace';</script>");
+                            } else {
+                                res.send("<script>alert('Server error'); history.go(-1);</script>");
+                            }
+                        });
+                    } else {
+                        res.send("<script>alert('비콘이 속한 장소는 삭제할 수 없습니다!'); location.href='/management/database_access/workplace';</script>");
+                    }
                 });
             }
             break;
@@ -840,21 +829,55 @@ router.post('/workplace', function(req, res, next) {
     }
 });
 
-router.post('/beacon', function(req, res, next) {
+router.post('/management/database_access/beacon', function(req, res, next) {
     var controlFlag = req.body.beacon_control_flag;
 
     switch (controlFlag) {
         case "add":
-            var beacon_address = req.body.beacon_address;
-            var uuid = req.body.uuid;
-            var major = req.body.major;
-            var minor = req.body.minor;
+            var add_beacon_address = req.body.beacon_address;
+            var add_uuid = req.body.uuid;
+            var add_major = req.body.major;
+            var add_minor = req.body.minor;
+            var add_id_workplace = req.body.id_workplace;
 
-            pool.id_registerBeacon(beacon_address, uuid, major, minor, function(valid) {
-                if (valid) {
-                    res.send("<script>alert('Add Success!'); location.href='/beacon';</script>");
+            pool.soc_getBeaconsCountOfWorkplace(add_id_workplace, function(beaconsCountOfWorkplace) {
+                if (beaconsCountOfWorkplace < 3 || add_id_workplace == -1) {
+                    pool.id_checkBeaconRegistered(add_beacon_address, function(valid) {
+                        if (valid) {
+                            pool.id_registerBeacon(add_beacon_address, add_uuid, add_major, add_minor, add_id_workplace, function (valid) {
+                                if (valid) {
+                                    pool.soc_getBeaconsCountOfWorkplace(add_id_workplace, function(afterBeaconsCountOfWorkplace) {
+                                        pool.id_getWorkplaceInfo(add_id_workplace, function(workplaceInfo) {
+                                            if (afterBeaconsCountOfWorkplace == 3) {
+                                                pool.id_modifyWorkplace(add_id_workplace, workplaceInfo.name_workplace, workplaceInfo.location_workplace,
+                                                    workplaceInfo.coordinateX, workplaceInfo.coordinateY, workplaceInfo.coordinateZ,
+                                                    workplaceInfo.thresholdX, workplaceInfo.thresholdY, workplaceInfo.thresholdZ,
+                                                    workplaceInfo.latitude, workplaceInfo.longitude, 1, function (valid) {
+                                                        if (valid) {
+                                                            res.send("<script>alert('Add Success!'); location.href='/management/database_access/beacon';</script>");
+                                                        } else {
+                                                            res.send("<script>alert('Server error'); history.go(-1);</script>");
+                                                        }
+                                                    });
+                                            } else {
+                                                if (valid) {
+                                                    res.send("<script>alert('Add Success!'); location.href='/management/database_access/beacon';</script>");
+                                                } else {
+                                                    res.send("<script>alert('Server error'); history.go(-1);</script>");
+                                                }
+                                            }
+                                        });
+                                    });
+                                } else {
+                                    res.send("<script>alert('Server error'); history.go(-1);</script>");
+                                }
+                            });
+                        } else {
+                            res.send("<script>alert('Already registered!'); history.go(-1);</script>");
+                        }
+                    });
                 } else {
-                    res.send("<script>alert('Server error'); history.go(-1);</script>");
+                    res.send("<script>alert('해당 장소에는 더 이상 비콘을 추가할 수 없습니다!'); history.go(-1);</script>");
                 }
             });
             break;
@@ -864,11 +887,13 @@ router.post('/beacon', function(req, res, next) {
             var modified_uuid = req.body.uuid;
             var modified_major = req.body.major;
             var modified_minor = req.body.minor;
+            var current_id_workplace = req.body.id_workplace;
+            var modified_id_workplace = req.body.modified_id_workplace;
 
             if (typeof selected_beacon_address === 'undefined') {
                 res.send("<script>alert('Cannot find any beacon information'); history.go(-1);</script>");
             } else {
-                pool.id_getBeaconInfo(selected_beacon_address, function(beaconInfo) {
+                pool.id_getBeaconInfo(selected_beacon_address, function (beaconInfo) {
                     if (typeof modified_uuid === 'undefined')
                         modified_uuid = beaconInfo.UUID;
                     if (typeof modified_major === 'undefined')
@@ -876,9 +901,65 @@ router.post('/beacon', function(req, res, next) {
                     if (typeof modified_minor === 'undefined')
                         modified_minor = beaconInfo.minor;
 
-                    pool.id_modifyBeacon(selected_beacon_address, modified_uuid, modified_major, modified_minor, function(valid) {
+                    pool.id_modifyBeacon(selected_beacon_address, modified_uuid, modified_major, modified_minor, modified_id_workplace, function (valid) {
                         if (valid) {
-                            res.send("<script>alert('Modify Success!'); location.href='/beacon';</script>");
+                            if (modified_id_workplace == -1) {
+                                pool.soc_getBeaconsCountOfWorkplace(current_id_workplace, function (afterBeaconsCountOfWorkplace) {
+                                    pool.id_getWorkplaceInfo(current_id_workplace, function (workplaceInfo) {
+                                        if (afterBeaconsCountOfWorkplace == 3) {
+                                            pool.id_modifyWorkplace(current_id_workplace, workplaceInfo.name_workplace, workplaceInfo.location_workplace,
+                                                workplaceInfo.coordinateX, workplaceInfo.coordinateY, workplaceInfo.coordinateZ,
+                                                workplaceInfo.thresholdX, workplaceInfo.thresholdY, workplaceInfo.thresholdZ,
+                                                workplaceInfo.latitude, workplaceInfo.longitude, 1, function (valid) {
+                                                    if (valid) {
+                                                        res.send("<script>alert('Modify Success!'); location.href='/management/database_access/beacon';</script>");
+                                                    } else {
+                                                        res.send("<script>alert('Server error'); history.go(-1);</script>");
+                                                    }
+                                                });
+                                        } else {
+                                            pool.id_modifyWorkplace(current_id_workplace, workplaceInfo.name_workplace, workplaceInfo.location_workplace,
+                                                workplaceInfo.coordinateX, workplaceInfo.coordinateY, workplaceInfo.coordinateZ,
+                                                workplaceInfo.thresholdX, workplaceInfo.thresholdY, workplaceInfo.thresholdZ,
+                                                workplaceInfo.latitude, workplaceInfo.longitude, 0, function (valid) {
+                                                    if (valid) {
+                                                        res.send("<script>alert('Modify Success!'); location.href='/management/database_access/beacon';</script>");
+                                                    } else {
+                                                        res.send("<script>alert('Server error'); history.go(-1);</script>");
+                                                    }
+                                                });
+                                        }
+                                    });
+                                });
+                            } else {
+                                pool.soc_getBeaconsCountOfWorkplace(modified_id_workplace, function (afterBeaconsCountOfWorkplace) {
+                                    pool.id_getWorkplaceInfo(modified_id_workplace, function (workplaceInfo) {
+                                        if (afterBeaconsCountOfWorkplace == 3) {
+                                            pool.id_modifyWorkplace(modified_id_workplace, workplaceInfo.name_workplace, workplaceInfo.location_workplace,
+                                                workplaceInfo.coordinateX, workplaceInfo.coordinateY, workplaceInfo.coordinateZ,
+                                                workplaceInfo.thresholdX, workplaceInfo.thresholdY, workplaceInfo.thresholdZ,
+                                                workplaceInfo.latitude, workplaceInfo.longitude, 1, function (valid) {
+                                                    if (valid) {
+                                                        res.send("<script>alert('Modify Success!'); location.href='/management/database_access/beacon';</script>");
+                                                    } else {
+                                                        res.send("<script>alert('Server error'); history.go(-1);</script>");
+                                                    }
+                                                });
+                                        } else {
+                                            pool.id_modifyWorkplace(modified_id_workplace, workplaceInfo.name_workplace, workplaceInfo.location_workplace,
+                                                workplaceInfo.coordinateX, workplaceInfo.coordinateY, workplaceInfo.coordinateZ,
+                                                workplaceInfo.thresholdX, workplaceInfo.thresholdY, workplaceInfo.thresholdZ,
+                                                workplaceInfo.latitude, workplaceInfo.longitude, 0, function (valid) {
+                                                    if (valid) {
+                                                        res.send("<script>alert('Modify Success!'); location.href='/management/database_access/beacon';</script>");
+                                                    } else {
+                                                        res.send("<script>alert('Server error'); history.go(-1);</script>");
+                                                    }
+                                                });
+                                        }
+                                    });
+                                });
+                            }
                         } else {
                             res.send("<script>alert('Server error'); history.go(-1);</script>");
                         }
@@ -894,14 +975,17 @@ router.post('/beacon', function(req, res, next) {
                 res.send("<script>alert('Cannot find any beacon information'); history.go(-1);</script>");
             } else {
                 pool.id_getBeaconInfo(deleted_beacon_address, function(beaconInfo) {
-
-                    pool.id_deleteBeacon(deleted_beacon_address, function(valid) {
-                        if (valid) {
-                            res.send("<script>alert('Delete Success!'); location.href='/beacon';</script>");
-                        } else {
-                            res.send("<script>alert('Server error'); history.go(-1);</script>");
-                        }
-                    });
+                    if (beaconInfo.id_workplace == -1) {
+                        pool.id_deleteBeacon(deleted_beacon_address, function (valid) {
+                            if (valid) {
+                                res.send("<script>alert('Delete Success!'); location.href='/management/database_access/beacon';</script>");
+                            } else {
+                                res.send("<script>alert('Server error'); history.go(-1);</script>");
+                            }
+                        });
+                    } else {
+                        res.send("<script>alert('먼저 비콘이 속한 장소를 \"미정\"으로 바꿔주세요!'); location.href='/management/database_access/beacon';</script>");
+                    }
                 });
             }
             break;
@@ -912,7 +996,7 @@ router.post('/beacon', function(req, res, next) {
     }
 });
 
-router.post('/permission', function(req, res, next) {
+router.post('/management/permission', function(req, res, next) {
     var controlFlag = req.body.user_control_flag;
 
     switch (controlFlag) {
@@ -943,7 +1027,7 @@ router.post('/permission', function(req, res, next) {
                     pool.id_modifyUser(selected_smartphone_address, selected_employee_number, modified_name, null,
                         modified_department, modified_position, modified_admin, function (valid) {
                             if (valid) {
-                                res.send("<script>alert('Modify Success!'); location.href='/permission';</script>");
+                                res.send("<script>alert('Modify Success!'); location.href='/management/permission';</script>");
                             } else {
                                 res.send("<script>alert('Server error'); history.go(-1);</script>");
                             }
@@ -962,7 +1046,7 @@ router.post('/permission', function(req, res, next) {
 
                     pool.id_deleteUser(deleted_smartphone_address, userInfo.employee_number, function (valid) {
                         if (valid) {
-                            res.send("<script>alert('Delete Success!'); location.href='/permission';</script>");
+                            res.send("<script>alert('Delete Success!'); location.href='/management/permission';</script>");
                         } else {
                             res.send("<script>alert('Server error'); history.go(-1);</script>");
                         }
@@ -973,7 +1057,7 @@ router.post('/permission', function(req, res, next) {
 
         case "permit":
             if (typeof req.body.toGivePermissionUsersJsonArrStr === 'undefined') {
-                res.send("<script>alert('No users checked'); location.href='/permission';</script>");
+                res.send("<script>alert('No users checked'); location.href='/management/permission';</script>");
             } else {
                 var toGivePermissionUsersJsonArr = JSON.parse(req.body.toGivePermissionUsersJsonArrStr);
 
@@ -984,7 +1068,7 @@ router.post('/permission', function(req, res, next) {
 
                 pool.id_permitUsers(toGivePermissionUsersArr, function(valid) {
                     if (valid) {
-                        res.send("<script>alert('Modify Success!'); location.href='/permission';</script>");
+                        res.send("<script>alert('Modify Success!'); location.href='/management/permission';</script>");
                     } else {
                         res.send("<script>alert('Server error'); history.go(-1);</script>");
                     }
@@ -999,7 +1083,7 @@ router.post('/permission', function(req, res, next) {
 
 });
 
-router.post('/position_department', function(req, res, next) {
+router.post('/management/position_department', function(req, res, next) {
     var controlFlag = req.body.control_flag;
     var smartphoneAddress = req.body.smartphone_address;
 
@@ -1011,7 +1095,7 @@ router.post('/position_department', function(req, res, next) {
 
                     pool.id_addDepartment(name, function(valid) {
                         if (valid) {
-                            res.send("<script>alert('Add Success!'); location.href='/position_department';</script>");
+                            res.send("<script>alert('Add Success!'); location.href='/management/position_department';</script>");
                         } else {
                             res.send("<script>alert('Server error'); history.go(-1);</script>");
                         }
@@ -1025,7 +1109,7 @@ router.post('/position_department', function(req, res, next) {
 
                     pool.id_modifyDepartment(id, name, function(valid) {
                         if (valid) {
-                            res.send("<script>alert('Modify Success!'); location.href='/position_department';</script>");
+                            res.send("<script>alert('Modify Success!'); location.href='/management/position_department';</script>");
                         } else {
                             res.send("<script>alert('Server error'); history.go(-1);</script>");
                         }
@@ -1038,7 +1122,7 @@ router.post('/position_department', function(req, res, next) {
 
                     pool.id_deleteDepartment(id, function(valid) {
                         if (valid) {
-                            res.send("<script>alert('Delete Success!'); location.href='/position_department';</script>");
+                            res.send("<script>alert('Delete Success!'); location.href='/management/position_department';</script>");
                         } else {
                             res.send("<script>alert('Server error'); history.go(-1);</script>");
                         }
@@ -1051,7 +1135,7 @@ router.post('/position_department', function(req, res, next) {
 
                     pool.id_addPosition(name, function(valid) {
                         if (valid) {
-                            res.send("<script>alert('Add Success!'); location.href='/position_department';</script>");
+                            res.send("<script>alert('Add Success!'); location.href='/management/position_department';</script>");
                         } else {
                             res.send("<script>alert('Server error'); history.go(-1);</script>");
                         }
@@ -1065,7 +1149,7 @@ router.post('/position_department', function(req, res, next) {
 
                     pool.id_modifyPosition(id, name, function(valid) {
                         if (valid) {
-                            res.send("<script>alert('Modify Success!'); location.href='/position_department';</script>");
+                            res.send("<script>alert('Modify Success!'); location.href='/management/position_department';</script>");
                         } else {
                             res.send("<script>alert('Server error'); history.go(-1);</script>");
                         }
@@ -1078,7 +1162,7 @@ router.post('/position_department', function(req, res, next) {
 
                     pool.id_deletePosition(id, function(valid) {
                         if (valid) {
-                            res.send("<script>alert('Delete Success!'); location.href='/position_department';</script>");
+                            res.send("<script>alert('Delete Success!'); location.href='/management/position_department';</script>");
                         } else {
                             res.send("<script>alert('Server error'); history.go(-1);</script>");
                         }
