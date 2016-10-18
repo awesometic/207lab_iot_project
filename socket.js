@@ -211,9 +211,11 @@ io.on("connection", function(socket) {
                         });
                     });
                 } else {
-                    socket.emit("data", {
-                        registered: false
-                    });
+                    var contentJsonString = "{ ";
+                    contentJsonString += "\"registered\":\"" + false + "\"";
+                    contentJsonString += " }";
+
+                    socket.emit("amIRegistered_answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
                     logger("socket").info("amIRegistered", "Whether user registered or not:\n\tSend: Not registered");
                 }
             });
