@@ -90,6 +90,49 @@ io.on("connection", function(socket) {
         }
     });
 
+    socket.on("circumstance_overdue", function(data) {
+        if (typeof data === "undefined" || JSON.stringify(data).replace(/\{/g, "").replace(/\}/g, "").length == 0) {
+            logger("socket").info("circumstance_overdue", "New commute record: received undefined data or empty");
+        } else {
+            var smartphoneRsaPublicKey = data.rsaPublicKey;
+            var contentJson = analyzer.extractContentFromReceivedJson(data);
+            var smartphoneDatetime = analyzer.getSmartphoneDatetime(contentJson);
+            var smartphoneAddress = analyzer.getSmartphoneAddress(contentJson);
+            var beaconAddressArr = analyzer.getBeaconAddressArray(contentJson);
+            var uuidArr = analyzer.getUuidArray(contentJson);
+            var majorArr = analyzer.getMajorArray(contentJson);
+            var minorArr = analyzer.getMinorArray(contentJson);
+            var commuteStatus = analyzer.getCommuteStatus(contentJson);
+
+            pool.soc_gatewayValidation(beaconAddressArr, uuidArr, majorArr, minorArr, function (id) {
+                if (id) {
+                    pool.soc_smartphoneValidation(smartphoneAddress, function (name) {
+                        if (name) {
+                            pool.soc_registerCommute(smartphoneAddress, id, commuteStatus, smartphoneDatetime, function (valid) {
+                                if (valid) {
+                                    var contentJsonString = "{ ";
+                                    contentJsonString += "\"requestSuccess\":\"" + true + "\"";
+                                    contentJsonString += " }";
+
+                                    socket.emit("circumstance_overdue_answer",
+                                        analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
+
+                                    logger("socket").info("circumstance_overdue", "New commute record: \n\tRegister success - " + commuteStatus);
+                                } else {
+                                    logger("socket").info("circumstance_overdue", "New commute record: \n\tRegister fail: Database connection problem");
+                                }
+                            });
+                        } else {
+                            logger("socket").info("circumstance_overdue", "New commute record: \n\tRegister fail: Unverified smartphone");
+                        }
+                    });
+                } else {
+                    logger("socket").info("circumstance_overdue", "New commute record: \n\tRegister fail: Unverified gateway");
+                }
+            });
+        }
+    });
+
     /*
      {
      BeaconDeviceAddress1: '00:00:00:00:00:00',
@@ -218,8 +261,6 @@ io.on("connection", function(socket) {
                             contentJsonString += "\"departmentListJsonArr\":" + JSON.stringify(departmentListRows) + ", ";
                             contentJsonString += "\"positionListJsonArr\":" + JSON.stringify(positionListRows);
                             contentJsonString += " }";
-
-                            console.log(contentJsonString);
 
                             socket.emit("amIRegistered_answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
                             logger("socket").info("amIRegistered", "Whether user registered or not:\n\tSend: Not registered");

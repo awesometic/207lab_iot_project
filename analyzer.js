@@ -66,6 +66,10 @@ Analyzer.getMinorArray = function(json) {
     return minorArray;
 };
 
+Analyzer.getSmartphoneDatetime = function(json) {
+    return json.SmartphoneDatetime;
+};
+
 Analyzer.getSmartphoneAddress = function(json) {
     return json.SmartphoneAddress;
 };
