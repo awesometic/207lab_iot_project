@@ -211,12 +211,20 @@ io.on("connection", function(socket) {
                         });
                     });
                 } else {
-                    var contentJsonString = "{ ";
-                    contentJsonString += "\"registered\":\"" + false + "\"";
-                    contentJsonString += " }";
+                    pool.id_getDepartmentList(function (departmentListRows) {
+                        pool.id_getPositionList(function (positionListRows) {
+                            var contentJsonString = "{ ";
+                            contentJsonString += "\"registered\":\"" + false + "\", ";
+                            contentJsonString += "\"departmentListJsonArr\":" + JSON.stringify(departmentListRows) + ", ";
+                            contentJsonString += "\"positionListJsonArr\":" + JSON.stringify(positionListRows);
+                            contentJsonString += " }";
 
-                    socket.emit("amIRegistered_answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
-                    logger("socket").info("amIRegistered", "Whether user registered or not:\n\tSend: Not registered");
+                            console.log(contentJsonString);
+
+                            socket.emit("amIRegistered_answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
+                            logger("socket").info("amIRegistered", "Whether user registered or not:\n\tSend: Not registered");
+                        });
+                    });
                 }
             });
         }
@@ -244,12 +252,12 @@ io.on("connection", function(socket) {
             var employee_number = analyzer.getEmployeeNumber(contentJson);
             var name = analyzer.getName(contentJson);
             var password = analyzer.getPassword(contentJson);
-            var department = analyzer.getDepartment(contentJson);
-            var position = analyzer.getPosition(contentJson);
+            var id_department = analyzer.getDepartment(contentJson);
+            var id_position = analyzer.getPosition(contentJson);
             var permission = analyzer.getPermission(contentJson);
             var admin = analyzer.getAdmin(contentJson);
 
-            pool.id_registerUser(smartphone_address, employee_number, name, password, department, position, permission, admin, function(success) {
+            pool.id_registerUser(smartphone_address, employee_number, name, password, id_department, id_position, permission, admin, function(success) {
                 var contentJsonString ="{ ";
                 if (success) {
                     contentJsonString += "\"requestSuccess\":\"" + true + "\"";
@@ -258,7 +266,7 @@ io.on("connection", function(socket) {
                     socket.emit("signupRequest_answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
                     logger("socket").info("signupRequest", "New sign-up request: \n" + smartphone_address + "\t" + employee_number + "\t" + name + "\n\tRegister Success");
                 } else {
-                    contentJsonString += "\"requestSuccess\":\"" + true + "\"";
+                    contentJsonString += "\"requestSuccess\":\"" + false + "\"";
                     contentJsonString += " }";
 
                     socket.emit("signupRequest_answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
