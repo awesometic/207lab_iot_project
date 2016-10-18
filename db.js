@@ -629,7 +629,7 @@ var id_getDepartmentList = function(callback) {
             console.error(err);
 
         conn.query("SELECT department.id, department.name, COUNT(identity.id_department) AS population" +
-            " FROM department LEFT JOIN identity ON department.id = identity.id_department" +
+            " FROM department LEFT JOIN identity ON department.id = identity.id_department WHERE id > 0" +
             " GROUP BY department.name ORDER BY population DESC", function(err, rows) {
             conn.release();
 
@@ -707,7 +707,7 @@ var id_getPositionList = function(callback) {
             console.error(err);
 
         conn.query("SELECT position.id, position.name, COUNT(identity.id_position) AS population" +
-            " FROM position LEFT JOIN identity ON position.id = identity.id_position" +
+            " FROM position LEFT JOIN identity ON position.id = identity.id_position WHERE id > 0" +
             " GROUP BY position.name ORDER BY position.permission_level DESC", function(err, rows) {
             conn.release();
 
