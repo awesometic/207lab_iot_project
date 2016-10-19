@@ -230,8 +230,18 @@ router.get('/management/permission', function(req, res, next) {
                 pool.id_getNotPermittedUserList(function (deniedUserListRows) {
                     callback(null, userInfo, companyName, deniedUserListRows);
                 });
+            },
+            function (userInfo, companyName, deniedUserListRows, callback) {
+                pool.id_getDepartmentList(function (departmentListRows) {
+                    callback(null, userInfo, companyName, deniedUserListRows, departmentListRows);
+                });
+            },
+            function (userInfo, companyName, deniedUserListRows, departmentListRows, callback) {
+                pool.id_getPositionList(function (positionListRows) {
+                    callback(null, userInfo, companyName, deniedUserListRows, departmentListRows, positionListRows);
+                });
             }
-        ], function (err, userInfo, companyName, deniedUserListRows) {
+        ], function (err, userInfo, companyName, deniedUserListRows, departmentListRows, positionListRows) {
             if (err == 'NOT PERMITTED') {
                 res.send("<script>alert('서비스 이용 권한이 없습니다'); location.href='/';</script>");
             } else if (err) {
@@ -241,7 +251,9 @@ router.get('/management/permission', function(req, res, next) {
                     title: title,
                     userInfo: userInfo,
                     companyName: companyName,
-                    deniedUserListRows: deniedUserListRows
+                    deniedUserListRows: deniedUserListRows,
+                    departmentListRows: departmentListRows,
+                    positionListRows: positionListRows
                 });
             }
         });
@@ -694,16 +706,19 @@ router.post('/management/database_access/member', function(req, res, next) {
             var modified_position = req.body.position;
             var modified_admin = req.body.admin;
 
+            console.log(modified_department + ", " + modified_position);
+
             if (typeof selected_employee_number === 'undefined' || typeof selected_smartphone_address === 'undefined') {
                 res.send("<script>alert('Cannot find any user information'); history.go(-1);</script>");
             } else {
                 pool.id_getUserInfo(selected_smartphone_address, function(userInfo) {
+                    console.log(JSON.stringify(userInfo));
                     if (typeof modified_name === 'undefined')
                         modified_name = userInfo.name;
                     if (typeof modified_department === 'undefined')
-                        modified_department = userInfo.department;
+                        modified_department = userInfo.id_department;
                     if (typeof modified_position === 'undefined')
-                        modified_position = userInfo.position;
+                        modified_position = userInfo.id_position;
 
                     if (typeof modified_admin === 'undefined')
                         modified_admin = 0;
@@ -1015,9 +1030,9 @@ router.post('/management/permission', function(req, res, next) {
                     if (typeof modified_name === 'undefined')
                         modified_name = userInfo.name;
                     if (typeof modified_department === 'undefined')
-                        modified_department = userInfo.department;
+                        modified_department = userInfo.id_department;
                     if (typeof modified_position === 'undefined')
-                        modified_position = userInfo.position;
+                        modified_position = userInfo.id_position;
 
                     if (typeof modified_admin === 'undefined')
                         modified_admin = 0;

@@ -584,8 +584,10 @@ var id_getNotPermittedUserList = function(callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
-
-        conn.query("SELECT * FROM identity WHERE permission = 0", function(err, rows) {
+        conn.query("SELECT smartphone_address, employee_number, name, id_department, id_position," +
+            " (SELECT name FROM department WHERE identity.id_department = department.id) AS department," +
+            " (SELECT name FROM position WHERE identity.id_position = position.id) AS position, " +
+            " permission, admin FROM identity WHERE permission = 0", function(err, rows) {
             conn.release();
 
             if (err) {
