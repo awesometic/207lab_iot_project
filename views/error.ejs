@@ -7,18 +7,21 @@
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.6 -->
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Pace style -->
-    <link rel="stylesheet" href="plugins/pace/pace.min.css">
+    <link rel="stylesheet" href="/plugins/pace/pace.min.css">
     <!-- Theme style -->
-    <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/dist/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. -->
-    <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="/dist/css/skins/_all-skins.min.css">
+
+    <!-- User defined style -->
+    <link rel="stylesheet" href="/style.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -36,23 +39,23 @@
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
+        <%
+        switch (error.status) {
+            case 404:
+        %>
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                <%= error.status %> Error Page
+                404 Error Page
             </h1>
             <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li class="active"><%= error.status %> error</li>
+                <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">404 error</li>
             </ol>
         </section>
 
         <!-- Main content -->
         <section class="content">
-        <%
-        switch (error.status) {
-            case 404:
-        %>
             <div class="error-page">
                 <h2 class="headline text-yellow"> 404</h2>
 
@@ -66,37 +69,58 @@
                 <!-- /.error-content -->
             </div>
             <!-- /.error-page -->
-        <%
-                break;
-            default:
-        %>
-            <div class="error-page">
-                <h2 class="headline text-red"><%= error.status %></h2>
-
-                <div class="error-content">
-                    <h3><i class="fa fa-warning text-red"></i> 문제가 발생했습니다!</h3>
-                    <p>
-                        알 수 없는 문제가 발생했습니다. 우린 이 문제를 해결하도록 노력할 것입니다.<br>
-                        <a href="/">홈 화면</a>으로 돌아가실 수 있습니다.
-                    </p>
-                </div>
-            </div>
-            <!-- /.error-page -->
-        <%
-                break;
-        }
-        %>
             <div class="row">
                 <div class="col-xs-12">
-                    <p>
                     <pre><%= error.stack %></pre>
-                    </p>
                 </div>
                 <!-- /.col-xs-12 -->
             </div>
             <!-- /.row -->
         </section>
         <!-- /.content -->
+        <%
+                break;
+            default:
+        %>
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                500 Error Page
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">500 error</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="error-page">
+                <h2 class="headline text-red">500</h2>
+
+                <div class="error-content">
+                    <h3><i class="fa fa-warning text-red"></i> 문제가 발생했습니다!</h3>
+                    <p>
+                        알 수 없는 문제가 발생했습니다.<br>
+                        우린 이 문제를 해결하도록 노력할 것입니다.<br>
+                        <a href="/">홈 화면</a>으로 돌아가실 수 있습니다.
+                    </p>
+                </div>
+            </div>
+            <!-- /.error-page -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <pre><%= error.stack %></pre>
+                </div>
+                <!-- /.col-xs-12 -->
+            </div>
+            <!-- /.row -->
+        </section>
+        <!-- /.content -->
+        <%
+                break;
+        }
+        %>
     </div>
     <!-- /.content-wrapper -->
 
@@ -106,15 +130,15 @@
 <!-- ./wrapper -->
 
 <!-- jQuery 2.2.3 -->
-<script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="/plugins/jQuery/jquery-2.2.3.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
-<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
 <!-- FastClick -->
-<script src="plugins/fastclick/fastclick.js"></script>
+<script src="/plugins/fastclick/fastclick.js"></script>
 <!-- AdminLTE App -->
-<script src="dist/js/app.min.js"></script>
+<script src="/dist/js/app.min.js"></script>
 <!-- PACE -->
-<script src="plugins/pace/pace.min.js"></script>
+<script src="/plugins/pace/pace.min.js"></script>
 <script>
 
     $(document).ajaxStart(function() { Pace.restart(); });

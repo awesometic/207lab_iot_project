@@ -10,6 +10,49 @@ var cookieExpires = 3600000;
 
 var title = 'Suwon Univ. 207 Lab - "Janus" IoT Project';
 
+/* For testing D3.js */
+router.get('/d3test', function(req, res, next) {
+    res.render('d3test/Test_page', {
+        title: title
+    });
+});
+
+router.get('/d3test/1/Sorting_BarChart', function(req, res, next) {
+    res.render('d3test/1/Sorting_BarChart', {
+        title: title
+    });
+});
+
+router.get('/d3test/2/BubbleChart', function(req, res, next) {
+    res.render('d3test/2/BubbleChart', {
+        title: title
+    });
+});
+
+router.get('/d3test/3/GanttChart', function(req, res, next) {
+    res.render('d3test/3/GanttChart', {
+        title: title
+    });
+});
+
+router.get('/d3test/4/DashBoard', function(req, res, next) {
+    res.render('d3test/4/DashBoard', {
+        title: title
+    });
+});
+
+router.get('/d3test/5/lineChart', function(req, res, next) {
+    res.render('d3test/5/lineChart', {
+        title: title
+    });
+});
+
+router.get('/d3test/6/Heatmap', function(req, res, next) {
+    res.render('d3test/6/Heatmap', {
+        title: title
+    });
+});
+
 /* GET */
 router.get('/', function(req, res, next) {
     var employee_number = req.session.user_employee_id;
