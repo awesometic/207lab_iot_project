@@ -1,0 +1,17 @@
+rect.heatmap-bordered {
+    stroke: #E6E6E6;
+    stroke-width:2px;
+}
+
+text.heatmap-mono {
+    font-size: 9pt;
+    fill: #aaa;
+}
+
+text.heatmap-axis-workweek {
+    fill: #000;
+}
+
+text.heatmap-axis-worktime {
+    fill: #000;
+}

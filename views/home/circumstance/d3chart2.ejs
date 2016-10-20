@@ -42,7 +42,7 @@
         <section class="content-header">
             <h1>
                 직원 근무 현황
-                <small>직원 근무 현황 차트</small>
+                <small>직원 근무 현황 차트 - 가상의 데이터입니다.</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -54,37 +54,19 @@
         <!-- Main content -->
         <section class="content">
             <div class="row">
-                <div class="col-xs-6">
+                <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">reserved</h3>
+                            <h3 class="box-title">근무 시간</h3>
                             <div class="box-tools pull-right">
                                 <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             </div>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
+                            <div id="line-chart-container">
 
-                        </div>
-                        <!-- /.box-body -->
-                        <div class="overlay pageload_effect">
-                            <i class="fa fa-refresh fa-spin"></i>
-                        </div>
-                    </div>
-                    <!-- /.box -->
-                </div>
-                <!-- /.col -->
-                <div class="col-xs-6">
-                    <div class="box">
-                        <div class="box-header">
-                            <h3 class="box-title">reserved</h3>
-                            <div class="box-tools pull-right">
-                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             </div>
-                        </div>
-                        <!-- /.box-header -->
-                        <div class="box-body">
-
                         </div>
                         <!-- /.box-body -->
                         <div class="overlay pageload_effect">
@@ -114,6 +96,11 @@
 <script src="/bootstrap/js/bootstrap.min.js"></script>
 <!-- PACE -->
 <script src="/plugins/pace/pace.min.js"></script>
+<!-- D3.js -->
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<!-- Chart01 - line chart -->
+<script src="http://dimplejs.org/dist/dimple.v2.2.0.min.js"></script>
+<script src="/d3resources/js/line_chart.js"></script>
 <script>
 
     $(document).ajaxStart(function() { Pace.restart(); });
