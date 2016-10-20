@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Pace style -->
+    <link rel="stylesheet" href="../plugins/pace/pace.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
@@ -86,8 +88,11 @@
 <script src="../dist/js/app.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
 <script src="../bootstrap/js/bootstrap.min.js"></script>
+<!-- PACE -->
+<script src="../plugins/pace/pace.min.js"></script>
 <script>
 
+    $(document).ajaxStart(function() { Pace.restart(); });
     $(document).ready(function() {
 
     });
