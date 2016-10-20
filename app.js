@@ -23,6 +23,12 @@ var session = require("express-session");
 // Include socket.io loading file by Yang Deokgyu
 var io = require("./socket");
 
+// Include db.js to access to database
+var pool = require('./db');
+
+// Include async to calling functions consequently
+var async = require('async');
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
@@ -39,7 +45,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'node_modules/admin-lte')));
 
 app.use(session({
     secret: "keyboard cat",
@@ -64,10 +69,38 @@ app.use(function(req, res, next) {
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
+
+        var employee_number = req.session.user_employee_id;
+        var smartphone_address = req.session.user_smartphone_address;
+
+        if (typeof employee_number != 'undefined' || typeof smartphone_address != 'undefined') {
+            async.waterfall([
+                function (callback) {
+                    pool.id_getUserInfo(smartphone_address, function (userInfo) {
+                        callback(null, userInfo);
+                    });
+                },
+                function (userInfo, callback) {
+                    pool.id_getCompanyName(function (companyName) {
+                        callback(null, userInfo, companyName);
+                    });
+                }
+            ], function (error, userInfo, companyName) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    res.render('error', {
+                        message: err.message,
+                        error: err,
+                        title: 'Janus - error page',
+                        userInfo: userInfo,
+                        companyName: companyName
+                    });
+                }
+            });
+        } else {
+            res.send("<script>location.href='/';</script>");
+        }
     });
 }
 
@@ -75,10 +108,38 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
+
+    var employee_number = req.session.user_employee_id;
+    var smartphone_address = req.session.user_smartphone_address;
+
+    if (typeof employee_number != 'undefined' || typeof smartphone_address != 'undefined') {
+        async.waterfall([
+            function (callback) {
+                pool.id_getUserInfo(smartphone_address, function (userInfo) {
+                    callback(null, userInfo);
+                });
+            },
+            function (userInfo, callback) {
+                pool.id_getCompanyName(function (companyName) {
+                    callback(null, userInfo, companyName);
+                });
+            }
+        ], function (error, userInfo, companyName) {
+            if (error) {
+                console.log(error);
+            } else {
+                res.render('error', {
+                    message: err.message,
+                    error: err,
+                    title: 'Janus - error page',
+                    userInfo: userInfo,
+                    companyName: companyName
+                });
+            }
+        });
+    } else {
+        res.send("<script>location.href='/';</script>");
+    }
 });
 
 module.exports = app;
