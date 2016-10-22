@@ -1,4 +1,4 @@
-#pieChart {
+#dashboard-pie-chart {
     position:absolute;
     top:10px;
     left:10px;
@@ -8,14 +8,14 @@
 
 
 
-#lineChart {
+#dashboard-line-chart {
     position:absolute;
     top:10px;
     left:410px;
     height: 150px;
 }
 
-#barChart {
+#dashboard-bar-chart{
     position:absolute;
     top:160px;
     left:410px;
@@ -86,7 +86,7 @@ td {
     padding-left: 10px;
 }
 
-#lineChartTitle1 {
+#dashboard-line-chart-title1 {
     font-family: Verdana;
     font-size  : 14px;
     fill       : lightgrey;
@@ -94,7 +94,7 @@ td {
     text-anchor: middle;
 }
 
-#lineChartTitle2 {
+#dashboard-line-chart-title2 {
     font-family: Verdana;
     font-size  : 72px;
     fill       : grey;

@@ -3,7 +3,6 @@
  -------------------------------------------
  */
 
-
 var 	formatAsPercentage = d3.format("%"),
     formatAsPercentage1Dec = d3.format(".1%"),
     formatAsInteger = d3.format(","),
@@ -27,7 +26,6 @@ var department2 = "정보호호학과";
 var department3 = "정보통신학과";
 var department4 = "207Lab";
 
-
 var personInCS = ["양덕규", "백소영", "강은정", "김선광"];
 var personInCS1 = "양덕규";
 var personInCS2 = "백소영";
@@ -40,7 +38,7 @@ var fixedtime= 9;
 
 var YDGWorktime = 14;
 var BSYWorktime = 15;
-var KEJWorktime = 16
+var KEJWorktime = 16;
 var KSGWorkitme = 17;
 
 var CSOvertimework = (YDGWorktime + BSYWorktime + KEJWorktime + KSGWorkitme) - fixedtime*4;
@@ -55,7 +53,6 @@ var personInIS = "조성래";
 var personInIS = "박수빈";
 
 var personNumIS = 3;
-
 
 var CSBWorktime = 9;
 var CSRWorkitme = 10;
@@ -94,7 +91,6 @@ var personInLAB5 = "lll";
 
 var personNumLAB = 5;
 
-
 var KWorktime = 10;
 var YWorktime = 9;
 var BWorktime = 12;
@@ -107,23 +103,22 @@ var LABMaxWorktime = 12;
 
 var LABOvertimework = ((KWorktime + YWorktime + BWorktime + SWorktime + LWorktime) - fixedtime*5);
 
+// TODO: dsPieChart dataset
+/**
+ * cartegory: 부서
+ * measure: 평균 근무 시간
+ */
+var dataset_pie = [
+        {category: "컴퓨터학과", measure: CSAvgWorktime},
+        {category: "정보보호학과", measure: ISAvgWorktime},
+        {category: "정보통신학과", measure: ICAvgWorktime},
+        {category: "207Lab", measure: LABAvgWorktime}
+    ]
+    ;
 
+var companyName = "207 LAB";
 
-
-function dsPieChart(){
-
-    // TODO: dsPieChart dataset
-    /**
-     * cartegory: 부서
-     * measure: 평균 근무 시간
-     */
-    var dataset = [
-            {category: "컴퓨터학과", measure: CSAvgWorktime},
-            {category: "정보보호학과", measure: ISAvgWorktime},
-            {category: "정보통신학과", measure: ICAvgWorktime},
-            {category: "207Lab", measure: LABAvgWorktime}
-        ]
-        ;
+function dsPieChart(dataset, companyName){
 
     var 	width = 400,
         height = 400,
@@ -135,7 +130,7 @@ function dsPieChart(){
         color = d3.scale.category20()    //builtin range of colors
         ;
 
-    var vis = d3.select("#pieChart")
+    var vis = d3.select("#dashboard-pie-chart")
             .append("svg:svg")              //create the SVG element inside the <body>
             .data([dataset])                   //associate our data with the document
             .attr("width", width)           //set the width and height of our visualization (these will be attributes of the <svg> tag
@@ -198,7 +193,7 @@ function dsPieChart(){
     vis.append("svg:text")
         .attr("dy", ".35em")
         .attr("text-anchor", "middle")
-        .text("USW Departments")
+        .text(String(companyName))
         .attr("class","title")
     ;
 
@@ -207,8 +202,8 @@ function dsPieChart(){
     function mouseover() {
         d3.select(this).select("path").transition()
             .duration(750)
-            //.attr("stroke","red")
-            //.attr("stroke-width", 1.5)
+            // .attr("stroke","red")
+            // .attr("stroke-width", 1.5)
             .attr("d", arcFinal3)
         ;
     }
@@ -216,8 +211,8 @@ function dsPieChart(){
     function mouseout() {
         d3.select(this).select("path").transition()
             .duration(750)
-            //.attr("stroke","blue")
-            //.attr("stroke-width", 1.5)
+            // .attr("stroke","blue")
+            // .attr("stroke-width", 1.5)
             .attr("d", arcFinal)
         ;
     }
@@ -232,7 +227,7 @@ function dsPieChart(){
     }
 }
 
-dsPieChart();
+dsPieChart(dataset_pie, companyName);
 
 /*
  ############# BAR CHART ###################
@@ -335,11 +330,11 @@ function dsBarChart() {
 
     //Create SVG element
 
-    var svg = d3.select("#barChart")
+    var svg = d3.select("#dashboard-bar-chart")
             .append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
-            .attr("id","barChartPlot")
+            .attr("id","dashboard-bar-plot")
         ;
 
     var plot = svg
@@ -453,9 +448,9 @@ function updateBarChart(group, colorChosen) {
             .range([height,0])
         ;
 
-    var svg = d3.select("#barChart svg");
+    var svg = d3.select("#dashboard-bar-chart svg");
 
-    var plot = d3.select("#barChartPlot")
+    var plot = d3.select("#dashboard-bar-plot")
             .datum(currentDatasetBarChart)
         ;
 
@@ -511,24 +506,24 @@ function updateBarChart(group, colorChosen) {
  */
 
 // measure: 평균 근무 시간
-// var datasetLineChart = [
-// { group: "All", category: 2008, measure: 289309 },
-// { group: "All", category: 2009, measure: 234998 },
-// { group: "All", category: 2010, measure: 310900 },
-// { group: "All", category: 2011, measure: 223900 },
-// { group: "All", category: 2012, measure: 234500 },
-// { group: "컴퓨터학과", category: 2008, measure: 234543 },
-// { group: "컴퓨터학과", category: 2009, measure: 704990 },
-// { group: "컴퓨터학과", category: 2010, measure: 379001 },
-// { group: "컴퓨터학과", category: 2011, measure: 431999 },
-// { group: "컴퓨터학과", category: 2012, measure: 350890 },
-// { group: "정보보호학과", category: 2008, measure: 63647.98 },
-// { group: "정보보호학과", category: 2009, measure: 61099.48 },
-// { group: "정보보호학과", category: 2010, measure: 87052 },
-// { group: "정보보호학과", category: 2011, measure: 58214 },
-// { group: "정보보호학과", category: 2012, measure: 58625 }
-// ]
-// ;
+var datasetLineChart = [
+{ group: "All", category: 2008, measure: 289309 },
+{ group: "All", category: 2009, measure: 234998 },
+{ group: "All", category: 2010, measure: 310900 },
+{ group: "All", category: 2011, measure: 223900 },
+{ group: "All", category: 2012, measure: 234500 },
+{ group: "컴퓨터학과", category: 2008, measure: 234543 },
+{ group: "컴퓨터학과", category: 2009, measure: 704990 },
+{ group: "컴퓨터학과", category: 2010, measure: 379001 },
+{ group: "컴퓨터학과", category: 2011, measure: 431999 },
+{ group: "컴퓨터학과", category: 2012, measure: 350890 },
+{ group: "정보보호학과", category: 2008, measure: 63647.98 },
+{ group: "정보보호학과", category: 2009, measure: 61099.48 },
+{ group: "정보보호학과", category: 2010, measure: 87052 },
+{ group: "정보보호학과", category: 2011, measure: 58214 },
+{ group: "정보보호학과", category: 2012, measure: 58625 }
+]
+;
 
 // set initial category value
 var group = "All";
@@ -586,7 +581,7 @@ function dsLineChart() {
             .y(function(d) { return yScale(d.measure); })
         ;
 
-    var svg = d3.select("#lineChart").append("svg")
+    var svg = d3.select("#dashboard-line-chart").append("svg")
         .datum(firstDatasetLineChart)
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -595,7 +590,7 @@ function dsLineChart() {
     var plot = svg
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-            .attr("id", "lineChartPlot")
+            .attr("id", "dashboard-line-plot")
         ;
 
     /* descriptive titles as part of plot -- start */
@@ -603,7 +598,7 @@ function dsLineChart() {
 
     plot.append("text")
         .text(firstDatasetLineChart[dsLength-1].measure)
-        .attr("id","lineChartTitle2")
+        .attr("id","dashboard-line-chart-title2")
         .attr("x",width/2)
         .attr("y",height/2)
     ;
@@ -633,7 +628,7 @@ function dsLineChart() {
 
     svg.append("text")
         .text("Weekend Total August")
-        .attr("id","lineChartTitle1")
+        .attr("id","dashboard-line-chart-title1")
         .attr("x",margin.left + ((width + margin.right)/2))
         .attr("y", 10)
     ;
@@ -672,7 +667,7 @@ function updateLineChart(group, colorChosen) {
             .y(function(d) { return yScale(d.measure); })
         ;
 
-    var plot = d3.select("#lineChartPlot")
+    var plot = d3.select("#dashboard-line-plot")
             .datum(currentDatasetLineChart)
         ;
 
