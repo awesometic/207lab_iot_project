@@ -16,6 +16,11 @@
     <link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap.css">
     <!-- Pace style -->
     <link rel="stylesheet" href="/plugins/pace/pace.min.css">
+
+    <!-- Bubble chart -->
+    <link rel="stylesheet" href="/d3resources/css/bubble_chart.css">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600,200italic,600italic&subset=latin,vietnamese">
+
     <!-- Theme style -->
     <link rel="stylesheet" href="/dist/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
@@ -32,22 +37,23 @@
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
-    <% include ../../nav.ejs %>
+    <% include ../../../nav.ejs %>
 
-    <% include ../../sidenav.ejs %>
+    <% include ../../../sidenav.ejs %>
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                직원 근무 현황
-                <small>직원 근무 현황 차트 - 가상의 데이터입니다.</small>
+                사무실별 인원 수
+                <small>사무실별 인원 수 - 가상의 데이터입니다.</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
                 <li><a href="#">근무 기록 조회</a></li>
-                <li class="active">직원 근무 현황</li>
+                <li><a href="#">D3 차트</a></li>
+                <li class="active">사무실별 인원 수</li>
             </ol>
         </section>
 
@@ -57,14 +63,14 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">근무 시간</h3>
+                            <h3 class="box-title">사무실별 인원 수</h3>
                             <div class="box-tools pull-right">
                                 <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             </div>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <div id="line-chart-container">
+                            <div id="bubble-chart-container">
 
                             </div>
                         </div>
@@ -83,7 +89,7 @@
     </div>
     <!-- /.content-wrapper -->
 
-    <% include ../../footer.ejs %>
+    <% include ../../../footer.ejs %>
 
 </div>
 <!-- ./wrapper -->
@@ -98,9 +104,16 @@
 <script src="/plugins/pace/pace.min.js"></script>
 <!-- D3.js -->
 <script src="http://d3js.org/d3.v3.min.js"></script>
-<!-- Chart01 - line chart -->
-<script src="http://dimplejs.org/dist/dimple.v2.2.0.min.js"></script>
-<script src="/d3resources/js/line_chart.js"></script>
+<!-- Bubble chart -->
+<script src="http://phuonghuynh.github.io/js/bower_components/d3-transform/src/d3-transform.js"></script>
+<script src="http://phuonghuynh.github.io/js/bower_components/cafej/src/extarray.js"></script>
+<script src="http://phuonghuynh.github.io/js/bower_components/cafej/src/misc.js"></script>
+<script src="http://phuonghuynh.github.io/js/bower_components/cafej/src/micro-observer.js"></script>
+<script src="http://phuonghuynh.github.io/js/bower_components/microplugin/src/microplugin.js"></script>
+<script src="http://phuonghuynh.github.io/js/bower_components/bubble-chart/src/bubble-chart.js"></script>
+<script src="http://phuonghuynh.github.io/js/bower_components/bubble-chart/src/plugins/lines/lines.js"></script>
+<script src="/d3resources/js/bubble_chart_index.js"></script>
+<script src="/d3resources/js/bubble_chart_central_click.js"></script>
 <script>
 
     $(document).ajaxStart(function() { Pace.restart(); });

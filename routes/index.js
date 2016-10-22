@@ -10,49 +10,6 @@ var cookieExpires = 3600000;
 
 var title = 'Suwon Univ. 207 Lab - "Janus" IoT Project';
 
-/* For testing D3.js */
-router.get('/d3test', function(req, res, next) {
-    res.render('d3test/Test_page', {
-        title: title
-    });
-});
-
-router.get('/d3test/1/Sorting_BarChart', function(req, res, next) {
-    res.render('d3test/1/Sorting_BarChart', {
-        title: title
-    });
-});
-
-router.get('/d3test/2/BubbleChart', function(req, res, next) {
-    res.render('d3test/2/BubbleChart', {
-        title: title
-    });
-});
-
-router.get('/d3test/3/GanttChart', function(req, res, next) {
-    res.render('d3test/3/GanttChart', {
-        title: title
-    });
-});
-
-router.get('/d3test/4/DashBoard', function(req, res, next) {
-    res.render('d3test/4/DashBoard', {
-        title: title
-    });
-});
-
-router.get('/d3test/5/lineChart', function(req, res, next) {
-    res.render('d3test/5/lineChart', {
-        title: title
-    });
-});
-
-router.get('/d3test/6/Heatmap', function(req, res, next) {
-    res.render('d3test/6/Heatmap', {
-        title: title
-    });
-});
-
 /* GET */
 router.get('/', function(req, res, next) {
     var employee_number = req.session.user_employee_id;
@@ -405,7 +362,7 @@ router.get('/service_environment', function(req, res, next) {
     }
 });
 
-router.get('/circumstance/d3chart1', function(req, res, next) {
+router.get('/circumstance/d3charts/heatmap', function(req, res, next) {
     var employee_number = req.session.user_employee_id;
     var smartphone_address = req.session.user_smartphone_address;
 
@@ -431,7 +388,7 @@ router.get('/circumstance/d3chart1', function(req, res, next) {
             } else if (err) {
                 console.log(err);
             } else {
-                res.render('home/circumstance/d3chart1', {
+                res.render('home/circumstance/d3charts/heatmap', {
                     title: title,
                     userInfo: userInfo,
                     companyName: companyName
@@ -443,7 +400,7 @@ router.get('/circumstance/d3chart1', function(req, res, next) {
     }
 });
 
-router.get('/circumstance/d3chart2', function(req, res, next) {
+router.get('/circumstance/d3charts/line', function(req, res, next) {
     var employee_number = req.session.user_employee_id;
     var smartphone_address = req.session.user_smartphone_address;
 
@@ -469,7 +426,159 @@ router.get('/circumstance/d3chart2', function(req, res, next) {
             } else if (err) {
                 console.log(err);
             } else {
-                res.render('home/circumstance/d3chart2', {
+                res.render('home/circumstance/d3charts/line', {
+                    title: title,
+                    userInfo: userInfo,
+                    companyName: companyName
+                });
+            }
+        });
+    } else {
+        res.send("<script>location.href='/';</script>");
+    }
+});
+
+router.get('/circumstance/d3charts/bar', function(req, res, next) {
+    var employee_number = req.session.user_employee_id;
+    var smartphone_address = req.session.user_smartphone_address;
+
+    if (typeof employee_number != 'undefined' || typeof smartphone_address != 'undefined') {
+        async.waterfall([
+            function (callback) {
+                pool.id_getUserInfo(smartphone_address, function (userInfo) {
+                    if (userInfo.permission == 0) {
+                        callback('NOT PERMITTED');
+                    } else {
+                        callback(null, userInfo);
+                    }
+                });
+            },
+            function (userInfo, callback) {
+                pool.id_getCompanyName(function (companyName) {
+                    callback(null, userInfo, companyName);
+                });
+            }
+        ], function (err, userInfo, companyName) {
+            if (err == 'NOT PERMITTED') {
+                res.send("<script>alert('서비스 이용 권한이 없습니다'); location.href='/';</script>");
+            } else if (err) {
+                console.log(err);
+            } else {
+                res.render('home/circumstance/d3charts/bar', {
+                    title: title,
+                    userInfo: userInfo,
+                    companyName: companyName
+                });
+            }
+        });
+    } else {
+        res.send("<script>location.href='/';</script>");
+    }
+});
+
+router.get('/circumstance/d3charts/bubble', function(req, res, next) {
+    var employee_number = req.session.user_employee_id;
+    var smartphone_address = req.session.user_smartphone_address;
+
+    if (typeof employee_number != 'undefined' || typeof smartphone_address != 'undefined') {
+        async.waterfall([
+            function (callback) {
+                pool.id_getUserInfo(smartphone_address, function (userInfo) {
+                    if (userInfo.permission == 0) {
+                        callback('NOT PERMITTED');
+                    } else {
+                        callback(null, userInfo);
+                    }
+                });
+            },
+            function (userInfo, callback) {
+                pool.id_getCompanyName(function (companyName) {
+                    callback(null, userInfo, companyName);
+                });
+            }
+        ], function (err, userInfo, companyName) {
+            if (err == 'NOT PERMITTED') {
+                res.send("<script>alert('서비스 이용 권한이 없습니다'); location.href='/';</script>");
+            } else if (err) {
+                console.log(err);
+            } else {
+                res.render('home/circumstance/d3charts/bubble', {
+                    title: title,
+                    userInfo: userInfo,
+                    companyName: companyName
+                });
+            }
+        });
+    } else {
+        res.send("<script>location.href='/';</script>");
+    }
+});
+
+router.get('/circumstance/d3charts/dashboard', function(req, res, next) {
+    var employee_number = req.session.user_employee_id;
+    var smartphone_address = req.session.user_smartphone_address;
+
+    if (typeof employee_number != 'undefined' || typeof smartphone_address != 'undefined') {
+        async.waterfall([
+            function (callback) {
+                pool.id_getUserInfo(smartphone_address, function (userInfo) {
+                    if (userInfo.permission == 0) {
+                        callback('NOT PERMITTED');
+                    } else {
+                        callback(null, userInfo);
+                    }
+                });
+            },
+            function (userInfo, callback) {
+                pool.id_getCompanyName(function (companyName) {
+                    callback(null, userInfo, companyName);
+                });
+            }
+        ], function (err, userInfo, companyName) {
+            if (err == 'NOT PERMITTED') {
+                res.send("<script>alert('서비스 이용 권한이 없습니다'); location.href='/';</script>");
+            } else if (err) {
+                console.log(err);
+            } else {
+                res.render('home/circumstance/d3charts/dashboard', {
+                    title: title,
+                    userInfo: userInfo,
+                    companyName: companyName
+                });
+            }
+        });
+    } else {
+        res.send("<script>location.href='/';</script>");
+    }
+});
+
+router.get('/circumstance/d3charts/gantt', function(req, res, next) {
+    var employee_number = req.session.user_employee_id;
+    var smartphone_address = req.session.user_smartphone_address;
+
+    if (typeof employee_number != 'undefined' || typeof smartphone_address != 'undefined') {
+        async.waterfall([
+            function (callback) {
+                pool.id_getUserInfo(smartphone_address, function (userInfo) {
+                    if (userInfo.permission == 0) {
+                        callback('NOT PERMITTED');
+                    } else {
+                        callback(null, userInfo);
+                    }
+                });
+            },
+            function (userInfo, callback) {
+                pool.id_getCompanyName(function (companyName) {
+                    callback(null, userInfo, companyName);
+                });
+            }
+        ], function (err, userInfo, companyName) {
+            if (err == 'NOT PERMITTED') {
+                res.send("<script>alert('서비스 이용 권한이 없습니다'); location.href='/';</script>");
+            } else if (err) {
+                console.log(err);
+            } else {
+                res.render('home/circumstance/d3charts/gantt', {
                     title: title,
                     userInfo: userInfo,
                     companyName: companyName

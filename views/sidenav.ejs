@@ -31,8 +31,19 @@
                     <i class="fa fa-search"></i><span> 근무 기록 조회</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="/circumstance/d3chart1"><i class="fa fa-circle-o"></i> 사무실 이동 현황</a></li>
-                    <li><a href="/circumstance/d3chart2"><i class="fa fa-circle-o"></i> 직원 근무 현황</a></li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-bar-chart"></i><span> D3 차트</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="/circumstance/d3charts/dashboard"><i class="fa fa-circle-o"></i> 요약 정보</a></li>
+                            <li><a href="/circumstance/d3charts/line"><i class="fa fa-circle-o"></i> 출퇴근 현황</a></li>
+                            <li><a href="/circumstance/d3charts/bar"><i class="fa fa-circle-o"></i> 근무 시간</a></li>
+                            <li><a href="/circumstance/d3charts/bubble"><i class="fa fa-circle-o"></i> 사무실별 인원 수</a></li>
+                            <li><a href="/circumstance/d3charts/heatmap"><i class="fa fa-circle-o"></i> 사무실 인원 현황</a></li>
+                            <li><a href="/circumstance/d3charts/gantt"><i class="fa fa-circle-o"></i> 사무실 이동 현황</a></li>
+                        </ul>
+                    </li>
                     <li><a href="/circumstance/commute_result"><i class="fa fa-circle-o"></i> 출퇴근 현황</a></li>
                 </ul>
             </li>
@@ -63,7 +74,7 @@
             <li class=""><a href="/service_environment"><i class="fa fa-cog"></i><span> 환경 설정</span></a></li>
             <% } } %>
 
-            <li class=""><a href="/d3test"><i class="fa fa-bar-chart"></i><span> D3js 테스트 페이지</span></a></li>
+            <li class=""><a href="/d3test/Test_page.html"><i class="fa fa-bar-chart"></i><span> D3js 테스트 페이지</span></a></li>
             <!--<li><a href="profile"><i class="fa fa-user"></i><span> 개인 정보</span></a></li>-->
         </ul>
 

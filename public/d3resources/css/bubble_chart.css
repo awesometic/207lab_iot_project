@@ -1,0 +1,9 @@
+#bubble-chart-container {
+    min-width: 100px;
+    max-width: 700px;
+    height: 500px;
+    margin: 0 auto;
+}
+#bubble-chart-container svg{
+    /*background: #000000;*/
+}
