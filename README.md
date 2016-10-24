@@ -5,12 +5,12 @@ This repository is for the project that has been performing by 207 laboratory at
 And this is supported by Hanium ICT mentoring program<br>
 
 ### Project members
-Yang Deokgyu
-Lee Yutaek
-Sim Jeounghyeon
-Baek Soyoung
-Kang Eunjeoung
-Kim Seoungwang (Not be in this project officially)
+Yang Deokgyu<br>
+Lee Yutaek<br>
+Sim Jeounghyeon<br>
+Baek Soyoung<br>
+Kang Eunjeoung<br>
+Kim Seoungwang (Not be in this project officially)<br>
 
 ## What is this project?
 Simply, the service of this project is to provide a solution that is associated with attendance management of the employees of any organization including any company or enterprise, school and so on<br>
@@ -22,8 +22,8 @@ To detect where is the specific place at Android application, each "specific" pl
 and these beacons must be registered into the database that is used by this Node.js server<br>
 
 ### Github repository of be mentioned Android application
-This application has been developing by Lee Yutaek
-[GitHub](https://github.com/eldbxor/CommutingChecker)
+This application has been developing by Lee Yutaek<br>
+[GitHub](https://github.com/eldbxor/CommutingChecker)<br>
 
 ## Requirement and Environment
 ### Needed pre-known languages and background of be using frameworks in this project to development
