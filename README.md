@@ -4,6 +4,14 @@
 This repository is for the project that has been performing by 207 laboratory at Suwon University since 2015. 11.<br>
 And this is supported by Hanium ICT mentoring program<br>
 
+### Project members
+Yang Deokgyu
+Lee Yutaek
+Sim Jeounghyeon
+Baek Soyoung
+Kang Eunjeoung
+Kim Seoungwang (Not be in this project officially)
+
 ## What is this project?
 Simply, the service of this project is to provide a solution that is associated with attendance management of the employees of any organization including any company or enterprise, school and so on<br>
 With this service, the administrators can know all about attendance status of all of employees more easily<br>
@@ -12,6 +20,10 @@ Before use this service, be sure all employees have to install the Android appli
 The application detect where the user in and automatically send a commute information to server when the user is in or out of the specific places<br> 
 To detect where is the specific place at Android application, each "specific" place must has 3 BLE beacons,<br>
 and these beacons must be registered into the database that is used by this Node.js server<br>
+
+### Github repository of be mentioned Android application
+This application has been developing by Lee Yutaek
+[GitHub](https://github.com/eldbxor/CommutingChecker)
 
 ## Requirement and Environment
 ### Needed pre-known languages and background of be using frameworks in this project to development
@@ -315,7 +327,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ## Members
 ### Contributors
 Website design support by Kim Seoungwang<br>
-D3.js chart support by Baek So Young, Kang Eunjeoung<br>
+D3.js chart support by Baek Soyoung, Kang Eunjeoung<br>
 
 ### Author
 Yang Deokgyu a.k.a. Awesomeitc<br>
