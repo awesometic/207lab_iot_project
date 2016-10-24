@@ -58,7 +58,20 @@ For now, all used npm packages are involved in this repository<br>
 So you don't have to install dependency npm packages specified in package.json file<br>
 
 ## Essential pre-installed database structure
-You have to make tables into your DBMS to use this Node.js server properly<br>
+You have to make database and tables into your DBMS to use this Node.js server properly<br>
+```javascript
+var pool = mysql.createPool({
+    connectionLimit : 100,
+    host            : 'localhost',
+    user            : '207lab',
+    password        : '207lab',
+    database        : 'project_CM'
+});
+```
+As you see above code, you should make database named "project_CM",<br>
+and add a user named '207lab' into your DBMS, give password '207lab' on it<br>
+Or, you can just modify the code as you want<br>
+Be sure you granted to "the user" to access "the project" through localhost<br>
 This service requires database tables that is figured below<br>
 * beacon
 ```sql
