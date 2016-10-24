@@ -2,8 +2,8 @@ var express = require('express');
 var router = express.Router();
 
 var async = require('async');
-var pool = require("../db");
-var logger = require("../logger");
+var pool = require("../public/libs/db");
+var logger = require("../public/libs/logger");
 
 // session will be expired in 1 hour
 var cookieExpires = 3600000;

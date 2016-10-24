@@ -21,10 +21,10 @@ var bodyParser = require('body-parser');
 var session = require("express-session");
 
 // Include socket.io loading file by Yang Deokgyu
-var io = require("./socket");
+var io = require("./public/libs/socket");
 
 // Include db.js to access to database
-var pool = require('./db');
+var pool = require('./public/libs/db');
 
 // Include async to calling functions consequently
 var async = require('async');
