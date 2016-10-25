@@ -5,12 +5,12 @@ This repository is for the project that has been performing by 207 laboratory at
 And this is supported by Hanium ICT mentoring program<br>
 
 ### Project members
-Yang Deokgyu<br>
-Lee Yutaek<br>
-Sim Jeounghyeon<br>
-Baek Soyoung<br>
-Kang Eunjeoung<br>
-Kim Seoungwang (Not be in this project officially)<br>
+* Yang Deokgyu
+* Lee Yutaek
+* Sim Jeounghyeon
+* Baek Soyoung
+* Kang Eunjeoung
+* Kim Seoungwang (Not be in this project officially)
 
 ## What is this project?
 Simply, the service of this project is to provide a solution that is associated with attendance management of the employees of any organization including any company or enterprise, school and so on<br>
@@ -22,8 +22,8 @@ To detect where is the specific place at Android application, each "specific" pl
 and these beacons must be registered into the database that is used by this Node.js server<br>
 
 ### Github repository of be mentioned Android application
-This application has been developing by Lee Yutaek<br>
-[GitHub](https://github.com/eldbxor/CommutingChecker)<br>
+This application has been developing by Lee Yootaek<br>
+[GitHub - CommutingChecker by Lee Yootaek](https://github.com/eldbxor/CommutingChecker)<br>
 
 ## Requirement and Environment
 ### Needed pre-known languages and background of be using frameworks in this project to development
@@ -68,9 +68,9 @@ var pool = mysql.createPool({
     database        : 'project_CM'
 });
 ```
-As you see above code, you should make database named "project_CM",<br>
+As you can see above code, you should make database named "project_CM",<br>
 and add a user named '207lab' into your DBMS, give password '207lab' on it<br>
-Or, you can just modify the code as you want<br>
+Or, you can just modify the code as you want. This code is involved in /public/libs/db.js<br>
 Be sure you granted to "the user" to access "the project" through localhost<br>
 This service requires database tables that is figured below<br>
 * beacon
@@ -146,6 +146,23 @@ create table workplace (
     beacon_set tinyint(1) not null
 );
 ```
+After creating these tables, you have to put some data as default value into workplace, department, position tables<br>
+You can insert default values like
+```sql
+insert into workplace values (-1, 'default', 'default', 0, 0, 0, 0, 0, 0, 0, 0, 1);
+insert into department (-1, 'default');
+insert into position (-1, 'default', 0);
+```
+And then, you'd better create relationships in your DBMS (use foreign key)<br>
+It is not a necessary part, but to improve stability of system, it's worth it<br>
+```sql
+alter table circumstance add constraint {FOREIGN KEY NAME} foreign key id_workplace references workplace(id_workplace);
+alter table circumstance add constraint {FOREIGN KEY NAME} foreign key smartphone_address references identity(smartphone_address);
+alter table identity add constraint {FOREIGN KEY NAME} foreign key id_department references department(id);
+alter table identity add constraint {FOREIGN KEY NAME} foreign key id_position references position(id);
+alter table beacon add constraint {FOREIGN KEY NAME} foreign key id_workplace references workplace(id_workplace);
+```
+Okay, now you can test/use our service<br>
 
 ## License
 ### express.js
@@ -337,11 +354,10 @@ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-## Members
-### Contributors
+## Contributors
 Website design support by Kim Seoungwang<br>
 D3.js chart support by Baek Soyoung, Kang Eunjeoung<br>
 
-### Author
+## Author
 Yang Deokgyu a.k.a. Awesomeitc<br>
 Repository created since 2016. 02.<br>
