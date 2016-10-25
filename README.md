@@ -359,5 +359,5 @@ Website design support by Kim Seoungwang<br>
 D3.js chart support by Baek Soyoung, Kang Eunjeoung<br>
 
 ## Author
-Yang Deokgyu a.k.a. Awesomeitc<br>
+Yang Deokgyu a.k.a. Awesometic<br>
 Repository created since 2016. 02.<br>
