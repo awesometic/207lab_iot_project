@@ -164,11 +164,11 @@ insert into identity values ('00:00:00:00:00:00', 'admin', 'admin', SHA2('admin'
 Finally, you'd better create relationships in your DBMS (use foreign key)<br>
 It is not a necessary part, but to improve stability of system, it's worth it<br>
 ```sql
-alter table circumstance add constraint {FOREIGN KEY NAME} foreign key id_workplace references workplace(id_workplace);
-alter table circumstance add constraint {FOREIGN KEY NAME} foreign key smartphone_address references identity(smartphone_address);
-alter table identity add constraint {FOREIGN KEY NAME} foreign key id_department references department(id);
-alter table identity add constraint {FOREIGN KEY NAME} foreign key id_position references position(id);
-alter table beacon add constraint {FOREIGN KEY NAME} foreign key id_workplace references workplace(id_workplace);
+alter table circumstance add constraint {FOREIGN_KEY_NAME} foreign key id_workplace references workplace(id_workplace);
+alter table circumstance add constraint {FOREIGN_KEY_NAME} foreign key smartphone_address references identity(smartphone_address);
+alter table identity add constraint {FOREIGN_KEY_NAME} foreign key id_department references department(id);
+alter table identity add constraint {FOREIGN_KEY_NAME} foreign key id_position references position(id);
+alter table beacon add constraint {FOREIGN_KEY_NAME} foreign key id_workplace references workplace(id_workplace);
 ```
 Okay, now you can test/use our service<br>
 
