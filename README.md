@@ -4,9 +4,10 @@
 This repository is for the project that has been performing by 207 laboratory at Suwon University since 2015. 11.<br>
 And this is supported by Hanium ICT mentoring program<br>
 
-### Project members
-* Yang Deokgyu
-* Lee Yutaek
+### Hanium project members
+* Her Sungmin - mentor
+* Yang Deokgyu - team leader
+* Lee Yootaek
 * Sim Jeounghyeon
 * Baek Soyoung
 * Kang Eunjeoung
@@ -153,7 +154,14 @@ insert into workplace values (-1, 'default', 'default', 0, 0, 0, 0, 0, 0, 0, 0, 
 insert into department (-1, 'default');
 insert into position (-1, 'default', 0);
 ```
-And then, you'd better create relationships in your DBMS (use foreign key)<br>
+And then, you have to add a user as administrator<br>
+default ID: admin, password: admin<br>
+Of course, you may change administrator's ID or password<br>
+Before insert administrator user into your database, ensure you have finished the required previous step<br>
+```sql
+insert into identity values ('00:00:00:00:00:00', 'admin', 'admin', SHA2('admin', 256), -1, -1, 1, 1);
+```
+Finally, you'd better create relationships in your DBMS (use foreign key)<br>
 It is not a necessary part, but to improve stability of system, it's worth it<br>
 ```sql
 alter table circumstance add constraint {FOREIGN KEY NAME} foreign key id_workplace references workplace(id_workplace);
