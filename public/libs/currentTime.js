@@ -1,4 +1,11 @@
-// https://github.com/TooTallNate/node-time
+/**
+ *  Created by Yang Deokgyu a.k.a. Awesometic
+ *
+ *  This file is to set timezone or to get current server time,
+ *  to convert the datetime format to another datetime format for use as intended
+ *
+ *  */
+
 var time = require('time');
 
 var now = new time.Date();

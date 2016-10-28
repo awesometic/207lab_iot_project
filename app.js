@@ -21,7 +21,7 @@ var bodyParser = require('body-parser');
 var session = require("express-session");
 
 // Include socket.io loading file by Yang Deokgyu
-var io = require("./public/libs/socket");
+var socketio = require("./public/libs/socket");
 
 // Include db.js to access to database
 var pool = require('./public/libs/db');
@@ -39,7 +39,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

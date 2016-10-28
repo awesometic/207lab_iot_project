@@ -1,3 +1,11 @@
+/**
+ *  Created by Yang Deokgyu a.k.a. Awesometic
+ *
+ *  This file is to communicate with the Android devices via internet
+ *  All of the communicated data is encrypted by RSA and AES algorithms
+ *
+ *  */
+
 //http://socket.io/docs/
 var port = process.env.PORT || 2070;
 var io = require("socket.io").listen(port);
@@ -37,17 +45,6 @@ io.on("connection", function(socket) {
         });
     });
 
-    /*
-     {
-     BeaconDeviceAddress1: '00:00:00:00:00:00',
-     BeaconDeviceAddress2: '00:00:00:00:00:00',
-     BeaconDeviceAddress3: '00:00:00:00:00:00',
-     BeaconData1: '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00',
-     BeaconData2: '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00',
-     BeaconData3: '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00',
-     SmartphoneAddress: '00:00:00:00:00:00',
-     }
-     */
     socket.on("circumstance", function(data) {
         if (typeof data === "undefined" || JSON.stringify(data).replace(/\{/g, "").replace(/\}/g, "").length == 0) {
             logger("socket").info("circumstance", "New commute record: received undefined data or empty");
@@ -133,23 +130,6 @@ io.on("connection", function(socket) {
         }
     });
 
-    /*
-     {
-     BeaconDeviceAddress1: '00:00:00:00:00:00',
-     BeaconDeviceAddress2: '00:00:00:00:00:00',
-     BeaconDeviceAddress3: '00:00:00:00:00:00',
-     BeaconData1: '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00',
-     BeaconData2: '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00',
-     BeaconData3: '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00',
-     SmartphoneAddress: '00:00:00:00:00:00',
-     CoordinateX: '-00',
-     CoordinateY: '-00',
-     CoordinateZ: '-00',
-     ThresholdX: '-00',
-     ThresholdY: '-00',
-     ThresholdX: '-00'
-     }
-     */
     socket.on("calibration", function(data) {
         if (typeof data === "undefined" || JSON.stringify(data).replace(/\{/g, "").replace(/\}/g, "").length == 0) {
             logger("socket").info("calibration", "New calibration data: received undefined data or empty");
@@ -191,11 +171,6 @@ io.on("connection", function(socket) {
         }
     });
 
-    /*
-     {
-     SmartphoneAddress: '00:00:00:00:00:00',
-     }
-     */
     socket.on("requestEssentialData", function(data) {
         if (typeof data === "undefined" || JSON.stringify(data).replace(/\{/g, "").replace(/\}/g, "").length == 0) {
             logger("socket").info("RequestData", "Request from user: received undefined data or empty");
@@ -223,11 +198,6 @@ io.on("connection", function(socket) {
         }
     });
 
-    /*
-     {
-     SmartphoneAddress: '00:00:00:00:00:00'
-     }
-     */
     socket.on("amIRegistered", function(data) {
         if (typeof data === "undefined" || JSON.stringify(data).replace(/\{/g, "").replace(/\}/g, "").length == 0) {
             logger("socket").info("amIRegistered", "Whether user registered or not: received undefined data or empty");
@@ -271,18 +241,6 @@ io.on("connection", function(socket) {
         }
     });
 
-    /*
-     {
-     SmartphoneAddress: '00:00:00:00:00:00',
-     EmployeeNumber: '00000000',
-     Name: 'NAME',
-     Password: 'PASSWORD',
-     Department: 'DEPARTMENT',
-     Position: 'POSITION',
-     Permission: 0,
-     Admin: 0
-     }
-     */
     socket.on("signupRequest", function(data) {
         if (typeof data === "undefined" || JSON.stringify(data).replace(/\{/g, "").replace(/\}/g, "").length == 0) {
             logger("socket").info("signupRequest", "New sign-up request: received undefined data or empty");
@@ -317,12 +275,6 @@ io.on("connection", function(socket) {
         }
     });
 
-    /*
-     {
-     SmartphoneAddress: '00:00:00:00:00:00',
-     Signal: 'SOMETHING'
-     }
-     */
     socket.on("requestChartData", function(data) {
         if (typeof data === "undefined" || JSON.stringify(data).replace(/\{/g, "").replace(/\}/g, "").length == 0) {
             logger("socket").info("requestChartData", "Request Chart Data: received undefined data or empty");

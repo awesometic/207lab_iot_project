@@ -1,21 +1,18 @@
 /**
- *  Created by Yang Deokgyu AKA Awesometic
+ *  Created by Yang Deokgyu a.k.a. Awesometic
  *
- *  Connect to database
- *  Database is used at index.js, socket.js
+ *  This file is to connect to database
+ *  The functions here is used at /routes/index.js, /public/libs/socket.js
  *
- *
- *  Must use callback function to deal with SQL Query properly!
- *  These are references about it
- *
+ *  In Node.js, as it is asynchronous, "using callback parameter" is required to get data from database properly
+ *  Below are references about it
  *  http://inspiredjw.tistory.com/entry/JavaScript-%EC%BD%9C%EB%B0%B1-%ED%95%A8%EC%88%98%EC%9D%98-%ED%99%9C%EC%9A%A9
  *  http://blog.jui.io/?p=19
  *  http://yubylab.tistory.com/entry/%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%EC%9D%98-%EC%BD%9C%EB%B0%B1%ED%95%A8%EC%88%98-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0
  *
  *  */
 
-//https://github.com/felixge/node-mysql
-/* Init connect to database */
+/* Init connection to the database */
 var mysql = require('mysql');
 var pool = mysql.createPool({
     connectionLimit : 100,
@@ -25,9 +22,7 @@ var pool = mysql.createPool({
     database        : 'project_CM'
 });
 
-// https://github.com/caolan/async
-// Async is a utility module which provides straight-forward,
-// powerful functions for working with asynchronous JavaScript
+/* Load the other libraries */
 var async = require("async");
 var currentTime = require('./currentTime');
 var logger = require("./logger");

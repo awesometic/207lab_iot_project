@@ -1,4 +1,3 @@
-
 // Cipher modules
 var aes256 = require('./aes256Cipher');
 var rsa = require('./rsaCipher');

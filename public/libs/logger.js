@@ -1,12 +1,12 @@
-// https://github.com/winstonjs/winston
-// https://github.com/winstonjs/winston-daily-rotate-file
-// references: http://niad.tistory.com/entry/logging-winston
-
-/** winston npm package for daily logging
- * It logs only at the specific files:
- * /db.js /socket.js /routes/index.js
- * 
- */
+/**
+ *  Created by Yang Deokgyu a.k.a. Awesometic
+ *
+ *  This file is to log any access data of server
+ *  Everyday, specific time, automatically
+ *
+ *  references: http://niad.tistory.com/entry/logging-winston
+ *
+ *  */
 
 var winston = require('winston');
 require('date-utils');
