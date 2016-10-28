@@ -1,6 +1,6 @@
 $(document).ready(function () {
     var bubbleChart = new d3.svg.BubbleChart({
-        supportResponsive: true,
+        // supportResponsive: true,
         container: "#bubble-chart-container",
         size: 500,
         //viewBoxSize: => use @default

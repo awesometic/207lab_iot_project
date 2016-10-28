@@ -69,7 +69,7 @@
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <div id="dashboard-container">
+                            <div id="dashboard-container" style="position: relative">
                                 <div id="dashboard-pie-chart"></div>
                                 <div id="dashboard-bar-chart"></div>
                                 <div id="dashboard-line-chart"></div>
@@ -112,6 +112,11 @@
     $(document).ajaxStart(function() { Pace.restart(); });
     $(document).ready(function() {
         $('div.pageload_effect').hide();
+        resizeDashboardContainer();
+
+        function resizeDashboardContainer() {
+            $('div#dashboard-container').height($('div#dashboard-pie-chart').height());
+        }
     });
 
 </script>

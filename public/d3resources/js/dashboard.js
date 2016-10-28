@@ -103,7 +103,6 @@ var LABMaxWorktime = 12;
 
 var LABOvertimework = ((KWorktime + YWorktime + BWorktime + SWorktime + LWorktime) - fixedtime*5);
 
-// TODO: dsPieChart dataset
 /**
  * cartegory: 부서
  * measure: 평균 근무 시간

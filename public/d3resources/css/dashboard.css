@@ -1,23 +1,19 @@
 #dashboard-pie-chart {
     position:absolute;
-    top:10px;
     left:10px;
     width:400px;
     height: 400px;
 }
 
-
-
 #dashboard-line-chart {
     position:absolute;
-    top:10px;
     left:410px;
     height: 150px;
 }
 
 #dashboard-bar-chart{
     position:absolute;
-    top:160px;
+    top:140px;
     left:410px;
     height: 250px;
 }
