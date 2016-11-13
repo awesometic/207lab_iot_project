@@ -153,7 +153,10 @@
 
     $(document).ajaxStart(function() { Pace.restart(); });
     $(document).ready(function() {
-        $('#commute_table').DataTable();
+        var commuteTable = $('#commute_table').DataTable({
+            "pageLength": 50
+        });
+        commuteTable.order([0, 'desc']).draw();
 
         $('div.pageload_effect').hide();
 

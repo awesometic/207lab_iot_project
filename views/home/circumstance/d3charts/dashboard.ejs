@@ -46,7 +46,7 @@
         <section class="content-header">
             <h1>
                 요약 정보
-                <small>요약 정보 - 가상의 데이터입니다.</small>
+                <small>요약 정보</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -107,6 +107,8 @@
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <!-- Dashboard -->
 <script src="/d3resources/js/dashboard.js"></script>
+<!-- Common -->
+<script src="/commonJqueryFunctions.js"></script>
 <script>
 
     $(document).ajaxStart(function() { Pace.restart(); });
@@ -114,8 +116,20 @@
         $('div.pageload_effect').hide();
         resizeDashboardContainer();
 
+        loadDashboard();
+
         function resizeDashboardContainer() {
             $('div#dashboard-container').height($('div#dashboard-pie-chart').height());
+        }
+
+        function loadDashboard() {
+            $.post('/post/chart/dashboard', {
+                smartphone_address: $('#current_smartphone_address').text()
+            }).done(function(json) {
+                json = clarifyResponsedJsonArr(json);
+                dsPieChart(json.datasetPieChart, json.companyName);
+                dsBarChart(json.datasetBarChart);
+            });
         }
     });
 

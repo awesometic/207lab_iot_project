@@ -36,7 +36,7 @@ io.on("connection", function(socket) {
     socket.on('requestRsaPublicKey', function(data) {
         var smartphoneAddress = analyzer.getSmartphoneAddress(data);
 
-        pool.soc_smartphoneValidation(smartphoneAddress, function(name) {
+        pool.smartphoneValidation(smartphoneAddress, function(name) {
             if (name) {
                 socket.emit('rsaPublicKey', {
                     publicKey: analyzer.rsa.getPublicKey()
@@ -58,11 +58,11 @@ io.on("connection", function(socket) {
             var minorArr = analyzer.getMinorArray(contentJson);
             var commuteStatus = analyzer.getCommuteStatus(contentJson);
 
-            pool.soc_gatewayValidation(beaconAddressArr, uuidArr, majorArr, minorArr, function (id) {
+            pool.gatewayValidation(beaconAddressArr, uuidArr, majorArr, minorArr, function (id) {
                 if (id) {
-                    pool.soc_smartphoneValidation(smartphoneAddress, function (name) {
+                    pool.smartphoneValidation(smartphoneAddress, function (name) {
                         if (name) {
-                            pool.soc_registerCommute(smartphoneAddress, id, commuteStatus, currentTime.getCurrentDateTime(), function (valid) {
+                            pool.registerCommute(smartphoneAddress, id, commuteStatus, currentTime.getCurrentDateTime(), function (valid) {
                                 if (valid) {
                                     var contentJsonString = "{ ";
                                     contentJsonString += "\"requestSuccess\":\"" + true + "\"";
@@ -101,11 +101,11 @@ io.on("connection", function(socket) {
             var minorArr = analyzer.getMinorArray(contentJson);
             var commuteStatus = analyzer.getCommuteStatus(contentJson);
 
-            pool.soc_gatewayValidation(beaconAddressArr, uuidArr, majorArr, minorArr, function (id) {
+            pool.gatewayValidation(beaconAddressArr, uuidArr, majorArr, minorArr, function (id) {
                 if (id) {
-                    pool.soc_smartphoneValidation(smartphoneAddress, function (name) {
+                    pool.smartphoneValidation(smartphoneAddress, function (name) {
                         if (name) {
-                            pool.soc_registerCommute(smartphoneAddress, id, commuteStatus, smartphoneDatetime, function (valid) {
+                            pool.registerCommute(smartphoneAddress, id, commuteStatus, smartphoneDatetime, function (valid) {
                                 if (valid) {
                                     var contentJsonString = "{ ";
                                     contentJsonString += "\"requestSuccess\":\"" + true + "\"";
@@ -144,11 +144,11 @@ io.on("connection", function(socket) {
             var coordinateArr = analyzer.getCoordinateArray(contentJson);
             var thresholdArr = analyzer.getThresholdArray(contentJson);
 
-            pool.soc_gatewayValidation(beaconAddressArr, uuidArr, majorArr, minorArr, function(id) {
+            pool.gatewayValidation(beaconAddressArr, uuidArr, majorArr, minorArr, function(id) {
                 if (id) {
-                    pool.soc_smartphoneValidation(smartphoneAddress, function(name) {
+                    pool.smartphoneValidation(smartphoneAddress, function(name) {
                         if (name) {
-                            pool.soc_RSSICalibration(coordinateArr, thresholdArr, id, name, currentTime.getCurrentDateTime(), function(valid) {
+                            pool.RSSICalibration(coordinateArr, thresholdArr, id, name, currentTime.getCurrentDateTime(), function(valid) {
                                 if (valid) {
                                     var contentJsonString = "{ ";
                                     contentJsonString += "\"requestSuccess\":\"" + true + "\"";
@@ -179,9 +179,9 @@ io.on("connection", function(socket) {
             var contentJson = analyzer.extractContentFromReceivedJson(data);
             var smartphoneAddress = analyzer.getSmartphoneAddress(contentJson);
 
-            pool.soc_smartphoneValidation(smartphoneAddress, function (name) {
+            pool.smartphoneValidation(smartphoneAddress, function (name) {
                 if (name) {
-                    pool.soc_getEssentialData(function (data) {
+                    pool.getEssentialData(function (data) {
 
                         if (data) {
                             socket.emit("requestEssentialData_answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, data));
@@ -206,11 +206,11 @@ io.on("connection", function(socket) {
             var contentJson = analyzer.extractContentFromReceivedJson(data);
             var smartphoneAddress = analyzer.getSmartphoneAddress(contentJson);
 
-            pool.soc_amIRegistered(smartphoneAddress, currentTime.getCurrentDateTime(), function (isRegistered) {
+            pool.amIRegistered(smartphoneAddress, currentTime.getCurrentDateTime(), function (isRegistered) {
                 if (isRegistered) {
-                    pool.soc_getSmartphoneUserName(smartphoneAddress, function (employee_name) {
-                        pool.soc_getSmartphoneUserENum(smartphoneAddress, function (employee_number) {
-                            pool.id_isPermitted(smartphoneAddress, employee_number, function (permitted) {
+                    pool.getSmartphoneUserName(smartphoneAddress, function (employee_name) {
+                        pool.getSmartphoneUserENum(smartphoneAddress, function (employee_number) {
+                            pool.isPermitted(smartphoneAddress, employee_number, function (permitted) {
                                 var contentJsonString = "{ ";
                                 contentJsonString += "\"registered\":\"" + true + "\", ";
                                 contentJsonString += "\"permitted\":\"" + permitted + "\",";
@@ -224,8 +224,8 @@ io.on("connection", function(socket) {
                         });
                     });
                 } else {
-                    pool.id_getDepartmentList(function (departmentListRows) {
-                        pool.id_getPositionList(function (positionListRows) {
+                    pool.getDepartmentList(function (departmentListRows) {
+                        pool.getPositionList(function (positionListRows) {
                             var contentJsonString = "{ ";
                             contentJsonString += "\"registered\":\"" + false + "\", ";
                             contentJsonString += "\"departmentListJsonArr\":" + JSON.stringify(departmentListRows) + ", ";
@@ -256,7 +256,7 @@ io.on("connection", function(socket) {
             var permission = analyzer.getPermission(contentJson);
             var admin = analyzer.getAdmin(contentJson);
 
-            pool.id_registerUser(smartphone_address, employee_number, name, password, id_department, id_position, permission, admin, function(success) {
+            pool.registerUser(smartphone_address, employee_number, name, password, id_department, id_position, permission, admin, function(success) {
                 var contentJsonString ="{ ";
                 if (success) {
                     contentJsonString += "\"requestSuccess\":\"" + true + "\"";
@@ -288,9 +288,9 @@ io.on("connection", function(socket) {
 
                 // Population of each department
                 case "POPULATION":
-                    pool.soc_smartphoneValidation(smartphoneAddress, function (name) {
+                    pool.smartphoneValidation(smartphoneAddress, function (name) {
                         if (name != undefined) {
-                            pool.chart_getPopulOfDepartment(function (chartData) {
+                            pool.getPopulOfDepartment(function (chartData) {
                                 socket.emit("requestChartData_answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, chartData));
                             });
                         } else {

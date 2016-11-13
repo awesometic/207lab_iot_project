@@ -11,7 +11,7 @@ And this is supported by Hanium ICT mentoring program<br>
 * Sim Jeounghyeon
 * Baek Soyoung
 * Kang Eunjeoung
-* Kim Seoungwang (Not be in this project officially)
+* Kim Seoungwang (Not in this project officially)
 
 ## What is this project?
 Simply, the service of this project is to provide a solution that is associated with attendance management of the employees of any organization including any company or enterprise, school and so on<br>
@@ -22,12 +22,12 @@ The application detect where the user in and automatically send a commute inform
 To detect where is the specific place at Android application, each "specific" place must has 3 BLE beacons,<br>
 and these beacons must be registered into the database that is used by this Node.js server<br>
 
-### Github repository of be mentioned Android application
+### Github repository of mentioned Android application
 This application has been developing by Lee Yootaek<br>
 [GitHub - CommutingChecker by Lee Yootaek](https://github.com/eldbxor/CommutingChecker)<br>
 
 ## Requirement and Environment
-### Needed pre-known languages and background of be using frameworks in this project to development
+### Needed pre-known languages and background of using frameworks in this project to development
 * HTML
 * CSS
 * Javascript

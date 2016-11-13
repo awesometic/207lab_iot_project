@@ -31,12 +31,12 @@ router.get('/dashboard', function(req, res, next) {
     if (typeof employee_number != 'undefined' || typeof smartphone_address != 'undefined') {
         async.waterfall([
             function (callback) {
-                pool.id_getUserInfo(smartphone_address, function (userInfo) {
+                pool.getUserInfo(smartphone_address, function (userInfo) {
                     callback(null, userInfo);
                 });
             },
             function (userInfo, callback) {
-                pool.id_getCompanyName(function (companyName) {
+                pool.getCompanyName(function (companyName) {
                     callback(null, userInfo, companyName);
                 });
             }
@@ -63,7 +63,7 @@ router.get('/management/database_access/member', function(req, res, next) {
     if (typeof employee_number != 'undefined' || typeof smartphone_address != 'undefined') {
         async.waterfall([
             function (callback) {
-                pool.id_getUserInfo(smartphone_address, function (userInfo) {
+                pool.getUserInfo(smartphone_address, function (userInfo) {
                     if (userInfo.permission == 0) {
                         callback('NOT PERMITTED');
                     } else {
@@ -72,22 +72,22 @@ router.get('/management/database_access/member', function(req, res, next) {
                 });
             },
             function (userInfo, callback) {
-                pool.id_getCompanyName(function (companyName) {
+                pool.getCompanyName(function (companyName) {
                     callback(null, userInfo, companyName);
                 });
             },
             function (userInfo, companyName, callback) {
-                pool.id_getUserList(function (userListRows) {
+                pool.getUserList(function (userListRows) {
                     callback(null, userInfo, companyName, userListRows);
                 });
             },
             function (userInfo, companyName, userListRows, callback) {
-                pool.id_getDepartmentList(function (departmentListRows) {
+                pool.getDepartmentList(function (departmentListRows) {
                     callback(null, userInfo, companyName, userListRows, departmentListRows);
                 });
             },
             function (userInfo, companyName, userListRows, departmentListRows, callback) {
-                pool.id_getPositionList(function (positionListRows) {
+                pool.getPositionList(function (positionListRows) {
                     callback(null, userInfo, companyName, userListRows, departmentListRows, positionListRows);
                 });
             }
@@ -119,7 +119,7 @@ router.get('/management/database_access/workplace', function(req, res, next) {
     if (typeof employee_number != 'undefined' || typeof smartphone_address != 'undefined') {
         async.waterfall([
             function (callback) {
-                pool.id_getUserInfo(smartphone_address, function (userInfo) {
+                pool.getUserInfo(smartphone_address, function (userInfo) {
                     if (userInfo.permission == 0) {
                         callback('NOT PERMITTED');
                     } else {
@@ -128,12 +128,12 @@ router.get('/management/database_access/workplace', function(req, res, next) {
                 });
             },
             function (userInfo, callback) {
-                pool.id_getCompanyName(function (companyName) {
+                pool.getCompanyName(function (companyName) {
                     callback(null, userInfo, companyName);
                 });
             },
             function (userInfo, companyName, callback) {
-                pool.id_getWorkplaceList(function (workplaceListRows) {
+                pool.getWorkplaceList(function (workplaceListRows) {
                     callback(null, userInfo, companyName, workplaceListRows);
                 });
             }
@@ -163,7 +163,7 @@ router.get('/management/database_access/beacon', function(req, res, next) {
     if (typeof employee_number != 'undefined' || typeof smartphone_address != 'undefined') {
         async.waterfall([
             function (callback) {
-                pool.id_getUserInfo(smartphone_address, function (userInfo) {
+                pool.getUserInfo(smartphone_address, function (userInfo) {
                     if (userInfo.permission == 0) {
                         callback('NOT PERMITTED');
                     } else {
@@ -172,17 +172,17 @@ router.get('/management/database_access/beacon', function(req, res, next) {
                 });
             },
             function (userInfo, callback) {
-                pool.id_getCompanyName(function (companyName) {
+                pool.getCompanyName(function (companyName) {
                     callback(null, userInfo, companyName);
                 });
             },
             function (userInfo, companyName, callback) {
-                pool.id_getBeaconList(function (beaconListRows) {
+                pool.getBeaconList(function (beaconListRows) {
                     callback(null, userInfo, companyName, beaconListRows);
                 });
             },
             function (userInfo, companyName, beaconListRows, callback) {
-                pool.id_getWorkplaceList(function (workplaceListRows) {
+                pool.getWorkplaceList(function (workplaceListRows) {
                     callback(null, userInfo, companyName, beaconListRows, workplaceListRows);
                 });
             }
@@ -213,7 +213,7 @@ router.get('/management/permission', function(req, res, next) {
     if (typeof employee_number != 'undefined' || typeof smartphone_address != 'undefined') {
         async.waterfall([
             function (callback) {
-                pool.id_getUserInfo(smartphone_address, function (userInfo) {
+                pool.getUserInfo(smartphone_address, function (userInfo) {
                     if (userInfo.permission == 0) {
                         callback('NOT PERMITTED');
                     } else {
@@ -222,22 +222,22 @@ router.get('/management/permission', function(req, res, next) {
                 });
             },
             function (userInfo, callback) {
-                pool.id_getCompanyName(function (companyName) {
+                pool.getCompanyName(function (companyName) {
                     callback(null, userInfo, companyName);
                 });
             },
             function (userInfo, companyName, callback) {
-                pool.id_getNotPermittedUserList(function (deniedUserListRows) {
+                pool.getNotPermittedUserList(function (deniedUserListRows) {
                     callback(null, userInfo, companyName, deniedUserListRows);
                 });
             },
             function (userInfo, companyName, deniedUserListRows, callback) {
-                pool.id_getDepartmentList(function (departmentListRows) {
+                pool.getDepartmentList(function (departmentListRows) {
                     callback(null, userInfo, companyName, deniedUserListRows, departmentListRows);
                 });
             },
             function (userInfo, companyName, deniedUserListRows, departmentListRows, callback) {
-                pool.id_getPositionList(function (positionListRows) {
+                pool.getPositionList(function (positionListRows) {
                     callback(null, userInfo, companyName, deniedUserListRows, departmentListRows, positionListRows);
                 });
             }
@@ -269,7 +269,7 @@ router.get('/management/position_department', function(req, res, next) {
     if (typeof employee_number != 'undefined' || typeof smartphone_address != 'undefined') {
         async.waterfall([
             function (callback) {
-                pool.id_getUserInfo(smartphone_address, function (userInfo) {
+                pool.getUserInfo(smartphone_address, function (userInfo) {
                     if (userInfo.permission == 0) {
                         callback('NOT PERMITTED');
                     } else {
@@ -278,17 +278,17 @@ router.get('/management/position_department', function(req, res, next) {
                 });
             },
             function (userInfo, callback) {
-                pool.id_getCompanyName(function (companyName) {
+                pool.getCompanyName(function (companyName) {
                     callback(null, userInfo, companyName);
                 });
             },
             function (userInfo, companyName, callback) {
-                pool.id_getDepartmentList(function (departmentListRows) {
+                pool.getDepartmentList(function (departmentListRows) {
                     callback(null, userInfo, companyName, departmentListRows);
                 });
             },
             function (userInfo, companyName, departmentListRows, callback) {
-                pool.id_getPositionList(function (positionListRows) {
+                pool.getPositionList(function (positionListRows) {
                     callback(null, userInfo, companyName, departmentListRows, positionListRows);
                 });
             }
@@ -319,7 +319,7 @@ router.get('/service_environment', function(req, res, next) {
     if (typeof employee_number != 'undefined' || typeof smartphone_address != 'undefined') {
         async.waterfall([
             function (callback) {
-                pool.id_getUserInfo(smartphone_address, function (userInfo) {
+                pool.getUserInfo(smartphone_address, function (userInfo) {
                     if (userInfo.permission == 0) {
                         callback('NOT PERMITTED');
                     } else {
@@ -328,17 +328,17 @@ router.get('/service_environment', function(req, res, next) {
                 });
             },
             function (userInfo, callback) {
-                pool.id_getCompanyName(function (companyName) {
+                pool.getCompanyName(function (companyName) {
                     callback(null, userInfo, companyName);
                 });
             },
             function (userInfo, companyName, callback) {
-                pool.id_getWorkStartTime(function (workStartTime) {
+                pool.getWorkStartTime(function (workStartTime) {
                     callback(null, userInfo, companyName, workStartTime);
                 });
             },
             function (userInfo, companyName, workStartTime, callback) {
-                pool.id_getWorkEndTime(function (workEndTime) {
+                pool.getWorkEndTime(function (workEndTime) {
                     callback(null, userInfo, companyName, workStartTime, workEndTime);
                 });
             }
@@ -369,7 +369,7 @@ router.get('/circumstance/d3charts/heatmap', function(req, res, next) {
     if (typeof employee_number != 'undefined' || typeof smartphone_address != 'undefined') {
         async.waterfall([
             function (callback) {
-                pool.id_getUserInfo(smartphone_address, function (userInfo) {
+                pool.getUserInfo(smartphone_address, function (userInfo) {
                     if (userInfo.permission == 0) {
                         callback('NOT PERMITTED');
                     } else {
@@ -378,7 +378,7 @@ router.get('/circumstance/d3charts/heatmap', function(req, res, next) {
                 });
             },
             function (userInfo, callback) {
-                pool.id_getCompanyName(function (companyName) {
+                pool.getCompanyName(function (companyName) {
                     callback(null, userInfo, companyName);
                 });
             }
@@ -407,7 +407,7 @@ router.get('/circumstance/d3charts/line', function(req, res, next) {
     if (typeof employee_number != 'undefined' || typeof smartphone_address != 'undefined') {
         async.waterfall([
             function (callback) {
-                pool.id_getUserInfo(smartphone_address, function (userInfo) {
+                pool.getUserInfo(smartphone_address, function (userInfo) {
                     if (userInfo.permission == 0) {
                         callback('NOT PERMITTED');
                     } else {
@@ -416,7 +416,7 @@ router.get('/circumstance/d3charts/line', function(req, res, next) {
                 });
             },
             function (userInfo, callback) {
-                pool.id_getCompanyName(function (companyName) {
+                pool.getCompanyName(function (companyName) {
                     callback(null, userInfo, companyName);
                 });
             }
@@ -445,7 +445,7 @@ router.get('/circumstance/d3charts/bar', function(req, res, next) {
     if (typeof employee_number != 'undefined' || typeof smartphone_address != 'undefined') {
         async.waterfall([
             function (callback) {
-                pool.id_getUserInfo(smartphone_address, function (userInfo) {
+                pool.getUserInfo(smartphone_address, function (userInfo) {
                     if (userInfo.permission == 0) {
                         callback('NOT PERMITTED');
                     } else {
@@ -454,7 +454,7 @@ router.get('/circumstance/d3charts/bar', function(req, res, next) {
                 });
             },
             function (userInfo, callback) {
-                pool.id_getCompanyName(function (companyName) {
+                pool.getCompanyName(function (companyName) {
                     callback(null, userInfo, companyName);
                 });
             }
@@ -483,7 +483,7 @@ router.get('/circumstance/d3charts/bubble', function(req, res, next) {
     if (typeof employee_number != 'undefined' || typeof smartphone_address != 'undefined') {
         async.waterfall([
             function (callback) {
-                pool.id_getUserInfo(smartphone_address, function (userInfo) {
+                pool.getUserInfo(smartphone_address, function (userInfo) {
                     if (userInfo.permission == 0) {
                         callback('NOT PERMITTED');
                     } else {
@@ -492,7 +492,7 @@ router.get('/circumstance/d3charts/bubble', function(req, res, next) {
                 });
             },
             function (userInfo, callback) {
-                pool.id_getCompanyName(function (companyName) {
+                pool.getCompanyName(function (companyName) {
                     callback(null, userInfo, companyName);
                 });
             }
@@ -521,7 +521,7 @@ router.get('/circumstance/d3charts/dashboard', function(req, res, next) {
     if (typeof employee_number != 'undefined' || typeof smartphone_address != 'undefined') {
         async.waterfall([
             function (callback) {
-                pool.id_getUserInfo(smartphone_address, function (userInfo) {
+                pool.getUserInfo(smartphone_address, function (userInfo) {
                     if (userInfo.permission == 0) {
                         callback('NOT PERMITTED');
                     } else {
@@ -530,7 +530,7 @@ router.get('/circumstance/d3charts/dashboard', function(req, res, next) {
                 });
             },
             function (userInfo, callback) {
-                pool.id_getCompanyName(function (companyName) {
+                pool.getCompanyName(function (companyName) {
                     callback(null, userInfo, companyName);
                 });
             }
@@ -559,7 +559,7 @@ router.get('/circumstance/d3charts/gantt', function(req, res, next) {
     if (typeof employee_number != 'undefined' || typeof smartphone_address != 'undefined') {
         async.waterfall([
             function (callback) {
-                pool.id_getUserInfo(smartphone_address, function (userInfo) {
+                pool.getUserInfo(smartphone_address, function (userInfo) {
                     if (userInfo.permission == 0) {
                         callback('NOT PERMITTED');
                     } else {
@@ -568,7 +568,7 @@ router.get('/circumstance/d3charts/gantt', function(req, res, next) {
                 });
             },
             function (userInfo, callback) {
-                pool.id_getCompanyName(function (companyName) {
+                pool.getCompanyName(function (companyName) {
                     callback(null, userInfo, companyName);
                 });
             }
@@ -597,7 +597,7 @@ router.get('/management/database_access/commute_table', function(req, res, next)
     if (typeof employee_number != 'undefined' || typeof smartphone_address != 'undefined') {
         async.waterfall([
             function (callback) {
-                pool.id_getUserInfo(smartphone_address, function (userInfo) {
+                pool.getUserInfo(smartphone_address, function (userInfo) {
                     if (userInfo.permission == 0) {
                         callback('NOT PERMITTED');
                     } else {
@@ -606,7 +606,7 @@ router.get('/management/database_access/commute_table', function(req, res, next)
                 });
             },
             function (userInfo, callback) {
-                pool.id_getCompanyName(function (companyName) {
+                pool.getCompanyName(function (companyName) {
                     callback(null, userInfo, companyName);
                 });
             },
@@ -615,11 +615,11 @@ router.get('/management/database_access/commute_table', function(req, res, next)
                     var startDate = req.query.start_date;
                     var endDate = req.query.end_date;
 
-                    pool.chart_getCircumstanceTable(startDate, endDate, function (circumstanceListRows) {
+                    pool.getCircumstanceTable(startDate, endDate, function (circumstanceListRows) {
                         callback(null, userInfo, companyName, circumstanceListRows);
                     });
                 } else {
-                    pool.chart_getCircumstanceTable(function (circumstanceListRows) {
+                    pool.getCircumstanceTable(function (circumstanceListRows) {
                         callback(null, userInfo, companyName, circumstanceListRows);
                     });
                 }
@@ -657,7 +657,7 @@ router.get('/circumstance/commute_result', function(req, res, next) {
     if (typeof employee_number != 'undefined' || typeof smartphone_address != 'undefined') {
         async.waterfall([
             function (callback) {
-                pool.id_getUserInfo(smartphone_address, function (userInfo) {
+                pool.getUserInfo(smartphone_address, function (userInfo) {
                     if (userInfo.permission == 0) {
                         callback('NOT PERMITTED');
                     } else {
@@ -666,41 +666,11 @@ router.get('/circumstance/commute_result', function(req, res, next) {
                 });
             },
             function (userInfo, callback) {
-                pool.id_getCompanyName(function (companyName) {
+                pool.getCompanyName(function (companyName) {
                     callback(null, userInfo, companyName);
                 });
-            },
-            function (userInfo, companyName, callback) {
-                pool.chart_getTodayComeInTime(function(allTodayComeInTime) {
-                    callback(null, userInfo, companyName, allTodayComeInTime);
-                });
-            },
-            function (userInfo, companyName, allTodayComeInTime, callback) {
-                pool.chart_getTodayComeOutTime(function(allTodayComeOutTime) {
-                    callback(null, userInfo, companyName, allTodayComeInTime, allTodayComeOutTime);
-                });
-            },
-            function (userInfo, companyName, allTodayComeInTime, allTodayComeOutTime, callback) {
-                pool.chart_getTodayWorkTime(function(allTodayWorkingTime) {
-                    callback(null, userInfo, companyName, allTodayComeInTime, allTodayComeOutTime, allTodayWorkingTime);
-                });
-            },
-            function (userInfo, companyName, allTodayComeInTime, allTodayComeOutTime, allTodayWorkingTime, callback) {
-                pool.chart_getAvgComeInTime(oneMonthAgoDate, todayEndDate, function(allAvgComeInTime) {
-                    callback(null, userInfo, companyName, allTodayComeInTime, allTodayComeOutTime, allTodayWorkingTime, allAvgComeInTime);
-                });
-            },
-            function (userInfo, companyName, allTodayComeInTime, allTodayComeOutTime, allTodayWorkingTime, allAvgComeInTime, callback) {
-                pool.chart_getAvgComeOutTime(oneMonthAgoDate, todayEndDate, function(allAvgComeOutTime) {
-                    callback(null, userInfo, companyName, allTodayComeInTime, allTodayComeOutTime, allTodayWorkingTime, allAvgComeInTime, allAvgComeOutTime);
-                });
-            },
-            function (userInfo, companyName, allTodayComeInTime, allTodayComeOutTime, allTodayWorkingTime, allAvgComeInTime, allAvgComeOutTime, callback) {
-                pool.chart_getAvgWorkTime(oneMonthAgoDate, todayEndDate, function(allAvgWorkingTime) {
-                    callback(null, userInfo, companyName, allTodayComeInTime, allTodayComeOutTime, allTodayWorkingTime, allAvgComeInTime, allAvgComeOutTime, allAvgWorkingTime);
-                });
             }
-        ], function (err, userInfo, companyName, allTodayComeInTime, allTodayComeOutTime, allTodayWorkingTime, allAvgComeInTime, allAvgComeOutTime, allAvgWorkingTime) {
+        ], function (err, userInfo, companyName) {
             if (err == 'NOT PERMITTED') {
                 res.send("<script>alert('서비스 이용 권한이 없습니다'); location.href='/';</script>");
             } else if (err) {
@@ -709,13 +679,7 @@ router.get('/circumstance/commute_result', function(req, res, next) {
                 res.render('home/circumstance/commute_result', {
                     title: title,
                     userInfo: userInfo,
-                    companyName: companyName,
-                    allTodayComeInTime: allTodayComeInTime,
-                    allTodayComeOutTime: allTodayComeOutTime,
-                    allTodayWorkingTime: allTodayWorkingTime,
-                    allAvgComeInTime: allAvgComeInTime,
-                    allAvgComeOutTime: allAvgComeOutTime,
-                    allAvgWorkingTime: allAvgWorkingTime
+                    companyName: companyName
                 });
             }
         });
@@ -737,8 +701,8 @@ router.get('/dashboard_deprecated', function(req, res, next) {
     var userSmartphoneAddress = req.session.user_smartphone_address;
 
     if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
-        pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
-            pool.id_getCompanyName(function (companyName) {
+        pool.getUserInfo(userSmartphoneAddress, function(userInfoRow) {
+            pool.getCompanyName(function (companyName) {
                 res.render('dashboard_deprecated', {
                     title: title,
                     userInfo: userInfoRow,
@@ -756,8 +720,8 @@ router.get('/profile_deprecated', function(req, res, next) {
     var userSmartphoneAddress = req.session.user_smartphone_address;
 
     if (typeof userEmployeeId != "undefined" || typeof userSmartphoneAddress != "undefined") {
-        pool.id_getUserInfo(userSmartphoneAddress, function(userInfoRow) {
-            pool.id_getCompanyName(function(companyName) {
+        pool.getUserInfo(userSmartphoneAddress, function(userInfoRow) {
+            pool.getCompanyName(function(companyName) {
 
                 res.render('profile_deprecated', {
                     title: title,
@@ -777,7 +741,7 @@ router.post("/", function(req, res) {
     var signin_id = req.body.signin_id;
     var signin_pw = req.body.signin_pw;
 
-    pool.id_loginValidation(signin_id, signin_pw, function(valid) {
+    pool.loginValidation(signin_id, signin_pw, function(valid) {
 
         if (valid == "unregistered") {
             // If employee number is unregistered
@@ -788,7 +752,7 @@ router.post("/", function(req, res) {
         } else if (typeof valid !== "undefined") {
             // Login success
 
-            pool.id_getSmartphoneAddress(signin_id, function (smartphone_address) {
+            pool.getSmartphoneAddress(signin_id, function (smartphone_address) {
                 req.session.user_employee_id = signin_id;
                 req.session.user_smartphone_address = smartphone_address;
                 req.session.user_admin = valid;
@@ -802,27 +766,6 @@ router.post("/", function(req, res) {
     });
 });
 
-// router.post('/home/dashboard', function(req, res, next) {
-//     var modified_password = req.body.password;
-//     var modified_password_confirm = req.body.password_confirm;
-//
-//     if (modified_password.length != 0 && (modified_password != modified_password_confirm)) {
-//         res.send("<script>alert('Check confirmation password!'); history.go(-1);</script>");
-//     } else if (modified_password.length == 0) {
-//         res.send("<script>alert('To change your password, fill out the form'); history.go(-1);</script>");
-//     } else {
-//         pool.id_getUserInfo(req.session.user_smartphone_address, function(userInfo) {
-//             pool.id_modifyUser(req.session.user_smartphone_address, req.session.user_employee_id, userInfo.name, modified_password, userInfo.department, userInfo.position, userInfo.admin, function (valid) {
-//                 if (valid) {
-//                     res.send("<script>alert('Modify Success!'); location.href='home/dashboard';</script>");
-//                 } else {
-//                     res.send("<script>alert('Server error'); history.go(-1);</script>");
-//                 }
-//             });
-//         });
-//     }
-// });
-
 router.post('/management/database_access/member', function(req, res, next) {
     var controlFlag = req.body.user_control_flag;
 
@@ -835,9 +778,9 @@ router.post('/management/database_access/member', function(req, res, next) {
             var signup_department = req.body.department;
             var signup_position = req.body.position;
 
-            pool.id_checkUserRegistered(signup_smartphone_address, signup_id, function (valid) {
+            pool.checkUserRegistered(signup_smartphone_address, signup_id, function (valid) {
                 if (valid) {
-                    pool.id_registerUser(signup_smartphone_address, signup_id, signup_name, signup_pw, signup_department, signup_position, 0, 0, function (valid) {
+                    pool.registerUser(signup_smartphone_address, signup_id, signup_name, signup_pw, signup_department, signup_position, 0, 0, function (valid) {
                         if (valid) {
                             res.send("<script>alert('Register success!'); location.href='/management/database_access/member';</script>");
                         } else {
@@ -858,13 +801,10 @@ router.post('/management/database_access/member', function(req, res, next) {
             var modified_position = req.body.position;
             var modified_admin = req.body.admin;
 
-            console.log(modified_department + ", " + modified_position);
-
             if (typeof selected_employee_number === 'undefined' || typeof selected_smartphone_address === 'undefined') {
                 res.send("<script>alert('Cannot find any user information'); history.go(-1);</script>");
             } else {
-                pool.id_getUserInfo(selected_smartphone_address, function(userInfo) {
-                    console.log(JSON.stringify(userInfo));
+                pool.getUserInfo(selected_smartphone_address, function(userInfo) {
                     if (typeof modified_name === 'undefined')
                         modified_name = userInfo.name;
                     if (typeof modified_department === 'undefined')
@@ -877,7 +817,7 @@ router.post('/management/database_access/member', function(req, res, next) {
                     else
                         modified_admin = 1;
 
-                    pool.id_modifyUser(selected_smartphone_address, selected_employee_number, modified_name, null,
+                    pool.modifyUser(selected_smartphone_address, selected_employee_number, modified_name, null,
                         modified_department, modified_position, modified_admin, function (valid) {
                             if (valid) {
                                 res.send("<script>alert('Modify Success!'); location.href='/management/database_access/member';</script>");
@@ -895,9 +835,9 @@ router.post('/management/database_access/member', function(req, res, next) {
             if (typeof deleted_smartphone_address === 'undefined') {
                 res.send("<script>alert('Cannot find any user information'); history.go(-1);</script>");
             } else {
-                pool.id_getUserInfo(deleted_smartphone_address, function(userInfo) {
+                pool.getUserInfo(deleted_smartphone_address, function(userInfo) {
 
-                    pool.id_deleteUser(deleted_smartphone_address, userInfo.employee_number, function (valid) {
+                    pool.deleteUser(deleted_smartphone_address, userInfo.employee_number, function (valid) {
                         if (valid) {
                             res.send("<script>alert('Delete Success!'); location.href='/management/database_access/member';</script>");
                         } else {
@@ -930,7 +870,7 @@ router.post('/management/database_access/workplace', function(req, res, next) {
             var latitude = +lat_lon.split(', ')[0];
             var longitude = +lat_lon.split(', ')[1];
 
-            pool.id_registerWorkplace(name_workplace, location_workplace, latitude, longitude, function(valid) {
+            pool.registerWorkplace(name_workplace, location_workplace, latitude, longitude, function(valid) {
                 if (valid) {
                     res.send("<script>alert('Add Success!'); location.href='/management/database_access/workplace';</script>");
                 } else {
@@ -948,13 +888,13 @@ router.post('/management/database_access/workplace', function(req, res, next) {
             if (typeof selected_id_workplace === 'undefined') {
                 res.send("<script>alert('Cannot find any workplace information'); history.go(-1);</script>");
             } else {
-                pool.id_getWorkplaceInfo(selected_id_workplace, function(workplaceInfo) {
+                pool.getWorkplaceInfo(selected_id_workplace, function(workplaceInfo) {
                     if (typeof modified_name === 'undefined')
                         modified_name = workplaceInfo.name;
                     if (typeof modified_location === 'undefined')
                         modified_location = workplaceInfo.department;
 
-                    pool.id_modifyWorkplace(selected_id_workplace, modified_name, modified_location,
+                    pool.modifyWorkplace(selected_id_workplace, modified_name, modified_location,
                         workplaceInfo.coordinateX, workplaceInfo.coordinateY, workplaceInfo.coordinateZ,
                         workplaceInfo.thresholdX, workplaceInfo.thresholdY, workplaceInfo.thresholdZ,
                         workplaceInfo.latitude, workplaceInfo.longitude, workplaceInfo.beacon_set, function (valid) {
@@ -974,9 +914,9 @@ router.post('/management/database_access/workplace', function(req, res, next) {
             if (typeof deleted_id_workplace === 'undefined') {
                 res.send("<script>alert('Cannot find any workplace information'); history.go(-1);</script>");
             } else {
-                pool.id_getWorkplaceInfo(deleted_id_workplace, function (workplaceInfo) {
+                pool.getWorkplaceInfo(deleted_id_workplace, function (workplaceInfo) {
                     if (workplaceInfo.beacon_set == 0) {
-                        pool.id_deleteWorkplace(deleted_id_workplace, function (valid) {
+                        pool.deleteWorkplace(deleted_id_workplace, function (valid) {
                             if (valid) {
                                 res.send("<script>alert('Delete Success!'); location.href='/management/database_access/workplace';</script>");
                             } else {
@@ -1007,16 +947,16 @@ router.post('/management/database_access/beacon', function(req, res, next) {
             var add_minor = req.body.minor;
             var add_id_workplace = req.body.id_workplace;
 
-            pool.soc_getBeaconsCountOfWorkplace(add_id_workplace, function(beaconsCountOfWorkplace) {
+            pool.getBeaconsCountOfWorkplace(add_id_workplace, function(beaconsCountOfWorkplace) {
                 if (beaconsCountOfWorkplace < 3 || add_id_workplace == -1) {
-                    pool.id_checkBeaconRegistered(add_beacon_address, function(valid) {
+                    pool.checkBeaconRegistered(add_beacon_address, function(valid) {
                         if (valid) {
-                            pool.id_registerBeacon(add_beacon_address, add_uuid, add_major, add_minor, add_id_workplace, function (valid) {
+                            pool.registerBeacon(add_beacon_address, add_uuid, add_major, add_minor, add_id_workplace, function (valid) {
                                 if (valid) {
-                                    pool.soc_getBeaconsCountOfWorkplace(add_id_workplace, function(afterBeaconsCountOfWorkplace) {
-                                        pool.id_getWorkplaceInfo(add_id_workplace, function(workplaceInfo) {
+                                    pool.getBeaconsCountOfWorkplace(add_id_workplace, function(afterBeaconsCountOfWorkplace) {
+                                        pool.getWorkplaceInfo(add_id_workplace, function(workplaceInfo) {
                                             if (afterBeaconsCountOfWorkplace == 3) {
-                                                pool.id_modifyWorkplace(add_id_workplace, workplaceInfo.name_workplace, workplaceInfo.location_workplace,
+                                                pool.modifyWorkplace(add_id_workplace, workplaceInfo.name_workplace, workplaceInfo.location_workplace,
                                                     workplaceInfo.coordinateX, workplaceInfo.coordinateY, workplaceInfo.coordinateZ,
                                                     workplaceInfo.thresholdX, workplaceInfo.thresholdY, workplaceInfo.thresholdZ,
                                                     workplaceInfo.latitude, workplaceInfo.longitude, 1, function (valid) {
@@ -1060,7 +1000,7 @@ router.post('/management/database_access/beacon', function(req, res, next) {
             if (typeof selected_beacon_address === 'undefined') {
                 res.send("<script>alert('Cannot find any beacon information'); history.go(-1);</script>");
             } else {
-                pool.id_getBeaconInfo(selected_beacon_address, function (beaconInfo) {
+                pool.getBeaconInfo(selected_beacon_address, function (beaconInfo) {
                     if (typeof modified_uuid === 'undefined')
                         modified_uuid = beaconInfo.UUID;
                     if (typeof modified_major === 'undefined')
@@ -1068,13 +1008,13 @@ router.post('/management/database_access/beacon', function(req, res, next) {
                     if (typeof modified_minor === 'undefined')
                         modified_minor = beaconInfo.minor;
 
-                    pool.id_modifyBeacon(selected_beacon_address, modified_uuid, modified_major, modified_minor, modified_id_workplace, function (valid) {
+                    pool.modifyBeacon(selected_beacon_address, modified_uuid, modified_major, modified_minor, modified_id_workplace, function (valid) {
                         if (valid) {
                             if (modified_id_workplace == -1) {
-                                pool.soc_getBeaconsCountOfWorkplace(current_id_workplace, function (afterBeaconsCountOfWorkplace) {
-                                    pool.id_getWorkplaceInfo(current_id_workplace, function (workplaceInfo) {
+                                pool.getBeaconsCountOfWorkplace(current_id_workplace, function (afterBeaconsCountOfWorkplace) {
+                                    pool.getWorkplaceInfo(current_id_workplace, function (workplaceInfo) {
                                         if (afterBeaconsCountOfWorkplace == 3) {
-                                            pool.id_modifyWorkplace(current_id_workplace, workplaceInfo.name_workplace, workplaceInfo.location_workplace,
+                                            pool.modifyWorkplace(current_id_workplace, workplaceInfo.name_workplace, workplaceInfo.location_workplace,
                                                 workplaceInfo.coordinateX, workplaceInfo.coordinateY, workplaceInfo.coordinateZ,
                                                 workplaceInfo.thresholdX, workplaceInfo.thresholdY, workplaceInfo.thresholdZ,
                                                 workplaceInfo.latitude, workplaceInfo.longitude, 1, function (valid) {
@@ -1085,7 +1025,7 @@ router.post('/management/database_access/beacon', function(req, res, next) {
                                                     }
                                                 });
                                         } else {
-                                            pool.id_modifyWorkplace(current_id_workplace, workplaceInfo.name_workplace, workplaceInfo.location_workplace,
+                                            pool.modifyWorkplace(current_id_workplace, workplaceInfo.name_workplace, workplaceInfo.location_workplace,
                                                 workplaceInfo.coordinateX, workplaceInfo.coordinateY, workplaceInfo.coordinateZ,
                                                 workplaceInfo.thresholdX, workplaceInfo.thresholdY, workplaceInfo.thresholdZ,
                                                 workplaceInfo.latitude, workplaceInfo.longitude, 0, function (valid) {
@@ -1099,10 +1039,10 @@ router.post('/management/database_access/beacon', function(req, res, next) {
                                     });
                                 });
                             } else {
-                                pool.soc_getBeaconsCountOfWorkplace(modified_id_workplace, function (afterBeaconsCountOfWorkplace) {
-                                    pool.id_getWorkplaceInfo(modified_id_workplace, function (workplaceInfo) {
+                                pool.getBeaconsCountOfWorkplace(modified_id_workplace, function (afterBeaconsCountOfWorkplace) {
+                                    pool.getWorkplaceInfo(modified_id_workplace, function (workplaceInfo) {
                                         if (afterBeaconsCountOfWorkplace == 3) {
-                                            pool.id_modifyWorkplace(modified_id_workplace, workplaceInfo.name_workplace, workplaceInfo.location_workplace,
+                                            pool.modifyWorkplace(modified_id_workplace, workplaceInfo.name_workplace, workplaceInfo.location_workplace,
                                                 workplaceInfo.coordinateX, workplaceInfo.coordinateY, workplaceInfo.coordinateZ,
                                                 workplaceInfo.thresholdX, workplaceInfo.thresholdY, workplaceInfo.thresholdZ,
                                                 workplaceInfo.latitude, workplaceInfo.longitude, 1, function (valid) {
@@ -1113,7 +1053,7 @@ router.post('/management/database_access/beacon', function(req, res, next) {
                                                     }
                                                 });
                                         } else {
-                                            pool.id_modifyWorkplace(modified_id_workplace, workplaceInfo.name_workplace, workplaceInfo.location_workplace,
+                                            pool.modifyWorkplace(modified_id_workplace, workplaceInfo.name_workplace, workplaceInfo.location_workplace,
                                                 workplaceInfo.coordinateX, workplaceInfo.coordinateY, workplaceInfo.coordinateZ,
                                                 workplaceInfo.thresholdX, workplaceInfo.thresholdY, workplaceInfo.thresholdZ,
                                                 workplaceInfo.latitude, workplaceInfo.longitude, 0, function (valid) {
@@ -1141,9 +1081,9 @@ router.post('/management/database_access/beacon', function(req, res, next) {
             if (typeof deleted_beacon_address === 'undefined') {
                 res.send("<script>alert('Cannot find any beacon information'); history.go(-1);</script>");
             } else {
-                pool.id_getBeaconInfo(deleted_beacon_address, function(beaconInfo) {
+                pool.getBeaconInfo(deleted_beacon_address, function(beaconInfo) {
                     if (beaconInfo.id_workplace == -1) {
-                        pool.id_deleteBeacon(deleted_beacon_address, function (valid) {
+                        pool.deleteBeacon(deleted_beacon_address, function (valid) {
                             if (valid) {
                                 res.send("<script>alert('Delete Success!'); location.href='/management/database_access/beacon';</script>");
                             } else {
@@ -1178,7 +1118,7 @@ router.post('/management/permission', function(req, res, next) {
             if (typeof selected_employee_number === 'undefined' || typeof selected_smartphone_address === 'undefined') {
                 res.send("<script>alert('Cannot find any user information'); history.go(-1);</script>");
             } else {
-                pool.id_getUserInfo(selected_smartphone_address, function(userInfo) {
+                pool.getUserInfo(selected_smartphone_address, function(userInfo) {
                     if (typeof modified_name === 'undefined')
                         modified_name = userInfo.name;
                     if (typeof modified_department === 'undefined')
@@ -1191,7 +1131,7 @@ router.post('/management/permission', function(req, res, next) {
                     else
                         modified_admin = 1;
 
-                    pool.id_modifyUser(selected_smartphone_address, selected_employee_number, modified_name, null,
+                    pool.modifyUser(selected_smartphone_address, selected_employee_number, modified_name, null,
                         modified_department, modified_position, modified_admin, function (valid) {
                             if (valid) {
                                 res.send("<script>alert('Modify Success!'); location.href='/management/permission';</script>");
@@ -1209,9 +1149,9 @@ router.post('/management/permission', function(req, res, next) {
             if (typeof deleted_smartphone_address === 'undefined') {
                 res.send("<script>alert('Cannot find any user information'); history.go(-1);</script>");
             } else {
-                pool.id_getUserInfo(deleted_smartphone_address, function(userInfo) {
+                pool.getUserInfo(deleted_smartphone_address, function(userInfo) {
 
-                    pool.id_deleteUser(deleted_smartphone_address, userInfo.employee_number, function (valid) {
+                    pool.deleteUser(deleted_smartphone_address, userInfo.employee_number, function (valid) {
                         if (valid) {
                             res.send("<script>alert('Delete Success!'); location.href='/management/permission';</script>");
                         } else {
@@ -1233,7 +1173,7 @@ router.post('/management/permission', function(req, res, next) {
                     toGivePermissionUsersArr.push(toGivePermissionUsersJsonArr[i].smartphone_address);
                 }
 
-                pool.id_permitUsers(toGivePermissionUsersArr, function(valid) {
+                pool.permitUsers(toGivePermissionUsersArr, function(valid) {
                     if (valid) {
                         res.send("<script>alert('Modify Success!'); location.href='/management/permission';</script>");
                     } else {
@@ -1254,13 +1194,13 @@ router.post('/management/position_department', function(req, res, next) {
     var controlFlag = req.body.control_flag;
     var smartphoneAddress = req.body.smartphone_address;
 
-    pool.id_getUserInfo(smartphoneAddress, function(userInfo) {
+    pool.getUserInfo(smartphoneAddress, function(userInfo) {
         if (userInfo.admin) {
             switch (controlFlag) {
                 case "department_add":
                     var name = req.body.department_name;
 
-                    pool.id_addDepartment(name, function(valid) {
+                    pool.addDepartment(name, function(valid) {
                         if (valid) {
                             res.send("<script>alert('Add Success!'); location.href='/management/position_department';</script>");
                         } else {
@@ -1274,7 +1214,7 @@ router.post('/management/position_department', function(req, res, next) {
                     var id = req.body.id_department;
                     var name = req.body.department_name;
 
-                    pool.id_modifyDepartment(id, name, function(valid) {
+                    pool.modifyDepartment(id, name, function(valid) {
                         if (valid) {
                             res.send("<script>alert('Modify Success!'); location.href='/management/position_department';</script>");
                         } else {
@@ -1287,7 +1227,7 @@ router.post('/management/position_department', function(req, res, next) {
                 case "department_delete":
                     var id = req.body.id_department;
 
-                    pool.id_deleteDepartment(id, function(valid) {
+                    pool.deleteDepartment(id, function(valid) {
                         if (valid) {
                             res.send("<script>alert('Delete Success!'); location.href='/management/position_department';</script>");
                         } else {
@@ -1300,7 +1240,7 @@ router.post('/management/position_department', function(req, res, next) {
                 case "position_add":
                     var name = req.body.position_name;
 
-                    pool.id_addPosition(name, function(valid) {
+                    pool.addPosition(name, function(valid) {
                         if (valid) {
                             res.send("<script>alert('Add Success!'); location.href='/management/position_department';</script>");
                         } else {
@@ -1314,7 +1254,7 @@ router.post('/management/position_department', function(req, res, next) {
                     var id = req.body.id_position;
                     var name = req.body.position_name;
 
-                    pool.id_modifyPosition(id, name, function(valid) {
+                    pool.modifyPosition(id, name, function(valid) {
                         if (valid) {
                             res.send("<script>alert('Modify Success!'); location.href='/management/position_department';</script>");
                         } else {
@@ -1327,7 +1267,7 @@ router.post('/management/position_department', function(req, res, next) {
                 case "position_delete":
                     var id = req.body.id_position;
 
-                    pool.id_deletePosition(id, function(valid) {
+                    pool.deletePosition(id, function(valid) {
                         if (valid) {
                             res.send("<script>alert('Delete Success!'); location.href='/management/position_department';</script>");
                         } else {
@@ -1351,13 +1291,13 @@ router.post('/service_environment', function(req, res, next) {
     var controlFlag = req.body.control_flag;
     var smartphoneAddress = req.body.smartphone_address;
 
-    pool.id_getUserInfo(smartphoneAddress, function(userInfo) {
+    pool.getUserInfo(smartphoneAddress, function(userInfo) {
         if (userInfo.admin) {
             switch (controlFlag) {
                 case "company_name":
                     var newCompanyName = req.body.new_company_name;
 
-                    pool.id_editCompanyName(newCompanyName, function(valid) {
+                    pool.editCompanyName(newCompanyName, function(valid) {
                         if (valid) {
                             res.send("<script>alert('Modify Success!'); location.href='/service_environment';</script>");
                         } else {
@@ -1370,7 +1310,7 @@ router.post('/service_environment', function(req, res, next) {
                     var workStartTime = req.body.work_start_time;
                     var workEndTime = req.body.work_end_time;
 
-                    pool.id_editWorkStartEndTime(workStartTime, workEndTime, function(valid) {
+                    pool.editWorkStartEndTime(workStartTime, workEndTime, function(valid) {
                         if (valid) {
                             res.send("<script>alert('Modify Success!'); location.href='/service_environment';</script>");
                         } else {
@@ -1385,6 +1325,211 @@ router.post('/service_environment', function(req, res, next) {
             }
         } else {
             res.send("<script>alert('권한이 없습니다!'); history.go(-1);</script>");
+        }
+    });
+});
+
+/* POST for getting data using Jquery. Not provided as accessible web page */
+router.post('/post/chart/dashboard', function(req, res, next) {
+    var smartphone_address = req.body.smartphone_address;
+
+    var oneMonthAgoDate = new Date();
+    oneMonthAgoDate.setMonth(oneMonthAgoDate.getMonth() - 1);
+    oneMonthAgoDate.setHours(0, 0, 0);
+
+    var todayEndDate = new Date();
+    todayEndDate.setHours(23, 59, 59);
+
+    var companyName;
+    var datasetPieChart = '[ ';
+    var datasetBarChart = '[ ';
+
+    async.waterfall([
+        function (callback) {
+            pool.getUserInfo(smartphone_address, function (userInfo) {
+                if (userInfo.permission == 0) {
+                    callback('NOT PERMITTED');
+                } else {
+                    callback(null);
+                }
+            });
+        },
+        function (callback) {
+            pool.getCompanyName(function (_companyName) {
+                companyName = _companyName;
+
+                callback(null);
+            });
+        },
+        function (callback) {
+            pool.getDepartmentList(function (departmentList) {
+                pool.getCommuteInfo(oneMonthAgoDate, todayEndDate, function (commuteInfoJson) {
+                    var avgWorkingTimeArr = [];
+                    var minWorkingTimeArr = [];
+                    var maxWorkingTimeArr = [];
+                    var avgOverWorkingTimeArr = [];
+                    var totalAvgWorkingTime = 0;
+                    var totalAvgOverWorkingTime = 0;
+                    var totalPopulation = 0;
+
+                    for (var i = 0; i < commuteInfoJson.departmentList.length; i++) {
+                        var name = commuteInfoJson.departmentList[i].name;
+                        var id = commuteInfoJson.departmentList[i].id_department;
+                        var avgWorkingTime = Math.floor(commuteInfoJson.departmentList[i].avgWorkingTime / 1000);
+                        var minWorkingTime = Math.floor(commuteInfoJson.departmentList[i].minWorkingTime / 1000);
+                        var maxWorkingTime = Math.floor(commuteInfoJson.departmentList[i].maxWorkingTime / 1000);
+                        var avgOverWorkingTime = Math.floor(commuteInfoJson.departmentList[i].avgOverWorkingTime / 1000);
+
+                        if (avgWorkingTime > 0)
+                            avgWorkingTimeArr.push(avgWorkingTime);
+                        if (minWorkingTime > 0)
+                            minWorkingTimeArr.push(minWorkingTime);
+                        if (maxWorkingTime > 0)
+                            maxWorkingTimeArr.push(maxWorkingTime);
+                        if (avgOverWorkingTime > 0)
+                            avgOverWorkingTimeArr.push(avgOverWorkingTime);
+
+                        datasetPieChart += '{ "category":"' + name + '", ';
+                        datasetPieChart += '"measure":' + avgWorkingTime + ' }';
+
+                        if (i < commuteInfoJson.departmentList.length - 1) {
+                            datasetPieChart += ',';
+                        }
+
+                        datasetBarChart += '{ "group":"' + name + '", "category":"평균", "measure":' + avgWorkingTime + '},';
+                        datasetBarChart += '{ "group":"' + name + '", "category":"최저", "measure":' + minWorkingTime + '},';
+                        datasetBarChart += '{ "group":"' + name + '", "category":"최고", "measure":' + maxWorkingTime + '},';
+                        datasetBarChart += '{ "group":"' + name + '", "category":"초과 평균", "measure":' + avgOverWorkingTime + '},';
+
+                        for (var i = 0; i < departmentList.length; i++) {
+                            if (departmentList[i].id == id) {
+                                datasetBarChart += '{ "group":"' + name + '", "category":"총 인원", "measure":' + departmentList[i].population + '},';
+
+                                break;
+                            }
+                        }
+                    }
+
+                    for (var i = 0; i < avgWorkingTimeArr.length; i++) {
+                        totalAvgWorkingTime += avgWorkingTimeArr[i];
+                    }
+
+                    for (var i = 0; i < avgOverWorkingTimeArr.length; i++) {
+                        totalAvgOverWorkingTime += avgOverWorkingTimeArr[i];
+                    }
+
+                    for (var i = 0; i < departmentList.length; i++) {
+                        totalPopulation += departmentList[i].population;
+                    }
+
+                    datasetBarChart += '{ "group":"All", "category":"평균", "measure":' + Math.floor(totalAvgWorkingTime / avgWorkingTimeArr.length) + '}, ';
+                    datasetBarChart += '{ "group":"All", "category":"최저", "measure":' + minWorkingTimeArr.sort()[0] + '}, ';
+                    datasetBarChart += '{ "group":"All", "category":"최고", "measure":' + maxWorkingTimeArr.sort()[maxWorkingTimeArr.length - 1] + '}, ';
+                    datasetBarChart += '{ "group":"All", "category":"초과 평균", "measure":' + Math.floor(totalAvgOverWorkingTime / avgOverWorkingTimeArr.length) + '}, ';
+                    datasetBarChart += '{ "group":"All", "category":"총 인원", "measure":' + totalPopulation + '} ';
+
+                    callback(null);
+                });
+            });
+        }
+    ], function (err) {
+        if (err != null) {
+            switch (err) {
+                case 'NOT PERMITTED':
+                    break;
+
+                default:
+                    console.log(err);
+                    break;
+            }
+        } else {
+            datasetPieChart += ' ]';
+            datasetBarChart += ' ]';
+
+            res.json({
+                companyName: companyName,
+                datasetPieChart: datasetPieChart,
+                datasetBarChart: datasetBarChart
+            });
+        }
+    });
+});
+
+router.post('/post/todayCommuteInfo', function(req, res, next) {
+    var smartphone_address = req.body.smartphone_address;
+
+    async.waterfall([
+        function (callback) {
+            pool.getUserInfo(smartphone_address, function (userInfo) {
+                if (userInfo.permission == 0) {
+                    callback('NOT PERMITTED');
+                } else {
+                    callback(null);
+                }
+            });
+        },
+        function (callback) {
+            pool.getTodayCommuteInfo(function (todayCommuteInfo) {
+                callback(null, todayCommuteInfo);
+            });
+        }
+    ], function (err, todayCommuteInfo) {
+        if (err != null) {
+            switch (err) {
+                case 'NOT PERMITTED':
+                    break;
+
+                default:
+                    console.log(err);
+                    break;
+            }
+        } else {
+            res.json({
+                todayCommuteInfo: todayCommuteInfo
+            });
+        }
+    });
+});
+
+router.post('/post/commuteInfo', function(req, res, next) {
+    var smartphone_address = req.body.smartphone_address;
+
+    var oneMonthAgoDate = new Date();
+    oneMonthAgoDate.setMonth(oneMonthAgoDate.getMonth() - 1);
+    oneMonthAgoDate.setHours(0, 0, 0);
+
+    var todayEndDate = new Date();
+    todayEndDate.setHours(23, 59, 59);
+
+    async.waterfall([
+        function (callback) {
+            pool.getUserInfo(smartphone_address, function (userInfo) {
+                if (userInfo.permission == 0) {
+                    callback('NOT PERMITTED');
+                } else {
+                    callback(null);
+                }
+            });
+        },
+        function (callback) {
+            pool.getCommuteInfo(oneMonthAgoDate, todayEndDate, function(avgCommuteInfo) {
+                callback(null, avgCommuteInfo);
+            });
+        }
+    ], function (err, avgCommuteInfo) {
+        if (err != null) {
+            switch (err) {
+                case 'NOT PERMITTED':
+                    break;
+
+                default:
+                    console.log(err);
+                    break;
+            }
+        } else {
+            res.json({
+                avgCommuteInfo: avgCommuteInfo
+            });
         }
     });
 });

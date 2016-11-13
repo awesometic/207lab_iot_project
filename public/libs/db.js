@@ -2,9 +2,9 @@
  *  Created by Yang Deokgyu a.k.a. Awesometic
  *
  *  This file is to connect to database
- *  The functions here is used at /routes/index.js, /public/libs/socket.js
+ *  The functions here are used at /routes/index.js, /public/libs/socket.js
  *
- *  In Node.js, as it is asynchronous, "using callback parameter" is required to get data from database properly
+ *  In Node.js, as it is working based on asynchronous, "using callback parameter" is required to get data from database properly
  *  Below are references about it
  *  http://inspiredjw.tistory.com/entry/JavaScript-%EC%BD%9C%EB%B0%B1-%ED%95%A8%EC%88%98%EC%9D%98-%ED%99%9C%EC%9A%A9
  *  http://blog.jui.io/?p=19
@@ -29,7 +29,7 @@ var logger = require("./logger");
 
 /* Functions */
 /* index.js */
-var id_checkLoginName = function(employee_number, callback) {
+var checkLoginName = function(employee_number, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -54,7 +54,7 @@ var id_checkLoginName = function(employee_number, callback) {
     });
 };
 
-var id_checkLoginPassword = function(employee_number, password, callback) {
+var checkLoginPassword = function(employee_number, password, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -79,7 +79,7 @@ var id_checkLoginPassword = function(employee_number, password, callback) {
     });
 };
 
-var id_isAdmin = function(employee_number, password, callback) {
+var isAdmin = function(employee_number, password, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -102,7 +102,7 @@ var id_isAdmin = function(employee_number, password, callback) {
     });
 };
 
-var id_isPermitted = function(smartphone_address, employee_number, callback) {
+var isPermitted = function(smartphone_address, employee_number, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -125,12 +125,12 @@ var id_isPermitted = function(smartphone_address, employee_number, callback) {
     });
 };
 
-var id_loginValidation = function(employee_number, password, callback) {
-    id_checkLoginName(employee_number, function(valid) {
+var loginValidation = function(employee_number, password, callback) {
+    checkLoginName(employee_number, function(valid) {
         if (valid) {
-            id_checkLoginPassword(employee_number, password, function(valid) {
+            checkLoginPassword(employee_number, password, function(valid) {
                 if (valid) {
-                    id_isAdmin(employee_number, password, function(isAdmin) {
+                    isAdmin(employee_number, password, function(isAdmin) {
                         if (typeof callback === "function") {
                             callback(isAdmin);
                         }
@@ -149,14 +149,14 @@ var id_loginValidation = function(employee_number, password, callback) {
     });
 };
 
-var id_getUserList = function(callback) {
+var getUserList = function(callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
         conn.query("SELECT smartphone_address, employee_number, name, id_department, id_position," +
             " (SELECT name FROM department WHERE identity.id_department = department.id) AS department," +
             " (SELECT name FROM position WHERE identity.id_position = position.id) AS position, " +
-            " permission, admin FROM identity", function(err, rows) {
+            " permission, admin FROM identity WHERE smartphone_address NOT IN ('00:00:00:00:00:00')", function(err, rows) {
             conn.release();
 
             if (err) {
@@ -170,7 +170,7 @@ var id_getUserList = function(callback) {
     });
 };
 
-var id_getUserInfo = function(smartphone_address, callback) {
+var getUserInfo = function(smartphone_address, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -191,7 +191,7 @@ var id_getUserInfo = function(smartphone_address, callback) {
     });
 };
 
-var id_checkUserRegistered = function(smartphone_address, employee_number, callback) {
+var checkUserRegistered = function(smartphone_address, employee_number, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -216,7 +216,7 @@ var id_checkUserRegistered = function(smartphone_address, employee_number, callb
     });
 };
 
-var id_registerUser = function(smartphone_address, employee_number, name, password, id_department, id_position, permission, admin, callback) {
+var registerUser = function(smartphone_address, employee_number, name, password, id_department, id_position, permission, admin, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -236,7 +236,7 @@ var id_registerUser = function(smartphone_address, employee_number, name, passwo
     });
 };
 
-var id_modifyUser = function(smartphone_address, employee_number, modify_name, modify_password, modify_id_department, modify_id_position, modify_admin, callback) {
+var modifyUser = function(smartphone_address, employee_number, modify_name, modify_password, modify_id_department, modify_id_position, modify_admin, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -271,7 +271,7 @@ var id_modifyUser = function(smartphone_address, employee_number, modify_name, m
     });
 };
 
-var id_deleteUser = function(smartphone_address, employee_number, callback) {
+var deleteUser = function(smartphone_address, employee_number, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -290,7 +290,7 @@ var id_deleteUser = function(smartphone_address, employee_number, callback) {
     });
 };
 
-var id_permitUsers = function(smartphone_address_arr, callback) {
+var permitUsers = function(smartphone_address_arr, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -317,7 +317,7 @@ var id_permitUsers = function(smartphone_address_arr, callback) {
     });
 };
 
-var id_getWorkplaceList = function(callback) {
+var getWorkplaceList = function(callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -335,7 +335,7 @@ var id_getWorkplaceList = function(callback) {
     });
 };
 
-var id_getWorkplaceInfo = function(id_workplace, callback) {
+var getWorkplaceInfo = function(id_workplace, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -354,7 +354,7 @@ var id_getWorkplaceInfo = function(id_workplace, callback) {
     });
 };
 
-var id_registerWorkplace = function(name_workplace, location_workplace, latitude, longitude, callback) {
+var registerWorkplace = function(name_workplace, location_workplace, latitude, longitude, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -378,11 +378,11 @@ var id_registerWorkplace = function(name_workplace, location_workplace, latitude
     });
 };
 
-var id_modifyWorkplace = function(id_workplace, modify_name_workplace, modify_location_workplace,
-                                  modify_coordinateX, modify_coordinateY, modify_coordinateZ,
-                                  modify_thresholdX, modify_thresholdY, modify_thresholdZ,
-                                  modify_latitude, modify_longitude, modify_beacon_set,
-                                  callback) {
+var modifyWorkplace = function(id_workplace, modify_name_workplace, modify_location_workplace,
+                               modify_coordinateX, modify_coordinateY, modify_coordinateZ,
+                               modify_thresholdX, modify_thresholdY, modify_thresholdZ,
+                               modify_latitude, modify_longitude, modify_beacon_set,
+                               callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -410,7 +410,7 @@ var id_modifyWorkplace = function(id_workplace, modify_name_workplace, modify_lo
     });
 };
 
-var id_deleteWorkplace = function(id_workplace, callback) {
+var deleteWorkplace = function(id_workplace, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -429,7 +429,7 @@ var id_deleteWorkplace = function(id_workplace, callback) {
     });
 };
 
-var id_getBeaconList = function(callback) {
+var getBeaconList = function(callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -449,7 +449,7 @@ var id_getBeaconList = function(callback) {
     });
 };
 
-var id_getBeaconInfo = function(beacon_address, callback) {
+var getBeaconInfo = function(beacon_address, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -467,7 +467,7 @@ var id_getBeaconInfo = function(beacon_address, callback) {
     });
 };
 
-var id_getAvailableBeacon = function(callback) {
+var getAvailableBeacon = function(callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -491,7 +491,7 @@ var id_getAvailableBeacon = function(callback) {
     });
 };
 
-var id_checkBeaconRegistered = function(beacon_address, callback) {
+var checkBeaconRegistered = function(beacon_address, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -516,7 +516,7 @@ var id_checkBeaconRegistered = function(beacon_address, callback) {
     });
 };
 
-var id_registerBeacon = function(beacon_address, uuid, major, minor, id_workplace, callback) {
+var registerBeacon = function(beacon_address, uuid, major, minor, id_workplace, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -536,7 +536,7 @@ var id_registerBeacon = function(beacon_address, uuid, major, minor, id_workplac
     });
 };
 
-var id_modifyBeacon = function(beacon_address, modify_uuid, modify_major, modify_minor, modified_id_workplace, callback) {
+var modifyBeacon = function(beacon_address, modify_uuid, modify_major, modify_minor, modified_id_workplace, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -556,7 +556,7 @@ var id_modifyBeacon = function(beacon_address, modify_uuid, modify_major, modify
     });
 };
 
-var id_deleteBeacon = function(beacon_address, callback) {
+var deleteBeacon = function(beacon_address, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -575,7 +575,7 @@ var id_deleteBeacon = function(beacon_address, callback) {
     });
 };
 
-var id_getNotPermittedUserList = function(callback) {
+var getNotPermittedUserList = function(callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -597,7 +597,7 @@ var id_getNotPermittedUserList = function(callback) {
 };
 
 // TODO: need to edit. not working for now yet.
-var id_getUserListCond = function(department, position, permission_level, admin, callback) {
+var getUserListCond = function(department, position, permission_level, admin, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -620,7 +620,7 @@ var id_getUserListCond = function(department, position, permission_level, admin,
     });
 };
 
-var id_getDepartmentList = function(callback) {
+var getDepartmentList = function(callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -641,7 +641,7 @@ var id_getDepartmentList = function(callback) {
     });
 };
 
-var id_addDepartment = function(name, callback) {
+var addDepartment = function(name, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -660,7 +660,7 @@ var id_addDepartment = function(name, callback) {
     });
 };
 
-var id_modifyDepartment = function(id, name, callback) {
+var modifyDepartment = function(id, name, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -679,7 +679,7 @@ var id_modifyDepartment = function(id, name, callback) {
     });
 };
 
-var id_deleteDepartment = function(id, callback) {
+var deleteDepartment = function(id, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -698,7 +698,7 @@ var id_deleteDepartment = function(id, callback) {
     });
 };
 
-var id_getPositionList = function(callback) {
+var getPositionList = function(callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -719,7 +719,7 @@ var id_getPositionList = function(callback) {
     });
 };
 
-var id_addPosition = function(name, callback) {
+var addPosition = function(name, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -738,7 +738,7 @@ var id_addPosition = function(name, callback) {
     });
 };
 
-var id_modifyPosition = function(id, name, callback) {
+var modifyPosition = function(id, name, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -757,7 +757,7 @@ var id_modifyPosition = function(id, name, callback) {
     });
 };
 
-var id_deletePosition = function(id, callback) {
+var deletePosition = function(id, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -776,7 +776,7 @@ var id_deletePosition = function(id, callback) {
     });
 };
 
-var id_getSmartphoneAddress = function(employee_number, callback) {
+var getSmartphoneAddress = function(employee_number, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -797,7 +797,7 @@ var id_getSmartphoneAddress = function(employee_number, callback) {
     });
 };
 
-var id_checkAdmin = function(employee_number, smartphone_address, callback) {
+var checkAdmin = function(employee_number, smartphone_address, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -820,7 +820,7 @@ var id_checkAdmin = function(employee_number, smartphone_address, callback) {
     });
 };
 
-var id_getCompanyName = function(callback) {
+var getCompanyName = function(callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -839,7 +839,7 @@ var id_getCompanyName = function(callback) {
     });
 };
 
-var id_editCompanyName = function(company_name, callback) {
+var editCompanyName = function(company_name, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -858,7 +858,7 @@ var id_editCompanyName = function(company_name, callback) {
     });
 };
 
-var id_getWorkStartTime = function(callback) {
+var getWorkStartTime = function(callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -877,7 +877,7 @@ var id_getWorkStartTime = function(callback) {
     });
 };
 
-var id_getWorkEndTime = function(callback) {
+var getWorkEndTime = function(callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -896,7 +896,7 @@ var id_getWorkEndTime = function(callback) {
     });
 };
 
-var id_editWorkStartEndTime = function(work_start_time, work_end_time, callback) {
+var editWorkStartEndTime = function(work_start_time, work_end_time, callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -918,9 +918,9 @@ var id_editWorkStartEndTime = function(work_start_time, work_end_time, callback)
 
 
 /* socket.js */
-var soc_gatewayValidation = function(beaconAddressArr, uuidArr, majorArr, minorArr, callback) {
-    soc_getWorkplaceOfBeacons(beaconAddressArr, uuidArr, majorArr, minorArr, function(id) {
-        soc_getWorkplaceName(id, function(name_workplace) {
+var gatewayValidation = function(beaconAddressArr, uuidArr, majorArr, minorArr, callback) {
+    getWorkplaceOfBeacons(beaconAddressArr, uuidArr, majorArr, minorArr, function(id) {
+        getWorkplaceName(id, function(name_workplace) {
             if (name_workplace != "undefined") {
                 if (typeof callback === "function") {
                     callback(id);
@@ -934,7 +934,7 @@ var soc_gatewayValidation = function(beaconAddressArr, uuidArr, majorArr, minorA
     });
 };
 
-var soc_getWorkplaceName = function(id_workplace, callback) {
+var getWorkplaceName = function(id_workplace, callback) {
     pool.getConnection(function(err, conn) {
         conn.query("SELECT IF ((SELECT COUNT(*) AS cnt FROM workplace WHERE id_workplace=? HAVING cnt > 0)"
             + ", (SELECT name_workplace FROM workplace WHERE id_workplace=?), 'undefined') AS name_workplace"
@@ -953,7 +953,7 @@ var soc_getWorkplaceName = function(id_workplace, callback) {
     });
 };
 
-var soc_getWorkplaceOfBeacons = function(beaconAddressArr, uuidArr, majorArr, minorArr, callback) {
+var getWorkplaceOfBeacons = function(beaconAddressArr, uuidArr, majorArr, minorArr, callback) {
     pool.getConnection(function(err, conn) {
         /* Needs change to better query than it if there would be */
         /* Check whether each beacon exists in the beacon table */
@@ -992,7 +992,7 @@ var soc_getWorkplaceOfBeacons = function(beaconAddressArr, uuidArr, majorArr, mi
     });
 };
 
-var soc_getBeaconsCountOfWorkplace = function(id_workplace, callback) {
+var getBeaconsCountOfWorkplace = function(id_workplace, callback) {
     pool.getConnection(function(err, conn) {
         conn.query("SELECT COUNT(beacon.id_workplace) AS count" +
             " FROM workplace, beacon WHERE beacon.id_workplace = workplace.id_workplace AND workplace.id_workplace=?"
@@ -1010,9 +1010,9 @@ var soc_getBeaconsCountOfWorkplace = function(id_workplace, callback) {
     });
 };
 
-var soc_smartphoneValidation = function(smartphone_address, callback) {
+var smartphoneValidation = function(smartphone_address, callback) {
 
-    soc_getSmartphoneUserName(smartphone_address, function(name) {
+    getSmartphoneUserName(smartphone_address, function(name) {
 
         if (name != "undefined") {
             if (typeof callback === "function") {
@@ -1026,7 +1026,7 @@ var soc_smartphoneValidation = function(smartphone_address, callback) {
     });
 };
 
-var soc_getSmartphoneUserName = function(smartphone_address, callback) {
+var getSmartphoneUserName = function(smartphone_address, callback) {
     pool.getConnection(function(err, conn) {
         conn.query("SELECT IF ((SELECT COUNT(*) AS cnt FROM identity WHERE smartphone_address=? HAVING cnt > 0)"
             + ", (SELECT name FROM identity WHERE smartphone_address=?), 'undefined') AS name"
@@ -1045,7 +1045,7 @@ var soc_getSmartphoneUserName = function(smartphone_address, callback) {
     });
 };
 
-var soc_getSmartphoneUserEmployeeNumber = function(smartphoneAddress, callback) {
+var getSmartphoneUserEmployeeNumber = function(smartphoneAddress, callback) {
 
     pool.getConnection(function(err, conn) {
         conn.query("SELECT IF ((SELECT COUNT(*) AS cnt FROM identity WHERE smartphone_address=? HAVING cnt > 0)"
@@ -1065,7 +1065,7 @@ var soc_getSmartphoneUserEmployeeNumber = function(smartphoneAddress, callback) 
     });
 };
 
-var soc_registerCommute = function(smartphoneAddress, id_workplace, commuteStatus, datetime, callback) {
+var registerCommute = function(smartphoneAddress, id_workplace, commuteStatus, datetime, callback) {
     pool.getConnection(function(err, conn) {
         conn.query("INSERT INTO circumstance (datetime, id_workplace, smartphone_address, commute_status)" +
             " VALUES (?, ?, ?, ?)", [datetime, id_workplace, smartphoneAddress, commuteStatus], function(err) {
@@ -1087,7 +1087,7 @@ var soc_registerCommute = function(smartphoneAddress, id_workplace, commuteStatu
     });
 };
 
-var soc_RSSICalibration = function(coordinateArr, thresholdArr, id, name, datetime, callback) {
+var RSSICalibration = function(coordinateArr, thresholdArr, id, name, datetime, callback) {
     pool.getConnection(function(err, conn) {
         conn.query("UPDATE workplace SET coordinateX=?, coordinateY=?, coordinateZ=?, thresholdX=?, thresholdY=?, thresholdZ=?" +
             " WHERE id_workplace=?"
@@ -1111,7 +1111,7 @@ var soc_RSSICalibration = function(coordinateArr, thresholdArr, id, name, dateti
     });
 };
 
-var soc_getEssentialData = function(callback) {
+var getEssentialData = function(callback) {
     pool.getConnection(function(err, conn) {
         conn.query("SELECT workplace.id_workplace, coordinateX, coordinateY, coordinateZ, "
             + "thresholdX, thresholdY, thresholdZ, "
@@ -1132,7 +1132,7 @@ var soc_getEssentialData = function(callback) {
     });
 };
 
-var soc_getBeaconMACAddress = function(callback) {
+var getBeaconMACAddress = function(callback) {
     pool.getConnection(function(err, conn) {
         conn.query("SELECT beacon_address, id_workplace FROM beacon", function(err, rows) {
             conn.release();
@@ -1148,7 +1148,7 @@ var soc_getBeaconMACAddress = function(callback) {
     });
 };
 
-var soc_getRSSI = function(callback) {
+var getRSSI = function(callback) {
     pool.getConnection(function(err, conn) {
         conn.query("SELECT id_workplace, coordinateX, coordinateY, coordinateZ FROM workplace", function(err, rows) {
             conn.release();
@@ -1164,7 +1164,7 @@ var soc_getRSSI = function(callback) {
     });
 };
 
-var soc_amIRegistered = function(smartphone_address, datetime, callback) {
+var amIRegistered = function(smartphone_address, datetime, callback) {
     pool.getConnection(function(err, conn) {
         conn.query("SELECT COUNT(*) AS cnt FROM identity WHERE smartphone_address=?", [smartphone_address], function(err, rows) {
             conn.release();
@@ -1185,7 +1185,7 @@ var soc_amIRegistered = function(smartphone_address, datetime, callback) {
 };
 
 /* Chart */
-var chart_getPopulationOfDepartments = function(callback) {
+var getPopulationOfDepartments = function(callback) {
     pool.getConnection(function(err, conn) {
         if (err)
             console.error(err);
@@ -1251,7 +1251,7 @@ var chart_getPopulationOfDepartments = function(callback) {
  * It is not necessary to put all parameters in, even you can put no parameters in here
  * It returns specific working time as concepts
  */
-var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
+var getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
     var smartphone_address; // 00:00:00:00:00:00
     var id_workplace;
     var startDatetime;
@@ -1261,6 +1261,8 @@ var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
         ", id_workplace, smartphone_address, commute_status" +
         ", (SELECT name_workplace FROM workplace WHERE circumstance.id_workplace = workplace.id_workplace) AS name_workplace" +
         ", (SELECT name FROM identity WHERE circumstance.smartphone_address = identity.smartphone_address) AS name_user" +
+        ", (SELECT id_department FROM identity WHERE circumstance.smartphone_address = identity.smartphone_address) AS id_department" +
+        ", (SELECT id_position FROM identity WHERE circumstance.smartphone_address = identity.smartphone_address) AS id_position" +
         " FROM circumstance";
 
     var args = [];
@@ -1482,14 +1484,72 @@ var chart_getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
 };
 
 /**
- * Cannot evaluate by each workplace yet
- * Just shows you first come in to somewhere workplace datetime
- * @param arg1 will be smartphone address of specific user (option)
+ * This function returns a JSON object that is structured like
+ *
+ * The means of "valid" in each JSON Object is
+ * the data measured with only successively completed stubs at a work cycle,
+ * which means the time between commute_status == 1 and commute_status == 0
+ *
+ * {
+ *     "userList":[{
+ *         "smartphoneAddress",
+ *         "employeeNumber",
+ *         "name",
+ *         "id_department",
+ *         "id_position",
+ *         "firstComeInTime",
+ *         "lastComeOutTime",
+ *         "validWorkingTime",
+ *         "validOverWorkingTime"
+ *     }],
+ *     "workplaceList":[{
+ *         "id_workplace",
+ *         "name",
+ *         "location",
+ *         "latitude",
+ *         "longitude",
+ *         "firstComeInTime",
+ *         "lastComeOutTime",
+ *         "totalValidWorkingTime",
+ *         "totalValidOverWorkingTime"
+ *         "avgFirstComeInTime",
+ *         "avgLastComeOutTime",
+ *         "avgValidWorkingTime",
+ *         "avgValidOverWorkingTime"
+ *     }],
+ *     "departmentList":[{
+ *         "id_department",
+ *         "name",
+ *         "firstComeInTime",
+ *         "lastComeOutTime",
+ *         "totalValidWorkingTime",
+ *         "totalValidOverWorkingTime"
+ *         "avgFirstComeInTime",
+ *         "avgLastComeOutTime",
+ *         "avgValidWorkingTime",
+ *         "avgValidOverWorkingTime"
+ *     }],
+ *     "positionList":[{
+ *         "id_position",
+ *         "name",
+ *         "firstComeInTime",
+ *         "lastComeOutTime",
+ *         "totalValidWorkingTime",
+ *         "totalValidOverWorkingTime"
+ *         "avgFirstComeInTime",
+ *         "avgLastComeOutTime",
+ *         "avgValidWorkingTime",
+ *         "avgValidOverWorkingTime"
+ *     }]
+ * }
+ *
+ * @param arg1 will be workplace id (option)
+ * @param arg2 will be department id (option)
+ * @param arg3 will be position id (option)
+ * @param arg4 will be smartphone bluetooth address (option)
  * @param callback
  */
-var chart_getTodayComeInTime = function(arg1, callback) {
-    var smartphone_address; // 00:00:00:00:00:00
-
+function getTodayCommuteInfo(arg1, arg2, arg3, arg4, callback) {
     var args = [];
     for (var i = 0; i < arguments.length; i++) {
         args.push(arguments[i]);
@@ -1498,312 +1558,567 @@ var chart_getTodayComeInTime = function(arg1, callback) {
     callback = args.pop();
 
     if (args.length > 0) arg1 = args.shift(); else arg1 = null;
+    if (args.length > 0) arg2 = args.shift(); else arg2 = null;
+    if (args.length > 0) arg3 = args.shift(); else arg3 = null;
+    if (args.length > 0) arg4 = args.shift(); else arg4 = null;
 
     if (arg1 != null) args.push(arg1);
+    if (arg2 != null) args.push(arg2);
+    if (arg2 != null) args.push(arg3);
+    if (arg2 != null) args.push(arg4);
 
-    var resultJsonString = '{ "userList" : [';
-    var resultJson;
-
-    id_getUserList(function(userListRows) {
-        switch (args.length) {
-            case 1:
-                smartphone_address = String(args[0]);
-
-                for (var i = 0; i < userListRows.length; i++) {
-                    if (smartphone_address == userListRows[i].smartphone_address) {
-                        resultJsonString += '{';
-                        resultJsonString += '"todayComeInTime":"' + 'NO DATA' + '",';
-                        resultJsonString += '"id_workplace":"' + 'NO DATA' + '",';
-                        resultJsonString += '"smartphone_address":"' + userListRows[i].smartphone_address + '",';
-                        resultJsonString += '"name_workplace":"' + 'NO DATA' + '",';
-                        resultJsonString += '"name_user":"' + userListRows[i].name + '"';
-                        resultJsonString += '}';
-
-                        break;
-                    }
-                }
-
-                resultJsonString += ']}';
-                resultJson = JSON.parse(resultJsonString);
-
-                chart_getCircumstanceTable(smartphone_address, currentTime.getCurrentDate(), function(circumstanceRows) {
-                    var lastIndex = circumstanceRows.length - 1;
-
-                    for (var i = 0; i < circumstanceRows.length; i++) {
-                        if (circumstanceRows[i].commute_status == 1)
-                            lastIndex = i;
-                    }
-
-                    resultJson.userList[0].todayComeInTime = circumstanceRows[lastIndex].datetime;
-                    resultJson.userList[0].id_workplace = circumstanceRows[lastIndex].id_workplace;
-                    resultJson.userList[0].name_workplace = circumstanceRows[lastIndex].name_workplace;
-
-                    if (typeof callback === "function") {
-                        callback(resultJson);
+    // TODO: implement options
+    switch (args.length) {
+        default:
+            getCircumstanceTable(function(circumstanceRows) {
+                getTodayCommuteInfoSetupJson(circumstanceRows, function(todayCommuteInfo) {
+                    if (typeof callback === 'function') {
+                        callback(todayCommuteInfo);
                     }
                 });
+            });
+            break;
+    }
+}
 
-                break;
+function getTodayCommuteInfoSetupJson(circumstanceRows, callback) {
+    getUserList(function (userListRows) {
+        getWorkplaceList(function (workplaceListRows) {
+            getDepartmentList(function (departmentListRows) {
+                getPositionList(function (positionListRows) {
+                    getWorkStartTime(function (workStartTime) {
+                        getWorkEndTime(function (workEndTime) {
+                            var i, j, k;
+                            var resultJsonString = '{';
+                            var resultJson;
 
-            default:
-                for (var i = 0; i < userListRows.length; i++) {
-                    resultJsonString += '{';
-                    resultJsonString += '"todayComeInTime":"' + 'NO DATA' + '",';
-                    resultJsonString += '"id_workplace":"' + 'NO DATA' + '",';
-                    resultJsonString += '"smartphone_address":"' + userListRows[i].smartphone_address + '",';
-                    resultJsonString += '"name_workplace":"' + 'NO DATA' + '",';
-                    resultJsonString += '"name_user":"' + userListRows[i].name + '"';
-                    resultJsonString += '}';
+                            if (userListRows.length > 0) {
+                                resultJsonString += '"userList":[';
+                                for (i = 0; i < userListRows.length; i++) {
+                                    resultJsonString += '{';
+                                    resultJsonString += '"smartphoneAddress":"' + userListRows[i].smartphone_address + '",';
+                                    resultJsonString += '"employeeNumber":"' + userListRows[i].employee_number + '",';
+                                    resultJsonString += '"name":"' + userListRows[i].name + '",';
+                                    resultJsonString += '"id_department":"' + userListRows[i].id_department + '",';
+                                    resultJsonString += '"id_position":"' + userListRows[i].id_position + '",';
+                                    resultJsonString += '"firstComeInTime":"' + 0 + '",';
+                                    resultJsonString += '"lastComeOutTime":"' + 0 + '",';
+                                    resultJsonString += '"validWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"validOverWorkingTime":"' + 0 + '"';
+                                    resultJsonString += '}';
 
-                    if (i < userListRows.length - 1)
-                        resultJsonString += ',';
-                }
-
-                resultJsonString += ']}';
-                resultJson = JSON.parse(resultJsonString);
-
-                chart_getCircumstanceTable(currentTime.getCurrentDate(), function (circumstanceRows) {
-                    // Need to modify below to improve performance
-                    for (var i = 0; i < circumstanceRows.length; i++) {
-                        for (var j = 0; j < resultJson.userList.length; j++) {
-                            if (resultJson.userList[j].smartphone_address == circumstanceRows[i].smartphone_address) {
-                                if (circumstanceRows[i].commute_status == 1) {
-                                    resultJson.userList[j].todayComeInTime = circumstanceRows[i].datetime;
-                                    resultJson.userList[j].id_workplace = circumstanceRows[i].id_workplace;
-                                    resultJson.userList[j].name_workplace = circumstanceRows[i].name_workplace;
+                                    if (i < userListRows.length - 1)
+                                        resultJsonString += ',';
                                 }
+                                resultJsonString += '],';
                             }
-                        }
-                    }
 
-                    if (typeof callback === "function") {
-                        callback(resultJson);
-                    }
-                });
+                            if (workplaceListRows.length > 0) {
+                                resultJsonString += '"workplaceList":[';
+                                for (i = 0; i < workplaceListRows.length; i++) {
+                                    resultJsonString += '{';
+                                    resultJsonString += '"id_workplace":"' + workplaceListRows[i].id_workplace + '",';
+                                    resultJsonString += '"name":"' + workplaceListRows[i].name_workplace + '",';
+                                    resultJsonString += '"location":"' + workplaceListRows[i].location + '",';
+                                    resultJsonString += '"latitude":"' + workplaceListRows[i].latitude + '",';
+                                    resultJsonString += '"longitude":"' + workplaceListRows[i].longitude + '",';
+                                    resultJsonString += '"firstComeInTime":"' + 0 + '",';
+                                    resultJsonString += '"lastComeOutTime":"' + 0 + '",';
+                                    resultJsonString += '"totalValidWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"totalValidOverWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"avgFirstComeInTime":"' + 0 + '",';
+                                    resultJsonString += '"avgLastComeOutTime":"' + 0 + '",';
+                                    resultJsonString += '"avgValidWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"avgValidOverWorkingTime":"' + 0 + '"';
+                                    resultJsonString += '}';
 
-                break;
-        }
-    });
-};
-
-/**
- * Cannot evaluate by each workplace yet
- * Just shows you last come out to somewhere workplace datetime
- * @param arg1 will be smartphone address of specific user (option)
- * @param callback
- */
-var chart_getTodayComeOutTime = function(arg1, callback) {
-    var smartphone_address; // 00:00:00:00:00:00
-
-    var args = [];
-    for (var i = 0; i < arguments.length; i++) {
-        args.push(arguments[i]);
-    }
-
-    callback = args.pop();
-
-    if (args.length > 0) arg1 = args.shift(); else arg1 = null;
-
-    if (arg1 != null) args.push(arg1);
-
-    var resultJsonString = '{ "userList" : [';
-    var resultJson;
-
-    id_getUserList(function(userListRows) {
-        switch (args.length) {
-            case 1:
-                smartphone_address = String(args[0]);
-
-                for (var i = 0; i < userListRows.length; i++) {
-                    if (smartphone_address == userListRows[i].smartphone_address) {
-                        resultJsonString += '{';
-                        resultJsonString += '"todayComeOutTime":"' + 'NO DATA' + '",';
-                        resultJsonString += '"id_workplace":"' + 'NO DATA' + '",';
-                        resultJsonString += '"smartphone_address":"' + userListRows[i].smartphone_address + '",';
-                        resultJsonString += '"name_workplace":"' + 'NO DATA' + '",';
-                        resultJsonString += '"name_user":"' + userListRows[i].name + '"';
-                        resultJsonString += '}';
-
-                        break;
-                    }
-                }
-
-                resultJsonString += ']}';
-                resultJson = JSON.parse(resultJsonString);
-
-                chart_getCircumstanceTable(smartphone_address, currentTime.getCurrentDate(), function(circumstanceRows) {
-                    var firstIndex = 0;
-
-                    for (var i = circumstanceRows.length - 1; i >= 0; i--) {
-                        if (circumstanceRows[i].commute_status == 0)
-                            firstIndex = i;
-                    }
-
-                    resultJson.userList[0].todayComeOutTime = circumstanceRows[firstIndex].datetime;
-                    resultJson.userList[0].id_workplace = circumstanceRows[firstIndex].id_workplace;
-                    resultJson.userList[0].name_workplace = circumstanceRows[firstIndex].name_workplace;
-
-                    if (typeof callback === "function") {
-                        callback(resultJson);
-                    }
-                });
-
-                break;
-
-            default:
-                for (var i = 0; i < userListRows.length; i++) {
-                    resultJsonString += '{';
-                    resultJsonString += '"todayComeOutTime":"' + 'NO DATA' + '",';
-                    resultJsonString += '"id_workplace":"' + 'NO DATA' + '",';
-                    resultJsonString += '"smartphone_address":"' + userListRows[i].smartphone_address + '",';
-                    resultJsonString += '"name_workplace":"' + 'NO DATA' + '",';
-                    resultJsonString += '"name_user":"' + userListRows[i].name + '"';
-                    resultJsonString += '}';
-
-                    if (i < userListRows.length - 1)
-                        resultJsonString += ',';
-                }
-
-                resultJsonString += ']}';
-                resultJson = JSON.parse(resultJsonString);
-
-                chart_getCircumstanceTable(currentTime.getCurrentDate(), function (circumstanceRows) {
-                    // Need to modify below to improve performance
-                    for (var i = circumstanceRows.length - 1; i >= 0; i--) {
-                        for (var j = 0; j < resultJson.userList.length; j++) {
-                            if (resultJson.userList[j].smartphone_address == circumstanceRows[i].smartphone_address) {
-                                if (circumstanceRows[i].commute_status == 0) {
-                                    resultJson.userList[j].todayComeOutTime = circumstanceRows[i].datetime;
-                                    resultJson.userList[j].id_workplace = circumstanceRows[i].id_workplace;
-                                    resultJson.userList[j].name_workplace = circumstanceRows[i].name_workplace;
+                                    if (i < workplaceListRows.length - 1)
+                                        resultJsonString += ',';
                                 }
-                            }
-                        }
-                    }
-
-                    if (typeof callback === "function") {
-                        callback(resultJson);
-                    }
-                });
-
-                break;
-        }
-    });
-};
-
-/**
- * Evaluating by each workplace not functioning yet
- * Only involves today total working time for now
- * @param arg1 will be smartphone address of specific user (option)
- * @param callback
- */
-var chart_getTodayWorkTime = function(arg1, callback) {
-    var smartphone_address; // 00:00:00:00:00:00
-
-    var args = [];
-    for (var i = 0; i < arguments.length; i++) {
-        args.push(arguments[i]);
-    }
-
-    callback = args.pop();
-
-    if (args.length > 0) arg1 = args.shift(); else arg1 = null;
-
-    if (arg1 != null) args.push(arg1);
-
-    var resultJsonString = '{ "userList" : [';
-    var resultJson;
-
-    id_getUserList(function(userListRows) {
-        id_getWorkplaceList(function(workplaceListRows) {
-            switch (args.length) {
-                case 1:
-                    smartphone_address = String(args[0]);
-
-                    for (var i = 0; i < userListRows.length; i++) {
-                        if (smartphone_address == userListRows[i].smartphone_address) {
-                            resultJsonString += '{';
-                            resultJsonString += '"todayWorkingTime":"' + 'UNAVAILABLE' + '",';
-                            resultJsonString += '"smartphone_address":"' + userListRows[i].smartphone_address + '",';
-                            resultJsonString += '"name_user":"' + userListRows[i].name + '",';
-                            resultJsonString += '"workplaceList" : [';
-
-                            for (var j = 0; j < workplaceListRows.length; j++) {
-                                resultJsonString += '{';
-                                resultJsonString += '"id_workplace":"' + workplaceListRows[j].id_workplace + '",';
-                                resultJsonString += '"name_workplace":"' + workplaceListRows[j].name_workplace + '",';
-                                resultJsonString += '"todayWorkingTime":"' + 'UNAVAILABLE' + '"';
-                                resultJsonString += '}';
-
-                                if (j < workplaceListRows.length - 1)
-                                    resultJsonString += ',';
+                                resultJsonString += '],';
                             }
 
-                            resultJsonString += ']}';
+                            if (departmentListRows.length > 0) {
+                                resultJsonString += '"departmentList":[';
+                                for (i = 0; i < departmentListRows.length; i++) {
+                                    resultJsonString += '{';
+                                    resultJsonString += '"id_department":"' + departmentListRows[i].id + '",';
+                                    resultJsonString += '"name":"' + departmentListRows[i].name + '",';
+                                    resultJsonString += '"firstComeInTime":"' + 0 + '",';
+                                    resultJsonString += '"lastComeOutTime":"' + 0 + '",';
+                                    resultJsonString += '"totalValidWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"totalValidOverWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"avgFirstComeInTime":"' + 0 + '",';
+                                    resultJsonString += '"avgLastComeOutTime":"' + 0 + '",';
+                                    resultJsonString += '"avgValidWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"avgValidOverWorkingTime":"' + 0 + '"';
+                                    resultJsonString += '}';
 
-                            break;
-                        }
-                    }
-
-                    resultJsonString += ']}';
-                    resultJson = JSON.parse(resultJsonString);
-
-                    chart_getTodayComeInTime(smartphone_address, function(todayComeInTime) {
-                        chart_getTodayComeOutTime(smartphone_address, function(todayComeOutTime) {
-                            if (todayComeInTime.userList[0].todayComeInTime != "NO DATA"
-                                && todayComeOutTime.userList[0].todayComeOutTime != "NO DATA") {
-                                var comeInTime = new Date(todayComeInTime.userList[0].todayComeInTime);
-                                var comeOutTime = new Date(todayComeOutTime.userList[0].todayComeOutTime);
-
-                                resultJson.userList[0].todayWorkingTime = (comeOutTime.getTime() - comeInTime.getTime()) / 1000;
+                                    if (i < departmentListRows.length - 1)
+                                        resultJsonString += ',';
+                                }
+                                resultJsonString += '],';
                             }
 
-                            if (typeof callback === "function") {
-                                callback(resultJson);
+                            if (positionListRows.length > 0) {
+                                resultJsonString += '"positionList":[';
+                                for (i = 0; i < positionListRows.length; i++) {
+                                    resultJsonString += '{';
+                                    resultJsonString += '"id_position":"' + positionListRows[i].id + '",';
+                                    resultJsonString += '"name":"' + positionListRows[i].name + '",';
+                                    resultJsonString += '"firstComeInTime":"' + 0 + '",';
+                                    resultJsonString += '"lastComeOutTime":"' + 0 + '",';
+                                    resultJsonString += '"totalValidWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"totalValidOverWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"avgFirstComeInTime":"' + 0 + '",';
+                                    resultJsonString += '"avgLastComeOutTime":"' + 0 + '",';
+                                    resultJsonString += '"avgValidWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"avgValidOverWorkingTime":"' + 0 + '"';
+                                    resultJsonString += '}';
+
+                                    if (i < positionListRows.length - 1)
+                                        resultJsonString += ',';
+                                }
+                                resultJsonString += ']';
                             }
-                        });
-                    });
 
-                    break;
-
-                default:
-                    for (var i = 0; i < userListRows.length; i++) {
-                        resultJsonString += '{';
-                        resultJsonString += '"todayWorkingTime":"' + 'UNAVAILABLE' + '",';
-                        resultJsonString += '"smartphone_address":"' + userListRows[i].smartphone_address + '",';
-                        resultJsonString += '"name_user":"' + userListRows[i].name + '",';
-                        resultJsonString += '"workplaceList" : [';
-
-                        for (var j = 0; j < workplaceListRows.length; j++) {
-                            resultJsonString += '{';
-                            resultJsonString += '"id_workplace":"' + workplaceListRows[j].id_workplace + '",';
-                            resultJsonString += '"name_workplace":"' + workplaceListRows[j].name_workplace + '",';
-                            resultJsonString += '"todayWorkingTime":"' + 'UNAVAILABLE' + '"';
                             resultJsonString += '}';
+                            resultJson = JSON.parse(resultJsonString);
 
-                            if (j < workplaceListRows.length - 1)
-                                resultJsonString += ',';
-                        }
+                            var workStartTimeMsec = new Date('1970-01-02 ' + workStartTime).getTime() - new Date('1970-01-02 00:00:00').getTime();
+                            var workEndTimeMsec = new Date('1970-01-02 ' + workEndTime).getTime() - new Date('1970-01-02 00:00:00').getTime();
+                            var comeInTimeMsec = 0;
+                            var comeOutTimeMsec = 0;
+                            var validWorkingTime = 0;
+                            var validOverWorkingTime = 0;
+                            var comeInTimeArr = [];
+                            var comeOutTimeArr = [];
+                            var validWorkingTimeArr = [];
+                            var validOverWorkingTimeArr = [];
 
-                        resultJsonString += ']}';
+                            for (i = 0; i < resultJson.userList.length; i++) {
+                                for (j = 0; j < circumstanceRows.length; j++) {
+                                    if (circumstanceRows[j].smartphone_address == resultJson.userList[i].smartphone_address) {
+                                        if (circumstanceRows[j].commute_status == 1) {
+                                            comeInTimeMsec = new Date('1970-01-02 ' + circumstanceRows[j].datetime).getTime() - new Data('1970-01-02 00:00:00').getTime();
+                                        } else if (circumstanceRows[j].commute_status == 0) {
+                                            comeOutTimeMsec = new Date('1970-01-02 ' + circumstanceRows[j].datetime).getTime() - new Data('1970-01-02 00:00:00').getTime();
 
-                        if (i < userListRows.length - 1)
-                            resultJsonString += ',';
-                    }
+                                            if (comeOutTimeMsec > comeInTimeMsec) {
+                                                comeInTimeArr.push(comeInTimeMsec);
+                                                comeOutTimeArr.push(comeOutTimeMsec);
+                                                validWorkingTimeArr.push(comeOutTimeMsec - comeInTimeMsec);
 
-                    resultJsonString += ']}';
-                    resultJson = JSON.parse(resultJsonString);
+                                                if (comeInTimeMsec < workStartTimeMsec) {
+                                                    validOverWorkingTimeArr.push(workStartTimeMsec - comeInTimeMsec);
+                                                }
+                                                if (comeOutTimeMsec > workEndTimeMsec) {
+                                                    validOverWorkingTimeArr.push(comeOutTimeMsec - workEndTimeMsec);
+                                                }
+                                            }
 
-                    chart_getTodayComeInTime(function(todayComeInTime) {
-                        chart_getTodayComeOutTime(function(todayComeOutTime) {
-                            for (var i = 0; i < todayComeInTime.userList.length; i++) {
-                                if (todayComeInTime.userList[i].todayComeInTime != "NO DATA"
-                                    && todayComeOutTime.userList[i].todayComeOutTime != "NO DATA") {
-                                    var comeInTime = new Date(todayComeInTime.userList[i].todayComeInTime);
-                                    var comeOutTime = new Date(todayComeOutTime.userList[i].todayComeOutTime);
-
-                                    resultJson.userList[i].todayWorkingTime = (comeOutTime.getTime() - comeInTime.getTime()) / 1000;
+                                            comeInTimeMsec = 0;
+                                            comeOutTimeMsec = 0;
+                                        } else {
+                                            // continue;
+                                        }
+                                    }
                                 }
+
+                                if (comeInTimeArr.length > 0) {
+                                    resultJson.userList[i].firstComeInTime = comeInTimeArr.sort()[0];
+                                }
+                                if (comeOutTimeArr.length > 0) {
+                                    resultJson.userList[i].lastComeOutTime = comeOutTimeArr.sort()[comeOutTimeArr.length - 1];
+                                }
+
+                                for (j = 0; j < validWorkingTimeArr.length; j++) {
+                                    resultJson.userList[i].validWorkingTime += validWorkingTimeArr[j];
+                                }
+                                for (j = 0; j < validOverWorkingTimeArr.length; j++) {
+                                    resultJson.userList[i].validOverWorkingTime += validOverWorkingTime[j];
+                                }
+
+                                comeInTimeMsec = 0;
+                                comeOutTimeMsec = 0;
+                                validWorkingTime = 0;
+                                validOverWorkingTime = 0;
+                                comeInTimeArr = [];
+                                comeOutTimeArr = [];
+                                validWorkingTimeArr = [];
+                                validOverWorkingTimeArr = [];   
+                            }
+
+                            var allUserComeInTimeArr = [];
+                            var allUserComeOutTimeArr = [];
+                            var allUserFirstComeInTimeArr = [];
+                            var allUserLastComeOutTimeArr = [];
+                            var allUserAvgWorkingTimeArr = [];
+                            var allUserAvgOverWorkingTimeArr = [];
+                            var eachUserAvgWorkingTimeMsec = 0;
+                            var eachUserAvgOverWorkingTimeMsec = 0;
+
+                            for (i = 0; i < resultJson.workplaceList.length; i++) {
+                                for (j = 0; j < resultJson.userList.length; j++) {
+                                    for (k = 0; k < circumstanceRows.length; k++) {
+                                        if (circumstanceRows[k].id_workplace == resultJson.workplaceList[i].id_workplace
+                                            && circumstanceRows[k].smartphone_address == resultJson.userList[j].smartphone_address) {
+
+                                            if (circumstanceRows[k].commute_status == 1) {
+                                                comeInTimeMsec = new Date('1970-01-02 ' + circumstanceRows[k].datetime).getTime() - new Data('1970-01-02 00:00:00').getTime();
+                                            } else if (circumstanceRows[k].commute_status == 0) {
+                                                comeOutTimeMsec = new Date('1970-01-02 ' + circumstanceRows[k].datetime).getTime() - new Data('1970-01-02 00:00:00').getTime();
+
+                                                if (comeOutTimeMsec > comeInTimeMsec) {
+                                                    comeInTimeArr.push(comeInTimeMsec);
+                                                    comeOutTimeArr.push(comeOutTimeMsec);
+                                                    validWorkingTimeArr.push(comeOutTimeMsec - comeInTimeMsec);
+                                                    
+                                                    allUserComeInTimeArr.push(comeInTimeMsec);
+                                                    allUserComeOutTimeArr.push(comeOutTimeMsec);
+
+                                                    if (comeInTimeMsec < workStartTimeMsec) {
+                                                        validOverWorkingTimeArr.push(workStartTimeMsec - comeInTimeMsec);
+                                                    }
+                                                    if (comeOutTimeMsec > workEndTimeMsec) {
+                                                        validOverWorkingTimeArr.push(comeOutTimeMsec - workEndTimeMsec);
+                                                    }
+                                                }
+
+                                                comeInTimeMsec = 0;
+                                                comeOutTimeMsec = 0;
+                                            } else {
+                                                // continue;
+                                            }
+                                        }
+                                    }
+
+                                    if (validWorkingTimeArr.length > 0) {
+                                        for (k = 0; k < validWorkingTimeArr.length; k++) {
+                                            eachUserAvgWorkingTimeMsec += validWorkingTimeArr[k];
+                                            resultJson.workplaceList[i].totalValidWorkingTime += validWorkingTimeArr[k];
+                                        }
+                                        eachUserAvgWorkingTimeMsec /= validWorkingTimeArr.length;
+                                    }
+
+                                    if (validOverWorkingTimeArr.length > 0) {
+                                        for (k = 0; k < validOverWorkingTimeArr.length; k++) {
+                                            eachUserAvgOverWorkingTimeMsec += validOverWorkingTimeArr[k];
+                                            resultJson.workplaceList[i].totalValidOverWorkingTime += validOverWorkingTimeArr[k];
+                                        }
+                                        eachUserAvgOverWorkingTimeMsec /= validOverWorkingTimeArr.length;
+                                    }
+
+                                    if (comeInTimeArr.length > 0) {
+                                        allUserFirstComeInTimeArr.push(comeInTimeArr.sort()[0]);
+                                    }
+                                    if (comeOutTimeArr.length > 0) {
+                                        allUserLastComeOutTimeArr.push(comeOutTimeArr.sort()[comeOutTimeArr.length - 1]);
+                                    }
+                                    if (eachUserAvgWorkingTimeMsec != 0) {
+                                        allUserAvgWorkingTimeArr.push(eachUserAvgWorkingTimeMsec);
+                                    }
+                                    if (eachUserAvgOverWorkingTimeMsec != 0) {
+                                        allUserAvgOverWorkingTimeArr.push(eachUserAvgOverWorkingTimeMsec);
+                                    }
+                                    
+                                    comeInTimeMsec = 0;
+                                    comeOutTimeMsec = 0;
+                                    validWorkingTime = 0;
+                                    validOverWorkingTime = 0;
+                                    comeInTimeArr = [];
+                                    comeOutTimeArr = [];
+                                    validWorkingTimeArr = [];
+                                    validOverWorkingTimeArr = [];
+                                    eachUserAvgWorkingTimeMsec = 0;
+                                    eachUserAvgOverWorkingTimeMsec = 0;
+                                }
+                     
+                                if (allUserComeInTimeArr.length > 0) {
+                                    resultJson.workplaceList[i].firstComeInTime = allUserComeInTimeArr.sort()[0];
+                                }
+                                if (allUserComeOutTimeArr.length > 0) {
+                                    resultJson.workplaceList[i].lastComeOutTime = allUserComeOutTimeArr.sort()[allUserComeOutTimeArr.length - 1];
+                                }
+                                
+                                if (allUserFirstComeInTimeArr.length > 0) {
+                                    for (j = 0; j < allUserFirstComeInTimeArr.length; j++) {
+                                        resultJson.workplaceList[i].avgFirstComeInTime += allUserFirstComeInTimeArr[j];
+                                    }
+                                    resultJson.workplaceList[i].avgFirstComeInTime /= allUserFirstComeInTimeArr.length;
+                                }
+                                
+                                if (allUserLastComeOutTimeArr.length > 0) {
+                                    for (j = 0; j < allUserLastComeOutTimeArr.length; j++) {
+                                        resultJson.workplaceList[i].avgLastComeOutTime += allUserLastComeOutTimeArr[j];
+                                    }
+                                    resultJson.workplaceList[i].avgLastComeOutTime /= allUserLastComeOutTimeArr.length;
+                                }
+
+                                if (allUserAvgWorkingTimeArr.length > 0) {
+                                    for (j = 0; j < allUserAvgWorkingTimeArr.length; j++) {
+                                        resultJson.workplaceList[i].avgValidWorkingTime += allUserAvgWorkingTimeArr[j];
+                                    }
+                                    resultJson.workplaceList[i].avgValidWorkingTime /= allUserAvgWorkingTimeArr.length;
+                                }
+
+                                if (allUserAvgOverWorkingTimeArr.length > 0) {
+                                    for (j = 0; j < allUserAvgOverWorkingTimeArr.length; j++) {
+                                        resultJson.workplaceList[i].avgValidOverWorkingTime += allUserAvgOverWorkingTimeArr[j];
+                                    }
+                                    resultJson.workplaceList[i].avgValidOverWorkingTime /= allUserAvgOverWorkingTimeArr.length;
+                                }
+
+                                allUserComeInTimeArr = [];
+                                allUserComeOutTimeArr = [];
+                                allUserFirstComeInTimeArr = [];
+                                allUserLastComeOutTimeArr = [];
+                                allUserAvgWorkingTimeArr = [];
+                                allUserAvgOverWorkingTimeArr = [];
+                                eachUserAvgWorkingTimeMsec = 0;
+                                eachUserAvgOverWorkingTimeMsec = 0;
+                            }
+
+                            for (i = 0; i < resultJson.departmentList.length; i++) {
+                                for (j = 0; j < resultJson.userList.length; j++) {
+                                    for (k = 0; k < circumstanceRows.length; k++) {
+                                        if (circumstanceRows[k].id_department == resultJson.departmentList[i].id_department
+                                            && circumstanceRows[k].smartphone_address == resultJson.userList[j].smartphone_address) {
+
+                                            if (circumstanceRows[k].commute_status == 1) {
+                                                comeInTimeMsec = new Date('1970-01-02 ' + circumstanceRows[k].datetime).getTime() - new Data('1970-01-02 00:00:00').getTime();
+                                            } else if (circumstanceRows[k].commute_status == 0) {
+                                                comeOutTimeMsec = new Date('1970-01-02 ' + circumstanceRows[k].datetime).getTime() - new Data('1970-01-02 00:00:00').getTime();
+
+                                                if (comeOutTimeMsec > comeInTimeMsec) {
+                                                    comeInTimeArr.push(comeInTimeMsec);
+                                                    comeOutTimeArr.push(comeOutTimeMsec);
+                                                    validWorkingTimeArr.push(comeOutTimeMsec - comeInTimeMsec);
+
+                                                    allUserComeInTimeArr.push(comeInTimeMsec);
+                                                    allUserComeOutTimeArr.push(comeOutTimeMsec);
+
+                                                    if (comeInTimeMsec < workStartTimeMsec) {
+                                                        validOverWorkingTimeArr.push(workStartTimeMsec - comeInTimeMsec);
+                                                    }
+                                                    if (comeOutTimeMsec > workEndTimeMsec) {
+                                                        validOverWorkingTimeArr.push(comeOutTimeMsec - workEndTimeMsec);
+                                                    }
+                                                }
+
+                                                comeInTimeMsec = 0;
+                                                comeOutTimeMsec = 0;
+                                            } else {
+                                                // continue;
+                                            }
+                                        }
+                                    }
+
+                                    if (validWorkingTimeArr.length > 0) {
+                                        for (k = 0; k < validWorkingTimeArr.length; k++) {
+                                            eachUserAvgWorkingTimeMsec += validWorkingTimeArr[k];
+                                            resultJson.departmentList[i].totalValidWorkingTime += validWorkingTimeArr[k];
+                                        }
+                                        eachUserAvgWorkingTimeMsec /= validWorkingTimeArr.length;
+                                    }
+
+                                    if (validOverWorkingTimeArr.length > 0) {
+                                        for (k = 0; k < validOverWorkingTimeArr.length; k++) {
+                                            eachUserAvgOverWorkingTimeMsec += validOverWorkingTimeArr[k];
+                                            resultJson.departmentList[i].totalValidOverWorkingTime += validOverWorkingTimeArr[k];
+                                        }
+                                        eachUserAvgOverWorkingTimeMsec /= validOverWorkingTimeArr.length;
+                                    }
+
+                                    if (comeInTimeArr.length > 0) {
+                                        allUserFirstComeInTimeArr.push(comeInTimeArr.sort()[0]);
+                                    }
+                                    if (comeOutTimeArr.length > 0) {
+                                        allUserLastComeOutTimeArr.push(comeOutTimeArr.sort()[comeOutTimeArr.length - 1]);
+                                    }
+                                    if (eachUserAvgWorkingTimeMsec != 0) {
+                                        allUserAvgWorkingTimeArr.push(eachUserAvgWorkingTimeMsec);
+                                    }
+                                    if (eachUserAvgOverWorkingTimeMsec != 0) {
+                                        allUserAvgOverWorkingTimeArr.push(eachUserAvgOverWorkingTimeMsec);
+                                    }
+
+                                    comeInTimeMsec = 0;
+                                    comeOutTimeMsec = 0;
+                                    validWorkingTime = 0;
+                                    validOverWorkingTime = 0;
+                                    comeInTimeArr = [];
+                                    comeOutTimeArr = [];
+                                    validWorkingTimeArr = [];
+                                    validOverWorkingTimeArr = [];
+                                    eachUserAvgWorkingTimeMsec = 0;
+                                    eachUserAvgOverWorkingTimeMsec = 0;
+                                }
+
+                                if (allUserComeInTimeArr.length > 0) {
+                                    resultJson.departmentList[i].firstComeInTime = allUserComeInTimeArr.sort()[0];
+                                }
+                                if (allUserComeOutTimeArr.length > 0) {
+                                    resultJson.departmentList[i].lastComeOutTime = allUserComeOutTimeArr.sort()[allUserComeOutTimeArr.length - 1];
+                                }
+
+                                if (allUserFirstComeInTimeArr.length > 0) {
+                                    for (j = 0; j < allUserFirstComeInTimeArr.length; j++) {
+                                        resultJson.departmentList[i].avgFirstComeInTime += allUserFirstComeInTimeArr[j];
+                                    }
+                                    resultJson.departmentList[i].avgFirstComeInTime /= allUserFirstComeInTimeArr.length;
+                                }
+
+                                if (allUserLastComeOutTimeArr.length > 0) {
+                                    for (j = 0; j < allUserLastComeOutTimeArr.length; j++) {
+                                        resultJson.departmentList[i].avgLastComeOutTime += allUserLastComeOutTimeArr[j];
+                                    }
+                                    resultJson.departmentList[i].avgLastComeOutTime /= allUserLastComeOutTimeArr.length;
+                                }
+
+                                if (allUserAvgWorkingTimeArr.length > 0) {
+                                    for (j = 0; j < allUserAvgWorkingTimeArr.length; j++) {
+                                        resultJson.departmentList[i].avgValidWorkingTime += allUserAvgWorkingTimeArr[j];
+                                    }
+                                    resultJson.departmentList[i].avgValidWorkingTime /= allUserAvgWorkingTimeArr.length;
+                                }
+
+                                if (allUserAvgOverWorkingTimeArr.length > 0) {
+                                    for (j = 0; j < allUserAvgOverWorkingTimeArr.length; j++) {
+                                        resultJson.departmentList[i].avgValidOverWorkingTime += allUserAvgOverWorkingTimeArr[j];
+                                    }
+                                    resultJson.departmentList[i].avgValidOverWorkingTime /= allUserAvgOverWorkingTimeArr.length;
+                                }
+
+                                allUserComeInTimeArr = [];
+                                allUserComeOutTimeArr = [];
+                                allUserFirstComeInTimeArr = [];
+                                allUserLastComeOutTimeArr = [];
+                                allUserAvgWorkingTimeArr = [];
+                                allUserAvgOverWorkingTimeArr = [];
+                                eachUserAvgWorkingTimeMsec = 0;
+                                eachUserAvgOverWorkingTimeMsec = 0;
+                            }
+
+                            for (i = 0; i < resultJson.positionList.length; i++) {
+                                for (j = 0; j < resultJson.userList.length; j++) {
+                                    for (k = 0; k < circumstanceRows.length; k++) {
+                                        if (circumstanceRows[k].id_position == resultJson.positionList[i].id_position
+                                            && circumstanceRows[k].smartphone_address == resultJson.userList[j].smartphone_address) {
+
+                                            if (circumstanceRows[k].commute_status == 1) {
+                                                comeInTimeMsec = new Date('1970-01-02 ' + circumstanceRows[k].datetime).getTime() - new Data('1970-01-02 00:00:00').getTime();
+                                            } else if (circumstanceRows[k].commute_status == 0) {
+                                                comeOutTimeMsec = new Date('1970-01-02 ' + circumstanceRows[k].datetime).getTime() - new Data('1970-01-02 00:00:00').getTime();
+
+                                                if (comeOutTimeMsec > comeInTimeMsec) {
+                                                    comeInTimeArr.push(comeInTimeMsec);
+                                                    comeOutTimeArr.push(comeOutTimeMsec);
+                                                    validWorkingTimeArr.push(comeOutTimeMsec - comeInTimeMsec);
+
+                                                    allUserComeInTimeArr.push(comeInTimeMsec);
+                                                    allUserComeOutTimeArr.push(comeOutTimeMsec);
+
+                                                    if (comeInTimeMsec < workStartTimeMsec) {
+                                                        validOverWorkingTimeArr.push(workStartTimeMsec - comeInTimeMsec);
+                                                    }
+                                                    if (comeOutTimeMsec > workEndTimeMsec) {
+                                                        validOverWorkingTimeArr.push(comeOutTimeMsec - workEndTimeMsec);
+                                                    }
+                                                }
+
+                                                comeInTimeMsec = 0;
+                                                comeOutTimeMsec = 0;
+                                            } else {
+                                                // continue;
+                                            }
+                                        }
+                                    }
+
+                                    if (validWorkingTimeArr.length > 0) {
+                                        for (k = 0; k < validWorkingTimeArr.length; k++) {
+                                            eachUserAvgWorkingTimeMsec += validWorkingTimeArr[k];
+                                            resultJson.positionList[i].totalValidWorkingTime += validWorkingTimeArr[k];
+                                        }
+                                        eachUserAvgWorkingTimeMsec /= validWorkingTimeArr.length;
+                                    }
+
+                                    if (validOverWorkingTimeArr.length > 0) {
+                                        for (k = 0; k < validOverWorkingTimeArr.length; k++) {
+                                            eachUserAvgOverWorkingTimeMsec += validOverWorkingTimeArr[k];
+                                            resultJson.positionList[i].totalValidOverWorkingTime += validOverWorkingTimeArr[k];
+                                        }
+                                        eachUserAvgOverWorkingTimeMsec /= validOverWorkingTimeArr.length;
+                                    }
+
+                                    if (comeInTimeArr.length > 0) {
+                                        allUserFirstComeInTimeArr.push(comeInTimeArr.sort()[0]);
+                                    }
+                                    if (comeOutTimeArr.length > 0) {
+                                        allUserLastComeOutTimeArr.push(comeOutTimeArr.sort()[comeOutTimeArr.length - 1]);
+                                    }
+                                    if (eachUserAvgWorkingTimeMsec != 0) {
+                                        allUserAvgWorkingTimeArr.push(eachUserAvgWorkingTimeMsec);
+                                    }
+                                    if (eachUserAvgOverWorkingTimeMsec != 0) {
+                                        allUserAvgOverWorkingTimeArr.push(eachUserAvgOverWorkingTimeMsec);
+                                    }
+
+                                    comeInTimeMsec = 0;
+                                    comeOutTimeMsec = 0;
+                                    validWorkingTime = 0;
+                                    validOverWorkingTime = 0;
+                                    comeInTimeArr = [];
+                                    comeOutTimeArr = [];
+                                    validWorkingTimeArr = [];
+                                    validOverWorkingTimeArr = [];
+                                    eachUserAvgWorkingTimeMsec = 0;
+                                    eachUserAvgOverWorkingTimeMsec = 0;
+                                }
+
+                                if (allUserComeInTimeArr.length > 0) {
+                                    resultJson.positionList[i].firstComeInTime = allUserComeInTimeArr.sort()[0];
+                                }
+                                if (allUserComeOutTimeArr.length > 0) {
+                                    resultJson.positionList[i].lastComeOutTime = allUserComeOutTimeArr.sort()[allUserComeOutTimeArr.length - 1];
+                                }
+                                
+                                if (allUserFirstComeInTimeArr.length > 0) {
+                                    for (j = 0; j < allUserFirstComeInTimeArr.length; j++) {
+                                        resultJson.positionList[i].avgFirstComeInTime += allUserFirstComeInTimeArr[j];
+                                    }
+                                    resultJson.positionList[i].avgFirstComeInTime /= allUserFirstComeInTimeArr.length;
+                                }
+
+                                if (allUserLastComeOutTimeArr.length > 0) {
+                                    for (j = 0; j < allUserLastComeOutTimeArr.length; j++) {
+                                        resultJson.positionList[i].avgLastComeOutTime += allUserLastComeOutTimeArr[j];
+                                    }
+                                    resultJson.positionList[i].avgLastComeOutTime /= allUserLastComeOutTimeArr.length;
+                                }
+
+                                if (allUserAvgWorkingTimeArr.length > 0) {
+                                    for (j = 0; j < allUserAvgWorkingTimeArr.length; j++) {
+                                        resultJson.positionList[i].avgValidWorkingTime += allUserAvgWorkingTimeArr[j];
+                                    }
+                                    resultJson.positionList[i].avgValidWorkingTime /= allUserAvgWorkingTimeArr.length;
+                                }
+
+                                if (allUserAvgOverWorkingTimeArr.length > 0) {
+                                    for (j = 0; j < allUserAvgOverWorkingTimeArr.length; j++) {
+                                        resultJson.positionList[i].avgValidOverWorkingTime += allUserAvgOverWorkingTimeArr[j];
+                                    }
+                                    resultJson.positionList[i].avgValidOverWorkingTime /= allUserAvgOverWorkingTimeArr.length;
+                                }
+
+                                allUserComeInTimeArr = [];
+                                allUserComeOutTimeArr = [];
+                                allUserFirstComeInTimeArr = [];
+                                allUserLastComeOutTimeArr = [];
+                                allUserAvgWorkingTimeArr = [];
+                                allUserAvgOverWorkingTimeArr = [];
+                                eachUserAvgWorkingTimeMsec = 0;
+                                eachUserAvgOverWorkingTimeMsec = 0;
                             }
 
                             if (typeof callback === "function") {
@@ -1811,40 +2126,98 @@ var chart_getTodayWorkTime = function(arg1, callback) {
                             }
                         });
                     });
-
-                    break;
-            }
+                });
+            });
         });
     });
-};
+}
 
 /**
- * To get average come to work time at specific period
- * The sequence of each parameters is important due to setting up period if it's needed
- *
- * You can put parameters in this like
- * (# is number of parameters)
- * 0
- * (It returns all user's circumstance data of all period)
- *
- * 1
- * smartphone_address
- *
- * 2
- * startDate, endDate
- *
- * 3
- * startDate, endDate, smartphone_address
+ * This function returns a JSON object that is structured like
+ * {
+ *     "userList":[{
+ *         "smartphoneAddress",
+ *         "employeeNumber",
+ *         "name",
+ *         "id_department",
+ *         "id_position",
+ *         "avgComeInTime",
+ *         "avgComeOutTime",
+ *         "avgWorkingTime",
+ *         "avgOverWorkingTime",
+ *         "minComeInTime",
+ *         "minComeOutTime",
+ *         "minWorkingTime",
+ *         "minOverWorkingTime",
+ *         "maxComeInTime",
+ *         "maxComeOutTime",
+ *         "maxWorkingTime",
+ *         "maxOverWorkingTime"
+ *     }],
+ *     "workplaceList":[{
+ *         "id_workplace",
+ *         "name",
+ *         "location",
+ *         "latitude",
+ *         "longitude",
+ *         "avgComeInTime",
+ *         "avgComeOutTime",
+ *         "avgWorkingTime",
+ *         "avgOverWorkingTime",
+ *         "minComeInTime",
+ *         "minComeOutTime",
+ *         "minWorkingTime",
+ *         "minOverWorkingTime",
+ *         "maxComeInTime",
+ *         "maxComeOutTime",
+ *         "maxWorkingTime",
+ *         "maxOverWorkingTime"
+ *     }],
+ *     "departmentList":[{
+ *         "id_department",
+ *         "name",
+ *         "avgComeInTime",
+ *         "avgComeOutTime",
+ *         "avgWorkingTime",
+ *         "avgOverWorkingTime",
+ *         "minComeInTime",
+ *         "minComeOutTime",
+ *         "minWorkingTime",
+ *         "minOverWorkingTime",
+ *         "maxComeInTime",
+ *         "maxComeOutTime",
+ *         "maxWorkingTime",
+ *         "maxOverWorkingTime"
+ *     }],
+ *     "positionList":[{
+ *         "id_position",
+ *         "name",
+ *         "avgComeInTime",
+ *         "avgComeOutTime",
+ *         "avgWorkingTime",
+ *         "avgOverWorkingTime",
+ *         "minComeInTime",
+ *         "minComeOutTime",
+ *         "minWorkingTime",
+ *         "minOverWorkingTime",
+ *         "maxComeInTime",
+ *         "maxComeOutTime",
+ *         "maxWorkingTime",
+ *         "maxOverWorkingTime"
+ *     }]
+ * }
  *
  * @param arg1 will be start date (option)
  * @param arg2 will be end date (option)
- * @param arg3 will be smartphone address of specific user (option)
+ * @param arg3 will be workplace id (option)
+ * @param arg4 will be department id (option)
+ * @param arg5 will be position id (option)
+ * @param arg6 will be smartphone bluetooth address (option)
  * @param callback
  */
-var chart_getAvgComeInTime = function(arg1, arg2, arg3, callback) {
+function getCommuteInfo(arg1, arg2, arg3, arg4, arg5, arg6, callback) {
     var startDate;
     var endDate;
-    var smartphone_address; // 00:00:00:00:00:00
 
     var args = [];
     for (var i = 0; i < arguments.length; i++) {
@@ -1856,747 +2229,513 @@ var chart_getAvgComeInTime = function(arg1, arg2, arg3, callback) {
     if (args.length > 0) arg1 = args.shift(); else arg1 = null;
     if (args.length > 0) arg2 = args.shift(); else arg2 = null;
     if (args.length > 0) arg3 = args.shift(); else arg3 = null;
+    if (args.length > 0) arg4 = args.shift(); else arg4 = null;
+    if (args.length > 0) arg5 = args.shift(); else arg5 = null;
+    if (args.length > 0) arg6 = args.shift(); else arg6 = null;
 
     if (arg1 != null) args.push(arg1);
     if (arg2 != null) args.push(arg2);
-    if (arg3 != null) args.push(arg3);
+    if (arg2 != null) args.push(arg3);
+    if (arg2 != null) args.push(arg4);
+    if (arg2 != null) args.push(arg5);
+    if (arg2 != null) args.push(arg6);
 
-    var resultJsonString = '{ "userList" : [';
-    var resultJson;
+    // TODO: implement options
+    switch (args.length) {
+        case 2:
+            args[0] = String(args[0]);
+            args[1] = String(args[1]);
 
-    id_getUserList(function(userListRows) {
-        switch (args.length) {
-            case 1:
-                args[0] = String(args[0]);
-                smartphone_address = args[0];
+            if (args[0].length != 10)
+                startDate = currentTime.convertCurrentTimezoneDateTime(args[0]);
+            else
+                startDate = args[0];
 
-                for (var i = 0; i < userListRows.length; i++) {
-                    if (userListRows[i].smartphone_address == smartphone_address) {
-                        resultJsonString += '{';
-                        resultJsonString += '"avgComeInTime":"' + 'UNAVAILABLE' + '",';
-                        resultJsonString += '"smartphone_address":"' + userListRows[i].smartphone_address + '",';
-                        resultJsonString += '"name_user":"' + userListRows[i].name + '"';
-                        resultJsonString += '}';
+            if (args[1].length != 10)
+                endDate = currentTime.convertCurrentTimezoneDateTime(args[1]);
+            else
+                endDate = args[1];
 
-                        break;
-                    }
-                }
-
-                resultJsonString += ']}';
-                resultJson = JSON.parse(resultJsonString);
-
-                chart_getCircumstanceTable(startDate, endDate, function (circumstanceRows) {
-                    // Need to modify below to improve performance
-                    for (var i = 0; i < resultJson.userList.length; i++) {
-                        var calculatedDate = '1970-01-02';
-                        var timeMsecArray = [];
-
-                        for (var j = circumstanceRows.length - 1; j >= 0; j--) {
-                            if (circumstanceRows[j].commute_status == 1) {
-                                var currentRowDate = currentTime.convertCurrentTimezoneDateTime(String(new Date(circumstanceRows[j].datetime))).split(' ')[0];
-
-                                if (calculatedDate == currentRowDate)
-                                    continue;
-                                else
-                                    calculatedDate = currentRowDate;
-
-                                timeMsecArray.push(new Date('1970-01-02 ' + circumstanceRows[j].datetime.split(' ')[1]).getTime());
-                            }
-                        }
-
-                        if (timeMsecArray.length > 0) {
-                            var avgComeInTime = 0;
-
-                            for (var j = 0; j < timeMsecArray.length; j++)
-                                avgComeInTime += timeMsecArray[j];
-
-                            avgComeInTime /= timeMsecArray.length;
-
-                            resultJson.userList[i].avgComeInTime = String(new Date(avgComeInTime)).split(' ')[4];
-                        }
-
-                        timeMsecArray = null;
-                        calculatedDate = '1970-01-02';
-                    }
-
+            getCircumstanceTable(startDate, endDate, function (circumstanceRows) {
+                getCommuteInfoSetupJson(circumstanceRows, function (resultJson) {
                     if (typeof callback === "function") {
                         callback(resultJson);
                     }
                 });
+            });
 
+            break;
 
-                break;
-
-            case 2:
-                args[0] = String(args[0]);
-                args[1] = String(args[1]);
-
-                if (args[0].length != 10)
-                    startDate = currentTime.convertCurrentTimezoneDateTime(args[0]);
-                else
-                    startDate = args[0];
-
-                if (args[1].length != 10)
-                    endDate = currentTime.convertCurrentTimezoneDateTime(args[1]);
-                else
-                    endDate = args[1];
-
-                for (var i = 0; i < userListRows.length; i++) {
-                    resultJsonString += '{';
-                    resultJsonString += '"avgComeInTime":"' + 'UNAVAILABLE' + '",';
-                    resultJsonString += '"smartphone_address":"' + userListRows[i].smartphone_address + '",';
-                    resultJsonString += '"name_user":"' + userListRows[i].name + '"';
-                    resultJsonString += '}';
-
-                    if (i < userListRows.length - 1)
-                        resultJsonString += ',';
-                }
-
-                resultJsonString += ']}';
-                resultJson = JSON.parse(resultJsonString);
-
-                chart_getCircumstanceTable(startDate, endDate, function (circumstanceRows) {
-                    // Need to modify below to improve performance
-                    for (var i = 0; i < resultJson.userList.length; i++) {
-                        var calculatedDate = '1970-01-02';
-                        var timeMsecArray = [];
-
-                        for (var j = circumstanceRows.length - 1; j >= 0; j--) {
-                            if (resultJson.userList[i].smartphone_address == circumstanceRows[j].smartphone_address) {
-                                if (circumstanceRows[j].commute_status == 1) {
-                                    var currentRowDate = currentTime.convertCurrentTimezoneDateTime(String(new Date(circumstanceRows[j].datetime))).split(' ')[0];
-
-                                    if (calculatedDate == currentRowDate)
-                                        continue;
-                                    else
-                                        calculatedDate = currentRowDate;
-
-                                    timeMsecArray.push(new Date('1970-01-02 ' + circumstanceRows[j].datetime.split(' ')[1]).getTime());
-                                }
-                            }
-                        }
-
-                        if (timeMsecArray.length > 0) {
-                            var avgComeInTime = 0;
-
-                            for (var j = 0; j < timeMsecArray.length; j++)
-                                avgComeInTime += timeMsecArray[j];
-
-                            avgComeInTime /= timeMsecArray.length;
-
-                            resultJson.userList[i].avgComeInTime = String(new Date(avgComeInTime)).split(' ')[4];
-                        }
-
-                        timeMsecArray = null;
-                        calculatedDate = '1970-01-02';
-                    }
-
+        default:
+            getCircumstanceTable(function (circumstanceRows) {
+                getCommuteInfoSetupJson(circumstanceRows, function (resultJson) {
                     if (typeof callback === "function") {
                         callback(resultJson);
                     }
                 });
+            });
 
-                break;
-
-            case 3:
-                args[0] = String(args[0]);
-                args[1] = String(args[1]);
-                args[2] = String(args[2]);
-
-                if (args[0].length != 10)
-                    startDate = currentTime.convertCurrentTimezoneDateTime(args[0]);
-                else
-                    startDate = args[0];
-
-                if (args[1].length != 10)
-                    endDate = currentTime.convertCurrentTimezoneDateTime(args[1]);
-                else
-                    endDate = args[1];
-
-                smartphone_address = args[2];
-
-                for (var i = 0; i < userListRows.length; i++) {
-                    if (userListRows[i].smartphone_address == smartphone_address) {
-                        resultJsonString += '{';
-                        resultJsonString += '"avgComeInTime":"' + 'UNAVAILABLE' + '",';
-                        resultJsonString += '"smartphone_address":"' + userListRows[i].smartphone_address + '",';
-                        resultJsonString += '"name_user":"' + userListRows[i].name + '"';
-                        resultJsonString += '}';
-
-                        break;
-                    }
-                }
-
-                resultJsonString += ']}';
-                resultJson = JSON.parse(resultJsonString);
-
-                chart_getCircumstanceTable(startDate, endDate, smartphone_address, function (circumstanceRows) {
-                    // Need to modify below to improve performance
-                    for (var i = 0; i < resultJson.userList.length; i++) {
-                        var calculatedDate = '1970-01-02';
-                        var timeMsecArray = [];
-
-                        for (var j = circumstanceRows.length - 1; j >= 0; j--) {
-                            if (circumstanceRows[j].commute_status == 1) {
-                                var currentRowDate = currentTime.convertCurrentTimezoneDateTime(String(new Date(circumstanceRows[j].datetime))).split(' ')[0];
-
-                                if (calculatedDate == currentRowDate)
-                                    continue;
-                                else
-                                    calculatedDate = currentRowDate;
-
-                                timeMsecArray.push(new Date('1970-01-02 ' + circumstanceRows[j].datetime.split(' ')[1]).getTime());
-                            }
-                        }
-
-                        if (timeMsecArray.length > 0) {
-                            var avgComeInTime = 0;
-
-                            for (var j = 0; j < timeMsecArray.length; j++)
-                                avgComeInTime += timeMsecArray[j];
-
-                            avgComeInTime /= timeMsecArray.length;
-
-                            resultJson.userList[i].avgComeInTime = String(new Date(avgComeInTime)).split(' ')[4];
-                        }
-
-                        timeMsecArray = null;
-                        calculatedDate = '1970-01-02';
-                    }
-
-                    if (typeof callback === "function") {
-                        callback(resultJson);
-                    }
-                });
-
-
-                break;
-
-            default:
-                for (var i = 0; i < userListRows.length; i++) {
-                    resultJsonString += '{';
-                    resultJsonString += '"avgComeInTime":"' + 'UNAVAILABLE' + '",';
-                    resultJsonString += '"smartphone_address":"' + userListRows[i].smartphone_address + '",';
-                    resultJsonString += '"name_user":"' + userListRows[i].name + '"';
-                    resultJsonString += '}';
-
-                    if (i < userListRows.length - 1)
-                        resultJsonString += ',';
-                }
-
-                resultJsonString += ']}';
-                resultJson = JSON.parse(resultJsonString);
-
-                chart_getCircumstanceTable(function (circumstanceRows) {
-                    // Need to modify below to improve performance
-                    for (var i = 0; i < resultJson.userList.length; i++) {
-                        var calculatedDate = '1970-01-02';
-                        var timeMsecArray = [];
-
-                        for (var j = circumstanceRows.length - 1; j >= 0; j--) {
-                            if (resultJson.userList[i].smartphone_address == circumstanceRows[j].smartphone_address) {
-                                if (circumstanceRows[j].commute_status == 1) {
-                                    var currentRowDate = currentTime.convertCurrentTimezoneDateTime(String(new Date(circumstanceRows[j].datetime))).split(' ')[0];
-
-                                    if (calculatedDate == currentRowDate)
-                                        continue;
-                                    else
-                                        calculatedDate = currentRowDate;
-
-                                    timeMsecArray.push(new Date('1970-01-02 ' + circumstanceRows[j].datetime.split(' ')[1]).getTime());
-                                }
-                            }
-                        }
-
-                        if (timeMsecArray.length > 0) {
-                            var avgComeInTime = 0;
-
-                            for (var j = 0; j < timeMsecArray.length; j++)
-                                avgComeInTime += timeMsecArray[j];
-
-                            avgComeInTime /= timeMsecArray.length;
-
-                            resultJson.userList[i].avgComeInTime = String(new Date(avgComeInTime)).split(' ')[4];
-                        }
-
-                        timeMsecArray = null;
-                        calculatedDate = '1970-01-02';
-                    }
-
-                    if (typeof callback === "function") {
-                        callback(resultJson);
-                    }
-                });
-
-
-                break;
-        }
-    });
-};
-
-/**
- * To get average come out of work time at specific period
- * The sequence of each parameters is important due to setting up period if it's needed
- *
- * You can put parameters in this like
- * (# is number of parameters)
- * 0
- * (It returns all user's circumstance data of all period)
- *
- * 1
- * smartphone_address
- *
- * 2
- * startDate, endDate
- *
- * 3
- * startDate, endDate, smartphone_address
- *
- * @param arg1 will be start date (option)
- * @param arg2 will be end date (option)
- * @param arg3 will be smartphone address of specific user (option)
- * @param callback
- */
-var chart_getAvgComeOutTime = function(arg1, arg2, arg3, callback) {
-    var startDate;
-    var endDate;
-    var smartphone_address; // 00:00:00:00:00:00
-
-    var args = [];
-    for (var i = 0; i < arguments.length; i++) {
-        args.push(arguments[i]);
+            break;
     }
 
-    callback = args.pop();
+}
 
-    if (args.length > 0) arg1 = args.shift(); else arg1 = null;
-    if (args.length > 0) arg2 = args.shift(); else arg2 = null;
-    if (args.length > 0) arg3 = args.shift(); else arg3 = null;
+function getCommuteInfoSetupJson(circumstanceRows, callback) {
+    getUserList(function (userListRows) {
+        getWorkplaceList(function (workplaceListRows) {
+            getDepartmentList(function (departmentListRows) {
+                getPositionList(function (positionListRows) {
+                    getWorkStartTime(function (workStartTime) {
+                        getWorkEndTime(function (workEndTime) {
+                            var i, j, k;
+                            var comeInTimeMsec;
+                            var comeOutTimeMsec;
+                            var comeInTimeArr;
+                            var comeOutTimeArr;
+                            var workingTimeArr;
+                            var overWorkingTimeArr;
+                            var totalComeInTime;
+                            var totalComeOutTime;
+                            var totalWorkingTime;
+                            var totalOverWorkingTime;
+                            var timeMsec;
+                            var commute_status;
+                            var workStartTimeMsec = new Date('1970-01-02 ' + workStartTime).getTime() - new Date('1970-01-02 00:00:00').getTime();
+                            var workEndTimeMsec = new Date('1970-01-02 ' + workEndTime).getTime() - new Date('1970-01-02 00:00:00').getTime();
 
-    if (arg1 != null) args.push(arg1);
-    if (arg2 != null) args.push(arg2);
-    if (arg3 != null) args.push(arg3);
+                            var resultJsonString = '{';
+                            var resultJson;
 
-    var resultJsonString = '{ "userList" : [';
-    var resultJson;
+                            if (userListRows.length > 0) {
+                                resultJsonString += '"userList":[';
+                                for (i = 0; i < userListRows.length; i++) {
+                                    resultJsonString += '{';
+                                    resultJsonString += '"smartphoneAddress":"' + userListRows[i].smartphone_address + '",';
+                                    resultJsonString += '"employeeNumber":"' + userListRows[i].employee_number + '",';
+                                    resultJsonString += '"name":"' + userListRows[i].name + '",';
+                                    resultJsonString += '"id_department":"' + userListRows[i].id_department + '",';
+                                    resultJsonString += '"id_position":"' + userListRows[i].id_position + '",';
+                                    resultJsonString += '"avgComeInTime":"' + 0 + '",';
+                                    resultJsonString += '"avgComeOutTime":"' + 0 + '",';
+                                    resultJsonString += '"avgWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"avgOverWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"minComeInTime":"' + 0 + '",';
+                                    resultJsonString += '"minComeOutTime":"' + 0 + '",';
+                                    resultJsonString += '"minWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"minOverWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"maxComeInTime":"' + 0 + '",';
+                                    resultJsonString += '"maxComeOutTime":"' + 0 + '",';
+                                    resultJsonString += '"maxWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"maxOverWorkingTime":"' + 0 + '"';
+                                    resultJsonString += '}';
 
-    id_getUserList(function(userListRows) {
-        switch (args.length) {
-            case 1:
-                args[0] = String(args[0]);
-                smartphone_address = args[0];
-
-                for (var i = 0; i < userListRows.length; i++) {
-                    if (userListRows[i].smartphone_address == smartphone_address) {
-                        resultJsonString += '{';
-                        resultJsonString += '"avgComeOutTime":"' + 'UNAVAILABLE' + '",';
-                        resultJsonString += '"smartphone_address":"' + userListRows[i].smartphone_address + '",';
-                        resultJsonString += '"name_user":"' + userListRows[i].name + '"';
-                        resultJsonString += '}';
-
-                        break;
-                    }
-                }
-
-                resultJsonString += ']}';
-                resultJson = JSON.parse(resultJsonString);
-
-                chart_getCircumstanceTable(smartphone_address, function (circumstanceRows) {
-                    // Need to modify below to improve performance
-                    for (var i = 0; i < resultJson.userList.length; i++) {
-                        var calculatedDate = '1970-01-02';
-                        var timeMsecArray = [];
-
-                        for (var j = 0; j < circumstanceRows.length; j++) {
-                            if (circumstanceRows[j].commute_status == 0) {
-                                var currentRowDate = currentTime.convertCurrentTimezoneDateTime(String(new Date(circumstanceRows[j].datetime))).split(' ')[0];
-
-                                if (calculatedDate == currentRowDate)
-                                    continue;
-                                else
-                                    calculatedDate = currentRowDate;
-
-                                timeMsecArray.push(new Date('1970-01-02 ' + circumstanceRows[j].datetime.split(' ')[1]).getTime());
-                            }
-                        }
-
-                        if (timeMsecArray.length > 0) {
-                            var avgComeOutTime = 0;
-
-                            for (var j = 0; j < timeMsecArray.length; j++)
-                                avgComeOutTime += timeMsecArray[j];
-
-                            avgComeOutTime /= timeMsecArray.length;
-
-                            resultJson.userList[i].avgComeOutTime = String(new Date(avgComeOutTime)).split(' ')[4];
-                        }
-
-                        timeMsecArray = null;
-                        calculatedDate = '1970-01-02';
-                    }
-
-                    if (typeof callback === "function") {
-                        callback(resultJson);
-                    }
-                });
-
-                break;
-
-            case 2:
-                args[0] = String(args[0]);
-                args[1] = String(args[1]);
-
-                if (args[0].length != 10)
-                    startDate = currentTime.convertCurrentTimezoneDateTime(args[0]);
-                else
-                    startDate = args[0];
-
-                if (args[1].length != 10)
-                    endDate = currentTime.convertCurrentTimezoneDateTime(args[1]);
-                else
-                    endDate = args[1];
-
-                for (var i = 0; i < userListRows.length; i++) {
-                    resultJsonString += '{';
-                    resultJsonString += '"avgComeOutTime":"' + 'UNAVAILABLE' + '",';
-                    resultJsonString += '"smartphone_address":"' + userListRows[i].smartphone_address + '",';
-                    resultJsonString += '"name_user":"' + userListRows[i].name + '"';
-                    resultJsonString += '}';
-
-                    if (i < userListRows.length - 1)
-                        resultJsonString += ',';
-                }
-
-                resultJsonString += ']}';
-                resultJson = JSON.parse(resultJsonString);
-
-                chart_getCircumstanceTable(startDate, endDate, function (circumstanceRows) {
-                    // Need to modify below to improve performance
-                    for (var i = 0; i < resultJson.userList.length; i++) {
-                        var calculatedDate = '1970-01-02';
-                        var timeMsecArray = [];
-
-                        for (var j = 0; j < circumstanceRows.length; j++) {
-                            if (resultJson.userList[i].smartphone_address == circumstanceRows[j].smartphone_address) {
-                                if (circumstanceRows[j].commute_status == 0) {
-                                    var currentRowDate = currentTime.convertCurrentTimezoneDateTime(String(new Date(circumstanceRows[j].datetime))).split(' ')[0];
-
-                                    if (calculatedDate == currentRowDate)
-                                        continue;
-                                    else
-                                        calculatedDate = currentRowDate;
-
-                                    timeMsecArray.push(new Date('1970-01-02 ' + circumstanceRows[j].datetime.split(' ')[1]).getTime());
+                                    if (i < userListRows.length - 1)
+                                        resultJsonString += ',';
                                 }
+                                resultJsonString += '],';
                             }
-                        }
 
-                        if (timeMsecArray.length > 0) {
-                            var avgComeOutTime = 0;
+                            if (workplaceListRows.length > 0) {
+                                resultJsonString += '"workplaceList":[';
+                                for (i = 0; i < workplaceListRows.length; i++) {
+                                    resultJsonString += '{';
+                                    resultJsonString += '"id_workplace":"' + workplaceListRows[i].id_workplace + '",';
+                                    resultJsonString += '"name":"' + workplaceListRows[i].name_workplace + '",';
+                                    resultJsonString += '"location":"' + workplaceListRows[i].location + '",';
+                                    resultJsonString += '"latitude":"' + workplaceListRows[i].latitude + '",';
+                                    resultJsonString += '"longitude":"' + workplaceListRows[i].longitude + '",';
+                                    resultJsonString += '"avgComeInTime":"' + 0 + '",';
+                                    resultJsonString += '"avgComeOutTime":"' + 0 + '",';
+                                    resultJsonString += '"avgWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"avgOverWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"minComeInTime":"' + 0 + '",';
+                                    resultJsonString += '"minComeOutTime":"' + 0 + '",';
+                                    resultJsonString += '"minWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"minOverWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"maxComeInTime":"' + 0 + '",';
+                                    resultJsonString += '"maxComeOutTime":"' + 0 + '",';
+                                    resultJsonString += '"maxWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"maxOverWorkingTime":"' + 0 + '"';
+                                    resultJsonString += '}';
 
-                            for (var j = 0; j < timeMsecArray.length; j++)
-                                avgComeOutTime += timeMsecArray[j];
-
-                            avgComeOutTime /= timeMsecArray.length;
-
-                            resultJson.userList[i].avgComeOutTime = String(new Date(avgComeOutTime)).split(' ')[4];
-                        }
-
-                        timeMsecArray = null;
-                        calculatedDate = '1970-01-02';
-                    }
-
-                    if (typeof callback === "function") {
-                        callback(resultJson);
-                    }
-                });
-
-                break;
-
-            case 3:
-                args[0] = String(args[0]);
-                args[1] = String(args[1]);
-                args[2] = String(args[2]);
-
-                if (args[0].length != 10)
-                    startDate = currentTime.convertCurrentTimezoneDateTime(args[0]);
-                else
-                    startDate = args[0];
-
-                if (args[1].length != 10)
-                    endDate = currentTime.convertCurrentTimezoneDateTime(args[1]);
-                else
-                    endDate = args[1];
-
-                smartphone_address = args[2];
-
-                for (var i = 0; i < userListRows.length; i++) {
-                    if (userListRows[i].smartphone_address == smartphone_address) {
-                        resultJsonString += '{';
-                        resultJsonString += '"avgComeOutTime":"' + 'UNAVAILABLE' + '",';
-                        resultJsonString += '"smartphone_address":"' + userListRows[i].smartphone_address + '",';
-                        resultJsonString += '"name_user":"' + userListRows[i].name + '"';
-                        resultJsonString += '}';
-
-                        break;
-                    }
-                }
-
-                resultJsonString += ']}';
-                resultJson = JSON.parse(resultJsonString);
-
-                chart_getCircumstanceTable(startDate, endDate, smartphone_address, function (circumstanceRows) {
-                    // Need to modify below to improve performance
-                    for (var i = 0; i < resultJson.userList.length; i++) {
-                        var calculatedDate = '1970-01-02';
-                        var timeMsecArray = [];
-
-                        for (var j = 0; j < circumstanceRows.length; j++) {
-                            if (circumstanceRows[j].commute_status == 0) {
-                                var currentRowDate = currentTime.convertCurrentTimezoneDateTime(String(new Date(circumstanceRows[j].datetime))).split(' ')[0];
-
-                                if (calculatedDate == currentRowDate)
-                                    continue;
-                                else
-                                    calculatedDate = currentRowDate;
-
-                                timeMsecArray.push(new Date('1970-01-02 ' + circumstanceRows[j].datetime.split(' ')[1]).getTime());
-                            }
-                        }
-
-                        if (timeMsecArray.length > 0) {
-                            var avgComeOutTime = 0;
-
-                            for (var j = 0; j < timeMsecArray.length; j++)
-                                avgComeOutTime += timeMsecArray[j];
-
-                            avgComeOutTime /= timeMsecArray.length;
-
-                            resultJson.userList[i].avgComeOutTime = String(new Date(avgComeOutTime)).split(' ')[4];
-                        }
-
-                        timeMsecArray = null;
-                        calculatedDate = '1970-01-02';
-                    }
-
-                    if (typeof callback === "function") {
-                        callback(resultJson);
-                    }
-                });
-
-                break;
-
-            default:
-                for (var i = 0; i < userListRows.length; i++) {
-                    resultJsonString += '{';
-                    resultJsonString += '"avgComeOutTime":"' + 'UNAVAILABLE' + '",';
-                    resultJsonString += '"smartphone_address":"' + userListRows[i].smartphone_address + '",';
-                    resultJsonString += '"name_user":"' + userListRows[i].name + '"';
-                    resultJsonString += '}';
-
-                    if (i < userListRows.length - 1)
-                        resultJsonString += ',';
-                }
-
-                resultJsonString += ']}';
-                resultJson = JSON.parse(resultJsonString);
-
-                chart_getCircumstanceTable(function (circumstanceRows) {
-                    // Need to modify below to improve performance
-                    for (var i = 0; i < resultJson.userList.length; i++) {
-                        var calculatedDate = '1970-01-02';
-                        var timeMsecArray = [];
-
-                        for (var j = 0; j < circumstanceRows.length; j++) {
-                            if (resultJson.userList[i].smartphone_address == circumstanceRows[j].smartphone_address) {
-                                if (circumstanceRows[j].commute_status == 0) {
-                                    var currentRowDate = currentTime.convertCurrentTimezoneDateTime(String(new Date(circumstanceRows[j].datetime))).split(' ')[0];
-
-                                    if (calculatedDate == currentRowDate)
-                                        continue;
-                                    else
-                                        calculatedDate = currentRowDate;
-
-                                    timeMsecArray.push(new Date('1970-01-02 ' + circumstanceRows[j].datetime.split(' ')[1]).getTime());
+                                    if (i < workplaceListRows.length - 1)
+                                        resultJsonString += ',';
                                 }
-                            }
-                        }
-
-                        if (timeMsecArray.length > 0) {
-                            var avgComeOutTime = 0;
-
-                            for (var j = 0; j < timeMsecArray.length; j++)
-                                avgComeOutTime += timeMsecArray[j];
-
-                            avgComeOutTime /= timeMsecArray.length;
-
-                            resultJson.userList[i].avgComeOutTime = String(new Date(avgComeOutTime)).split(' ')[4];
-                        }
-
-                        timeMsecArray = null;
-                        calculatedDate = '1970-01-02';
-                    }
-
-                    if (typeof callback === "function") {
-                        callback(resultJson);
-                    }
-                });
-
-                break;
-        }
-    });
-};
-
-/**
- * To get average time on work at specific period
- * The sequence of each parameters is important due to setting up period if it's needed
- *
- * You can put parameters in this like
- * (# is number of parameters)
- * 0
- * (It returns all user's circumstance data of all period)
- *
- * 1
- * smartphone_address
- *
- * 2
- * startDate, endDate
- *
- * 3
- * startDate, endDate, smartphone_address
- *
- * @param arg1 will be start date (option)
- * @param arg2 will be end date (option)
- * @param arg3 will be smartphone address of specific user (option)
- * @param callback
- */
-var chart_getAvgWorkTime = function(arg1, arg2, arg3, callback) {
-    var startDate;
-    var endDate;
-    var smartphone_address; // 00:00:00:00:00:00
-
-    var args = [];
-    for (var i = 0; i < arguments.length; i++) {
-        args.push(arguments[i]);
-    }
-
-    callback = args.pop();
-
-    if (args.length > 0) arg1 = args.shift(); else arg1 = null;
-    if (args.length > 0) arg2 = args.shift(); else arg2 = null;
-    if (args.length > 0) arg3 = args.shift(); else arg3 = null;
-
-    if (arg1 != null) args.push(arg1);
-    if (arg2 != null) args.push(arg2);
-    if (arg3 != null) args.push(arg3);
-
-    var resultJsonString = '{ "userList" : [';
-    var resultJson;
-
-    id_getUserList(function(userListRows) {
-        id_getWorkplaceList(function(workplaceListRows) {
-            switch (args.length) {
-                case 1:
-                    smartphone_address = String(args[0]);
-
-                    for (var i = 0; i < userListRows.length; i++) {
-                        if (smartphone_address == userListRow[i].smartphone_address) {
-                            resultJsonString += '{';
-                            resultJsonString += '"avgWorkingTime":"' + 'UNAVAILABLE' + '",';
-                            resultJsonString += '"smartphone_address":"' + userListRows[i].smartphone_address + '",';
-                            resultJsonString += '"name_user":"' + userListRows[i].name + '",';
-                            resultJsonString += '"workplaceList" : [';
-
-                            for (var j = 0; j < workplaceListRows.length; j++) {
-                                resultJsonString += '{';
-                                resultJsonString += '"id_workplace":"' + workplaceListRows[j].id_workplace + '",';
-                                resultJsonString += '"name_workplace":"' + workplaceListRows[j].name_workplace + '",';
-                                resultJsonString += '"avgWorkingTime":"' + 'UNAVAILABLE' + '"';
-                                resultJsonString += '}';
-
-                                if (j < workplaceListRows.length - 1)
-                                    resultJsonString += ',';
+                                resultJsonString += '],';
                             }
 
-                            resultJsonString += ']}';
+                            if (departmentListRows.length > 0) {
+                                resultJsonString += '"departmentList":[';
+                                for (i = 0; i < departmentListRows.length; i++) {
+                                    resultJsonString += '{';
+                                    resultJsonString += '"id_department":"' + departmentListRows[i].id + '",';
+                                    resultJsonString += '"name":"' + departmentListRows[i].name + '",';
+                                    resultJsonString += '"avgComeInTime":"' + 0 + '",';
+                                    resultJsonString += '"avgComeOutTime":"' + 0 + '",';
+                                    resultJsonString += '"avgWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"avgOverWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"minComeInTime":"' + 0 + '",';
+                                    resultJsonString += '"minComeOutTime":"' + 0 + '",';
+                                    resultJsonString += '"minWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"minOverWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"maxComeInTime":"' + 0 + '",';
+                                    resultJsonString += '"maxComeOutTime":"' + 0 + '",';
+                                    resultJsonString += '"maxWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"maxOverWorkingTime":"' + 0 + '"';
+                                    resultJsonString += '}';
 
-                            break;
-                        }
-                    }
-
-                    resultJsonString += ']}';
-                    resultJson = JSON.parse(resultJsonString);
-
-                    chart_getAvgComeInTime(smartphone_address, function(avgComeInTime) {
-                        chart_getAvgComeOutTime(smartphone_address, function(avgComeOutTime) {
-                            for (var i = 0; i < avgComeInTime.userList.length; i++) {
-                                if (avgComeInTime.userList[i].avgComeInTime != 'UNAVAILABLE'
-                                    && avgComeOutTime.userList[i].avgComeOutTime != 'UNAVAILABLE') {
-                                    var comeInTime = new Date('1970-01-02 ' + avgComeInTime.userList[i].avgComeInTime);
-                                    var comeOutTime = new Date('1970-01-02 ' + avgComeOutTime.userList[i].avgComeOutTime);
-
-                                    resultJson.userList[i].avgWorkingTime = (comeOutTime.getTime() - comeInTime.getTime()) / 1000;
+                                    if (i < departmentListRows.length - 1)
+                                        resultJsonString += ',';
                                 }
+                                resultJsonString += '],';
                             }
 
-                            if (typeof callback === "function") {
-                                callback(resultJson);
+                            if (positionListRows.length > 0) {
+                                resultJsonString += '"positionList":[';
+                                for (i = 0; i < positionListRows.length; i++) {
+                                    resultJsonString += '{';
+                                    resultJsonString += '"id_position":"' + positionListRows[i].id + '",';
+                                    resultJsonString += '"name":"' + positionListRows[i].name + '",';
+                                    resultJsonString += '"avgComeInTime":"' + 0 + '",';
+                                    resultJsonString += '"avgComeOutTime":"' + 0 + '",';
+                                    resultJsonString += '"avgWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"avgOverWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"minComeInTime":"' + 0 + '",';
+                                    resultJsonString += '"minComeOutTime":"' + 0 + '",';
+                                    resultJsonString += '"minWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"minOverWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"maxComeInTime":"' + 0 + '",';
+                                    resultJsonString += '"maxComeOutTime":"' + 0 + '",';
+                                    resultJsonString += '"maxWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"maxOverWorkingTime":"' + 0 + '"';
+                                    resultJsonString += '}';
+
+                                    if (i < positionListRows.length - 1)
+                                        resultJsonString += ',';
+                                }
+                                resultJsonString += ']';
                             }
-                        });
-                    });
 
-                    break;
-
-                case 2:
-                    args[0] = String(args[0]);
-                    args[1] = String(args[1]);
-
-                    if (args[0].length != 10)
-                        startDate = currentTime.convertCurrentTimezoneDateTime(args[0]);
-                    else
-                        startDate = args[0];
-
-                    if (args[1].length != 10)
-                        endDate = currentTime.convertCurrentTimezoneDateTime(args[1]);
-                    else
-                        endDate = args[1];
-
-                    for (var i = 0; i < userListRows.length; i++) {
-                        resultJsonString += '{';
-                        resultJsonString += '"avgWorkingTime":"' + 'UNAVAILABLE' + '",';
-                        resultJsonString += '"smartphone_address":"' + userListRows[i].smartphone_address + '",';
-                        resultJsonString += '"name_user":"' + userListRows[i].name + '",';
-                        resultJsonString += '"workplaceList" : [';
-
-                        for (var j = 0; j < workplaceListRows.length; j++) {
-                            resultJsonString += '{';
-                            resultJsonString += '"id_workplace":"' + workplaceListRows[j].id_workplace + '",';
-                            resultJsonString += '"name_workplace":"' + workplaceListRows[j].name_workplace + '",';
-                            resultJsonString += '"avgWorkingTime":"' + 'UNAVAILABLE' + '"';
                             resultJsonString += '}';
+                            resultJson = JSON.parse(resultJsonString);
 
-                            if (j < workplaceListRows.length - 1)
-                                resultJsonString += ',';
-                        }
+                            for (i = 0; i < resultJson.userList.length; i++) {
+                                comeInTimeMsec = 0;
+                                comeOutTimeMsec = 0;
+                                comeInTimeArr = [];
+                                comeOutTimeArr = [];
+                                workingTimeArr = [];
+                                overWorkingTimeArr = [];
+                                totalComeInTime = 0;
+                                totalComeOutTime = 0;
+                                totalWorkingTime = 0;
+                                totalOverWorkingTime = 0;
 
-                        resultJsonString += ']}';
+                                for (j = 0; j < circumstanceRows.length; j++) {
+                                    var smartphone_address = circumstanceRows[j].smartphone_address;
 
-                        if (i < userListRows.length - 1)
-                            resultJsonString += ',';
-                    }
+                                    timeMsec = new Date('1970-01-02 ' + circumstanceRows[j].datetime.split(' ')[1]).getTime() - new Date('1970-01-02 00:00:00').getTime();
+                                    commute_status = circumstanceRows[j].commute_status;
 
-                    resultJsonString += ']}';
-                    resultJson = JSON.parse(resultJsonString);
+                                    if (smartphone_address == resultJson.userList[i].smartphoneAddress) {
+                                        if (commute_status == 1 && comeInTimeMsec == 0)
+                                            comeInTimeMsec = timeMsec;
+                                        else {
+                                            if (commute_status == 0 && comeOutTimeMsec == 0) {
+                                                comeOutTimeMsec = timeMsec;
 
-                    chart_getAvgComeInTime(startDate, endDate, function(avgComeInTime) {
-                        chart_getAvgComeOutTime(startDate, endDate, function(avgComeOutTime) {
-                            for (var i = 0; i < avgComeInTime.userList.length; i++) {
-                                if (avgComeInTime.userList[i].avgComeInTime != 'UNAVAILABLE'
-                                    && avgComeOutTime.userList[i].avgComeOutTime != 'UNAVAILABLE') {
-                                    var comeInTime = new Date('1970-01-02 ' + avgComeInTime.userList[i].avgComeInTime);
-                                    var comeOutTime = new Date('1970-01-02 ' + avgComeOutTime.userList[i].avgComeOutTime);
+                                                if (comeOutTimeMsec > comeInTimeMsec) {
+                                                    comeInTimeArr.push(comeInTimeMsec);
+                                                    comeOutTimeArr.push(comeOutTimeMsec);
+                                                    workingTimeArr.push(comeOutTimeMsec - comeInTimeMsec);
 
-                                    resultJson.userList[i].avgWorkingTime = (comeOutTime.getTime() - comeInTime.getTime()) / 1000;
+                                                    if (comeOutTimeMsec > workEndTimeMsec) {
+                                                        overWorkingTimeArr.push(comeOutTimeMsec - workEndTimeMsec);
+                                                    }
+                                                    if (comeInTimeMsec < workStartTimeMsec) {
+                                                        overWorkingTimeArr.push(workStartTimeMsec - comeInTimeMsec);
+                                                    }
+
+                                                    for (k = 0; k < comeInTimeArr.length; k++) {
+                                                        totalComeInTime += comeInTimeArr[k];
+                                                    }
+                                                    resultJson.userList[i].avgComeInTime = Math.floor(totalComeInTime / comeInTimeArr.length);
+
+
+                                                    for (k = 0; k < comeOutTimeArr.length; k++) {
+                                                        totalComeOutTime += comeOutTimeArr[k];
+                                                    }
+                                                    resultJson.userList[i].avgComeOutTime = Math.floor(totalComeOutTime / comeOutTimeArr.length);
+
+                                                    for (k = 0; k < workingTimeArr.length; k++) {
+                                                        totalWorkingTime += workingTimeArr[k];
+                                                    }
+                                                    resultJson.userList[i].avgWorkingTime = Math.floor(totalWorkingTime / workingTimeArr.length);
+
+                                                    for (k = 0; k < overWorkingTimeArr.length; k++) {
+                                                        totalOverWorkingTime += overWorkingTimeArr[k];
+                                                    }
+                                                    resultJson.userList[i].avgOverWorkingTime = Math.floor(totalOverWorkingTime / overWorkingTimeArr.length);
+
+                                                    resultJson.userList[i].minComeInTime = comeInTimeArr.sort()[0];
+                                                    resultJson.userList[i].minComeOutTime = comeOutTimeArr.sort()[0];
+                                                    resultJson.userList[i].minWorkingTime = workingTimeArr.sort()[0];
+                                                    resultJson.userList[i].minOverWorkingTime = overWorkingTimeArr.sort()[0];
+
+                                                    resultJson.userList[i].maxComeInTime = comeInTimeArr.sort()[comeInTimeArr.length - 1];
+                                                    resultJson.userList[i].maxComeOutTime = comeOutTimeArr.sort()[comeOutTimeArr.length - 1];
+                                                    resultJson.userList[i].maxWorkingTime = workingTimeArr.sort()[workingTimeArr.length - 1];
+                                                    resultJson.userList[i].maxOverWorkingTime = overWorkingTimeArr.sort()[overWorkingTimeArr.length - 1];
+
+                                                    comeInTimeMsec = 0;
+                                                    comeOutTimeMsec = 0;
+                                                } else {
+                                                    comeInTimeMsec = 0;
+                                                    comeOutTimeMsec = 0;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            for (i = 0; i < resultJson.workplaceList.length; i++) {
+                                comeInTimeMsec = 0;
+                                comeOutTimeMsec = 0;
+                                comeInTimeArr = [];
+                                comeOutTimeArr = [];
+                                workingTimeArr = [];
+                                overWorkingTimeArr = [];
+                                totalComeInTime = 0;
+                                totalComeOutTime = 0;
+                                totalWorkingTime = 0;
+                                totalOverWorkingTime = 0;
+
+                                for (j = 0; j < circumstanceRows.length; j++) {
+                                    var id_workplace = circumstanceRows[j].id_workplace;
+
+                                    timeMsec = new Date('1970-01-02 ' + circumstanceRows[j].datetime.split(' ')[1]).getTime() - new Date('1970-01-02 00:00:00').getTime();
+                                    commute_status = circumstanceRows[j].commute_status;
+
+                                    if (id_workplace == resultJson.workplaceList[i].id_workplace) {
+                                        if (commute_status == 1 && comeInTimeMsec == 0)
+                                            comeInTimeMsec = timeMsec;
+                                        else {
+                                            if (commute_status == 0 && comeOutTimeMsec == 0) {
+                                                comeOutTimeMsec = timeMsec;
+
+                                                if (comeOutTimeMsec > comeInTimeMsec) {
+                                                    comeInTimeArr.push(comeInTimeMsec);
+                                                    comeOutTimeArr.push(comeOutTimeMsec);
+                                                    workingTimeArr.push(comeOutTimeMsec - comeInTimeMsec);
+
+                                                    if (comeOutTimeMsec > workEndTimeMsec) {
+                                                        overWorkingTimeArr.push(comeOutTimeMsec - workEndTimeMsec);
+                                                    }
+                                                    if (comeInTimeMsec < workStartTimeMsec) {
+                                                        overWorkingTimeArr.push(workStartTimeMsec - comeInTimeMsec);
+                                                    }
+
+                                                    for (k = 0; k < comeInTimeArr.length; k++) {
+                                                        totalComeInTime += comeInTimeArr[k];
+                                                    }
+                                                    resultJson.workplaceList[i].avgComeInTime = Math.floor(totalComeInTime / comeInTimeArr.length);
+
+
+                                                    for (k = 0; k < comeOutTimeArr.length; k++) {
+                                                        totalComeOutTime += comeOutTimeArr[k];
+                                                    }
+                                                    resultJson.workplaceList[i].avgComeOutTime = Math.floor(totalComeOutTime / comeOutTimeArr.length);
+
+                                                    for (k = 0; k < workingTimeArr.length; k++) {
+                                                        totalWorkingTime += workingTimeArr[k];
+                                                    }
+                                                    resultJson.workplaceList[i].avgWorkingTime = Math.floor(totalWorkingTime / workingTimeArr.length);
+
+                                                    for (k = 0; k < overWorkingTimeArr.length; k++) {
+                                                        totalOverWorkingTime += overWorkingTimeArr[k];
+                                                    }
+                                                    resultJson.workplaceList[i].avgOverWorkingTime = Math.floor(totalOverWorkingTime / overWorkingTimeArr.length);
+
+                                                    resultJson.workplaceList[i].minComeInTime = comeInTimeArr.sort()[0];
+                                                    resultJson.workplaceList[i].minComeOutTime = comeOutTimeArr.sort()[0];
+                                                    resultJson.workplaceList[i].minWorkingTime = workingTimeArr.sort()[0];
+                                                    resultJson.workplaceList[i].minOverWorkingTime = overWorkingTimeArr.sort()[0];
+
+                                                    resultJson.workplaceList[i].maxComeInTime = comeInTimeArr.sort()[comeInTimeArr.length - 1];
+                                                    resultJson.workplaceList[i].maxComeOutTime = comeOutTimeArr.sort()[comeOutTimeArr.length - 1];
+                                                    resultJson.workplaceList[i].maxWorkingTime = workingTimeArr.sort()[workingTimeArr.length - 1];
+                                                    resultJson.workplaceList[i].maxOverWorkingTime = overWorkingTimeArr.sort()[overWorkingTimeArr.length - 1];
+
+                                                    comeInTimeMsec = 0;
+                                                    comeOutTimeMsec = 0;
+                                                } else {
+                                                    comeInTimeMsec = 0;
+                                                    comeOutTimeMsec = 0;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            for (i = 0; i < resultJson.departmentList.length; i++) {
+                                comeInTimeMsec = 0;
+                                comeOutTimeMsec = 0;
+                                comeInTimeArr = [];
+                                comeOutTimeArr = [];
+                                workingTimeArr = [];
+                                overWorkingTimeArr = [];
+                                totalComeInTime = 0;
+                                totalComeOutTime = 0;
+                                totalWorkingTime = 0;
+                                totalOverWorkingTime = 0;
+
+                                for (j = 0; j < circumstanceRows.length; j++) {
+                                    var id_department = circumstanceRows[j].id_department;
+
+                                    timeMsec = new Date('1970-01-02 ' + circumstanceRows[j].datetime.split(' ')[1]).getTime() - new Date('1970-01-02 00:00:00').getTime();
+                                    commute_status = circumstanceRows[j].commute_status;
+
+                                    if (id_department == resultJson.departmentList[i].id_department) {
+                                        if (commute_status == 1 && comeInTimeMsec == 0)
+                                            comeInTimeMsec = timeMsec;
+                                        else {
+                                            if (commute_status == 0 && comeOutTimeMsec == 0) {
+                                                comeOutTimeMsec = timeMsec;
+
+                                                if (comeOutTimeMsec > comeInTimeMsec) {
+                                                    comeInTimeArr.push(comeInTimeMsec);
+                                                    comeOutTimeArr.push(comeOutTimeMsec);
+                                                    workingTimeArr.push(comeOutTimeMsec - comeInTimeMsec);
+
+                                                    if (comeOutTimeMsec > workEndTimeMsec) {
+                                                        overWorkingTimeArr.push(comeOutTimeMsec - workEndTimeMsec);
+                                                    }
+                                                    if (comeInTimeMsec < workStartTimeMsec) {
+                                                        overWorkingTimeArr.push(workStartTimeMsec - comeInTimeMsec);
+                                                    }
+
+                                                    for (k = 0; k < comeInTimeArr.length; k++) {
+                                                        totalComeInTime += comeInTimeArr[k];
+                                                    }
+                                                    resultJson.departmentList[i].avgComeInTime = Math.floor(totalComeInTime / comeInTimeArr.length);
+
+
+                                                    for (k = 0; k < comeOutTimeArr.length; k++) {
+                                                        totalComeOutTime += comeOutTimeArr[k];
+                                                    }
+                                                    resultJson.departmentList[i].avgComeOutTime = Math.floor(totalComeOutTime / comeOutTimeArr.length);
+
+                                                    for (k = 0; k < workingTimeArr.length; k++) {
+                                                        totalWorkingTime += workingTimeArr[k];
+                                                    }
+                                                    resultJson.departmentList[i].avgWorkingTime = Math.floor(totalWorkingTime / workingTimeArr.length);
+
+                                                    for (k = 0; k < overWorkingTimeArr.length; k++) {
+                                                        totalOverWorkingTime += overWorkingTimeArr[k];
+                                                    }
+                                                    resultJson.departmentList[i].avgOverWorkingTime = Math.floor(totalOverWorkingTime / overWorkingTimeArr.length);
+
+                                                    resultJson.departmentList[i].minComeInTime = comeInTimeArr.sort()[0];
+                                                    resultJson.departmentList[i].minComeOutTime = comeOutTimeArr.sort()[0];
+                                                    resultJson.departmentList[i].minWorkingTime = workingTimeArr.sort()[0];
+                                                    resultJson.departmentList[i].minOverWorkingTime = overWorkingTimeArr.sort()[0];
+
+                                                    resultJson.departmentList[i].maxComeInTime = comeInTimeArr.sort()[comeInTimeArr.length - 1];
+                                                    resultJson.departmentList[i].maxComeOutTime = comeOutTimeArr.sort()[comeOutTimeArr.length - 1];
+                                                    resultJson.departmentList[i].maxWorkingTime = workingTimeArr.sort()[workingTimeArr.length - 1];
+                                                    resultJson.departmentList[i].maxOverWorkingTime = overWorkingTimeArr.sort()[overWorkingTimeArr.length - 1];
+
+                                                    comeInTimeMsec = 0;
+                                                    comeOutTimeMsec = 0;
+                                                } else {
+                                                    comeInTimeMsec = 0;
+                                                    comeOutTimeMsec = 0;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            for (i = 0; i < resultJson.positionList.length; i++) {
+                                comeInTimeMsec = 0;
+                                comeOutTimeMsec = 0;
+                                comeInTimeArr = [];
+                                comeOutTimeArr = [];
+                                workingTimeArr = [];
+                                overWorkingTimeArr = [];
+                                totalComeInTime = 0;
+                                totalComeOutTime = 0;
+                                totalWorkingTime = 0;
+                                totalOverWorkingTime = 0;
+
+                                for (j = 0; j < circumstanceRows.length; j++) {
+                                    var id_position = circumstanceRows[j].id_position;
+
+                                    timeMsec = new Date('1970-01-02 ' + circumstanceRows[j].datetime.split(' ')[1]).getTime() - new Date('1970-01-02 00:00:00').getTime();
+                                    commute_status = circumstanceRows[j].commute_status;
+
+                                    if (id_position == resultJson.positionList[i].id_position) {
+                                        if (commute_status == 1 && comeInTimeMsec == 0)
+                                            comeInTimeMsec = timeMsec;
+                                        else {
+                                            if (commute_status == 0 && comeOutTimeMsec == 0) {
+                                                comeOutTimeMsec = timeMsec;
+
+                                                if (comeOutTimeMsec > comeInTimeMsec) {
+                                                    comeInTimeArr.push(comeInTimeMsec);
+                                                    comeOutTimeArr.push(comeOutTimeMsec);
+                                                    workingTimeArr.push(comeOutTimeMsec - comeInTimeMsec);
+
+                                                    if (comeOutTimeMsec > workEndTimeMsec) {
+                                                        overWorkingTimeArr.push(comeOutTimeMsec - workEndTimeMsec);
+                                                    }
+                                                    if (comeInTimeMsec < workStartTimeMsec) {
+                                                        overWorkingTimeArr.push(workStartTimeMsec - comeInTimeMsec);
+                                                    }
+
+                                                    for (k = 0; k < comeInTimeArr.length; k++) {
+                                                        totalComeInTime += comeInTimeArr[k];
+                                                    }
+                                                    resultJson.positionList[i].avgComeInTime = Math.floor(totalComeInTime / comeInTimeArr.length);
+
+
+                                                    for (k = 0; k < comeOutTimeArr.length; k++) {
+                                                        totalComeOutTime += comeOutTimeArr[k];
+                                                    }
+                                                    resultJson.positionList[i].avgComeOutTime = Math.floor(totalComeOutTime / comeOutTimeArr.length);
+
+                                                    for (k = 0; k < workingTimeArr.length; k++) {
+                                                        totalWorkingTime += workingTimeArr[k];
+                                                    }
+                                                    resultJson.positionList[i].avgWorkingTime = Math.floor(totalWorkingTime / workingTimeArr.length);
+
+                                                    for (k = 0; k < overWorkingTimeArr.length; k++) {
+                                                        totalOverWorkingTime += overWorkingTimeArr[k];
+                                                    }
+                                                    resultJson.positionList[i].avgOverWorkingTime = Math.floor(totalOverWorkingTime / overWorkingTimeArr.length);
+
+                                                    resultJson.positionList[i].minComeInTime = comeInTimeArr.sort()[0];
+                                                    resultJson.positionList[i].minComeOutTime = comeOutTimeArr.sort()[0];
+                                                    resultJson.positionList[i].minWorkingTime = workingTimeArr.sort()[0];
+                                                    resultJson.positionList[i].minOverWorkingTime = overWorkingTimeArr.sort()[0];
+
+                                                    resultJson.positionList[i].maxComeInTime = comeInTimeArr.sort()[comeInTimeArr.length - 1];
+                                                    resultJson.positionList[i].maxComeOutTime = comeOutTimeArr.sort()[comeOutTimeArr.length - 1];
+                                                    resultJson.positionList[i].maxWorkingTime = workingTimeArr.sort()[workingTimeArr.length - 1];
+                                                    resultJson.positionList[i].maxOverWorkingTime = overWorkingTimeArr.sort()[overWorkingTimeArr.length - 1];
+
+                                                    comeInTimeMsec = 0;
+                                                    comeOutTimeMsec = 0;
+                                                } else {
+                                                    comeInTimeMsec = 0;
+                                                    comeOutTimeMsec = 0;
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
 
@@ -2605,202 +2744,83 @@ var chart_getAvgWorkTime = function(arg1, arg2, arg3, callback) {
                             }
                         });
                     });
-
-                    break;
-
-                case 3:
-                    args[0] = String(args[0]);
-                    args[1] = String(args[1]);
-                    args[2] = String(args[2]);
-
-                    if (args[0].length != 10)
-                        startDate = currentTime.convertCurrentTimezoneDateTime(args[0]);
-                    else
-                        startDate = args[0];
-
-                    if (args[1].length != 10)
-                        endDate = currentTime.convertCurrentTimezoneDateTime(args[1]);
-                    else
-                        endDate = args[1];
-
-                    smartphone_address = args[2];
-
-                    for (var i = 0; i < userListRows.length; i++) {
-                        if (smartphone_address == userListRow[i].smartphone_address) {
-                            resultJsonString += '{';
-                            resultJsonString += '"avgWorkingTime":"' + 'UNAVAILABLE' + '",';
-                            resultJsonString += '"smartphone_address":"' + userListRows[i].smartphone_address + '",';
-                            resultJsonString += '"name_user":"' + userListRows[i].name + '",';
-                            resultJsonString += '"workplaceList" : [';
-
-                            for (var j = 0; j < workplaceListRows.length; j++) {
-                                resultJsonString += '{';
-                                resultJsonString += '"id_workplace":"' + workplaceListRows[j].id_workplace + '",';
-                                resultJsonString += '"name_workplace":"' + workplaceListRows[j].name_workplace + '",';
-                                resultJsonString += '"avgWorkingTime":"' + 'UNAVAILABLE' + '"';
-                                resultJsonString += '}';
-
-                                if (j < workplaceListRows.length - 1)
-                                    resultJsonString += ',';
-                            }
-
-                            resultJsonString += ']}';
-
-                            break;
-                        }
-                    }
-
-                    resultJsonString += ']}';
-                    resultJson = JSON.parse(resultJsonString);
-
-                    chart_getAvgComeInTime(startDate, endDate, smartphone_address, function(avgComeInTime) {
-                        chart_getAvgComeOutTime(startDate, endDate, smartphone_address, function(avgComeOutTime) {
-                            for (var i = 0; i < avgComeInTime.userList.length; i++) {
-                                if (avgComeInTime.userList[i].avgComeInTime != 'UNAVAILABLE'
-                                    && avgComeOutTime.userList[i].avgComeOutTime != 'UNAVAILABLE') {
-                                    var comeInTime = new Date('1970-01-02 ' + avgComeInTime.userList[i].avgComeInTime);
-                                    var comeOutTime = new Date('1970-01-02 ' + avgComeOutTime.userList[i].avgComeOutTime);
-
-                                    resultJson.userList[i].avgWorkingTime = (comeOutTime.getTime() - comeInTime.getTime()) / 1000;
-                                }
-                            }
-
-                            if (typeof callback === "function") {
-                                callback(resultJson);
-                            }
-                        });
-                    });
-
-                    break;
-
-                default:
-                    for (var i = 0; i < userListRows.length; i++) {
-                        resultJsonString += '{';
-                        resultJsonString += '"avgWorkingTime":"' + 'UNAVAILABLE' + '",';
-                        resultJsonString += '"smartphone_address":"' + userListRows[i].smartphone_address + '",';
-                        resultJsonString += '"name_user":"' + userListRows[i].name + '",';
-                        resultJsonString += '"workplaceList" : [';
-
-                        for (var j = 0; j < workplaceListRows.length; j++) {
-                            resultJsonString += '{';
-                            resultJsonString += '"id_workplace":"' + workplaceListRows[j].id_workplace + '",';
-                            resultJsonString += '"name_workplace":"' + workplaceListRows[j].name_workplace + '",';
-                            resultJsonString += '"avgWorkingTime":"' + 'UNAVAILABLE' + '"';
-                            resultJsonString += '}';
-
-                            if (j < workplaceListRows.length - 1)
-                                resultJsonString += ',';
-                        }
-
-                        resultJsonString += ']}';
-
-                        if (i < userListRows.length - 1)
-                            resultJsonString += ',';
-                    }
-
-                    resultJsonString += ']}';
-                    resultJson = JSON.parse(resultJsonString);
-
-                    chart_getAvgComeInTime(function(avgComeInTime) {
-                        chart_getAvgComeOutTime(function(avgComeOutTime) {
-                            for (var i = 0; i < avgComeInTime.userList.length; i++) {
-                                if (avgComeInTime.userList[i].avgComeInTime != 'UNAVAILABLE'
-                                    && avgComeOutTime.userList[i].avgComeOutTime != 'UNAVAILABLE') {
-                                    var comeInTime = new Date('1970-01-02 ' + avgComeInTime.userList[i].avgComeInTime);
-                                    var comeOutTime = new Date('1970-01-02 ' + avgComeOutTime.userList[i].avgComeOutTime);
-
-                                    resultJson.userList[i].avgWorkingTime = (comeOutTime.getTime() - comeInTime.getTime()) / 1000;
-                                }
-                            }
-
-                            if (typeof callback === "function") {
-                                callback(resultJson);
-                            }
-                        });
-                    });
-
-                    break;
-            }
+                });
+            });
         });
     });
-};
+}
 
 /* Exports */
 module.exports = pool;
 
-/* index.js */
-module.exports.id_checkLoginName            = id_checkLoginName;
-module.exports.id_checkLoginPassword        = id_checkLoginPassword;
-module.exports.id_isAdmin                   = id_isAdmin;
-module.exports.id_isPermitted               = id_isPermitted;
-module.exports.id_loginValidation           = id_loginValidation;
+module.exports.checkLoginName               = checkLoginName;
+module.exports.checkLoginPassword           = checkLoginPassword;
+module.exports.isAdmin                      = isAdmin;
+module.exports.isPermitted                  = isPermitted;
+module.exports.loginValidation              = loginValidation;
 
-module.exports.id_getUserList               = id_getUserList;
-module.exports.id_getUserInfo               = id_getUserInfo;
-module.exports.id_checkUserRegistered       = id_checkUserRegistered;
-module.exports.id_registerUser              = id_registerUser;
-module.exports.id_modifyUser                = id_modifyUser;
-module.exports.id_deleteUser                = id_deleteUser;
-module.exports.id_permitUsers               = id_permitUsers;
+module.exports.getUserList                  = getUserList;
+module.exports.getUserInfo                  = getUserInfo;
+module.exports.checkUserRegistered          = checkUserRegistered;
+module.exports.registerUser                 = registerUser;
+module.exports.modifyUser                   = modifyUser;
+module.exports.deleteUser                   = deleteUser;
+module.exports.permitUsers                  = permitUsers;
 
-module.exports.id_getWorkplaceList          = id_getWorkplaceList;
-module.exports.id_getWorkplaceInfo          = id_getWorkplaceInfo;
-module.exports.id_registerWorkplace         = id_registerWorkplace;
-module.exports.id_modifyWorkplace           = id_modifyWorkplace;
-module.exports.id_deleteWorkplace           = id_deleteWorkplace;
+module.exports.getWorkplaceList             = getWorkplaceList;
+module.exports.getWorkplaceInfo             = getWorkplaceInfo;
+module.exports.registerWorkplace            = registerWorkplace;
+module.exports.modifyWorkplace              = modifyWorkplace;
+module.exports.deleteWorkplace              = deleteWorkplace;
 
-module.exports.id_getBeaconList             = id_getBeaconList;
-module.exports.id_getBeaconInfo             = id_getBeaconInfo;
-module.exports.id_getAvailableBeacon        = id_getAvailableBeacon;
-module.exports.id_checkBeaconRegistered     = id_checkBeaconRegistered;
-module.exports.id_registerBeacon            = id_registerBeacon;
-module.exports.id_modifyBeacon              = id_modifyBeacon;
-module.exports.id_deleteBeacon              = id_deleteBeacon;
+module.exports.getBeaconList                = getBeaconList;
+module.exports.getBeaconInfo                = getBeaconInfo;
+module.exports.getAvailableBeacon           = getAvailableBeacon;
+module.exports.checkBeaconRegistered        = checkBeaconRegistered;
+module.exports.registerBeacon               = registerBeacon;
+module.exports.modifyBeacon                 = modifyBeacon;
+module.exports.deleteBeacon                 = deleteBeacon;
 
-module.exports.id_getNotPermittedUserList   = id_getNotPermittedUserList;
-module.exports.id_getUserListCond           = id_getUserListCond;
+module.exports.getNotPermittedUserList      = getNotPermittedUserList;
+module.exports.getUserListCond              = getUserListCond;
 
-module.exports.id_getDepartmentList         = id_getDepartmentList;
-module.exports.id_addDepartment             = id_addDepartment;
-module.exports.id_modifyDepartment          = id_modifyDepartment;
-module.exports.id_deleteDepartment          = id_deleteDepartment;
-module.exports.id_getPositionList           = id_getPositionList;
-module.exports.id_addPosition               = id_addPosition;
-module.exports.id_modifyPosition            = id_modifyPosition;
-module.exports.id_deletePosition            = id_deletePosition;
+module.exports.getDepartmentList            = getDepartmentList;
+module.exports.addDepartment                = addDepartment;
+module.exports.modifyDepartment             = modifyDepartment;
+module.exports.deleteDepartment             = deleteDepartment;
+module.exports.getPositionList              = getPositionList;
+module.exports.addPosition                  = addPosition;
+module.exports.modifyPosition               = modifyPosition;
+module.exports.deletePosition               = deletePosition;
 
-module.exports.id_getSmartphoneAddress      = id_getSmartphoneAddress;
-module.exports.id_checkAdmin                = id_checkAdmin;
+module.exports.getSmartphoneAddress         = getSmartphoneAddress;
+module.exports.checkAdmin                   = checkAdmin;
 
-module.exports.id_getCompanyName            = id_getCompanyName;
-module.exports.id_editCompanyName           = id_editCompanyName;
-module.exports.id_getWorkStartTime          = id_getWorkStartTime;
-module.exports.id_getWorkEndTime            = id_getWorkEndTime;
-module.exports.id_editWorkStartEndTime      = id_editWorkStartEndTime;
+module.exports.getCompanyName               = getCompanyName;
+module.exports.editCompanyName              = editCompanyName;
+module.exports.getWorkStartTime             = getWorkStartTime;
+module.exports.getWorkEndTime               = getWorkEndTime;
+module.exports.editWorkStartEndTime         = editWorkStartEndTime;
 
-/* socket.js */
-module.exports.soc_gatewayValidation        = soc_gatewayValidation;
-module.exports.soc_smartphoneValidation     = soc_smartphoneValidation;
-module.exports.soc_getWorkplaceOfBeacons    = soc_getWorkplaceOfBeacons;
-module.exports.soc_getBeaconsCountOfWorkplace    = soc_getBeaconsCountOfWorkplace;
-module.exports.soc_getWorkplaceName         = soc_getWorkplaceName;
-module.exports.soc_getSmartphoneUserName    = soc_getSmartphoneUserName;
-module.exports.soc_getSmartphoneUserENum    = soc_getSmartphoneUserEmployeeNumber;
-module.exports.soc_registerCommute          = soc_registerCommute;
+module.exports.gatewayValidation            = gatewayValidation;
+module.exports.smartphoneValidation         = smartphoneValidation;
+module.exports.getWorkplaceOfBeacons        = getWorkplaceOfBeacons;
+module.exports.getBeaconsCountOfWorkplace   = getBeaconsCountOfWorkplace;
+module.exports.getWorkplaceName             = getWorkplaceName;
+module.exports.getSmartphoneUserName        = getSmartphoneUserName;
+module.exports.getSmartphoneUserENum        = getSmartphoneUserEmployeeNumber;
+module.exports.registerCommute              = registerCommute;
 
-module.exports.soc_RSSICalibration          = soc_RSSICalibration;
-module.exports.soc_getEssentialData         = soc_getEssentialData;
-module.exports.soc_getBeaconMACAddress      = soc_getBeaconMACAddress;
-module.exports.soc_getRSSI                  = soc_getRSSI;
+module.exports.RSSICalibration              = RSSICalibration;
+module.exports.getEssentialData             = getEssentialData;
+module.exports.getBeaconMACAddress          = getBeaconMACAddress;
+module.exports.getRSSI                      = getRSSI;
 
-module.exports.soc_amIRegistered            = soc_amIRegistered;
+module.exports.amIRegistered                = amIRegistered;
 
-/* Chart */
-module.exports.chart_getPopulOfDepartment   = chart_getPopulationOfDepartments;
-module.exports.chart_getCircumstanceTable   = chart_getCircumstanceTable;
-module.exports.chart_getTodayComeInTime     = chart_getTodayComeInTime;
-module.exports.chart_getTodayComeOutTime    = chart_getTodayComeOutTime;
-module.exports.chart_getTodayWorkTime       = chart_getTodayWorkTime;
-module.exports.chart_getAvgComeInTime       = chart_getAvgComeInTime;
-module.exports.chart_getAvgComeOutTime      = chart_getAvgComeOutTime;
-module.exports.chart_getAvgWorkTime         = chart_getAvgWorkTime;
+module.exports.getCircumstanceTable         = getCircumstanceTable;
+module.exports.getTodayCommuteInfo          = getTodayCommuteInfo;
+module.exports.getCommuteInfo               = getCommuteInfo;
+
+// Belows will be deprecated
+module.exports.getPopulOfDepartment         = getPopulationOfDepartments;

@@ -60,101 +60,46 @@
                     <div class="alert alert-warning alert-dismissible">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                         <h4><i class="icon fa fa-warning"></i> 읽어보세요!</h4>
-                        출퇴근 현황을 각종 필터별로 보여주는 페이지입니다.<br>
-                        현재 사원, 날짜, 기간, 사무실, 직책별로 검색하실 수 있습니다.
+                        각종 출퇴근 현황을 종합적으로 보여주는 페이지입니다.<br>
+                        - 평균 값은 지난 한 달 근태 현황에 대한 평균입니다.
                     </div>
                 </div>
                 <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">출퇴근 현황</h3>
-                            <small> - 평균 값은 지난 한 달 근태 현황에 대한 평균입니다.</small>
+                            <h3 class="box-title">사용자별 오늘</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="commute_table" class="table table-bordered table-striped">
+                            <table id="commute_table_user_today" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
                                     <th>이름</th>
                                     <th>스마트폰 주소</th>
-                                    <th>오늘 출근 시간</th>
-                                    <th>오늘 퇴근 시간</th>
-                                    <th>오늘 일 한 시간</th>
-                                    <th>평균 출근 시간</th>
-                                    <th>평균 퇴근 시간</th>
-                                    <th>평균 일 한 시간</th>
+                                    <th>가장 빠른 입장</th>
+                                    <th>가장 늦은 퇴장</th>
+                                    <th>근무</th>
+                                    <th>초과 근무</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <%
-                                if (typeof allTodayComeInTime !== 'undefined' && typeof allTodayComeOutTime !== 'undefined'
-                                        && typeof allTodayWorkingTime !== 'undefined' && typeof allAvgComeInTime !== 'undefined'
-                                        && typeof allAvgComeOutTime !== 'undefined' && typeof allAvgWorkingTime !== 'undefined') {
-                                for (var i = 0; i < allTodayComeInTime.userList.length; i++) {
-                                %>
-                                <tr>
-                                    <td><%= allTodayComeInTime.userList[i].name_user %></td>
-                                    <td><%= allTodayComeInTime.userList[i].smartphone_address %></td>
-
-                                    <!-- 오늘 출근 시간 -->
-                                    <% if (allTodayComeInTime.userList[i].todayComeInTime == 'NO DATA') { %>
-                                    <td><%= allTodayComeInTime.userList[i].todayComeInTime; %></td>
-                                    <% } else { %>
-                                    <td><%= allTodayComeInTime.userList[i].todayComeInTime.split(' ')[1] %></td>
-                                    <% } %>
-
-                                    <!-- 오늘 퇴근 시간 -->
-                                    <% if (allTodayComeOutTime.userList[i].todayComeOutTime == 'NO DATA') { %>
-                                    <td><%= allTodayComeOutTime.userList[i].todayComeOutTime; %></td>
-                                    <% } else { %>
-                                    <td><%= allTodayComeOutTime.userList[i].todayComeOutTime.split(' ')[1] %></td>
-                                    <% } %>
-
-                                    <!-- 오늘 일 한 시간 -->
-                                    <%
-                                    if (allTodayWorkingTime.userList[i].todayWorkingTime != 'UNAVAILABLE') {
-                                        var totalWorkingTimeSec = allTodayWorkingTime.userList[i].todayWorkingTime;
-                                        var workingTimeSec = Math.floor(totalWorkingTimeSec % 60);
-                                        var workingTimeMin = Math.floor(totalWorkingTimeSec / 60) % 60;
-                                        var workingTimeHour = Math.floor(totalWorkingTimeSec / 3600);
-                                    %>
-                                    <td><%= workingTimeHour %> 시간 <%= workingTimeMin %> 분 <%= workingTimeSec %> 초</td>
-                                    <% } else { %>
-                                    <td><%= allTodayWorkingTime.userList[i].todayWorkingTime %></td>
-                                    <% } %>
-
-                                    <!-- 평균 출근 시간 -->
-                                    <td><%= allAvgComeInTime.userList[i].avgComeInTime %></td>
-
-                                    <!-- 평균 퇴근 시간 -->
-                                    <td><%= allAvgComeOutTime.userList[i].avgComeOutTime %></td>
-
-                                    <!-- 평균 일 한 시간 -->
-                                    <%
-                                    if (allAvgWorkingTime.userList[i].avgWorkingTime != 'UNAVAILABLE') {
-                                        var totalWorkingTimeSec = allAvgWorkingTime.userList[i].avgWorkingTime;
-                                        var workingTimeSec = Math.floor(totalWorkingTimeSec % 60);
-                                        var workingTimeMin = Math.floor(totalWorkingTimeSec / 60) % 60;
-                                        var workingTimeHour = Math.floor(totalWorkingTimeSec / 3600);
-                                    %>
-                                    <td><%= workingTimeHour %> 시간 <%= workingTimeMin %> 분 <%= workingTimeSec %> 초</td>
-                                    <% } else { %>
-                                    <td><%= allAvgWorkingTime.userList[i].avgWorkingTime %></td>
-                                    <% } %>
-                                </tr>
-                                <% } } %>
+                                <!-- dynamic loaded by Jquery -->
                                 </tbody>
                                 <tfoot>
                                 <tr>
                                     <th>이름</th>
                                     <th>스마트폰 주소</th>
-                                    <th>오늘 출근 시간</th>
-                                    <th>오늘 퇴근 시간</th>
-                                    <th>오늘 일 한 시간</th>
-                                    <th>평균 출근 시간</th>
-                                    <th>평균 퇴근 시간</th>
-                                    <th>평균 일 한 시간</th>
+                                    <th>가장 빠른 입장</th>
+                                    <th>가장 늦은 퇴장</th>
+                                    <th>근무</th>
+                                    <th>초과 근무</th>
                                 </tr>
                                 </tfoot>
                             </table>
@@ -171,36 +116,724 @@
             </div>
             <!-- /.row -->
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">reserved</h3>
+                            <h3 class="box-title">장소별 오늘</h3>
                             <div class="box-tools pull-right">
                                 <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             </div>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-
+                            <table id="commute_table_workplace_today" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>위치</th>
+                                    <th>가장 빠른 출근</th>
+                                    <th>가장 늦은 퇴근</th>
+                                    <th>평균 출근</th>
+                                    <th>평균 퇴근</th>
+                                    <th>총 근무</th>
+                                    <th>총 초과 근무</th>
+                                    <th>평균 근무</th>
+                                    <th>평균 초과 근무</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- dynamic loaded by Jquery -->
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>위치</th>
+                                    <th>가장 빠른 출근</th>
+                                    <th>가장 늦은 퇴근</th>
+                                    <th>평균 출근</th>
+                                    <th>평균 퇴근</th>
+                                    <th>총 근무</th>
+                                    <th>총 초과 근무</th>
+                                    <th>평균 근무</th>
+                                    <th>평균 초과 근무</th>
+                                </tr>
+                                </tfoot>
+                            </table>
                         </div>
                         <!-- /.box-body -->
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
                     </div>
                     <!-- /.box -->
                 </div>
                 <!-- /.col -->
-                <div class="col-sm-6">
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">reserved</h3>
+                            <h3 class="box-title">부서별 오늘</h3>
                             <div class="box-tools pull-right">
                                 <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             </div>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-
+                            <table id="commute_table_department_today" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>가장 빠른 출근</th>
+                                    <th>가장 늦은 퇴근</th>
+                                    <th>평균 출근</th>
+                                    <th>평균 퇴근</th>
+                                    <th>총 근무</th>
+                                    <th>총 초과 근무</th>
+                                    <th>평균 근무</th>
+                                    <th>평균 초과 근무</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- dynamic loaded by Jquery -->
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>가장 빠른 출근</th>
+                                    <th>가장 늦은 퇴근</th>
+                                    <th>평균 출근</th>
+                                    <th>평균 퇴근</th>
+                                    <th>총 근무</th>
+                                    <th>총 초과 근무</th>
+                                    <th>평균 근무</th>
+                                    <th>평균 초과 근무</th>
+                                </tr>
+                                </tfoot>
+                            </table>
                         </div>
                         <!-- /.box-body -->
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">직책별 오늘</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="commute_table_position_today" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>가장 빠른 출근</th>
+                                    <th>가장 늦은 퇴근</th>
+                                    <th>평균 출근</th>
+                                    <th>평균 퇴근</th>
+                                    <th>총 근무</th>
+                                    <th>총 초과 근무</th>
+                                    <th>평균 근무</th>
+                                    <th>평균 초과 근무</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- dynamic loaded by Jquery -->
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>가장 빠른 출근</th>
+                                    <th>가장 늦은 퇴근</th>
+                                    <th>평균 출근</th>
+                                    <th>평균 퇴근</th>
+                                    <th>총 근무</th>
+                                    <th>총 초과 근무</th>
+                                    <th>평균 근무</th>
+                                    <th>평균 초과 근무</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">사용자별 평균</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="commute_table_user_avg" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>스마트폰 주소</th>
+                                    <th>평균 출근</th>
+                                    <th>평균 퇴근</th>
+                                    <th>평균 근무</th>
+                                    <th>평균 초과 근무</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- dynamic loaded by Jquery -->
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>스마트폰 주소</th>
+                                    <th>평균 출근</th>
+                                    <th>평균 퇴근</th>
+                                    <th>평균 근무</th>
+                                    <th>평균 초과 근무</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">사용자별 최소 값</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="commute_table_user_min" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>스마트폰 주소</th>
+                                    <th>가장 빠른 출근</th>
+                                    <th>가장 늦은 퇴근</th>
+                                    <th>가장 적은 근무</th>
+                                    <th>가장 적은 초과 근무</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- dynamic loaded by Jquery -->
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>스마트폰 주소</th>
+                                    <th>가장 빠른 출근</th>
+                                    <th>가장 빠른 퇴근</th>
+                                    <th>가장 적은 근무</th>
+                                    <th>가장 적은 초과 근무</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">사용자별 최대 값</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="commute_table_user_max" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>스마트폰 주소</th>
+                                    <th>가장 늦은 출근</th>
+                                    <th>가장 늦은 퇴근</th>
+                                    <th>가장 많은 근무</th>
+                                    <th>가장 많은 초과 근무</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- dynamic loaded by Jquery -->
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>스마트폰 주소</th>
+                                    <th>가장 늦은 출근</th>
+                                    <th>가장 늦은 퇴근</th>
+                                    <th>가장 많은 근무</th>
+                                    <th>가장 많은 초과 근무</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">장소별 평균</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="commute_table_workplace_avg" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>위치</th>
+                                    <th>펑균 출근 시간</th>
+                                    <th>평균 퇴근 시간</th>
+                                    <th>평균 근무 시간</th>
+                                    <th>평균 초과 근무 시간</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- dynamic loaded by Jquery -->
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>위치</th>
+                                    <th>펑균 출근 시간</th>
+                                    <th>평균 퇴근 시간</th>
+                                    <th>평균 근무 시간</th>
+                                    <th>평균 초과 근무 시간</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">장소별 최소 값</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="commute_table_workplace_min" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>위치</th>
+                                    <th>가장 빠른 출근</th>
+                                    <th>가장 빠른 퇴근</th>
+                                    <th>가장 적은 근무</th>
+                                    <th>가장 적은 초과 근무</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- dynamic loaded by Jquery -->
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>위치</th>
+                                    <th>가장 빠른 출근</th>
+                                    <th>가장 빠른 퇴근</th>
+                                    <th>가장 적은 근무</th>
+                                    <th>가장 적은 초과 근무</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">장소별 최대 값</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="commute_table_workplace_max" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>위치</th>
+                                    <th>가장 늦은 출근</th>
+                                    <th>가장 늦은 퇴근</th>
+                                    <th>가장 많은 근무</th>
+                                    <th>가장 많은 초과 근무</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- dynamic loaded by Jquery -->
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>위치</th>
+                                    <th>가장 늦은 출근</th>
+                                    <th>가장 늦은 퇴근</th>
+                                    <th>가장 많은 근무</th>
+                                    <th>가장 많은 초과 근무</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">부서별 평균</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="commute_table_department_avg" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>펑균 출근 시간</th>
+                                    <th>평균 퇴근 시간</th>
+                                    <th>평균 근무 시간</th>
+                                    <th>평균 초과 근무 시간</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- dynamic loaded by Jquery -->
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>펑균 출근 시간</th>
+                                    <th>평균 퇴근 시간</th>
+                                    <th>평균 근무 시간</th>
+                                    <th>평균 초과 근무 시간</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">부서별 최소 값</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="commute_table_department_min" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>가장 빠른 출근</th>
+                                    <th>가장 빠른 퇴근</th>
+                                    <th>가장 적은 근무</th>
+                                    <th>가장 적은 초과 근무</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- dynamic loaded by Jquery -->
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>가장 빠른 출근</th>
+                                    <th>가장 빠른 퇴근</th>
+                                    <th>가장 적은 근무</th>
+                                    <th>가장 적은 초과 근무</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">부서별 최대 값</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="commute_table_department_max" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>가장 늦은 출근</th>
+                                    <th>가장 늦은 퇴근</th>
+                                    <th>가장 많은 근무</th>
+                                    <th>가장 많은 초과 근무</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- dynamic loaded by Jquery -->
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>가장 늦은 출근</th>
+                                    <th>가장 늦은 퇴근</th>
+                                    <th>가장 많은 근무</th>
+                                    <th>가장 많은 초과 근무</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">직책별 평균</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="commute_table_position_avg" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>펑균 출근 시간</th>
+                                    <th>평균 퇴근 시간</th>
+                                    <th>평균 근무 시간</th>
+                                    <th>평균 초과 근무 시간</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- dynamic loaded by Jquery -->
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>펑균 출근 시간</th>
+                                    <th>평균 퇴근 시간</th>
+                                    <th>평균 근무 시간</th>
+                                    <th>평균 초과 근무 시간</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">직책별 최소 값</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="commute_table_position_min" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>가장 빠른 출근</th>
+                                    <th>가장 빠른 퇴근</th>
+                                    <th>가장 적은 근무</th>
+                                    <th>가장 적은 초과 근무</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- dynamic loaded by Jquery -->
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>가장 빠른 출근</th>
+                                    <th>가장 빠른 퇴근</th>
+                                    <th>가장 적은 근무</th>
+                                    <th>가장 적은 초과 근무</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">직책별 최대 값</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="commute_table_position_max" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>가장 늦은 출근</th>
+                                    <th>가장 늦은 퇴근</th>
+                                    <th>가장 많은 근무</th>
+                                    <th>가장 많은 초과 근무</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- dynamic loaded by Jquery -->
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>가장 늦은 출근</th>
+                                    <th>가장 늦은 퇴근</th>
+                                    <th>가장 많은 근무</th>
+                                    <th>가장 많은 초과 근무</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
                     </div>
                     <!-- /.box -->
                 </div>
@@ -230,13 +863,237 @@
 <script src="/bootstrap/js/bootstrap.min.js"></script>
 <!-- PACE -->
 <script src="/plugins/pace/pace.min.js"></script>
+<!-- Common -->
+<script src="/commonJqueryFunctions.js"></script>
 <script>
 
-    $(document).ajaxStart(function() { Pace.restart(); });
-    $(document).ready(function() {
-        $('#commute_table').DataTable();
+    $(document).ajaxStart(function() {
+        Pace.restart();
+        $('div.pageload_effect').show();
+    });
 
-        $('div.pageload_effect').hide();
+    $(document).ready(function() {
+        var dtUserToday = $('#commute_table_user_today').DataTable();
+        var dtWorkplaceToday = $('#commute_table_workplace_today').DataTable();
+        var dtDepartmentToday = $('#commute_table_department_today').DataTable();
+        var dtPositionToday = $('#commute_table_position_today').DataTable();
+        var dtUserAvg = $('#commute_table_user_avg').DataTable();
+        var dtUserMin = $('#commute_table_user_min').DataTable();
+        var dtUserMax = $('#commute_table_user_max').DataTable();
+        var dtWorkplaceAvg = $('#commute_table_workplace_avg').DataTable();
+        var dtWorkplaceMin = $('#commute_table_workplace_min').DataTable();
+        var dtWorkplaceMax = $('#commute_table_workplace_max').DataTable();
+        var dtDepartmentAvg = $('#commute_table_department_avg').DataTable();
+        var dtDepartmentMin = $('#commute_table_department_min').DataTable();
+        var dtDepartmentMax = $('#commute_table_department_max').DataTable();
+        var dtPositionAvg = $('#commute_table_position_avg').DataTable();
+        var dtPositionMin = $('#commute_table_position_min').DataTable();
+        var dtPositionMax = $('#commute_table_position_max').DataTable();
+
+        var currentSmartphoneAddress = $('#current_smartphone_address').text();
+
+        loadCommuteInfo();
+
+        function loadCommuteInfo() {
+            var todayCommuteInfoJson;
+            var avgCommuteInfoJson;
+
+            $.post('/post/todayCommuteInfo', {
+                smartphone_address: currentSmartphoneAddress
+            }, function(json) {
+                todayCommuteInfoJson = clarifyResponsedJsonArr(json.todayCommuteInfo);
+
+                $.post('/post/commuteInfo', {
+                    smartphone_address: currentSmartphoneAddress
+                }, function (json) {
+                    avgCommuteInfoJson = clarifyResponsedJsonArr(json.avgCommuteInfo);
+
+                    var i;
+                    for (i = 0; i < todayCommuteInfoJson.userList.length; i++) {
+                        dtUserToday.row.add([
+                            todayCommuteInfoJson.userList[i].name,
+                            todayCommuteInfoJson.userList[i].smartphoneAddress,
+                            todayCommuteInfoJson.userList[i].firstComeInTime,
+                            todayCommuteInfoJson.userList[i].lastComeOutTime,
+                            todayCommuteInfoJson.userList[i].validWorkingTime,
+                            todayCommuteInfoJson.userList[i].validOverWorkingTime
+                        ]);
+                    }
+
+                    for (i = 0; i < todayCommuteInfoJson.workplaceList.length; i++) {
+                        dtWorkplaceToday.row.add([
+                                todayCommuteInfoJson.workplaceList[i].name,
+                                todayCommuteInfoJson.workplaceList[i].latitude + ', ' + todayCommuteInfoJson.workplaceList[i].longitude,
+                                todayCommuteInfoJson.workplaceList[i].firstComeInTime,
+                                todayCommuteInfoJson.workplaceList[i].lastComeOutTime,
+                                todayCommuteInfoJson.workplaceList[i].avgFirstComeInTime,
+                                todayCommuteInfoJson.workplaceList[i].avgLastComeOutTime,
+                                todayCommuteInfoJson.workplaceList[i].totalValidWorkingTime,
+                                todayCommuteInfoJson.workplaceList[i].totalValidOverWorkingTime,
+                                todayCommuteInfoJson.workplaceList[i].avgValidWorkingTime,
+                                todayCommuteInfoJson.workplaceList[i].avgValidOverWorkingTime
+                        ]);
+                    }
+
+                    for (i = 0; i < todayCommuteInfoJson.departmentList.length; i++) {
+                        dtDepartmentToday.row.add([
+                            todayCommuteInfoJson.departmentList[i].name,
+                            todayCommuteInfoJson.departmentList[i].firstComeInTime,
+                            todayCommuteInfoJson.departmentList[i].lastComeOutTime,
+                            todayCommuteInfoJson.departmentList[i].avgFirstComeInTime,
+                            todayCommuteInfoJson.departmentList[i].avgLastComeOutTime,
+                            todayCommuteInfoJson.departmentList[i].totalValidWorkingTime,
+                            todayCommuteInfoJson.departmentList[i].totalValidOverWorkingTime,
+                            todayCommuteInfoJson.departmentList[i].avgValidWorkingTime,
+                            todayCommuteInfoJson.departmentList[i].avgValidOverWorkingTime
+                        ]);
+                    }
+
+                    for (i = 0; i < todayCommuteInfoJson.positionList.length; i++) {
+                        dtPositionToday.row.add([
+                            todayCommuteInfoJson.positionList[i].name,
+                            todayCommuteInfoJson.positionList[i].firstComeInTime,
+                            todayCommuteInfoJson.positionList[i].lastComeOutTime,
+                            todayCommuteInfoJson.positionList[i].avgFirstComeInTime,
+                            todayCommuteInfoJson.positionList[i].avgLastComeOutTime,
+                            todayCommuteInfoJson.positionList[i].totalValidWorkingTime,
+                            todayCommuteInfoJson.positionList[i].totalValidOverWorkingTime,
+                            todayCommuteInfoJson.positionList[i].avgValidWorkingTime,
+                            todayCommuteInfoJson.positionList[i].avgValidOverWorkingTime
+                        ]);
+                    }
+
+                    for (i = 0; i < avgCommuteInfoJson.userList.length; i++) {
+                        dtUserAvg.row.add([
+                            avgCommuteInfoJson.userList[i].name,
+                            avgCommuteInfoJson.userList[i].smartphoneAddress,
+                            avgCommuteInfoJson.userList[i].avgComeInTime,
+                            avgCommuteInfoJson.userList[i].avgComeOutTime,
+                            avgCommuteInfoJson.userList[i].avgWorkingTime,
+                            avgCommuteInfoJson.userList[i].avgOverWorkingTime
+                        ]);
+
+                        dtUserMin.row.add([
+                            avgCommuteInfoJson.userList[i].name,
+                            avgCommuteInfoJson.userList[i].smartphoneAddress,
+                            avgCommuteInfoJson.userList[i].minComeInTime,
+                            avgCommuteInfoJson.userList[i].minComeOutTime,
+                            avgCommuteInfoJson.userList[i].minWorkingTime,
+                            avgCommuteInfoJson.userList[i].minOverWorkingTime
+                        ]);
+
+                        dtUserMax.row.add([
+                            avgCommuteInfoJson.userList[i].name,
+                            avgCommuteInfoJson.userList[i].smartphoneAddress,
+                            avgCommuteInfoJson.userList[i].maxComeInTime,
+                            avgCommuteInfoJson.userList[i].maxComeOutTime,
+                            avgCommuteInfoJson.userList[i].maxWorkingTime,
+                            avgCommuteInfoJson.userList[i].maxOverWorkingTime
+                        ]);
+                    }
+
+                    for (i = 0; i < avgCommuteInfoJson.workplaceList.length; i++) {
+                        dtWorkplaceAvg.row.add([
+                            avgCommuteInfoJson.workplaceList[i].name,
+                            avgCommuteInfoJson.workplaceList[i].latitude + ', ' + avgCommuteInfoJson.workplaceList[i].longitude,
+                            avgCommuteInfoJson.workplaceList[i].avgComeInTime,
+                            avgCommuteInfoJson.workplaceList[i].avgComeOutTime,
+                            avgCommuteInfoJson.workplaceList[i].avgWorkingTime,
+                            avgCommuteInfoJson.workplaceList[i].avgOverWorkingTime
+                        ]);
+
+                        dtWorkplaceMin.row.add([
+                            avgCommuteInfoJson.workplaceList[i].name,
+                            avgCommuteInfoJson.workplaceList[i].latitude + ', ' + avgCommuteInfoJson.workplaceList[i].longitude,
+                            avgCommuteInfoJson.workplaceList[i].minComeInTime,
+                            avgCommuteInfoJson.workplaceList[i].minComeOutTime,
+                            avgCommuteInfoJson.workplaceList[i].minWorkingTime,
+                            avgCommuteInfoJson.workplaceList[i].minOverWorkingTime
+                        ]);
+
+                        dtWorkplaceMax.row.add([
+                            avgCommuteInfoJson.workplaceList[i].name,
+                            avgCommuteInfoJson.workplaceList[i].latitude + ', ' + avgCommuteInfoJson.workplaceList[i].longitude,
+                            avgCommuteInfoJson.workplaceList[i].maxComeInTime,
+                            avgCommuteInfoJson.workplaceList[i].maxComeOutTime,
+                            avgCommuteInfoJson.workplaceList[i].maxWorkingTime,
+                            avgCommuteInfoJson.workplaceList[i].maxOverWorkingTime
+                        ]);
+                    }
+
+                    for (i = 0; i < avgCommuteInfoJson.departmentList.length; i++) {
+                        dtDepartmentAvg.row.add([
+                            avgCommuteInfoJson.departmentList[i].name,
+                            avgCommuteInfoJson.departmentList[i].avgComeInTime,
+                            avgCommuteInfoJson.departmentList[i].avgComeOutTime,
+                            avgCommuteInfoJson.departmentList[i].avgWorkingTime,
+                            avgCommuteInfoJson.departmentList[i].avgOverWorkingTime
+                        ]);
+
+                        dtDepartmentMin.row.add([
+                            avgCommuteInfoJson.departmentList[i].name,
+                            avgCommuteInfoJson.departmentList[i].minComeInTime,
+                            avgCommuteInfoJson.departmentList[i].minComeOutTime,
+                            avgCommuteInfoJson.departmentList[i].minWorkingTime,
+                            avgCommuteInfoJson.departmentList[i].minOverWorkingTime
+                        ]);
+
+                        dtDepartmentMax.row.add([
+                            avgCommuteInfoJson.departmentList[i].name,
+                            avgCommuteInfoJson.departmentList[i].maxComeInTime,
+                            avgCommuteInfoJson.departmentList[i].maxComeOutTime,
+                            avgCommuteInfoJson.departmentList[i].maxWorkingTime,
+                            avgCommuteInfoJson.departmentList[i].maxOverWorkingTime
+                        ]);
+                    }
+
+                    for (i = 0; i < avgCommuteInfoJson.positionList.length; i++) {
+                        dtPositionAvg.row.add([
+                            avgCommuteInfoJson.positionList[i].name,
+                            avgCommuteInfoJson.positionList[i].avgComeInTime,
+                            avgCommuteInfoJson.positionList[i].avgComeOutTime,
+                            avgCommuteInfoJson.positionList[i].avgWorkingTime,
+                            avgCommuteInfoJson.positionList[i].avgOverWorkingTime
+                        ]);
+
+                        dtPositionMin.row.add([
+                            avgCommuteInfoJson.positionList[i].name,
+                            avgCommuteInfoJson.positionList[i].minComeInTime,
+                            avgCommuteInfoJson.positionList[i].minComeOutTime,
+                            avgCommuteInfoJson.positionList[i].minWorkingTime,
+                            avgCommuteInfoJson.positionList[i].minOverWorkingTime
+                        ]);
+
+                        dtPositionMax.row.add([
+                            avgCommuteInfoJson.positionList[i].name,
+                            avgCommuteInfoJson.positionList[i].maxComeInTime,
+                            avgCommuteInfoJson.positionList[i].maxComeOutTime,
+                            avgCommuteInfoJson.positionList[i].maxWorkingTime,
+                            avgCommuteInfoJson.positionList[i].maxOverWorkingTime
+                        ]);
+                    }
+
+                    dtUserToday.draw();
+                    dtWorkplaceToday.draw();
+                    dtDepartmentToday.draw();
+                    dtPositionToday.draw();
+                    dtUserAvg.draw();
+                    dtUserMin.draw();
+                    dtUserMax.draw();
+                    dtWorkplaceAvg.draw();
+                    dtWorkplaceMin.draw();
+                    dtWorkplaceMax.draw();
+                    dtDepartmentAvg.draw();
+                    dtDepartmentMin.draw();
+                    dtDepartmentMax.draw();
+                    dtPositionAvg.draw();
+                    dtPositionMin.draw();
+                    dtPositionMax.draw();
+
+                    $('div.pageload_effect').hide();
+                });
+            });
+        }
     });
 
 </script>

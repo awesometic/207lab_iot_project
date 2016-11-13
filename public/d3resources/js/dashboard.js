@@ -19,104 +19,6 @@ var 	formatAsPercentage = d3.format("%"),
  -------------------------------------------
  */
 
-// Dataset example
-var departments = ["컴퓨터학과", "정보보호학과", "정보통신학과", "207Lab"];
-var department1 = "컴퓨터학과";
-var department2 = "정보호호학과";
-var department3 = "정보통신학과";
-var department4 = "207Lab";
-
-var personInCS = ["양덕규", "백소영", "강은정", "김선광"];
-var personInCS1 = "양덕규";
-var personInCS2 = "백소영";
-var personInCS3 = "강은정";
-var personInCS4 = "김선광";
-
-var personNumCS = 4;
-
-var fixedtime= 9;
-
-var YDGWorktime = 14;
-var BSYWorktime = 15;
-var KEJWorktime = 16;
-var KSGWorkitme = 17;
-
-var CSOvertimework = (YDGWorktime + BSYWorktime + KEJWorktime + KSGWorkitme) - fixedtime*4;
-
-var CSAvgWorktime = (YDGWorktime + BSYWorktime + KEJWorktime + KSGWorkitme) / 4;
-var CSMinWorktime = 14;
-var CSMaxWorktime = 17;
-
-var personInIS = ["조수빈", "조성래", "박수빈"];
-var personInIS = "조수빈";
-var personInIS = "조성래";
-var personInIS = "박수빈";
-
-var personNumIS = 3;
-
-var CSBWorktime = 9;
-var CSRWorkitme = 10;
-var PSBWorkitme = 11;
-
-var ISOvertimework = (CSBWorktime + CSRWorkitme + PSBWorkitme) - fixedtime*3;
-
-var ISAvgWorktime = (CSBWorktime + CSRWorkitme + PSBWorkitme) / 3;
-var ISMinWorktime = 9;
-var ISMaxWorktime = 11;
-
-var personInIC = ["하연담", "최민경", "박상호"];
-var personInIC1 = "하연담";
-var personInIC2 = "최민경";
-var personInIC3 = "박상호";
-
-var personNumIC = 3;
-
-var HYDWorktime = 3;
-var CMKWorktime = 4;
-var PSHWorktime = 5;
-
-var ICAvgWorktime = (HYDWorktime + CMKWorktime + PSHWorktime) / 3;
-var ICMinWorktime = 3;
-var ICMaxWorktime = 5;
-
-var ICOvertimework = ((HYDWorktime + CMKWorktime + PSHWorktime) - fixedtime*3) > 0 ? ICOvertimework : 0;
-
-var personInLAB = ["kkk", "yyy", "bbb", "sss", "lll"];
-
-var personInLAB1 = "kkk";
-var personInLAB2 = "yyy";
-var personInLAB3 = "bbb";
-var personInLAB4 = "sss";
-var personInLAB5 = "lll";
-
-var personNumLAB = 5;
-
-var KWorktime = 10;
-var YWorktime = 9;
-var BWorktime = 12;
-var SWorktime = 7;
-var LWorktime = 11;
-
-var LABAvgWorktime = (KWorktime + YWorktime + BWorktime + SWorktime + LWorktime) / 5;
-var LABMinWorktime = 7;
-var LABMaxWorktime = 12;
-
-var LABOvertimework = ((KWorktime + YWorktime + BWorktime + SWorktime + LWorktime) - fixedtime*5);
-
-/**
- * cartegory: 부서
- * measure: 평균 근무 시간
- */
-var dataset_pie = [
-        {category: "컴퓨터학과", measure: CSAvgWorktime},
-        {category: "정보보호학과", measure: ISAvgWorktime},
-        {category: "정보통신학과", measure: ICAvgWorktime},
-        {category: "207Lab", measure: LABAvgWorktime}
-    ]
-    ;
-
-var companyName = "207 LAB";
-
 function dsPieChart(dataset, companyName){
 
     var 	width = 400,
@@ -226,47 +128,12 @@ function dsPieChart(dataset, companyName){
     }
 }
 
-dsPieChart(dataset_pie, companyName);
-
 /*
  ############# BAR CHART ###################
  -------------------------------------------
  */
 
-// 카테고리 2개 더 생각하기
-var datasetBarChart = [
-        { group: "All", category: "평균 근무 시간", measure: ((CSAvgWorktime + ISAvgWorktime + ICAvgWorktime) / 3) },
-        { group: "All", category: "최저 근무 시간", measure: ISMinWorktime },
-        { group: "All", category: "최고 근무 시간", measure: CSMaxWorktime },
-        { group: "All", category: "초과 근무 시간", measure: CSOvertimework },
-        { group: "All", category: "총 인원", measure: personNumCS },
-        { group: "컴퓨터학과", category: "평균 근무 시간", measure: CSAvgWorktime },
-        { group: "컴퓨터학과", category: "최저 근무 시간", measure: CSMinWorktime },
-        { group: "컴퓨터학과", category: "최고 근무 시간", measure: CSMaxWorktime },
-        { group: "컴퓨터학과", category: "초과 근무 시간", measure: CSOvertimework },
-        { group: "컴퓨터학과", category: "총 인원", measure: personNumCS },
-        { group: "정보보호학과", category: "평균 근무 시간", measure: ISAvgWorktime },
-        { group: "정보보호학과", category: "최저 근무 시간", measure: ISMinWorktime },
-        { group: "정보보호학과", category: "최고 근무 시간", measure: ISMaxWorktime },
-        { group: "정보보호학과", category: "초과 근무 시간", measure: ISOvertimework },
-        { group: "정보보호학과", category: "총 인원", measure: personNumIS },
-        { group: "정보통신학과", category: "평균 근무 시간", measure: ICAvgWorktime },
-        { group: "정보통신학과", category: "최저 근무 시간", measure: ICMinWorktime },
-        { group: "정보통신학과", category: "최고 근무 시간", measure: ICMaxWorktime },
-        { group: "정보통신학과", category: "초과 근무 시간", measure: ICOvertimework },
-        { group: "정보통신학과", category: "총 인원", measure: personNumIC },
-        { group: "207Lab", category: "평균 근무 시간", measure: LABAvgWorktime },
-        { group: "207Lab", category: "최저 근무 시간", measure: LABMinWorktime },
-        { group: "207Lab", category: "최고 근무 시간", measure: LABMaxWorktime },
-        { group: "207Lab", category: "초과 근무 시간", measure: LABOvertimework },
-        { group: "207Lab", category: "총 인원", measure: personNumLAB }
-    ]
-    ;
-
-// set initial group value
-var group = "All";
-
-function datasetBarChosen(group) {
+function datasetBarChosen(datasetBarChart, group) {
     var ds = [];
     for (x in datasetBarChart) {
         if(datasetBarChart[x].group==group){
@@ -296,9 +163,12 @@ function dsBarChartBasics() {
         ;
 }
 
-function dsBarChart() {
+function dsBarChart(datasetBarChart) {
 
-    var firstDatasetBarChart = datasetBarChosen(group);
+    // set initial group value
+    var group = "All";
+
+    var firstDatasetBarChart = datasetBarChosen(datasetBarChart, group);
 
     var basics = dsBarChartBasics();
 
@@ -417,8 +287,6 @@ function dsBarChart() {
     ;
 }
 
-dsBarChart();
-
 /* ** UPDATE CHART ** */
 
 /* updates bar chart on request */
@@ -504,30 +372,7 @@ function updateBarChart(group, colorChosen) {
  -------------------------------------------
  */
 
-// measure: 평균 근무 시간
-var datasetLineChart = [
-{ group: "All", category: 2008, measure: 289309 },
-{ group: "All", category: 2009, measure: 234998 },
-{ group: "All", category: 2010, measure: 310900 },
-{ group: "All", category: 2011, measure: 223900 },
-{ group: "All", category: 2012, measure: 234500 },
-{ group: "컴퓨터학과", category: 2008, measure: 234543 },
-{ group: "컴퓨터학과", category: 2009, measure: 704990 },
-{ group: "컴퓨터학과", category: 2010, measure: 379001 },
-{ group: "컴퓨터학과", category: 2011, measure: 431999 },
-{ group: "컴퓨터학과", category: 2012, measure: 350890 },
-{ group: "정보보호학과", category: 2008, measure: 63647.98 },
-{ group: "정보보호학과", category: 2009, measure: 61099.48 },
-{ group: "정보보호학과", category: 2010, measure: 87052 },
-{ group: "정보보호학과", category: 2011, measure: 58214 },
-{ group: "정보보호학과", category: 2012, measure: 58625 }
-]
-;
-
-// set initial category value
-var group = "All";
-
-function datasetLineChartChosen(group) {
+function datasetLineChartChosen(datasetLineChart, group) {
     var ds = [];
     for (x in datasetLineChart) {
         if(datasetLineChart[x].group==group){
@@ -553,9 +398,12 @@ function dsLineChartBasics() {
 }
 
 
-function dsLineChart() {
+function dsLineChart(datasetLineChart) {
 
-    var firstDatasetLineChart = datasetLineChartChosen(group);
+    // set initial category value
+    var group = "All";
+
+    var firstDatasetLineChart = datasetLineChartChosen(datasetLineChart, group);
 
     var basics = dsLineChartBasics();
 
@@ -633,9 +481,6 @@ function dsLineChart() {
     ;
 
 }
-
-dsLineChart();
-
 
 /* ** UPDATE CHART ** */
 
