@@ -1467,8 +1467,6 @@ var getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
                 break;
         }
 
-        sql += " ORDER BY datetime DESC";
-
         conn.query(sql, function(err, rows) {
             conn.release();
 
