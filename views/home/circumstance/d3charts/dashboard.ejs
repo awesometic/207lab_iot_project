@@ -126,7 +126,7 @@
             $.post('/post/chart/dashboard', {
                 smartphone_address: $('#current_smartphone_address').text()
             }).done(function(json) {
-                json = clarifyResponsedJsonArr(json);
+                json = commonFunc.clarifyResponsedJsonArr(json);
                 dsPieChart(json.datasetPieChart, json.companyName);
                 dsBarChart(json.datasetBarChart);
             });

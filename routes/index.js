@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var async = require('async');
+var currentTime = require('../public/libs/currentTime');
 var pool = require("../public/libs/db");
 var logger = require("../public/libs/logger");
 
@@ -1457,6 +1458,16 @@ router.post('/post/chart/dashboard', function(req, res, next) {
 
 router.post('/post/todayCommuteInfo', function(req, res, next) {
     var smartphone_address = req.body.smartphone_address;
+    var searchDate, searchDateStart, searchDateEnd;
+
+    if (typeof req.body.searchDate === 'undefined') {
+        searchDate = currentTime.getCurrentDate();
+    } else {
+        searchDate = req.body.searchDate;
+    }
+
+    searchDateStart = searchDate + ' 00:00:00';
+    searchDateEnd = searchDate + ' 23:59:59';
 
     async.waterfall([
         function (callback) {
@@ -1469,7 +1480,7 @@ router.post('/post/todayCommuteInfo', function(req, res, next) {
             });
         },
         function (callback) {
-            pool.getTodayCommuteInfo(function (todayCommuteInfo) {
+            pool.getTodayCommuteInfo(searchDateStart, searchDateEnd, function (todayCommuteInfo) {
                 callback(null, todayCommuteInfo);
             });
         }

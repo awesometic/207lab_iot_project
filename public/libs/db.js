@@ -1512,8 +1512,10 @@ var getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
  *         "totalValidOverWorkingTime"
  *         "avgFirstComeInTime",
  *         "avgLastComeOutTime",
- *         "avgValidWorkingTime",
+ *         "avgValidWorkingTime"
+ *         "avgUserValidWorkingTime"
  *         "avgValidOverWorkingTime"
+ *         "avgUserValidOverWorkingTime"
  *     }],
  *     "departmentList":[{
  *         "id_department",
@@ -1524,8 +1526,10 @@ var getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
  *         "totalValidOverWorkingTime"
  *         "avgFirstComeInTime",
  *         "avgLastComeOutTime",
- *         "avgValidWorkingTime",
+ *         "avgValidWorkingTime"
+ *         "avgUserValidWorkingTime"
  *         "avgValidOverWorkingTime"
+ *         "avgUserValidOverWorkingTime"
  *     }],
  *     "positionList":[{
  *         "id_position",
@@ -1536,18 +1540,24 @@ var getCircumstanceTable = function(arg1, arg2, arg3, arg4, callback) {
  *         "totalValidOverWorkingTime"
  *         "avgFirstComeInTime",
  *         "avgLastComeOutTime",
- *         "avgValidWorkingTime",
+ *         "avgValidWorkingTime"
+ *         "avgUserValidWorkingTime"
  *         "avgValidOverWorkingTime"
+ *         "avgUserValidOverWorkingTime"
  *     }]
  * }
  *
- * @param arg1 will be workplace id (option)
- * @param arg2 will be department id (option)
- * @param arg3 will be position id (option)
- * @param arg4 will be smartphone bluetooth address (option)
+ * @param arg1 will be start date (option)
+ * @param arg2 will be end date (option)
+ * @param arg3 will be workplace id (option)
+ * @param arg4 will be department id (option)
+ * @param arg5 will be position id (option)
+ * @param arg6 will be smartphone bluetooth address (option)
  * @param callback
  */
-function getTodayCommuteInfo(arg1, arg2, arg3, arg4, callback) {
+function getTodayCommuteInfo(arg1, arg2, arg3, arg4, arg5, arg6, callback) {
+    var startDate, endDate;
+
     var args = [];
     for (var i = 0; i < arguments.length; i++) {
         args.push(arguments[i]);
@@ -1559,22 +1569,42 @@ function getTodayCommuteInfo(arg1, arg2, arg3, arg4, callback) {
     if (args.length > 0) arg2 = args.shift(); else arg2 = null;
     if (args.length > 0) arg3 = args.shift(); else arg3 = null;
     if (args.length > 0) arg4 = args.shift(); else arg4 = null;
+    if (args.length > 0) arg5 = args.shift(); else arg5 = null;
+    if (args.length > 0) arg6 = args.shift(); else arg6 = null;
 
     if (arg1 != null) args.push(arg1);
     if (arg2 != null) args.push(arg2);
-    if (arg2 != null) args.push(arg3);
-    if (arg2 != null) args.push(arg4);
+    if (arg3 != null) args.push(arg3);
+    if (arg4 != null) args.push(arg4);
+    if (arg5 != null) args.push(arg5);
+    if (arg6 != null) args.push(arg6);
 
     // TODO: implement options
     switch (args.length) {
-        default:
-            getCircumstanceTable(function(circumstanceRows) {
+        case 2:
+            args[0] = String(args[0]);
+            args[1] = String(args[1]);
+
+            if (args[0].length != 10)
+                startDate = currentTime.convertCurrentTimezoneDateTime(args[0]);
+            else
+                startDate = args[0];
+
+            if (args[1].length != 10)
+                endDate = currentTime.convertCurrentTimezoneDateTime(args[1]);
+            else
+                endDate = args[1];
+
+            getCircumstanceTable(startDate, endDate, function(circumstanceRows) {
                 getTodayCommuteInfoSetupJson(circumstanceRows, function(todayCommuteInfo) {
                     if (typeof callback === 'function') {
                         callback(todayCommuteInfo);
                     }
                 });
             });
+            break;
+
+        default:
             break;
     }
 }
@@ -1627,7 +1657,9 @@ function getTodayCommuteInfoSetupJson(circumstanceRows, callback) {
                                     resultJsonString += '"avgFirstComeInTime":"' + 0 + '",';
                                     resultJsonString += '"avgLastComeOutTime":"' + 0 + '",';
                                     resultJsonString += '"avgValidWorkingTime":"' + 0 + '",';
-                                    resultJsonString += '"avgValidOverWorkingTime":"' + 0 + '"';
+                                    resultJsonString += '"avgUserValidWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"avgValidOverWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"avgUserValidOverWorkingTime":"' + 0 + '"';
                                     resultJsonString += '}';
 
                                     if (i < workplaceListRows.length - 1)
@@ -1649,7 +1681,9 @@ function getTodayCommuteInfoSetupJson(circumstanceRows, callback) {
                                     resultJsonString += '"avgFirstComeInTime":"' + 0 + '",';
                                     resultJsonString += '"avgLastComeOutTime":"' + 0 + '",';
                                     resultJsonString += '"avgValidWorkingTime":"' + 0 + '",';
-                                    resultJsonString += '"avgValidOverWorkingTime":"' + 0 + '"';
+                                    resultJsonString += '"avgUserValidWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"avgValidOverWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"avgUserValidOverWorkingTime":"' + 0 + '"';
                                     resultJsonString += '}';
 
                                     if (i < departmentListRows.length - 1)
@@ -1671,7 +1705,9 @@ function getTodayCommuteInfoSetupJson(circumstanceRows, callback) {
                                     resultJsonString += '"avgFirstComeInTime":"' + 0 + '",';
                                     resultJsonString += '"avgLastComeOutTime":"' + 0 + '",';
                                     resultJsonString += '"avgValidWorkingTime":"' + 0 + '",';
-                                    resultJsonString += '"avgValidOverWorkingTime":"' + 0 + '"';
+                                    resultJsonString += '"avgUserValidWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"avgValidOverWorkingTime":"' + 0 + '",';
+                                    resultJsonString += '"avgUserValidOverWorkingTime":"' + 0 + '"';
                                     resultJsonString += '}';
 
                                     if (i < positionListRows.length - 1)
@@ -1696,11 +1732,11 @@ function getTodayCommuteInfoSetupJson(circumstanceRows, callback) {
 
                             for (i = 0; i < resultJson.userList.length; i++) {
                                 for (j = 0; j < circumstanceRows.length; j++) {
-                                    if (circumstanceRows[j].smartphone_address == resultJson.userList[i].smartphone_address) {
+                                    if (circumstanceRows[j].smartphone_address == resultJson.userList[i].smartphoneAddress) {
                                         if (circumstanceRows[j].commute_status == 1) {
-                                            comeInTimeMsec = new Date('1970-01-02 ' + circumstanceRows[j].datetime).getTime() - new Data('1970-01-02 00:00:00').getTime();
+                                            comeInTimeMsec = new Date('1970-01-02 ' + circumstanceRows[j].datetime.split(' ')[1]).getTime() - new Date('1970-01-02 00:00:00').getTime();
                                         } else if (circumstanceRows[j].commute_status == 0) {
-                                            comeOutTimeMsec = new Date('1970-01-02 ' + circumstanceRows[j].datetime).getTime() - new Data('1970-01-02 00:00:00').getTime();
+                                            comeOutTimeMsec = new Date('1970-01-02 ' + circumstanceRows[j].datetime.split(' ')[1]).getTime() - new Date('1970-01-02 00:00:00').getTime();
 
                                             if (comeOutTimeMsec > comeInTimeMsec) {
                                                 comeInTimeArr.push(comeInTimeMsec);
@@ -1731,10 +1767,10 @@ function getTodayCommuteInfoSetupJson(circumstanceRows, callback) {
                                 }
 
                                 for (j = 0; j < validWorkingTimeArr.length; j++) {
-                                    resultJson.userList[i].validWorkingTime += validWorkingTimeArr[j];
+                                    resultJson.userList[i].validWorkingTime = parseInt(resultJson.userList[i].validWorkingTime) + validWorkingTimeArr[j];
                                 }
                                 for (j = 0; j < validOverWorkingTimeArr.length; j++) {
-                                    resultJson.userList[i].validOverWorkingTime += validOverWorkingTime[j];
+                                    resultJson.userList[i].validOverWorkingTime = parseInt(resultJson.userList[i].validOverWorkingTime) + validOverWorkingTimeArr[j];
                                 }
 
                                 comeInTimeMsec = 0;
@@ -1744,7 +1780,7 @@ function getTodayCommuteInfoSetupJson(circumstanceRows, callback) {
                                 comeInTimeArr = [];
                                 comeOutTimeArr = [];
                                 validWorkingTimeArr = [];
-                                validOverWorkingTimeArr = [];   
+                                validOverWorkingTimeArr = [];
                             }
 
                             var allUserComeInTimeArr = [];
@@ -1755,23 +1791,26 @@ function getTodayCommuteInfoSetupJson(circumstanceRows, callback) {
                             var allUserAvgOverWorkingTimeArr = [];
                             var eachUserAvgWorkingTimeMsec = 0;
                             var eachUserAvgOverWorkingTimeMsec = 0;
+                            var isThisUserCommute = false;
+                            var commutePersonCount = 0;
+                            var overWorkingPersonCount = 0;
 
                             for (i = 0; i < resultJson.workplaceList.length; i++) {
                                 for (j = 0; j < resultJson.userList.length; j++) {
                                     for (k = 0; k < circumstanceRows.length; k++) {
                                         if (circumstanceRows[k].id_workplace == resultJson.workplaceList[i].id_workplace
-                                            && circumstanceRows[k].smartphone_address == resultJson.userList[j].smartphone_address) {
+                                            && circumstanceRows[k].smartphone_address == resultJson.userList[j].smartphoneAddress) {
 
                                             if (circumstanceRows[k].commute_status == 1) {
-                                                comeInTimeMsec = new Date('1970-01-02 ' + circumstanceRows[k].datetime).getTime() - new Data('1970-01-02 00:00:00').getTime();
+                                                comeInTimeMsec = new Date('1970-01-02 ' + circumstanceRows[k].datetime.split(' ')[1]).getTime() - new Date('1970-01-02 00:00:00').getTime();
                                             } else if (circumstanceRows[k].commute_status == 0) {
-                                                comeOutTimeMsec = new Date('1970-01-02 ' + circumstanceRows[k].datetime).getTime() - new Data('1970-01-02 00:00:00').getTime();
+                                                comeOutTimeMsec = new Date('1970-01-02 ' + circumstanceRows[k].datetime.split(' ')[1]).getTime() - new Date('1970-01-02 00:00:00').getTime();
 
                                                 if (comeOutTimeMsec > comeInTimeMsec) {
                                                     comeInTimeArr.push(comeInTimeMsec);
                                                     comeOutTimeArr.push(comeOutTimeMsec);
                                                     validWorkingTimeArr.push(comeOutTimeMsec - comeInTimeMsec);
-                                                    
+
                                                     allUserComeInTimeArr.push(comeInTimeMsec);
                                                     allUserComeOutTimeArr.push(comeOutTimeMsec);
 
@@ -1785,41 +1824,47 @@ function getTodayCommuteInfoSetupJson(circumstanceRows, callback) {
 
                                                 comeInTimeMsec = 0;
                                                 comeOutTimeMsec = 0;
+                                                isThisUserCommute = true;
                                             } else {
                                                 // continue;
                                             }
                                         }
                                     }
-
-                                    if (validWorkingTimeArr.length > 0) {
-                                        for (k = 0; k < validWorkingTimeArr.length; k++) {
-                                            eachUserAvgWorkingTimeMsec += validWorkingTimeArr[k];
-                                            resultJson.workplaceList[i].totalValidWorkingTime += validWorkingTimeArr[k];
-                                        }
-                                        eachUserAvgWorkingTimeMsec /= validWorkingTimeArr.length;
-                                    }
-
-                                    if (validOverWorkingTimeArr.length > 0) {
-                                        for (k = 0; k < validOverWorkingTimeArr.length; k++) {
-                                            eachUserAvgOverWorkingTimeMsec += validOverWorkingTimeArr[k];
-                                            resultJson.workplaceList[i].totalValidOverWorkingTime += validOverWorkingTimeArr[k];
-                                        }
-                                        eachUserAvgOverWorkingTimeMsec /= validOverWorkingTimeArr.length;
-                                    }
-
-                                    if (comeInTimeArr.length > 0) {
-                                        allUserFirstComeInTimeArr.push(comeInTimeArr.sort()[0]);
-                                    }
-                                    if (comeOutTimeArr.length > 0) {
-                                        allUserLastComeOutTimeArr.push(comeOutTimeArr.sort()[comeOutTimeArr.length - 1]);
-                                    }
-                                    if (eachUserAvgWorkingTimeMsec != 0) {
-                                        allUserAvgWorkingTimeArr.push(eachUserAvgWorkingTimeMsec);
-                                    }
-                                    if (eachUserAvgOverWorkingTimeMsec != 0) {
-                                        allUserAvgOverWorkingTimeArr.push(eachUserAvgOverWorkingTimeMsec);
-                                    }
                                     
+                                    if (isThisUserCommute) {
+                                        if (validWorkingTimeArr.length > 0) {
+                                            for (k = 0; k < validWorkingTimeArr.length; k++) {
+                                                eachUserAvgWorkingTimeMsec += validWorkingTimeArr[k];
+                                                resultJson.workplaceList[i].totalValidWorkingTime = parseInt(resultJson.workplaceList[i].totalValidWorkingTime) + validWorkingTimeArr[k];
+                                            }
+                                            eachUserAvgWorkingTimeMsec /= validWorkingTimeArr.length;
+                                        }
+
+                                        if (validOverWorkingTimeArr.length > 0) {
+                                            for (k = 0; k < validOverWorkingTimeArr.length; k++) {
+                                                eachUserAvgOverWorkingTimeMsec += validOverWorkingTimeArr[k];
+                                                resultJson.workplaceList[i].totalValidOverWorkingTime = parseInt(resultJson.workplaceList[i].totalValidOverWorkingTime) + validOverWorkingTimeArr[k];
+                                            }
+                                            eachUserAvgOverWorkingTimeMsec /= validOverWorkingTimeArr.length;
+                                            overWorkingPersonCount++;
+                                        }
+
+                                        if (comeInTimeArr.length > 0) {
+                                            allUserFirstComeInTimeArr.push(comeInTimeArr.sort()[0]);
+                                        }
+                                        if (comeOutTimeArr.length > 0) {
+                                            allUserLastComeOutTimeArr.push(comeOutTimeArr.sort()[comeOutTimeArr.length - 1]);
+                                        }
+                                        if (eachUserAvgWorkingTimeMsec != 0) {
+                                            allUserAvgWorkingTimeArr.push(eachUserAvgWorkingTimeMsec);
+                                        }
+                                        if (eachUserAvgOverWorkingTimeMsec != 0) {
+                                            allUserAvgOverWorkingTimeArr.push(eachUserAvgOverWorkingTimeMsec);
+                                        }
+                                        
+                                        commutePersonCount++;
+                                    }
+
                                     comeInTimeMsec = 0;
                                     comeOutTimeMsec = 0;
                                     validWorkingTime = 0;
@@ -1830,41 +1875,38 @@ function getTodayCommuteInfoSetupJson(circumstanceRows, callback) {
                                     validOverWorkingTimeArr = [];
                                     eachUserAvgWorkingTimeMsec = 0;
                                     eachUserAvgOverWorkingTimeMsec = 0;
+                                    isThisUserCommute = false;
                                 }
-                     
-                                if (allUserComeInTimeArr.length > 0) {
+
+                                if (commutePersonCount > 0) {
                                     resultJson.workplaceList[i].firstComeInTime = allUserComeInTimeArr.sort()[0];
-                                }
-                                if (allUserComeOutTimeArr.length > 0) {
                                     resultJson.workplaceList[i].lastComeOutTime = allUserComeOutTimeArr.sort()[allUserComeOutTimeArr.length - 1];
-                                }
-                                
-                                if (allUserFirstComeInTimeArr.length > 0) {
+
                                     for (j = 0; j < allUserFirstComeInTimeArr.length; j++) {
-                                        resultJson.workplaceList[i].avgFirstComeInTime += allUserFirstComeInTimeArr[j];
+                                        resultJson.workplaceList[i].avgFirstComeInTime = parseInt(resultJson.workplaceList[i].avgFirstComeInTime) + allUserFirstComeInTimeArr[j];
                                     }
-                                    resultJson.workplaceList[i].avgFirstComeInTime /= allUserFirstComeInTimeArr.length;
-                                }
-                                
-                                if (allUserLastComeOutTimeArr.length > 0) {
+                                    resultJson.workplaceList[i].avgFirstComeInTime = parseInt(resultJson.workplaceList[i].avgFirstComeInTime) / allUserFirstComeInTimeArr.length;
+
                                     for (j = 0; j < allUserLastComeOutTimeArr.length; j++) {
-                                        resultJson.workplaceList[i].avgLastComeOutTime += allUserLastComeOutTimeArr[j];
+                                        resultJson.workplaceList[i].avgLastComeOutTime = parseInt(resultJson.workplaceList[i].avgLastComeOutTime) + allUserLastComeOutTimeArr[j];
                                     }
-                                    resultJson.workplaceList[i].avgLastComeOutTime /= allUserLastComeOutTimeArr.length;
-                                }
+                                    resultJson.workplaceList[i].avgLastComeOutTime = parseInt(resultJson.workplaceList[i].avgLastComeOutTime) / allUserLastComeOutTimeArr.length;
 
-                                if (allUserAvgWorkingTimeArr.length > 0) {
                                     for (j = 0; j < allUserAvgWorkingTimeArr.length; j++) {
-                                        resultJson.workplaceList[i].avgValidWorkingTime += allUserAvgWorkingTimeArr[j];
+                                        resultJson.workplaceList[i].avgValidWorkingTime = parseInt(resultJson.workplaceList[i].avgValidWorkingTime) + allUserAvgWorkingTimeArr[j];
                                     }
-                                    resultJson.workplaceList[i].avgValidWorkingTime /= allUserAvgWorkingTimeArr.length;
-                                }
+                                    resultJson.workplaceList[i].avgValidWorkingTime = parseInt(resultJson.workplaceList[i].avgValidWorkingTime) / allUserAvgWorkingTimeArr.length;
 
-                                if (allUserAvgOverWorkingTimeArr.length > 0) {
-                                    for (j = 0; j < allUserAvgOverWorkingTimeArr.length; j++) {
-                                        resultJson.workplaceList[i].avgValidOverWorkingTime += allUserAvgOverWorkingTimeArr[j];
+                                    resultJson.workplaceList[i].avgUserValidWorkingTime = parseInt(resultJson.workplaceList[i].totalValidWorkingTime) / commutePersonCount;
+
+                                    if (allUserAvgOverWorkingTimeArr.length > 0) {
+                                        for (j = 0; j < allUserAvgOverWorkingTimeArr.length; j++) {
+                                            resultJson.workplaceList[i].avgValidOverWorkingTime = parseInt(resultJson.workplaceList[i].avgValidOverWorkingTime) + allUserAvgOverWorkingTimeArr[j];
+                                        }
+                                        resultJson.workplaceList[i].avgValidOverWorkingTime = parseInt(resultJson.workplaceList[i].avgValidOverWorkingTime) / allUserAvgOverWorkingTimeArr.length;
                                     }
-                                    resultJson.workplaceList[i].avgValidOverWorkingTime /= allUserAvgOverWorkingTimeArr.length;
+
+                                    resultJson.workplaceList[i].avgUserValidOverWorkingTime = parseInt(resultJson.workplaceList[i].totalValidOverWorkingTime) / overWorkingPersonCount;
                                 }
 
                                 allUserComeInTimeArr = [];
@@ -1873,20 +1915,20 @@ function getTodayCommuteInfoSetupJson(circumstanceRows, callback) {
                                 allUserLastComeOutTimeArr = [];
                                 allUserAvgWorkingTimeArr = [];
                                 allUserAvgOverWorkingTimeArr = [];
-                                eachUserAvgWorkingTimeMsec = 0;
-                                eachUserAvgOverWorkingTimeMsec = 0;
+                                commutePersonCount = 0;
+                                overWorkingPersonCount = 0;
                             }
 
                             for (i = 0; i < resultJson.departmentList.length; i++) {
                                 for (j = 0; j < resultJson.userList.length; j++) {
                                     for (k = 0; k < circumstanceRows.length; k++) {
                                         if (circumstanceRows[k].id_department == resultJson.departmentList[i].id_department
-                                            && circumstanceRows[k].smartphone_address == resultJson.userList[j].smartphone_address) {
+                                            && circumstanceRows[k].smartphone_address == resultJson.userList[j].smartphoneAddress) {
 
                                             if (circumstanceRows[k].commute_status == 1) {
-                                                comeInTimeMsec = new Date('1970-01-02 ' + circumstanceRows[k].datetime).getTime() - new Data('1970-01-02 00:00:00').getTime();
+                                                comeInTimeMsec = new Date('1970-01-02 ' + circumstanceRows[k].datetime.split(' ')[1]).getTime() - new Date('1970-01-02 00:00:00').getTime();
                                             } else if (circumstanceRows[k].commute_status == 0) {
-                                                comeOutTimeMsec = new Date('1970-01-02 ' + circumstanceRows[k].datetime).getTime() - new Data('1970-01-02 00:00:00').getTime();
+                                                comeOutTimeMsec = new Date('1970-01-02 ' + circumstanceRows[k].datetime.split(' ')[1]).getTime() - new Date('1970-01-02 00:00:00').getTime();
 
                                                 if (comeOutTimeMsec > comeInTimeMsec) {
                                                     comeInTimeArr.push(comeInTimeMsec);
@@ -1906,39 +1948,45 @@ function getTodayCommuteInfoSetupJson(circumstanceRows, callback) {
 
                                                 comeInTimeMsec = 0;
                                                 comeOutTimeMsec = 0;
+                                                isThisUserCommute = true;
                                             } else {
                                                 // continue;
                                             }
                                         }
                                     }
 
-                                    if (validWorkingTimeArr.length > 0) {
-                                        for (k = 0; k < validWorkingTimeArr.length; k++) {
-                                            eachUserAvgWorkingTimeMsec += validWorkingTimeArr[k];
-                                            resultJson.departmentList[i].totalValidWorkingTime += validWorkingTimeArr[k];
+                                    if (isThisUserCommute) {
+                                        if (validWorkingTimeArr.length > 0) {
+                                            for (k = 0; k < validWorkingTimeArr.length; k++) {
+                                                eachUserAvgWorkingTimeMsec += validWorkingTimeArr[k];
+                                                resultJson.departmentList[i].totalValidWorkingTime = parseInt(resultJson.departmentList[i].totalValidWorkingTime) + validWorkingTimeArr[k];
+                                            }
+                                            eachUserAvgWorkingTimeMsec /= validWorkingTimeArr.length;
                                         }
-                                        eachUserAvgWorkingTimeMsec /= validWorkingTimeArr.length;
-                                    }
 
-                                    if (validOverWorkingTimeArr.length > 0) {
-                                        for (k = 0; k < validOverWorkingTimeArr.length; k++) {
-                                            eachUserAvgOverWorkingTimeMsec += validOverWorkingTimeArr[k];
-                                            resultJson.departmentList[i].totalValidOverWorkingTime += validOverWorkingTimeArr[k];
+                                        if (validOverWorkingTimeArr.length > 0) {
+                                            for (k = 0; k < validOverWorkingTimeArr.length; k++) {
+                                                eachUserAvgOverWorkingTimeMsec += validOverWorkingTimeArr[k];
+                                                resultJson.departmentList[i].totalValidOverWorkingTime = parseInt(resultJson.departmentList[i].totalValidOverWorkingTime) + validOverWorkingTimeArr[k];
+                                            }
+                                            eachUserAvgOverWorkingTimeMsec /= validOverWorkingTimeArr.length;
+                                            overWorkingPersonCount++;
                                         }
-                                        eachUserAvgOverWorkingTimeMsec /= validOverWorkingTimeArr.length;
-                                    }
 
-                                    if (comeInTimeArr.length > 0) {
-                                        allUserFirstComeInTimeArr.push(comeInTimeArr.sort()[0]);
-                                    }
-                                    if (comeOutTimeArr.length > 0) {
-                                        allUserLastComeOutTimeArr.push(comeOutTimeArr.sort()[comeOutTimeArr.length - 1]);
-                                    }
-                                    if (eachUserAvgWorkingTimeMsec != 0) {
-                                        allUserAvgWorkingTimeArr.push(eachUserAvgWorkingTimeMsec);
-                                    }
-                                    if (eachUserAvgOverWorkingTimeMsec != 0) {
-                                        allUserAvgOverWorkingTimeArr.push(eachUserAvgOverWorkingTimeMsec);
+                                        if (comeInTimeArr.length > 0) {
+                                            allUserFirstComeInTimeArr.push(comeInTimeArr.sort()[0]);
+                                        }
+                                        if (comeOutTimeArr.length > 0) {
+                                            allUserLastComeOutTimeArr.push(comeOutTimeArr.sort()[comeOutTimeArr.length - 1]);
+                                        }
+                                        if (eachUserAvgWorkingTimeMsec != 0) {
+                                            allUserAvgWorkingTimeArr.push(eachUserAvgWorkingTimeMsec);
+                                        }
+                                        if (eachUserAvgOverWorkingTimeMsec != 0) {
+                                            allUserAvgOverWorkingTimeArr.push(eachUserAvgOverWorkingTimeMsec);
+                                        }
+
+                                        commutePersonCount++;
                                     }
 
                                     comeInTimeMsec = 0;
@@ -1951,41 +1999,38 @@ function getTodayCommuteInfoSetupJson(circumstanceRows, callback) {
                                     validOverWorkingTimeArr = [];
                                     eachUserAvgWorkingTimeMsec = 0;
                                     eachUserAvgOverWorkingTimeMsec = 0;
+                                    isThisUserCommute = false;
                                 }
 
-                                if (allUserComeInTimeArr.length > 0) {
+                                if (commutePersonCount > 0) {
                                     resultJson.departmentList[i].firstComeInTime = allUserComeInTimeArr.sort()[0];
-                                }
-                                if (allUserComeOutTimeArr.length > 0) {
                                     resultJson.departmentList[i].lastComeOutTime = allUserComeOutTimeArr.sort()[allUserComeOutTimeArr.length - 1];
-                                }
 
-                                if (allUserFirstComeInTimeArr.length > 0) {
                                     for (j = 0; j < allUserFirstComeInTimeArr.length; j++) {
-                                        resultJson.departmentList[i].avgFirstComeInTime += allUserFirstComeInTimeArr[j];
+                                        resultJson.departmentList[i].avgFirstComeInTime = parseInt(resultJson.departmentList[i].avgFirstComeInTime) + allUserFirstComeInTimeArr[j];
                                     }
-                                    resultJson.departmentList[i].avgFirstComeInTime /= allUserFirstComeInTimeArr.length;
-                                }
+                                    resultJson.departmentList[i].avgFirstComeInTime = parseInt(resultJson.departmentList[i].avgFirstComeInTime) / allUserFirstComeInTimeArr.length;
 
-                                if (allUserLastComeOutTimeArr.length > 0) {
                                     for (j = 0; j < allUserLastComeOutTimeArr.length; j++) {
-                                        resultJson.departmentList[i].avgLastComeOutTime += allUserLastComeOutTimeArr[j];
+                                        resultJson.departmentList[i].avgLastComeOutTime = parseInt(resultJson.departmentList[i].avgLastComeOutTime) + allUserLastComeOutTimeArr[j];
                                     }
-                                    resultJson.departmentList[i].avgLastComeOutTime /= allUserLastComeOutTimeArr.length;
-                                }
+                                    resultJson.departmentList[i].avgLastComeOutTime = parseInt(resultJson.departmentList[i].avgLastComeOutTime) / allUserLastComeOutTimeArr.length;
 
-                                if (allUserAvgWorkingTimeArr.length > 0) {
                                     for (j = 0; j < allUserAvgWorkingTimeArr.length; j++) {
-                                        resultJson.departmentList[i].avgValidWorkingTime += allUserAvgWorkingTimeArr[j];
+                                        resultJson.departmentList[i].avgValidWorkingTime = parseInt(resultJson.departmentList[i].avgValidWorkingTime) + allUserAvgWorkingTimeArr[j];
                                     }
-                                    resultJson.departmentList[i].avgValidWorkingTime /= allUserAvgWorkingTimeArr.length;
-                                }
+                                    resultJson.departmentList[i].avgValidWorkingTime = parseInt(resultJson.departmentList[i].avgValidWorkingTime) / allUserAvgWorkingTimeArr.length;
 
-                                if (allUserAvgOverWorkingTimeArr.length > 0) {
-                                    for (j = 0; j < allUserAvgOverWorkingTimeArr.length; j++) {
-                                        resultJson.departmentList[i].avgValidOverWorkingTime += allUserAvgOverWorkingTimeArr[j];
+                                    resultJson.departmentList[i].avgUserValidWorkingTime = parseInt(resultJson.departmentList[i].totalValidWorkingTime) / commutePersonCount;
+
+                                    if (allUserAvgOverWorkingTimeArr.length > 0) {
+                                        for (j = 0; j < allUserAvgOverWorkingTimeArr.length; j++) {
+                                            resultJson.departmentList[i].avgValidOverWorkingTime = parseInt(resultJson.departmentList[i].avgValidOverWorkingTime) + allUserAvgOverWorkingTimeArr[j];
+                                        }
+                                        resultJson.departmentList[i].avgValidOverWorkingTime = parseInt(resultJson.departmentList[i].avgValidOverWorkingTime) / allUserAvgOverWorkingTimeArr.length;
                                     }
-                                    resultJson.departmentList[i].avgValidOverWorkingTime /= allUserAvgOverWorkingTimeArr.length;
+
+                                    resultJson.departmentList[i].avgUserValidOverWorkingTime = parseInt(resultJson.departmentList[i].totalValidOverWorkingTime) / overWorkingPersonCount;
                                 }
 
                                 allUserComeInTimeArr = [];
@@ -1994,20 +2039,20 @@ function getTodayCommuteInfoSetupJson(circumstanceRows, callback) {
                                 allUserLastComeOutTimeArr = [];
                                 allUserAvgWorkingTimeArr = [];
                                 allUserAvgOverWorkingTimeArr = [];
-                                eachUserAvgWorkingTimeMsec = 0;
-                                eachUserAvgOverWorkingTimeMsec = 0;
+                                commutePersonCount = 0;
+                                overWorkingPersonCount = 0;
                             }
 
                             for (i = 0; i < resultJson.positionList.length; i++) {
                                 for (j = 0; j < resultJson.userList.length; j++) {
                                     for (k = 0; k < circumstanceRows.length; k++) {
                                         if (circumstanceRows[k].id_position == resultJson.positionList[i].id_position
-                                            && circumstanceRows[k].smartphone_address == resultJson.userList[j].smartphone_address) {
+                                            && circumstanceRows[k].smartphone_address == resultJson.userList[j].smartphoneAddress) {
 
                                             if (circumstanceRows[k].commute_status == 1) {
-                                                comeInTimeMsec = new Date('1970-01-02 ' + circumstanceRows[k].datetime).getTime() - new Data('1970-01-02 00:00:00').getTime();
+                                                comeInTimeMsec = new Date('1970-01-02 ' + circumstanceRows[k].datetime.split(' ')[1]).getTime() - new Date('1970-01-02 00:00:00').getTime();
                                             } else if (circumstanceRows[k].commute_status == 0) {
-                                                comeOutTimeMsec = new Date('1970-01-02 ' + circumstanceRows[k].datetime).getTime() - new Data('1970-01-02 00:00:00').getTime();
+                                                comeOutTimeMsec = new Date('1970-01-02 ' + circumstanceRows[k].datetime.split(' ')[1]).getTime() - new Date('1970-01-02 00:00:00').getTime();
 
                                                 if (comeOutTimeMsec > comeInTimeMsec) {
                                                     comeInTimeArr.push(comeInTimeMsec);
@@ -2027,39 +2072,45 @@ function getTodayCommuteInfoSetupJson(circumstanceRows, callback) {
 
                                                 comeInTimeMsec = 0;
                                                 comeOutTimeMsec = 0;
+                                                isThisUserCommute = true;
                                             } else {
                                                 // continue;
                                             }
                                         }
                                     }
 
-                                    if (validWorkingTimeArr.length > 0) {
-                                        for (k = 0; k < validWorkingTimeArr.length; k++) {
-                                            eachUserAvgWorkingTimeMsec += validWorkingTimeArr[k];
-                                            resultJson.positionList[i].totalValidWorkingTime += validWorkingTimeArr[k];
+                                    if (isThisUserCommute) {
+                                        if (validWorkingTimeArr.length > 0) {
+                                            for (k = 0; k < validWorkingTimeArr.length; k++) {
+                                                eachUserAvgWorkingTimeMsec += validWorkingTimeArr[k];
+                                                resultJson.positionList[i].totalValidWorkingTime = parseInt(resultJson.positionList[i].totalValidWorkingTime) + validWorkingTimeArr[k];
+                                            }
+                                            eachUserAvgWorkingTimeMsec /= validWorkingTimeArr.length;
                                         }
-                                        eachUserAvgWorkingTimeMsec /= validWorkingTimeArr.length;
-                                    }
 
-                                    if (validOverWorkingTimeArr.length > 0) {
-                                        for (k = 0; k < validOverWorkingTimeArr.length; k++) {
-                                            eachUserAvgOverWorkingTimeMsec += validOverWorkingTimeArr[k];
-                                            resultJson.positionList[i].totalValidOverWorkingTime += validOverWorkingTimeArr[k];
+                                        if (validOverWorkingTimeArr.length > 0) {
+                                            for (k = 0; k < validOverWorkingTimeArr.length; k++) {
+                                                eachUserAvgOverWorkingTimeMsec += validOverWorkingTimeArr[k];
+                                                resultJson.positionList[i].totalValidOverWorkingTime = parseInt(resultJson.positionList[i].totalValidOverWorkingTime) + validOverWorkingTimeArr[k];
+                                            }
+                                            eachUserAvgOverWorkingTimeMsec /= validOverWorkingTimeArr.length;
+                                            overWorkingPersonCount++;
                                         }
-                                        eachUserAvgOverWorkingTimeMsec /= validOverWorkingTimeArr.length;
-                                    }
 
-                                    if (comeInTimeArr.length > 0) {
-                                        allUserFirstComeInTimeArr.push(comeInTimeArr.sort()[0]);
-                                    }
-                                    if (comeOutTimeArr.length > 0) {
-                                        allUserLastComeOutTimeArr.push(comeOutTimeArr.sort()[comeOutTimeArr.length - 1]);
-                                    }
-                                    if (eachUserAvgWorkingTimeMsec != 0) {
-                                        allUserAvgWorkingTimeArr.push(eachUserAvgWorkingTimeMsec);
-                                    }
-                                    if (eachUserAvgOverWorkingTimeMsec != 0) {
-                                        allUserAvgOverWorkingTimeArr.push(eachUserAvgOverWorkingTimeMsec);
+                                        if (comeInTimeArr.length > 0) {
+                                            allUserFirstComeInTimeArr.push(comeInTimeArr.sort()[0]);
+                                        }
+                                        if (comeOutTimeArr.length > 0) {
+                                            allUserLastComeOutTimeArr.push(comeOutTimeArr.sort()[comeOutTimeArr.length - 1]);
+                                        }
+                                        if (eachUserAvgWorkingTimeMsec != 0) {
+                                            allUserAvgWorkingTimeArr.push(eachUserAvgWorkingTimeMsec);
+                                        }
+                                        if (eachUserAvgOverWorkingTimeMsec != 0) {
+                                            allUserAvgOverWorkingTimeArr.push(eachUserAvgOverWorkingTimeMsec);
+                                        }
+
+                                        commutePersonCount++;
                                     }
 
                                     comeInTimeMsec = 0;
@@ -2072,41 +2123,38 @@ function getTodayCommuteInfoSetupJson(circumstanceRows, callback) {
                                     validOverWorkingTimeArr = [];
                                     eachUserAvgWorkingTimeMsec = 0;
                                     eachUserAvgOverWorkingTimeMsec = 0;
+                                    isThisUserCommute = false;
                                 }
 
-                                if (allUserComeInTimeArr.length > 0) {
+                                if (commutePersonCount > 0) {
                                     resultJson.positionList[i].firstComeInTime = allUserComeInTimeArr.sort()[0];
-                                }
-                                if (allUserComeOutTimeArr.length > 0) {
                                     resultJson.positionList[i].lastComeOutTime = allUserComeOutTimeArr.sort()[allUserComeOutTimeArr.length - 1];
-                                }
-                                
-                                if (allUserFirstComeInTimeArr.length > 0) {
+
                                     for (j = 0; j < allUserFirstComeInTimeArr.length; j++) {
-                                        resultJson.positionList[i].avgFirstComeInTime += allUserFirstComeInTimeArr[j];
+                                        resultJson.positionList[i].avgFirstComeInTime = parseInt(resultJson.positionList[i].avgFirstComeInTime) + allUserFirstComeInTimeArr[j];
                                     }
-                                    resultJson.positionList[i].avgFirstComeInTime /= allUserFirstComeInTimeArr.length;
-                                }
+                                    resultJson.positionList[i].avgFirstComeInTime = parseInt(resultJson.positionList[i].avgFirstComeInTime) / allUserFirstComeInTimeArr.length;
 
-                                if (allUserLastComeOutTimeArr.length > 0) {
                                     for (j = 0; j < allUserLastComeOutTimeArr.length; j++) {
-                                        resultJson.positionList[i].avgLastComeOutTime += allUserLastComeOutTimeArr[j];
+                                        resultJson.positionList[i].avgLastComeOutTime = parseInt(resultJson.positionList[i].avgLastComeOutTime) + allUserLastComeOutTimeArr[j];
                                     }
-                                    resultJson.positionList[i].avgLastComeOutTime /= allUserLastComeOutTimeArr.length;
-                                }
+                                    resultJson.positionList[i].avgLastComeOutTime = parseInt(resultJson.positionList[i].avgLastComeOutTime) / allUserLastComeOutTimeArr.length;
 
-                                if (allUserAvgWorkingTimeArr.length > 0) {
                                     for (j = 0; j < allUserAvgWorkingTimeArr.length; j++) {
-                                        resultJson.positionList[i].avgValidWorkingTime += allUserAvgWorkingTimeArr[j];
+                                        resultJson.positionList[i].avgValidWorkingTime = parseInt(resultJson.positionList[i].avgValidWorkingTime) + allUserAvgWorkingTimeArr[j];
                                     }
-                                    resultJson.positionList[i].avgValidWorkingTime /= allUserAvgWorkingTimeArr.length;
-                                }
+                                    resultJson.positionList[i].avgValidWorkingTime = parseInt(resultJson.positionList[i].avgValidWorkingTime) / allUserAvgWorkingTimeArr.length;
 
-                                if (allUserAvgOverWorkingTimeArr.length > 0) {
-                                    for (j = 0; j < allUserAvgOverWorkingTimeArr.length; j++) {
-                                        resultJson.positionList[i].avgValidOverWorkingTime += allUserAvgOverWorkingTimeArr[j];
+                                    resultJson.positionList[i].avgUserValidWorkingTime = parseInt(resultJson.positionList[i].totalValidWorkingTime) / commutePersonCount;
+
+                                    if (allUserAvgOverWorkingTimeArr.length > 0) {
+                                        for (j = 0; j < allUserAvgOverWorkingTimeArr.length; j++) {
+                                            resultJson.positionList[i].avgValidOverWorkingTime = parseInt(resultJson.positionList[i].avgValidOverWorkingTime) + allUserAvgOverWorkingTimeArr[j];
+                                        }
+                                        resultJson.positionList[i].avgValidOverWorkingTime = parseInt(resultJson.positionList[i].avgValidOverWorkingTime) / allUserAvgOverWorkingTimeArr.length;
                                     }
-                                    resultJson.positionList[i].avgValidOverWorkingTime /= allUserAvgOverWorkingTimeArr.length;
+
+                                    resultJson.positionList[i].avgUserValidOverWorkingTime = parseInt(resultJson.positionList[i].totalValidOverWorkingTime) / overWorkingPersonCount;
                                 }
 
                                 allUserComeInTimeArr = [];
@@ -2115,8 +2163,8 @@ function getTodayCommuteInfoSetupJson(circumstanceRows, callback) {
                                 allUserLastComeOutTimeArr = [];
                                 allUserAvgWorkingTimeArr = [];
                                 allUserAvgOverWorkingTimeArr = [];
-                                eachUserAvgWorkingTimeMsec = 0;
-                                eachUserAvgOverWorkingTimeMsec = 0;
+                                commutePersonCount = 0;
+                                overWorkingPersonCount = 0;
                             }
 
                             if (typeof callback === "function") {
@@ -2214,8 +2262,7 @@ function getTodayCommuteInfoSetupJson(circumstanceRows, callback) {
  * @param callback
  */
 function getCommuteInfo(arg1, arg2, arg3, arg4, arg5, arg6, callback) {
-    var startDate;
-    var endDate;
+    var startDate, endDate;
 
     var args = [];
     for (var i = 0; i < arguments.length; i++) {
