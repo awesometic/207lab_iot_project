@@ -47,7 +47,7 @@ var convertCurrentTimezoneDateTime = function(datetime) {
 
     if (String(datetime).length == 39) {
         // Mon Jan 01 1970 00:00:00 GMT+0900 (KST)
-        spaceSplit = datetime.split(' ');
+        spaceSplit = String(datetime).split(' ');
         colonSplit = spaceSplit[4].split(':');
 
         year = +spaceSplit[3];
@@ -74,7 +74,7 @@ var convertCurrentTimezoneDateTime = function(datetime) {
         }
     } else {
         // 0000-00-00 00:00:00
-        spaceSplit = datetime.split(' ');
+        spaceSplit = String(datetime).split(' ');
         var hyphenSplit = spaceSplit[0].split('-');
         colonSplit = spaceSplit[1].split(':');
 

@@ -295,7 +295,7 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">사용자별 평균</h3>
+                            <h3 class="box-title">사용자별 기간 평균</h3>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
@@ -304,6 +304,10 @@
                                 <tr>
                                     <th>이름</th>
                                     <th>스마트폰 주소</th>
+                                    <th>근무 일수</th>
+                                    <th>초과 근무 일수</th>
+                                    <th>총 근무</th>
+                                    <th>총 초과 근무</th>
                                     <th>평균 출근</th>
                                     <th>평균 퇴근</th>
                                     <th>평균 근무</th>
@@ -317,6 +321,10 @@
                                 <tr>
                                     <th>이름</th>
                                     <th>스마트폰 주소</th>
+                                    <th>근무 일수</th>
+                                    <th>초과 근무 일수</th>
+                                    <th>총 근무</th>
+                                    <th>총 초과 근무</th>
                                     <th>평균 출근</th>
                                     <th>평균 퇴근</th>
                                     <th>평균 근무</th>
@@ -340,7 +348,7 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">사용자별 최소 값</h3>
+                            <h3 class="box-title">사용자별 기간 최소 값</h3>
                             <div class="box-tools pull-right">
                                 <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             </div>
@@ -353,7 +361,7 @@
                                     <th>이름</th>
                                     <th>스마트폰 주소</th>
                                     <th>가장 빠른 출근</th>
-                                    <th>가장 늦은 퇴근</th>
+                                    <th>가장 빠른 퇴근</th>
                                     <th>가장 적은 근무</th>
                                     <th>가장 적은 초과 근무</th>
                                 </tr>
@@ -388,7 +396,7 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">사용자별 최대 값</h3>
+                            <h3 class="box-title">사용자별 기간 최대 값</h3>
                             <div class="box-tools pull-right">
                                 <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             </div>
@@ -436,7 +444,7 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">장소별 평균</h3>
+                            <h3 class="box-title">장소별 기간 평균</h3>
                             <div class="box-tools pull-right">
                                 <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             </div>
@@ -448,10 +456,14 @@
                                 <tr>
                                     <th>이름</th>
                                     <th>위치</th>
-                                    <th>펑균 출근 시간</th>
-                                    <th>평균 퇴근 시간</th>
-                                    <th>평균 근무 시간</th>
-                                    <th>평균 초과 근무 시간</th>
+                                    <th>총 근무</th>
+                                    <th>총 초과 근무</th>
+                                    <th>평균 출근</th>
+                                    <th>평균 퇴근</th>
+                                    <th>평균 근무</th>
+                                    <th>평균 사용자별 근무</th>
+                                    <th>평균 초과 근무</th>
+                                    <th>평균 사용자별 초과 근무</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -461,10 +473,14 @@
                                 <tr>
                                     <th>이름</th>
                                     <th>위치</th>
-                                    <th>펑균 출근 시간</th>
-                                    <th>평균 퇴근 시간</th>
-                                    <th>평균 근무 시간</th>
-                                    <th>평균 초과 근무 시간</th>
+                                    <th>총 근무</th>
+                                    <th>총 초과 근무</th>
+                                    <th>평균 출근</th>
+                                    <th>평균 퇴근</th>
+                                    <th>평균 근무</th>
+                                    <th>평균 사용자별 근무</th>
+                                    <th>평균 초과 근무</th>
+                                    <th>평균 사용자별 초과 근무</th>
                                 </tr>
                                 </tfoot>
                             </table>
@@ -484,7 +500,7 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">장소별 최소 값</h3>
+                            <h3 class="box-title">장소별 기간 최소 값</h3>
                             <div class="box-tools pull-right">
                                 <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             </div>
@@ -499,7 +515,9 @@
                                     <th>가장 빠른 출근</th>
                                     <th>가장 빠른 퇴근</th>
                                     <th>가장 적은 근무</th>
+                                    <th>가장 적은 사용자별 근무</th>
                                     <th>가장 적은 초과 근무</th>
+                                    <th>가장 적은 사용자별 초과 근무</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -512,7 +530,9 @@
                                     <th>가장 빠른 출근</th>
                                     <th>가장 빠른 퇴근</th>
                                     <th>가장 적은 근무</th>
+                                    <th>가장 적은 사용자별 근무</th>
                                     <th>가장 적은 초과 근무</th>
+                                    <th>가장 적은 사용자별 초과 근무</th>
                                 </tr>
                                 </tfoot>
                             </table>
@@ -532,7 +552,7 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">장소별 최대 값</h3>
+                            <h3 class="box-title">장소별 기간 최대 값</h3>
                             <div class="box-tools pull-right">
                                 <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             </div>
@@ -547,7 +567,9 @@
                                     <th>가장 늦은 출근</th>
                                     <th>가장 늦은 퇴근</th>
                                     <th>가장 많은 근무</th>
+                                    <th>가장 많은 사용자별 근무</th>
                                     <th>가장 많은 초과 근무</th>
+                                    <th>가장 많은 사용자별 초과 근무</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -560,7 +582,9 @@
                                     <th>가장 늦은 출근</th>
                                     <th>가장 늦은 퇴근</th>
                                     <th>가장 많은 근무</th>
+                                    <th>가장 많은 사용자별 근무</th>
                                     <th>가장 많은 초과 근무</th>
+                                    <th>가장 많은 사용자별 초과 근무</th>
                                 </tr>
                                 </tfoot>
                             </table>
@@ -580,7 +604,7 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">부서별 평균</h3>
+                            <h3 class="box-title">부서별 기간 평균</h3>
                             <div class="box-tools pull-right">
                                 <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             </div>
@@ -591,10 +615,14 @@
                                 <thead>
                                 <tr>
                                     <th>이름</th>
-                                    <th>펑균 출근 시간</th>
-                                    <th>평균 퇴근 시간</th>
-                                    <th>평균 근무 시간</th>
-                                    <th>평균 초과 근무 시간</th>
+                                    <th>총 근무</th>
+                                    <th>총 초과 근무</th>
+                                    <th>평균 출근</th>
+                                    <th>평균 퇴근</th>
+                                    <th>평균 근무</th>
+                                    <th>평균 사용자별 근무</th>
+                                    <th>평균 초과 근무</th>
+                                    <th>평균 사용자별 초과 근무</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -603,10 +631,14 @@
                                 <tfoot>
                                 <tr>
                                     <th>이름</th>
-                                    <th>펑균 출근 시간</th>
-                                    <th>평균 퇴근 시간</th>
-                                    <th>평균 근무 시간</th>
-                                    <th>평균 초과 근무 시간</th>
+                                    <th>총 근무</th>
+                                    <th>총 초과 근무</th>
+                                    <th>평균 출근</th>
+                                    <th>평균 퇴근</th>
+                                    <th>평균 근무</th>
+                                    <th>평균 사용자별 근무</th>
+                                    <th>평균 초과 근무</th>
+                                    <th>평균 사용자별 초과 근무</th>
                                 </tr>
                                 </tfoot>
                             </table>
@@ -626,7 +658,7 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">부서별 최소 값</h3>
+                            <h3 class="box-title">부서별 기간 최소 값</h3>
                             <div class="box-tools pull-right">
                                 <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             </div>
@@ -640,7 +672,9 @@
                                     <th>가장 빠른 출근</th>
                                     <th>가장 빠른 퇴근</th>
                                     <th>가장 적은 근무</th>
+                                    <th>가장 적은 사용자별 근무</th>
                                     <th>가장 적은 초과 근무</th>
+                                    <th>가장 적은 사용자별 초과 근무</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -652,7 +686,9 @@
                                     <th>가장 빠른 출근</th>
                                     <th>가장 빠른 퇴근</th>
                                     <th>가장 적은 근무</th>
+                                    <th>가장 적은 사용자별 근무</th>
                                     <th>가장 적은 초과 근무</th>
+                                    <th>가장 적은 사용자별 초과 근무</th>
                                 </tr>
                                 </tfoot>
                             </table>
@@ -672,7 +708,7 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">부서별 최대 값</h3>
+                            <h3 class="box-title">부서별 기간 최대 값</h3>
                             <div class="box-tools pull-right">
                                 <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             </div>
@@ -686,7 +722,9 @@
                                     <th>가장 늦은 출근</th>
                                     <th>가장 늦은 퇴근</th>
                                     <th>가장 많은 근무</th>
+                                    <th>가장 많은 사용자별 근무</th>
                                     <th>가장 많은 초과 근무</th>
+                                    <th>가장 많은 사용자별 초과 근무</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -698,7 +736,9 @@
                                     <th>가장 늦은 출근</th>
                                     <th>가장 늦은 퇴근</th>
                                     <th>가장 많은 근무</th>
+                                    <th>가장 많은 사용자별 근무</th>
                                     <th>가장 많은 초과 근무</th>
+                                    <th>가장 많은 사용자별 초과 근무</th>
                                 </tr>
                                 </tfoot>
                             </table>
@@ -718,7 +758,7 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">직책별 평균</h3>
+                            <h3 class="box-title">직책별 기간 평균</h3>
                             <div class="box-tools pull-right">
                                 <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             </div>
@@ -729,10 +769,14 @@
                                 <thead>
                                 <tr>
                                     <th>이름</th>
-                                    <th>펑균 출근 시간</th>
-                                    <th>평균 퇴근 시간</th>
-                                    <th>평균 근무 시간</th>
-                                    <th>평균 초과 근무 시간</th>
+                                    <th>총 근무</th>
+                                    <th>총 초과 근무</th>
+                                    <th>평균 출근</th>
+                                    <th>평균 퇴근</th>
+                                    <th>평균 근무</th>
+                                    <th>평균 사용자별 근무</th>
+                                    <th>평균 초과 근무</th>
+                                    <th>평균 사용자별 초과 근무</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -741,10 +785,14 @@
                                 <tfoot>
                                 <tr>
                                     <th>이름</th>
-                                    <th>펑균 출근 시간</th>
-                                    <th>평균 퇴근 시간</th>
-                                    <th>평균 근무 시간</th>
-                                    <th>평균 초과 근무 시간</th>
+                                    <th>총 근무</th>
+                                    <th>총 초과 근무</th>
+                                    <th>평균 출근</th>
+                                    <th>평균 퇴근</th>
+                                    <th>평균 근무</th>
+                                    <th>평균 사용자별 근무</th>
+                                    <th>평균 초과 근무</th>
+                                    <th>평균 사용자별 초과 근무</th>
                                 </tr>
                                 </tfoot>
                             </table>
@@ -764,7 +812,7 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">직책별 최소 값</h3>
+                            <h3 class="box-title">직책별 기간 최소 값</h3>
                             <div class="box-tools pull-right">
                                 <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             </div>
@@ -778,7 +826,9 @@
                                     <th>가장 빠른 출근</th>
                                     <th>가장 빠른 퇴근</th>
                                     <th>가장 적은 근무</th>
+                                    <th>가장 적은 사용자별 근무</th>
                                     <th>가장 적은 초과 근무</th>
+                                    <th>가장 적은 사용자별 초과 근무</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -790,7 +840,9 @@
                                     <th>가장 빠른 출근</th>
                                     <th>가장 빠른 퇴근</th>
                                     <th>가장 적은 근무</th>
+                                    <th>가장 적은 사용자별 근무</th>
                                     <th>가장 적은 초과 근무</th>
+                                    <th>가장 적은 사용자별 초과 근무</th>
                                 </tr>
                                 </tfoot>
                             </table>
@@ -810,7 +862,7 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">직책별 최대 값</h3>
+                            <h3 class="box-title">직책별 기간 최대 값</h3>
                             <div class="box-tools pull-right">
                                 <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             </div>
@@ -824,7 +876,9 @@
                                     <th>가장 늦은 출근</th>
                                     <th>가장 늦은 퇴근</th>
                                     <th>가장 많은 근무</th>
+                                    <th>가장 많은 사용자별 근무</th>
                                     <th>가장 많은 초과 근무</th>
+                                    <th>가장 많은 사용자별 초과 근무</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -836,7 +890,9 @@
                                     <th>가장 늦은 출근</th>
                                     <th>가장 늦은 퇴근</th>
                                     <th>가장 많은 근무</th>
+                                    <th>가장 많은 사용자별 근무</th>
                                     <th>가장 많은 초과 근무</th>
+                                    <th>가장 많은 사용자별 초과 근무</th>
                                 </tr>
                                 </tfoot>
                             </table>
@@ -985,28 +1041,32 @@
                         dtUserAvg.row.add([
                             avgCommuteInfoJson.userList[i].name,
                             avgCommuteInfoJson.userList[i].smartphoneAddress,
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].avgComeInTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].avgComeOutTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].avgWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].avgOverWorkingTime)
+                            avgCommuteInfoJson.userList[i].commuteDays,
+                            avgCommuteInfoJson.userList[i].overWorkingDays,
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].totalValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].totalValidOverWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].avgFirstComeInTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].avgLastComeOutTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].avgValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].avgValidOverWorkingTime)
                         ]);
 
                         dtUserMin.row.add([
                             avgCommuteInfoJson.userList[i].name,
                             avgCommuteInfoJson.userList[i].smartphoneAddress,
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].minComeInTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].minComeOutTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].minWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].minOverWorkingTime)
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].minFirstComeInTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].minLastComeOutTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].minValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].minValidOverWorkingTime)
                         ]);
 
                         dtUserMax.row.add([
                             avgCommuteInfoJson.userList[i].name,
                             avgCommuteInfoJson.userList[i].smartphoneAddress,
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].maxComeInTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].maxComeOutTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].maxWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].maxOverWorkingTime)
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].maxFirstComeInTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].maxLastComeOutTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].maxValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].maxValidOverWorkingTime)
                         ]);
                     }
 
@@ -1014,80 +1074,104 @@
                         dtWorkplaceAvg.row.add([
                             avgCommuteInfoJson.workplaceList[i].name,
                             avgCommuteInfoJson.workplaceList[i].latitude + ', ' + avgCommuteInfoJson.workplaceList[i].longitude,
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].avgComeInTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].avgComeOutTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].avgWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].avgOverWorkingTime)
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].totalValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].totalValidOverWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].avgFirstComeInTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].avgLastComeOutTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].avgValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].avgUserValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].avgValidOverWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].avgUserValidOverWorkingTime)
                         ]);
 
                         dtWorkplaceMin.row.add([
                             avgCommuteInfoJson.workplaceList[i].name,
                             avgCommuteInfoJson.workplaceList[i].latitude + ', ' + avgCommuteInfoJson.workplaceList[i].longitude,
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].minComeInTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].minComeOutTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].minWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].minOverWorkingTime)
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].minFirstComeInTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].minLastComeOutTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].minValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].minUserValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].minValidOverWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].minUserValidOverWorkingTime)
                         ]);
 
                         dtWorkplaceMax.row.add([
                             avgCommuteInfoJson.workplaceList[i].name,
                             avgCommuteInfoJson.workplaceList[i].latitude + ', ' + avgCommuteInfoJson.workplaceList[i].longitude,
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].maxComeInTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].maxComeOutTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].maxWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].maxOverWorkingTime)
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].maxFirstComeInTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].maxLastComeOutTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].maxValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].maxUserValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].maxValidOverWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].maxUserValidOverWorkingTime)
                         ]);
                     }
 
                     for (i = 0; i < avgCommuteInfoJson.departmentList.length; i++) {
                         dtDepartmentAvg.row.add([
                             avgCommuteInfoJson.departmentList[i].name,
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].avgComeInTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].avgComeOutTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].avgWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].avgOverWorkingTime)
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].totalValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].totalValidOverWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].avgFirstComeInTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].avgLastComeOutTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].avgValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].avgUserValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].avgValidOverWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].avgUserValidOverWorkingTime)
                         ]);
 
                         dtDepartmentMin.row.add([
                             avgCommuteInfoJson.departmentList[i].name,
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].minComeInTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].minComeOutTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].minWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].minOverWorkingTime)
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].minFirstComeInTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].minLastComeOutTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].minValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].minUserValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].minValidOverWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].minUserValidOverWorkingTime)
                         ]);
 
                         dtDepartmentMax.row.add([
                             avgCommuteInfoJson.departmentList[i].name,
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].maxComeInTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].maxComeOutTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].maxWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].maxOverWorkingTime)
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].maxFirstComeInTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].maxLastComeOutTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].maxValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].maxUserValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].maxValidOverWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].maxUserValidOverWorkingTime)
                         ]);
                     }
 
                     for (i = 0; i < avgCommuteInfoJson.positionList.length; i++) {
                         dtPositionAvg.row.add([
                             avgCommuteInfoJson.positionList[i].name,
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].avgComeInTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].avgComeOutTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].avgWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].avgOverWorkingTime)
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].totalValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].totalValidOverWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].avgFirstComeInTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].avgLastComeOutTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].avgValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].avgUserValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].avgValidOverWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].avgUserValidOverWorkingTime)
                         ]);
 
                         dtPositionMin.row.add([
                             avgCommuteInfoJson.positionList[i].name,
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].minComeInTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].minComeOutTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].minWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].minOverWorkingTime)
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].minFirstComeInTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].minLastComeOutTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].minValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].minUserValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].minValidOverWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].minUserValidOverWorkingTime)
                         ]);
 
                         dtPositionMax.row.add([
                             avgCommuteInfoJson.positionList[i].name,
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].maxComeInTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].maxComeOutTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].maxWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].maxOverWorkingTime)
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].maxFirstComeInTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].maxLastComeOutTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].maxValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].maxUserValidWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].maxValidOverWorkingTime),
+                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].maxUserValidOverWorkingTime)
                         ]);
                     }
 
