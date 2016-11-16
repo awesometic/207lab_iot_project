@@ -306,7 +306,7 @@ io.on("connection", function(socket) {
                     pool.smartphoneValidation(smartphoneAddress, function (name) {
                         if (name != undefined) {
                             pool.getTodayCommuteInfo(function (chartData) {
-                                socket.emit("requestChartData_answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, chartData));
+                                socket.emit("requestTodayCommuteInfo_answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, chartData));
                             });
                         } else {
                             var contentJsonString = "{ ";
@@ -329,7 +329,7 @@ io.on("connection", function(socket) {
                             todayEndDate.setHours(23, 59, 59);
 
                             pool.getCommuteInfo(oneMonthAgoDate, todayEndDate, function (chartData) {
-                                socket.emit("requestChartData_answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, chartData));
+                                socket.emit("requestAvgCommuteInfo_answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, chartData));
                             });
                         } else {
                             var contentJsonString = "{ ";
