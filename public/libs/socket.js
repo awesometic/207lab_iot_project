@@ -285,7 +285,6 @@ io.on("connection", function(socket) {
             var signal = analyzer.getSignal(contentJson);
 
             switch (signal) {
-
                 // Population of each department
                 case "POPULATION":
                     pool.smartphoneValidation(smartphoneAddress, function (name) {
@@ -303,9 +302,47 @@ io.on("connection", function(socket) {
                     });
                     break;
 
-                default:
+                case "TODAYCOMMUTEINFO":
+                    pool.smartphoneValidation(smartphoneAddress, function (name) {
+                        if (name != undefined) {
+                            pool.getTodayCommuteInfo(function (chartData) {
+                                socket.emit("requestChartData_answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, chartData));
+                            });
+                        } else {
+                            var contentJsonString = "{ ";
+                            contentJsonString += "\"registered\":\"" + false + "\"";
+                            contentJsonString += " }";
+
+                            socket.emit("data", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
+                        }
+                    });
                     break;
 
+                case "AVGCOMMUTEINFO":
+                    pool.smartphoneValidation(smartphoneAddress, function (name) {
+                        if (name != undefined) {
+                            var oneMonthAgoDate = new Date();
+                            oneMonthAgoDate.setMonth(oneMonthAgoDate.getMonth() - 1);
+                            oneMonthAgoDate.setHours(0, 0, 0);
+
+                            var todayEndDate = new Date();
+                            todayEndDate.setHours(23, 59, 59);
+
+                            pool.getCommuteInfo(oneMonthAgoDate, todayEndDate, function (chartData) {
+                                socket.emit("requestChartData_answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, chartData));
+                            });
+                        } else {
+                            var contentJsonString = "{ ";
+                            contentJsonString += "\"registered\":\"" + false + "\"";
+                            contentJsonString += " }";
+
+                            socket.emit("data", analyzer.encryptSendJson(smartphoneRsaPublicKey, JSON.parse(contentJsonString)));
+                        }
+                    });
+                    break;
+
+                default:
+                    break;
             }
         }
     });
