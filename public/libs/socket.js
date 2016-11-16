@@ -305,7 +305,11 @@ io.on("connection", function(socket) {
                 case "TODAYCOMMUTEINFO":
                     pool.smartphoneValidation(smartphoneAddress, function (name) {
                         if (name != undefined) {
-                            pool.getTodayCommuteInfo(function (chartData) {
+                            var searchDate = currentTime.getCurrentDate();
+                            var searchDateStart = searchDate + ' 00:00:00';
+                            var searchDateEnd = searchDate + ' 23:59:59';
+
+                            pool.getTodayCommuteInfo(searchDateStart, searchDateEnd, function (chartData) {
                                 socket.emit("requestTodayCommuteInfo_answer", analyzer.encryptSendJson(smartphoneRsaPublicKey, chartData));
                             });
                         } else {
