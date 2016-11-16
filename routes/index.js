@@ -1504,13 +1504,8 @@ router.post('/post/todayCommuteInfo', function(req, res, next) {
 
 router.post('/post/commuteInfo', function(req, res, next) {
     var smartphone_address = req.body.smartphone_address;
-
-    var oneMonthAgoDate = new Date();
-    oneMonthAgoDate.setMonth(oneMonthAgoDate.getMonth() - 1);
-    oneMonthAgoDate.setHours(0, 0, 0);
-
-    var todayEndDate = new Date();
-    todayEndDate.setHours(23, 59, 59);
+    var startDate = req.body.startDate;
+    var endDate = req.body.endDate;
 
     async.waterfall([
         function (callback) {
@@ -1523,7 +1518,7 @@ router.post('/post/commuteInfo', function(req, res, next) {
             });
         },
         function (callback) {
-            pool.getCommuteInfo(oneMonthAgoDate, todayEndDate, function(avgCommuteInfo) {
+            pool.getCommuteInfo(startDate, endDate, function(avgCommuteInfo) {
                 callback(null, avgCommuteInfo);
             });
         }

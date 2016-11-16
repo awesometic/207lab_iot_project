@@ -971,8 +971,18 @@
             }, function(json) {
                 todayCommuteInfoJson = commonFunc.clarifyResponsedJsonArr(json.todayCommuteInfo);
 
+                // TODO: implement dynamic period selected by user
+                var oneMonthAgoDate = new Date();
+                oneMonthAgoDate.setMonth(oneMonthAgoDate.getMonth() - 1);
+                oneMonthAgoDate.setHours(0, 0, 0);
+
+                var todayEndDate = new Date();
+                todayEndDate.setHours(23, 59, 59);
+
                 $.post('/post/commuteInfo', {
-                    smartphone_address: currentSmartphoneAddress
+                    smartphone_address: currentSmartphoneAddress,
+                    startDate: oneMonthAgoDate,
+                    endDate: todayEndDate
                 }, function (json) {
                     avgCommuteInfoJson = commonFunc.clarifyResponsedJsonArr(json.avgCommuteInfo);
 

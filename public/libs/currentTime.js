@@ -48,7 +48,7 @@ var convertCurrentTimezoneDateTime = function(datetime) {
     if (String(datetime).length == 39) {
         // Mon Jan 01 1970 00:00:00 GMT+0900 (KST)
         spaceSplit = String(datetime).split(' ');
-        colonSplit = spaceSplit[4].split(':');
+        colonSplit = String(spaceSplit[4]).split(':');
 
         year = +spaceSplit[3];
         month = spaceSplit[1];
@@ -75,8 +75,8 @@ var convertCurrentTimezoneDateTime = function(datetime) {
     } else {
         // 0000-00-00 00:00:00
         spaceSplit = String(datetime).split(' ');
-        var hyphenSplit = spaceSplit[0].split('-');
-        colonSplit = spaceSplit[1].split(':');
+        var hyphenSplit = String(spaceSplit[0]).split('-');
+        colonSplit = String(spaceSplit[1]).split(':');
 
         year = +hyphenSplit[0];
         month = +hyphenSplit[1];
@@ -115,7 +115,44 @@ var convertCurrentTimezoneDateTime = function(datetime) {
     return year + "-" + month + "-" + dayOfMonth + ' ' + resultTime;
 };
 
+var convertDatetimeFormatToSimple = function(datetime) {
+    if (String(datetime).length > 19) {
+        // Mon Jan 01 1970 00:00:00 GMT+0900 (KST)
+        var spaceSplit = String(datetime).split(' ');
+        var colonSplit = String(spaceSplit[4]).split(':');
+
+        var year = spaceSplit[3];
+        var month = spaceSplit[1];
+        var dayOfMonth = (spaceSplit[2].length == 2) ? spaceSplit[2] : ('0' + spaceSplit[2]);
+        var hour = colonSplit[0];
+        var min = colonSplit[1];
+        var sec = colonSplit[2];
+
+        switch (month) {
+            case "Jan": month = "01"; break;
+            case "Feb": month = "02"; break;
+            case "Mar": month = "03"; break;
+            case "Apr": month = "04"; break;
+            case "May": month = "05"; break;
+            case "Jun": month = "06"; break;
+            case "Jul": month = "07"; break;
+            case "Aug": month = "08"; break;
+            case "Sep": month = "09"; break;
+            case "Oct": month = "10"; break;
+            case "Nov": month = "11"; break;
+            case "Dec": month = "12"; break;
+        }
+
+        return String(year + '-' + month + '-' + dayOfMonth + ' ' + hour + ':' + min + ':' + sec);
+    } else if (String(datetime).length == 10) {
+        return String(datetime + ' 00:00:00');
+    } else {
+        return String(datetime);
+    }
+};
+
 module.exports = now;
 module.exports.getCurrentDate = getCurrentDate;
 module.exports.getCurrentDateTime = getCurrentDateTime;
 module.exports.convertCurrentTimezoneDateTime = convertCurrentTimezoneDateTime;
+module.exports.convertDatetimeFormatToSimple = convertDatetimeFormatToSimple;
