@@ -131,6 +131,10 @@
                             </table>
                         </div>
                         <!-- /.box-body -->
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
                     </div>
                     <!-- /.box -->
                 </div>
@@ -162,6 +166,10 @@
                             </table>
                         </div>
                         <!-- /.box-body -->
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
                     </div>
                     <!-- /.box -->
                 </div>
@@ -193,6 +201,10 @@
                             </table>
                         </div>
                         <!-- /.box-body -->
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
                     </div>
                     <!-- /.box -->
                 </div>
@@ -224,7 +236,10 @@
 <script src="/commonJqueryFunctions.js"></script>
 <script>
 
-    $(document).ajaxStart(function() { Pace.restart(); });
+    $(document).ajaxStart(function() {
+        Pace.restart();
+        $('div.pageload_effect').show();
+    });
 
     $(document).ready(function() {
         var currentSmartphoneAddress = $('#current_smartphone_address').text();
@@ -292,6 +307,8 @@
 
                 $('#table-today-position-avg').find('tbody:last-child').append(row);
             }
+
+            $('div.pageload_effect').hide();
         });
     });
 
