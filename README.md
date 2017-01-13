@@ -127,7 +127,8 @@ create table identity (
 ```sql
 create table position (
     id int(11) not null primary key auto_increment,
-    name varchar(20) not null
+    name varchar(20) not null,
+    permission_level int(8) unsigned not null
 );
 ```
 * workplace
@@ -151,8 +152,8 @@ After creating these tables, you have to put some data as default value into wor
 You can insert default values like
 ```sql
 insert into workplace values (-1, 'default', 'default', 0, 0, 0, 0, 0, 0, 0, 0, 1);
-insert into department (-1, 'default');
-insert into position (-1, 'default', 0);
+insert into department values (-1, 'default');
+insert into position values (-1, 'default', 0);
 ```
 And then, you have to add a user as administrator<br>
 default ID: admin, password: admin<br>
@@ -164,11 +165,11 @@ insert into identity values ('00:00:00:00:00:00', 'admin', 'admin', SHA2('admin'
 Finally, you'd better create relationships in your DBMS (use foreign key)<br>
 It is not a necessary part, but to improve stability of system, it's worth it<br>
 ```sql
-alter table circumstance add constraint {FOREIGN_KEY_NAME} foreign key id_workplace references workplace(id_workplace);
-alter table circumstance add constraint {FOREIGN_KEY_NAME} foreign key smartphone_address references identity(smartphone_address);
-alter table identity add constraint {FOREIGN_KEY_NAME} foreign key id_department references department(id);
-alter table identity add constraint {FOREIGN_KEY_NAME} foreign key id_position references position(id);
-alter table beacon add constraint {FOREIGN_KEY_NAME} foreign key id_workplace references workplace(id_workplace);
+alter table circumstance add constraint FK_circumstance_workplace foreign key circumstance(id_workplace) references workplace(id_workplace);
+alter table circumstance add constraint FK_circumstance_identity foreign key circumstance(smartphone_address) references identity(smartphone_address);
+alter table identity add constraint FK_identity_department foreign key identity(id_department) references department(id);
+alter table identity add constraint FK_identity_position foreign key identity(id_position) references project_CM.position(id);
+alter table beacon add constraint FK_beacon_workplace foreign key beacon(id_workplace) references workplace(id_workplace);
 ```
 Okay, now you can test/use our service<br>
 
