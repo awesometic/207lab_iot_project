@@ -17,9 +17,9 @@ var mysql = require('mysql');
 var pool = mysql.createPool({
     connectionLimit : 100,
     host            : 'localhost',
-    user            : '207lab',
-    password        : '207lab',
-    database        : 'project_CM'
+    user            : 'awesometic',
+    password        : 'awesometic',
+    database        : 'janus'
 });
 
 /* Load the other libraries */
