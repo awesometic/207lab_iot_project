@@ -1729,10 +1729,10 @@ function getTodayCommuteInfoSetupJson(circumstanceRows, callback) {
                             var validOverWorkingTimeArr = [];
                             var isMidnightComeIn = false;
 
-                            if (resultJson.userList.length !== "undefined"
-                                && resultJson.workplaceList.length !== "undefined"
-                                && resultJson.departmentList.length !== "undefined"
-                                && resultJson.positionList.length !== "undefined") {
+                            if (typeof resultJson.userList !== "undefined"
+                                && typeof resultJson.workplaceList !== "undefined"
+                                && typeof resultJson.departmentList !== "undefined"
+                                && typeof resultJson.positionList !== "undefined") {
                                 for (i = 0; i < resultJson.userList.length; i++) {
                                     for (j = 0; j < circumstanceRows.length; j++) {
                                         if (circumstanceRows[j].smartphone_address == resultJson.userList[i].smartphoneAddress) {
@@ -2599,10 +2599,10 @@ function getCommuteInfoSetupJson(circumstanceRows, callback) {
 
                             var dayIndex, userIndex, circIndex, condIndex;
 
-                            if (resultJson.userList.length !== "undefined"
-                                && resultJson.workplaceList.length !== "undefined"
-                                && resultJson.departmentList.length !== "undefined"
-                                && resultJson.positionList.length !== "undefined") {
+                            if (typeof resultJson.userList !== "undefined"
+                                && typeof resultJson.workplaceList !== "undefined"
+                                && typeof resultJson.departmentList !== "undefined"
+                                && typeof resultJson.positionList !== "undefined") {
                                 for (userIndex = 0; userIndex < resultJson.userList.length; userIndex++) {
                                     for (dayIndex = 0; dayIndex < betweenDays; dayIndex++) {
                                         targetDateObj = new Date(startDateObj.getFullYear(), startDateObj.getMonth(), startDateObj.getDate());
