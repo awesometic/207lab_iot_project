@@ -7,7 +7,7 @@
  *  */
 
 //http://socket.io/docs/
-var port = process.env.PORT || 2070;
+var port = process.env.PORT || 20700;
 var io = require("socket.io").listen(port);
 
 var pool = require("./db");
