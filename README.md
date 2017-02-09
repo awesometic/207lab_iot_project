@@ -50,13 +50,14 @@ This application has been developing by Lee Yootaek<br>
 * socket.io
 
 ## How to execute this Node.js server
-Clone this repository and execute it as debugging mod<br>
+Clone this repository and install npm packages, rename default AdminLTE index page to avoid accessing wrong page. Then run as debugging mode<br>
 ```bash
 git clone https://github.com/awesometic/207lab_iot_project.git
+cd 207lab_iot_project
+npm install
+mv node_modules/admin-lte/index.html node_modules/admin-lte/index.html.backup
 sudo DEBUG=app:* npm start
 ```
-For now, all used npm packages are involved in this repository<br>
-So you don't have to install dependency npm packages specified in package.json file<br>
 
 ## Essential pre-installed database structure
 You have to make database and tables into your DBMS to use this Node.js server properly<br>
