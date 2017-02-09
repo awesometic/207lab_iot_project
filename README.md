@@ -155,6 +155,7 @@ You can insert default values like
 insert into workplace values (-1, 'default', 'default', 0, 0, 0, 0, 0, 0, 0, 0, 1);
 insert into department values (-1, 'default');
 insert into position values (-1, 'default', 0);
+insert into common values ('default', '09:00', '17:00');
 ```
 And then, you have to add a user as administrator<br>
 default ID: admin, password: admin<br>
