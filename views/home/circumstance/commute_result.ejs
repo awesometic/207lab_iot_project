@@ -989,221 +989,231 @@
                 }, function (json) {
                     avgCommuteInfoJson = commonFunc.clarifyResponsedJsonArr(json.avgCommuteInfo);
 
-                    var i;
-                    for (i = 0; i < todayCommuteInfoJson.userList.length; i++) {
-                        dtUserToday.row.add([
-                            todayCommuteInfoJson.userList[i].name,
-                            todayCommuteInfoJson.userList[i].smartphoneAddress,
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.userList[i].firstComeInTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.userList[i].lastComeOutTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.userList[i].validWorkingTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.userList[i].validOverWorkingTime)
-                        ]);
+                    if (typeof todayCommuteInfoJson.userList !== "undefined"
+                        && typeof todayCommuteInfoJson.workPlaceList !== "undefined"
+                        && typeof todayCommuteInfoJson.departmentList !== "undefined"
+                        && typeof todayCommuteInfoJson.positionList !== "undefined"
+                        && typeof avgCommuteInfoJson.userList !== "undefined"
+                        && typeof avgCommuteInfoJson.workplaceList !== "undefined"
+                        && typeof avgCommuteInfoJson.departmentList !== "undefined"
+                        && typeof avgCommuteInfoJson.positionList !== "undefined") {
+
+                        var i;
+                        for (i = 0; i < todayCommuteInfoJson.userList.length; i++) {
+                            dtUserToday.row.add([
+                                todayCommuteInfoJson.userList[i].name,
+                                todayCommuteInfoJson.userList[i].smartphoneAddress,
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.userList[i].firstComeInTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.userList[i].lastComeOutTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.userList[i].validWorkingTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.userList[i].validOverWorkingTime)
+                            ]);
+                        }
+
+                        for (i = 0; i < todayCommuteInfoJson.workplaceList.length; i++) {
+                            dtWorkplaceToday.row.add([
+                                todayCommuteInfoJson.workplaceList[i].name,
+                                todayCommuteInfoJson.workplaceList[i].latitude + ', ' + todayCommuteInfoJson.workplaceList[i].longitude,
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.workplaceList[i].firstComeInTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.workplaceList[i].lastComeOutTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.workplaceList[i].avgFirstComeInTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.workplaceList[i].avgLastComeOutTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.workplaceList[i].totalValidWorkingTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.workplaceList[i].totalValidOverWorkingTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.workplaceList[i].avgValidWorkingTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.workplaceList[i].avgUserValidWorkingTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.workplaceList[i].avgValidOverWorkingTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.workplaceList[i].avgUserValidOverWorkingTime)
+                            ]);
+                        }
+
+                        for (i = 0; i < todayCommuteInfoJson.departmentList.length; i++) {
+                            dtDepartmentToday.row.add([
+                                todayCommuteInfoJson.departmentList[i].name,
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.departmentList[i].firstComeInTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.departmentList[i].lastComeOutTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.departmentList[i].avgFirstComeInTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.departmentList[i].avgLastComeOutTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.departmentList[i].totalValidWorkingTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.departmentList[i].totalValidOverWorkingTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.departmentList[i].avgValidWorkingTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.departmentList[i].avgUserValidWorkingTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.departmentList[i].avgValidOverWorkingTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.departmentList[i].avgUserValidOverWorkingTime)
+                            ]);
+                        }
+
+                        for (i = 0; i < todayCommuteInfoJson.positionList.length; i++) {
+                            dtPositionToday.row.add([
+                                todayCommuteInfoJson.positionList[i].name,
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.positionList[i].firstComeInTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.positionList[i].lastComeOutTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.positionList[i].avgFirstComeInTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.positionList[i].avgLastComeOutTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.positionList[i].totalValidWorkingTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.positionList[i].totalValidOverWorkingTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.positionList[i].avgValidWorkingTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.positionList[i].avgUserValidWorkingTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.positionList[i].avgValidOverWorkingTime),
+                                commonFunc.msecToTimeDuration(todayCommuteInfoJson.positionList[i].avgUserValidOverWorkingTime)
+                            ]);
+                        }
+
+                        for (i = 0; i < avgCommuteInfoJson.userList.length; i++) {
+                            dtUserAvg.row.add([
+                                avgCommuteInfoJson.userList[i].name,
+                                avgCommuteInfoJson.userList[i].smartphoneAddress,
+                                avgCommuteInfoJson.userList[i].commuteDays,
+                                avgCommuteInfoJson.userList[i].overWorkingDays,
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].totalValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].totalValidOverWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].avgFirstComeInTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].avgLastComeOutTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].avgValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].avgValidOverWorkingTime)
+                            ]);
+
+                            dtUserMin.row.add([
+                                avgCommuteInfoJson.userList[i].name,
+                                avgCommuteInfoJson.userList[i].smartphoneAddress,
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].minFirstComeInTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].minLastComeOutTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].minValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].minValidOverWorkingTime)
+                            ]);
+
+                            dtUserMax.row.add([
+                                avgCommuteInfoJson.userList[i].name,
+                                avgCommuteInfoJson.userList[i].smartphoneAddress,
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].maxFirstComeInTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].maxLastComeOutTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].maxValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].maxValidOverWorkingTime)
+                            ]);
+                        }
+
+                        for (i = 0; i < avgCommuteInfoJson.workplaceList.length; i++) {
+                            dtWorkplaceAvg.row.add([
+                                avgCommuteInfoJson.workplaceList[i].name,
+                                avgCommuteInfoJson.workplaceList[i].latitude + ', ' + avgCommuteInfoJson.workplaceList[i].longitude,
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].totalValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].totalValidOverWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].avgFirstComeInTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].avgLastComeOutTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].avgValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].avgUserValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].avgValidOverWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].avgUserValidOverWorkingTime)
+                            ]);
+
+                            dtWorkplaceMin.row.add([
+                                avgCommuteInfoJson.workplaceList[i].name,
+                                avgCommuteInfoJson.workplaceList[i].latitude + ', ' + avgCommuteInfoJson.workplaceList[i].longitude,
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].minFirstComeInTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].minLastComeOutTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].minValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].minUserValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].minValidOverWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].minUserValidOverWorkingTime)
+                            ]);
+
+                            dtWorkplaceMax.row.add([
+                                avgCommuteInfoJson.workplaceList[i].name,
+                                avgCommuteInfoJson.workplaceList[i].latitude + ', ' + avgCommuteInfoJson.workplaceList[i].longitude,
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].maxFirstComeInTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].maxLastComeOutTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].maxValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].maxUserValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].maxValidOverWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].maxUserValidOverWorkingTime)
+                            ]);
+                        }
+
+                        for (i = 0; i < avgCommuteInfoJson.departmentList.length; i++) {
+                            dtDepartmentAvg.row.add([
+                                avgCommuteInfoJson.departmentList[i].name,
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].totalValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].totalValidOverWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].avgFirstComeInTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].avgLastComeOutTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].avgValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].avgUserValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].avgValidOverWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].avgUserValidOverWorkingTime)
+                            ]);
+
+                            dtDepartmentMin.row.add([
+                                avgCommuteInfoJson.departmentList[i].name,
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].minFirstComeInTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].minLastComeOutTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].minValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].minUserValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].minValidOverWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].minUserValidOverWorkingTime)
+                            ]);
+
+                            dtDepartmentMax.row.add([
+                                avgCommuteInfoJson.departmentList[i].name,
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].maxFirstComeInTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].maxLastComeOutTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].maxValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].maxUserValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].maxValidOverWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].maxUserValidOverWorkingTime)
+                            ]);
+                        }
+
+                        for (i = 0; i < avgCommuteInfoJson.positionList.length; i++) {
+                            dtPositionAvg.row.add([
+                                avgCommuteInfoJson.positionList[i].name,
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].totalValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].totalValidOverWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].avgFirstComeInTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].avgLastComeOutTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].avgValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].avgUserValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].avgValidOverWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].avgUserValidOverWorkingTime)
+                            ]);
+
+                            dtPositionMin.row.add([
+                                avgCommuteInfoJson.positionList[i].name,
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].minFirstComeInTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].minLastComeOutTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].minValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].minUserValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].minValidOverWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].minUserValidOverWorkingTime)
+                            ]);
+
+                            dtPositionMax.row.add([
+                                avgCommuteInfoJson.positionList[i].name,
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].maxFirstComeInTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].maxLastComeOutTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].maxValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].maxUserValidWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].maxValidOverWorkingTime),
+                                commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].maxUserValidOverWorkingTime)
+                            ]);
+                        }
+
+                        dtUserToday.draw();
+                        dtWorkplaceToday.draw();
+                        dtDepartmentToday.draw();
+                        dtPositionToday.draw();
+                        dtUserAvg.draw();
+                        dtUserMin.draw();
+                        dtUserMax.draw();
+                        dtWorkplaceAvg.draw();
+                        dtWorkplaceMin.draw();
+                        dtWorkplaceMax.draw();
+                        dtDepartmentAvg.draw();
+                        dtDepartmentMin.draw();
+                        dtDepartmentMax.draw();
+                        dtPositionAvg.draw();
+                        dtPositionMin.draw();
+                        dtPositionMax.draw();
                     }
-
-                    for (i = 0; i < todayCommuteInfoJson.workplaceList.length; i++) {
-                        dtWorkplaceToday.row.add([
-                            todayCommuteInfoJson.workplaceList[i].name,
-                            todayCommuteInfoJson.workplaceList[i].latitude + ', ' + todayCommuteInfoJson.workplaceList[i].longitude,
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.workplaceList[i].firstComeInTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.workplaceList[i].lastComeOutTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.workplaceList[i].avgFirstComeInTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.workplaceList[i].avgLastComeOutTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.workplaceList[i].totalValidWorkingTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.workplaceList[i].totalValidOverWorkingTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.workplaceList[i].avgValidWorkingTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.workplaceList[i].avgUserValidWorkingTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.workplaceList[i].avgValidOverWorkingTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.workplaceList[i].avgUserValidOverWorkingTime)
-                        ]);
-                    }
-
-                    for (i = 0; i < todayCommuteInfoJson.departmentList.length; i++) {
-                        dtDepartmentToday.row.add([
-                            todayCommuteInfoJson.departmentList[i].name,
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.departmentList[i].firstComeInTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.departmentList[i].lastComeOutTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.departmentList[i].avgFirstComeInTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.departmentList[i].avgLastComeOutTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.departmentList[i].totalValidWorkingTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.departmentList[i].totalValidOverWorkingTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.departmentList[i].avgValidWorkingTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.departmentList[i].avgUserValidWorkingTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.departmentList[i].avgValidOverWorkingTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.departmentList[i].avgUserValidOverWorkingTime)
-                        ]);
-                    }
-
-                    for (i = 0; i < todayCommuteInfoJson.positionList.length; i++) {
-                        dtPositionToday.row.add([
-                            todayCommuteInfoJson.positionList[i].name,
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.positionList[i].firstComeInTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.positionList[i].lastComeOutTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.positionList[i].avgFirstComeInTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.positionList[i].avgLastComeOutTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.positionList[i].totalValidWorkingTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.positionList[i].totalValidOverWorkingTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.positionList[i].avgValidWorkingTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.positionList[i].avgUserValidWorkingTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.positionList[i].avgValidOverWorkingTime),
-                            commonFunc.msecToTimeDuration(todayCommuteInfoJson.positionList[i].avgUserValidOverWorkingTime)
-                        ]);
-                    }
-
-                    for (i = 0; i < avgCommuteInfoJson.userList.length; i++) {
-                        dtUserAvg.row.add([
-                            avgCommuteInfoJson.userList[i].name,
-                            avgCommuteInfoJson.userList[i].smartphoneAddress,
-                            avgCommuteInfoJson.userList[i].commuteDays,
-                            avgCommuteInfoJson.userList[i].overWorkingDays,
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].totalValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].totalValidOverWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].avgFirstComeInTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].avgLastComeOutTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].avgValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].avgValidOverWorkingTime)
-                        ]);
-
-                        dtUserMin.row.add([
-                            avgCommuteInfoJson.userList[i].name,
-                            avgCommuteInfoJson.userList[i].smartphoneAddress,
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].minFirstComeInTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].minLastComeOutTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].minValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].minValidOverWorkingTime)
-                        ]);
-
-                        dtUserMax.row.add([
-                            avgCommuteInfoJson.userList[i].name,
-                            avgCommuteInfoJson.userList[i].smartphoneAddress,
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].maxFirstComeInTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].maxLastComeOutTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].maxValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.userList[i].maxValidOverWorkingTime)
-                        ]);
-                    }
-
-                    for (i = 0; i < avgCommuteInfoJson.workplaceList.length; i++) {
-                        dtWorkplaceAvg.row.add([
-                            avgCommuteInfoJson.workplaceList[i].name,
-                            avgCommuteInfoJson.workplaceList[i].latitude + ', ' + avgCommuteInfoJson.workplaceList[i].longitude,
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].totalValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].totalValidOverWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].avgFirstComeInTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].avgLastComeOutTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].avgValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].avgUserValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].avgValidOverWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].avgUserValidOverWorkingTime)
-                        ]);
-
-                        dtWorkplaceMin.row.add([
-                            avgCommuteInfoJson.workplaceList[i].name,
-                            avgCommuteInfoJson.workplaceList[i].latitude + ', ' + avgCommuteInfoJson.workplaceList[i].longitude,
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].minFirstComeInTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].minLastComeOutTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].minValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].minUserValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].minValidOverWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].minUserValidOverWorkingTime)
-                        ]);
-
-                        dtWorkplaceMax.row.add([
-                            avgCommuteInfoJson.workplaceList[i].name,
-                            avgCommuteInfoJson.workplaceList[i].latitude + ', ' + avgCommuteInfoJson.workplaceList[i].longitude,
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].maxFirstComeInTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].maxLastComeOutTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].maxValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].maxUserValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].maxValidOverWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.workplaceList[i].maxUserValidOverWorkingTime)
-                        ]);
-                    }
-
-                    for (i = 0; i < avgCommuteInfoJson.departmentList.length; i++) {
-                        dtDepartmentAvg.row.add([
-                            avgCommuteInfoJson.departmentList[i].name,
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].totalValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].totalValidOverWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].avgFirstComeInTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].avgLastComeOutTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].avgValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].avgUserValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].avgValidOverWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].avgUserValidOverWorkingTime)
-                        ]);
-
-                        dtDepartmentMin.row.add([
-                            avgCommuteInfoJson.departmentList[i].name,
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].minFirstComeInTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].minLastComeOutTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].minValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].minUserValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].minValidOverWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].minUserValidOverWorkingTime)
-                        ]);
-
-                        dtDepartmentMax.row.add([
-                            avgCommuteInfoJson.departmentList[i].name,
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].maxFirstComeInTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].maxLastComeOutTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].maxValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].maxUserValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].maxValidOverWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.departmentList[i].maxUserValidOverWorkingTime)
-                        ]);
-                    }
-
-                    for (i = 0; i < avgCommuteInfoJson.positionList.length; i++) {
-                        dtPositionAvg.row.add([
-                            avgCommuteInfoJson.positionList[i].name,
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].totalValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].totalValidOverWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].avgFirstComeInTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].avgLastComeOutTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].avgValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].avgUserValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].avgValidOverWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].avgUserValidOverWorkingTime)
-                        ]);
-
-                        dtPositionMin.row.add([
-                            avgCommuteInfoJson.positionList[i].name,
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].minFirstComeInTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].minLastComeOutTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].minValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].minUserValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].minValidOverWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].minUserValidOverWorkingTime)
-                        ]);
-
-                        dtPositionMax.row.add([
-                            avgCommuteInfoJson.positionList[i].name,
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].maxFirstComeInTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].maxLastComeOutTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].maxValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].maxUserValidWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].maxValidOverWorkingTime),
-                            commonFunc.msecToTimeDuration(avgCommuteInfoJson.positionList[i].maxUserValidOverWorkingTime)
-                        ]);
-                    }
-
-                    dtUserToday.draw();
-                    dtWorkplaceToday.draw();
-                    dtDepartmentToday.draw();
-                    dtPositionToday.draw();
-                    dtUserAvg.draw();
-                    dtUserMin.draw();
-                    dtUserMax.draw();
-                    dtWorkplaceAvg.draw();
-                    dtWorkplaceMin.draw();
-                    dtWorkplaceMax.draw();
-                    dtDepartmentAvg.draw();
-                    dtDepartmentMin.draw();
-                    dtDepartmentMax.draw();
-                    dtPositionAvg.draw();
-                    dtPositionMin.draw();
-                    dtPositionMax.draw();
 
                     $('div.pageload_effect').hide();
                 });
