@@ -1040,32 +1040,55 @@ router.post('/management/database_access/beacon', function(req, res, next) {
                                     });
                                 });
                             } else {
-                                pool.getBeaconsCountOfWorkplace(modified_id_workplace, function (afterBeaconsCountOfWorkplace) {
-                                    pool.getWorkplaceInfo(modified_id_workplace, function (workplaceInfo) {
-                                        if (afterBeaconsCountOfWorkplace == 3) {
-                                            pool.modifyWorkplace(modified_id_workplace, workplaceInfo.name_workplace, workplaceInfo.location_workplace,
-                                                workplaceInfo.coordinateX, workplaceInfo.coordinateY, workplaceInfo.coordinateZ,
-                                                workplaceInfo.thresholdX, workplaceInfo.thresholdY, workplaceInfo.thresholdZ,
-                                                workplaceInfo.latitude, workplaceInfo.longitude, 1, function (valid) {
-                                                    if (valid) {
-                                                        res.send("<script>alert('Modify Success!'); location.href='/management/database_access/beacon';</script>");
-                                                    } else {
-                                                        res.send("<script>alert('Server error'); history.go(-1);</script>");
-                                                    }
-                                                });
-                                        } else {
-                                            pool.modifyWorkplace(modified_id_workplace, workplaceInfo.name_workplace, workplaceInfo.location_workplace,
-                                                workplaceInfo.coordinateX, workplaceInfo.coordinateY, workplaceInfo.coordinateZ,
-                                                workplaceInfo.thresholdX, workplaceInfo.thresholdY, workplaceInfo.thresholdZ,
-                                                workplaceInfo.latitude, workplaceInfo.longitude, 0, function (valid) {
-                                                    if (valid) {
-                                                        res.send("<script>alert('Modify Success!'); location.href='/management/database_access/beacon';</script>");
-                                                    } else {
-                                                        res.send("<script>alert('Server error'); history.go(-1);</script>");
-                                                    }
-                                                });
-                                        }
-                                    });
+                                async.waterfall([
+                                    function(callback) {
+                                        pool.getBeaconsCountOfWorkplace(modified_id_workplace, function (afterBeaconsCountOfWorkplace) {
+                                            pool.getWorkplaceInfo(modified_id_workplace, function (workplaceInfo) {
+                                                if (afterBeaconsCountOfWorkplace == 3) {
+                                                    pool.modifyWorkplace(modified_id_workplace, workplaceInfo.name_workplace, workplaceInfo.location_workplace,
+                                                        workplaceInfo.coordinateX, workplaceInfo.coordinateY, workplaceInfo.coordinateZ,
+                                                        workplaceInfo.thresholdX, workplaceInfo.thresholdY, workplaceInfo.thresholdZ,
+                                                        workplaceInfo.latitude, workplaceInfo.longitude, 1, function (valid) {
+                                                            callback((valid) ? null : false);
+                                                        });
+                                                } else {
+                                                    pool.modifyWorkplace(modified_id_workplace, workplaceInfo.name_workplace, workplaceInfo.location_workplace,
+                                                        workplaceInfo.coordinateX, workplaceInfo.coordinateY, workplaceInfo.coordinateZ,
+                                                        workplaceInfo.thresholdX, workplaceInfo.thresholdY, workplaceInfo.thresholdZ,
+                                                        workplaceInfo.latitude, workplaceInfo.longitude, 0, function (valid) {
+                                                            callback((valid) ? null : false);
+                                                        });
+                                                }
+                                            });
+                                        });
+                                    },
+                                    function(callback) {
+                                        pool.getBeaconsCountOfWorkplace(current_id_workplace, function (afterBeaconsCountOfWorkplace) {
+                                            pool.getWorkplaceInfo(current_id_workplace, function (workplaceInfo) {
+                                                if (afterBeaconsCountOfWorkplace == 3) {
+                                                    pool.modifyWorkplace(current_id_workplace, workplaceInfo.name_workplace, workplaceInfo.location_workplace,
+                                                        workplaceInfo.coordinateX, workplaceInfo.coordinateY, workplaceInfo.coordinateZ,
+                                                        workplaceInfo.thresholdX, workplaceInfo.thresholdY, workplaceInfo.thresholdZ,
+                                                        workplaceInfo.latitude, workplaceInfo.longitude, 1, function (valid) {
+                                                            callback((valid) ? null : false);
+                                                        });
+                                                } else {
+                                                    pool.modifyWorkplace(current_id_workplace, workplaceInfo.name_workplace, workplaceInfo.location_workplace,
+                                                        workplaceInfo.coordinateX, workplaceInfo.coordinateY, workplaceInfo.coordinateZ,
+                                                        workplaceInfo.thresholdX, workplaceInfo.thresholdY, workplaceInfo.thresholdZ,
+                                                        workplaceInfo.latitude, workplaceInfo.longitude, 0, function (valid) {
+                                                            callback((valid) ? null : false);
+                                                        });
+                                                }
+                                            });
+                                        });
+                                    }
+                                ], function(err) {
+                                    if (err == null) {
+                                        res.send("<script>alert('Modify Success!'); location.href='/management/database_access/beacon';</script>");
+                                    } else {
+                                        res.send("<script>alert('Server error'); history.go(-1);</script>");
+                                    }
                                 });
                             }
                         } else {
