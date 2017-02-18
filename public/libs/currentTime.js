@@ -8,19 +8,21 @@
 
 var time = require('time');
 
-var now = new time.Date();
-
-now.setTimezone("Asia/Seoul");
-
 var getCurrentDateTime = function() {
+    var now = new time.Date();
+    now.setTimezone("Asia/Seoul");
     return convertDatetimeFormatToSimple(now.toString());
 };
 
 var getCurrentDate = function() {
+    var now = new time.Date();
+    now.setTimezone("Asia/Seoul");
     return convertDatetimeFormatToSimple(now.toString()).split(' ')[0];
 };
 
 var getCurrentTimestamp = function() {
+    var now = new time.Date();
+    now.setTimezone("Asia/Seoul");
     return convertDatetimeFormatToSimple(now.toString()).split(' ')[1];
 };
 
@@ -134,7 +136,6 @@ var convertDatetimeFormatToSimple = function(datetime) {
     }
 };
 
-module.exports = now;
 module.exports.getCurrentDateTime = getCurrentDateTime;
 module.exports.getCurrentDate = getCurrentDate;
 module.exports.getCurrentTimestamp = getCurrentTimestamp;
