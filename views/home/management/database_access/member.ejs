@@ -297,7 +297,10 @@
 
     $(document).ajaxStart(function() { Pace.restart(); });
     $(document).ready(function() {
-        $('#member_table').DataTable();
+        $('#member_table').DataTable({
+            "pageLength": 100
+        });
+
         $(".select2").select2({
             placeholder: "눌러서 선택하세요",
             allowClear: true

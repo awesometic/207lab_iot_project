@@ -154,7 +154,7 @@
     $(document).ajaxStart(function() { Pace.restart(); });
     $(document).ready(function() {
         var commuteTable = $('#commute_table').DataTable({
-            "pageLength": 50
+            "pageLength": 100
         });
         commuteTable.order([0, 'desc']).draw();
 
