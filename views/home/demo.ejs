@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title><%= title %></title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Pace style -->
+    <link rel="stylesheet" href="/plugins/pace/pace.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/dist/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="/dist/css/skins/_all-skins.min.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <% include ../nav.ejs %>
+
+    <% include ../sidenav.ejs %>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                데모 설정
+                <small> 데모 구동에 대한 인터페이스</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">데모 설정</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="alert alert-info alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-info"></i> 읽어보세요!</h4>
+                        데모를 키고 끌 수 있고, 데모에 대한 로그를 확인할 수 있는 페이지입니다.<br>
+                    </div>
+                    <!-- /.alert-info -->
+                </div>
+                <!-- /.col -->
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">로그 및 작동 관리</h3>
+                        </div>
+                        <!-- /.box-header -->
+                            <div class="box-body">
+                                <div id="logs">
+
+                                </div>
+                            </div>
+                            <div class="box-footer">
+                                <form method="post">
+                                    <input type="button" id="demo_switch" class="btn btn-primary pull-right" name="demo_switch" value="">
+                                    <input type="button" id="demo_log_refresh" class="btn btn-primary pull-left" name="demo_log_refresh" value="새로고침">
+                                </form>
+                            </div>
+                        <!-- /.box-body -->
+                        <div class="overlay pageload_effect">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- /.pageload_effect -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <% include ../footer.ejs %>
+
+</div>
+<!-- ./wrapper -->
+<!-- REQUIRED JS SCRIPTS -->
+<!-- jQuery 2.2.3 -->
+<script src="/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- bootstrap time picker -->
+<script src="/plugins/timepicker/bootstrap-timepicker.min.js"></script>
+<!-- AdminLTE App -->
+<script src="/dist/js/app.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<!-- PACE -->
+<script src="/plugins/pace/pace.min.js"></script>
+<!-- Common -->
+<script src="/commonJqueryFunctions.js"></script>
+<script>
+
+    $(document).ajaxStart(function() {
+        Pace.restart();
+    });
+
+    $(document).ready(function() {
+        var currentSmartphoneAddress = $('#current_smartphone_address').text();
+
+        var getDemoStatus = function() {
+            $.post('/post/demo-status', {
+                smartphone_address: currentSmartphoneAddress
+            }, function(resultJson) {
+                $('input#demo_switch').val((resultJson.status) ? "OFF" : "ON");
+            });
+        };
+
+        var getLog = function() {
+            $('div.pageload_effect').show();
+
+            $.post('/post/demo-log', {
+                smartphone_address: currentSmartphoneAddress
+            }, function(resultJson) {
+                $('div#logs').html(resultJson.log);
+            });
+
+            $('div.pageload_effect').hide();
+        };
+
+        getDemoStatus();
+        getLog();
+
+        $('input#demo_switch').click(function() {
+            var operation = $('input#demo_switch').val();
+
+            $.post('/post/demo-switch', {
+                operation: operation,
+                smartphone_address: currentSmartphoneAddress
+            }, function(resultJson) {
+                // if resultJson.status is equal to true of boolean, demo service has been started
+                if (resultJson.status) {
+                    alert('데모 서비스가 켜졌습니다.');
+                } else {
+                    alert('데모 서비스가 꺼졌습니다.');
+                }
+
+                getDemoStatus();
+                getLog();
+            });
+        });
+
+        $('input#demo_log_refresh').click(function() {
+            getLog();
+        });
+    });
+
+</script>
+</body>
+</html>
