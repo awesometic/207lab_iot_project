@@ -11,6 +11,8 @@
 var winston = require('winston');
 require('date-utils');
 
+var currentTime = require('./currentTime');
+
 module.exports = function(filename) {
     filename = '_' + filename;
 
@@ -19,7 +21,7 @@ module.exports = function(filename) {
             new winston.transports.Console({
                 level: 'info',
                 colorize: true,
-                timestmap: function() { return new Date().toFormat('YYYY-MM-DD HH24:MI:SS') }
+                timestamp: function() { return currentTime.getCurrentDateTime() }
             }),
             new (require('winston-daily-rotate-file'))({
                 level: 'info',
@@ -28,7 +30,7 @@ module.exports = function(filename) {
                 datePattern: 'yyyy-MM-dd',
                 filename: './logs/' + filename + '.log',
                 maxsize: 1000000,
-                timestamp: function() { return new Date().toFormat('YYYY-MM-DD HH24:MI:SS') }
+                timestamp: function() { return currentTime.getCurrentDateTime() }
             })
         ]
     });
