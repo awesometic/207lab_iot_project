@@ -40,16 +40,26 @@ var demo = demo || (function() {
         };
 
         var generateProcedure = function() {
-            logger("demo").info("generateProcedure: begin generating circumstance data");
+            // 퇴근시간~24시일 경우 데이터 생성하지 않기
+            pool.getWorkEndTime(function(workEndTimestamp) {
+                workEndTimestamp = '1970-01-01 ' + workEndTimestamp;
+                var currentTimestamp = '1970-01-01 ' + currentTime.getCurrentTimestamp();
 
-            generateCircumstanceData(function(generatedCircumstanceDataDictionary) {
-                reservedCircumstanceDictionary = generatedCircumstanceDataDictionary;
+                var workEndTimeMsec = new Date(workEndTimestamp).getTime();
+                var currentTimeMsec = new Date(currentTimestamp).getTime();
+
+                // 데모를 시작한 시간이 퇴근 시간 전이라면 출퇴근 데이터 생성
+                if (workEndTimeMsec > currentTimeMsec) {
+                    logger("demo").info("generateProcedure: begin generating circumstance data");
+                    generateCircumstanceData(function(generatedCircumstanceDataDictionary) {
+                        reservedCircumstanceDictionary = generatedCircumstanceDataDictionary;
+                    });
+                }
             });
         };
 
         var start = function() {
             logger("demo").info("start: start DEMO");
-            logger("demo").info("start: generate today circumstance data");
             generateProcedure();
 
             if (registerCron == null) {
@@ -82,6 +92,65 @@ var demo = demo || (function() {
                 generateCron.cancel();
             }
 
+            if (reservedCircumstanceDictionary != null
+                && Object.keys(reservedCircumstanceDictionary).length > 0) {
+                var leftKeys = Object.keys(reservedCircumstanceDictionary);
+                var keyIdx;
+
+                // 사용자별로 바로 다음에 등록될 출퇴근 데이터가 퇴근이면 현재 시간으로 퇴근시키기
+                // 사용자 분류
+                var userListArr = [];
+                for (keyIdx in leftKeys) {
+                    var smartphoneAddress = reservedCircumstanceDictionary[leftKeys[keyIdx]].getSmartphoneAddress();
+                    if (userListArr.indexOf(smartphoneAddress) === -1) {
+                        userListArr.push(smartphoneAddress);
+                    }
+                }
+
+                // 사용자별로 바로 다음 출퇴근 데이터 추출
+                for (var userIdx = 0; userIdx < userListArr.length; userIdx++) {
+                    var circumstanceDataDatetimeMsecArr = [];
+                    var circumstanceDataArr = [];
+
+                    for (keyIdx in leftKeys) {
+                        var circumstanceData = reservedCircumstanceDictionary[leftKeys[keyIdx]];
+                        if (userListArr[userIdx] == circumstanceData.getSmartphoneAddress()) {
+                            circumstanceDataArr.push(circumstanceData);
+                            circumstanceDataDatetimeMsecArr.push(circumstanceData.getDatetimeMsec());
+                        }
+                    }
+
+                    // 바로 다음 출퇴근 데이터가 퇴근이면 현재 시간으로 퇴근
+                    // 마이크로초를 정렬해 바로 다음에 수행될 출퇴근 데이터의 Datetime 추출
+                    circumstanceDataDatetimeMsecArr.sort();
+                    var nextDatetime = currentTime.getCurrentDate() + ' ' + currentTime.convertCurrentTimezoneDateTime(new Date(circumstanceDataDatetimeMsecArr[0])).split(' ')[1];
+
+                    // 추출한 Datetime으로 다음 수행될 출퇴근 데이터 추출
+                    var nextCircumstanceData;
+                    for (var circumstanceDataIdx = 0; circumstanceDataIdx < circumstanceDataArr.length; circumstanceDataIdx++) {
+                        if (circumstanceDataArr[circumstanceDataIdx].getDatetime() == nextDatetime) {
+                            nextCircumstanceData = circumstanceDataArr[circumstanceDataIdx];
+                        }
+                    }
+
+                    // 추출한 출퇴근 데이터의 출퇴근 정보가 퇴근이면 현재 시간으로 퇴근 등록
+                    if (nextCircumstanceData.getCommuteStatus() == false) {
+                        var datetime = currentTime.getCurrentDateTime();
+                        var smartphoneAddress = circumstanceData.getSmartphoneAddress();
+                        var workplaceId = circumstanceData.getWorkplaceId();
+                        var commuteStatus = circumstanceData.getCommuteStatus();
+
+                        pool.registerCommute(smartphoneAddress, workplaceId, commuteStatus, datetime, function (valid) {
+                            if (valid) {
+                                logger("demo").info("registerProcedure: register scheduled circumstance data success: " + circumstanceData.toString());
+                            } else {
+                                logger("demo").info("registerProcedure: register scheduled circumstance data fail: " + circumstanceData.toString());
+                            }
+                        });
+                    }
+                }
+            }
+
             reservedCircumstanceDictionary = null;
             registerCron = null;
             generateCron = null;
@@ -111,13 +180,16 @@ var demo = demo || (function() {
                         }
 
                         for (i = 0; i < rawWorkplaceListRows.length; i++) {
-                            workplaceList.push(rawWorkplaceListRows[i].id_workplace);
+                            if (rawWorkplaceListRows[i].beacon_set == 1) {
+                                workplaceList.push(rawWorkplaceListRows[i].id_workplace);
+                            }
                         }
 
                         logger("demo").info("generateCircumstanceData: userList.toString(): " + userList.toString());
                         logger("demo").info("generateCircumstanceData: workplaceList.toString(): " + workplaceList.toString());
                         for (var userIdx = 0; userIdx < userList.length; userIdx++) {
                             var randomTimeArr = [];
+                            var randomTimeMsecArr = [];
                             var commuteCount = Math.floor(Math.random() * 10);
                             commuteCount = (commuteCount % 2 == 0) ? commuteCount : commuteCount + 1;
 
@@ -139,24 +211,24 @@ var demo = demo || (function() {
                                     (LOWESTHOURASSECOND > currentTimeAsSecond)
                                         ? Math.floor((Math.random() * (HIGHESTHOURASSECOND - LOWESTHOURASSECOND + 1)) + LOWESTHOURASSECOND)
                                         : Math.floor((Math.random() * (HIGHESTHOURASSECOND - currentTimeAsSecond + 1)) + currentTimeAsSecond);
-                                randomTimeArr.push(randomRawTime);
+                                randomTimeMsecArr.push(randomRawTime * 1000);
                             }
 
-                            randomTimeArr.sort();
-                            logger("demo").info("generateCircumstanceData: userIdx / randomTimeArr Contents:" + userIdx + " / " + randomTimeArr.toString());
+                            randomTimeMsecArr.sort();
+                            logger("demo").info("generateCircumstanceData: userIdx / randomTimeMsecArr Contents:" + userIdx + " / " + randomTimeMsecArr.toString());
 
                             var timestampHour;
                             var timestampMin;
                             var timestampSec;
                             for (commute = 0; commute < commuteCount; commute++) {
                                 // new Date(0) returns 1970-01-01 00:00:00, not 09:00:00 so that no need to subtract 32400000 milliseconds which is equal to 9 hours
-                                var createdTimeStampSplit = (new Date(randomTimeArr[commute] * 1000/* - 32400000*/)).toString().split(' ')[4].split(':');
+                                var createdTimeStampSplit = (new Date(randomTimeMsecArr[commute]/* - 32400000*/)).toString().split(' ')[4].split(':');
                                 timestampHour = createdTimeStampSplit[0];
                                 timestampMin = createdTimeStampSplit[1];
                                 timestampSec = createdTimeStampSplit[2];
 
                                 logger("demo").info("generateCircumstanceData: commute / timestampHour:timestampMin:timestampSec: " + commute + " / " + timestampHour + ":" + timestampMin + ":" + timestampSec);
-                                randomTimeArr[commute] = timestampHour + ":" + timestampMin + ":" + timestampSec;
+                                randomTimeArr.push(timestampHour + ":" + timestampMin + ":" + timestampSec);
                             }
 
                             logger("demo").info("generateCircumstanceData: userIdx / randomTimeArr Contents:" + userIdx + " / " + randomTimeArr.toString());
@@ -169,6 +241,7 @@ var demo = demo || (function() {
                                 var circumstanceData = new CircumstanceData();
 
                                 circumstanceData.setDatetime(currentTime.getCurrentDate() + " " + randomTimeArr[commute]);
+                                circumstanceData.setDatetimeMsec(randomTimeMsecArr[commute]);
                                 circumstanceData.setSmartphoneAddress(smartphoneAddress);
 
                                 if (isEnter == false) {
@@ -213,12 +286,17 @@ var demo = demo || (function() {
 function CircumstanceData() {
 
     var datetime = "";
+    var datetimeMsec = 0;
     var smartphoneAddress ="";
     var workplaceId = 0;
     var commuteStatus = false;
 
     var setDatetime = function (_datetime) {
         datetime = _datetime;
+    };
+
+    var setDatetimeMsec = function (_datetimeMsec) {
+        datetimeMsec = _datetimeMsec;
     };
 
     var setSmartphoneAddress = function (_smartphoneAddress) {
@@ -237,6 +315,10 @@ function CircumstanceData() {
         return datetime;
     };
 
+    var getDatetimeMsec = function () {
+        return datetimeMsec;
+    };
+
     var getSmartphoneAddress = function () {
         return smartphoneAddress;
     };
@@ -250,15 +332,17 @@ function CircumstanceData() {
     };
 
     var toString = function() {
-        return datetime + " / " + smartphoneAddress + " / " + workplaceId + " / " + ((commuteStatus) ? "true" : "false");
+        return datetime + " / " + datetimeMsec + " / " +  smartphoneAddress + " / " + workplaceId + " / " + ((commuteStatus) ? "true" : "false");
     };
 
     return {
         "setDatetime"           : setDatetime,
+        "setDatetimeMsec"       : setDatetimeMsec,
         "setSmartphoneAddress"  : setSmartphoneAddress,
         "setWorkplaceId"        : setWorkplaceId,
         "setCommuteStatus"      : setCommuteStatus,
         "getDatetime"           : getDatetime,
+        "getDatetimeMsec"       : getDatetimeMsec,
         "getSmartphoneAddress"  : getSmartphoneAddress,
         "getWorkplaceId"        : getWorkplaceId,
         "getCommuteStatus"      : getCommuteStatus,
