@@ -40,6 +40,8 @@ var demo = demo || (function() {
         };
 
         var generateProcedure = function() {
+            reservedCircumstanceDictionary = {};
+
             // 퇴근시간~24시일 경우 데이터 생성하지 않기
             pool.getWorkEndTime(function(workEndTimestamp) {
                 workEndTimestamp = '1970-01-01 ' + workEndTimestamp;
