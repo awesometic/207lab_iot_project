@@ -254,7 +254,9 @@
 
     $(document).ajaxStart(function() { Pace.restart(); });
     $(document).ready(function() {
-        $('#workplace_table').DataTable();
+        $('#workplace_table').DataTable({
+            "pageLength": 100
+        });
 
         $('div.pageload_effect').hide();
 

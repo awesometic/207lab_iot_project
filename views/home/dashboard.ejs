@@ -51,6 +51,18 @@
         <!-- Main content -->
         <section class="content">
 
+            <div id="is-admin" class="row">
+                <div class="col-xs-12">
+                    <div class="alert alert-info alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-info"></i> 읽어보세요!</h4>
+                        해당 계정은 기본 관리자 계정이므로 해당 계정에 대한 근무 내역을 표시하지 않습니다.
+                    </div>
+                    <!-- /.alert-info -->
+                </div>
+                <!-- /.col -->
+            </div>
+
             <div class="row">
                 <div class="col-md-3 col-sm-6 col-xs-12">
                     <div class="info-box">
@@ -243,25 +255,36 @@
 
     $(document).ready(function() {
         var currentSmartphoneAddress = $('#current_smartphone_address').text();
+        $("#is-admin").hide();
+
+        if (currentSmartphoneAddress == "00:00:00:00:00:00") {
+            $("#is-admin").show();
+        }
 
         $.post('/post/todayCommuteInfo', {
             smartphone_address: currentSmartphoneAddress
         }, function(resultJson) {
             var todayCommuteInfoJson = commonFunc.clarifyResponsedJsonArr(resultJson.todayCommuteInfo);
 
-            for (var i = 0; i < todayCommuteInfoJson.userList.length; i++) {
-                if (todayCommuteInfoJson.userList[i].smartphoneAddress == currentSmartphoneAddress) {
-                    $('#first-come-in-time').text(commonFunc.msecToTimeDuration(todayCommuteInfoJson.userList[i].firstComeInTime));
-                    $('#last-come-out-time').text(commonFunc.msecToTimeDuration(todayCommuteInfoJson.userList[i].lastComeOutTime));
-                    $('#valid-working-time').text(commonFunc.msecToTimeDuration(todayCommuteInfoJson.userList[i].validWorkingTime));
-                    $('#valid-over-working-time').text(commonFunc.msecToTimeDuration(todayCommuteInfoJson.userList[i].validOverWorkingTime));
+            var i, row;
+            if (typeof todayCommuteInfoJson.userList !== "undefined"
+                && typeof todayCommuteInfoJson.workplaceList !== "undefined"
+                && typeof todayCommuteInfoJson.departmentList !== "undefined"
+                && typeof todayCommuteInfoJson.positionList !== "undefined") {
 
-                    break;
+                for (i = 0; i < todayCommuteInfoJson.userList.length; i++) {
+                    if (todayCommuteInfoJson.userList[i].smartphoneAddress == currentSmartphoneAddress) {
+                        $('#first-come-in-time').text(commonFunc.msecToTimeDuration(todayCommuteInfoJson.userList[i].firstComeInTime));
+                        $('#last-come-out-time').text(commonFunc.msecToTimeDuration(todayCommuteInfoJson.userList[i].lastComeOutTime));
+                        $('#valid-working-time').text(commonFunc.msecToTimeDuration(todayCommuteInfoJson.userList[i].validWorkingTime));
+                        $('#valid-over-working-time').text(commonFunc.msecToTimeDuration(todayCommuteInfoJson.userList[i].validOverWorkingTime));
+
+                        break;
+                    }
                 }
-            }
 
-            for (var i = 0; i < todayCommuteInfoJson.workplaceList.length; i++) {
-                var row =
+                for (i = 0; i < todayCommuteInfoJson.workplaceList.length; i++) {
+                    row =
                         '<tr>' +
                         '<td>' + todayCommuteInfoJson.workplaceList[i].name + '</td>' +
                         '<td>' + commonFunc.msecToTimeDuration(todayCommuteInfoJson.workplaceList[i].avgFirstComeInTime) + '</td>' +
@@ -271,13 +294,13 @@
                         '<td>' + commonFunc.msecToTimeDuration(todayCommuteInfoJson.workplaceList[i].avgValidOverWorkingTime) + '</td>' +
                         '<td>' + commonFunc.msecToTimeDuration(todayCommuteInfoJson.workplaceList[i].avgUserValidOverWorkingTime) + '</td>' +
                         '</tr>'
-                ;
+                    ;
 
-                $('#table-today-workplace-avg').find('tbody:last-child').append(row);
-            }
+                    $('#table-today-workplace-avg').find('tbody:last-child').append(row);
+                }
 
-            for (var i = 0; i < todayCommuteInfoJson.departmentList.length; i++) {
-                var row =
+                for (i = 0; i < todayCommuteInfoJson.departmentList.length; i++) {
+                    row =
                         '<tr>' +
                         '<td>' + todayCommuteInfoJson.departmentList[i].name + '</td>' +
                         '<td>' + commonFunc.msecToTimeDuration(todayCommuteInfoJson.departmentList[i].avgFirstComeInTime) + '</td>' +
@@ -289,11 +312,11 @@
                         '</tr>'
                     ;
 
-                $('#table-today-department-avg').find('tbody:last-child').append(row);
-            }
+                    $('#table-today-department-avg').find('tbody:last-child').append(row);
+                }
 
-            for (var i = 0; i < todayCommuteInfoJson.positionList.length; i++) {
-                var row =
+                for (i = 0; i < todayCommuteInfoJson.positionList.length; i++) {
+                    row =
                         '<tr>' +
                         '<td>' + todayCommuteInfoJson.positionList[i].name + '</td>' +
                         '<td>' + commonFunc.msecToTimeDuration(todayCommuteInfoJson.positionList[i].avgFirstComeInTime) + '</td>' +
@@ -305,7 +328,8 @@
                         '</tr>'
                     ;
 
-                $('#table-today-position-avg').find('tbody:last-child').append(row);
+                    $('#table-today-position-avg').find('tbody:last-child').append(row);
+                }
             }
 
             $('div.pageload_effect').hide();

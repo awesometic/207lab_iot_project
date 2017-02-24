@@ -8,37 +8,22 @@
 
 var time = require('time');
 
-var now = new time.Date();
-
-now.setTimezone("Asia/Seoul");
-
-var getCurrentDate = function() {
-    var localtime = time.localtime(Date.now()/1000);
-
-    var currentMonth = localtime.month + 1;
-    var str_currentMonth;
-
-    if (currentMonth < 10)
-        str_currentMonth = '0' + currentMonth;
-    else
-        str_currentMonth = currentMonth;
-
-    return new Date().getFullYear() + "-" + str_currentMonth + "-" + localtime.dayOfMonth;
+var getCurrentDateTime = function() {
+    var now = new time.Date();
+    now.setTimezone("Asia/Seoul");
+    return convertDatetimeFormatToSimple(now.toString());
 };
 
-var getCurrentDateTime = function() {
-    var localtime = time.localtime(Date.now()/1000);
+var getCurrentDate = function() {
+    var now = new time.Date();
+    now.setTimezone("Asia/Seoul");
+    return convertDatetimeFormatToSimple(now.toString()).split(' ')[0];
+};
 
-    var currentMonth = localtime.month + 1;
-    var str_currentMonth;
-
-    if (currentMonth < 10)
-        str_currentMonth = '0' + currentMonth;
-    else
-        str_currentMonth = currentMonth;
-
-    return new Date().getFullYear() + "-" + str_currentMonth + "-" + localtime.dayOfMonth
-        + " " + localtime.hours + ":" + localtime.minutes + ":" + localtime.seconds;
+var getCurrentTimestamp = function() {
+    var now = new time.Date();
+    now.setTimezone("Asia/Seoul");
+    return convertDatetimeFormatToSimple(now.toString()).split(' ')[1];
 };
 
 var convertCurrentTimezoneDateTime = function(datetime) {
@@ -151,8 +136,8 @@ var convertDatetimeFormatToSimple = function(datetime) {
     }
 };
 
-module.exports = now;
-module.exports.getCurrentDate = getCurrentDate;
 module.exports.getCurrentDateTime = getCurrentDateTime;
+module.exports.getCurrentDate = getCurrentDate;
+module.exports.getCurrentTimestamp = getCurrentTimestamp;
 module.exports.convertCurrentTimezoneDateTime = convertCurrentTimezoneDateTime;
 module.exports.convertDatetimeFormatToSimple = convertDatetimeFormatToSimple;
