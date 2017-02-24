@@ -138,15 +138,15 @@ var demo = demo || (function() {
                     // 추출한 출퇴근 데이터의 출퇴근 정보가 퇴근이면 현재 시간으로 퇴근 등록
                     if (nextCircumstanceData.getCommuteStatus() == false) {
                         var datetime = currentTime.getCurrentDateTime();
-                        var smartphoneAddress = circumstanceData.getSmartphoneAddress();
-                        var workplaceId = circumstanceData.getWorkplaceId();
-                        var commuteStatus = circumstanceData.getCommuteStatus();
+                        var smartphoneAddress = nextCircumstanceData.getSmartphoneAddress();
+                        var workplaceId = nextCircumstanceData.getWorkplaceId();
+                        var commuteStatus = nextCircumstanceData.getCommuteStatus();
 
                         pool.registerCommute(smartphoneAddress, workplaceId, commuteStatus, datetime, function (valid) {
                             if (valid) {
-                                logger("demo").info("registerProcedure: register scheduled circumstance data success: " + circumstanceData.toString());
+                                logger("demo").info("stop: register scheduled circumstance data in advance with current timestamp success: " + circumstanceData.toString());
                             } else {
-                                logger("demo").info("registerProcedure: register scheduled circumstance data fail: " + circumstanceData.toString());
+                                logger("demo").info("stop: register scheduled circumstance data in advance with current timestamp fail: " + circumstanceData.toString());
                             }
                         });
                     }
