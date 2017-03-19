@@ -1383,130 +1383,130 @@ router.post('/demo', function(req, res, next) {
 });
 
 /* POST for getting data using Jquery. Not provided as accessible web page */
-router.post('/post/chart/dashboard', function(req, res, next) {
-    var smartphone_address = req.body.smartphone_address;
-
-    var oneMonthAgoDate = new Date();
-    oneMonthAgoDate.setMonth(oneMonthAgoDate.getMonth() - 1);
-    oneMonthAgoDate.setHours(0, 0, 0);
-
-    var todayEndDate = new Date();
-    todayEndDate.setHours(23, 59, 59);
-
-    var companyName;
-    var datasetPieChart = '[ ';
-    var datasetBarChart = '[ ';
-
-    async.waterfall([
-        function (callback) {
-            pool.getUserInfo(smartphone_address, function (userInfo) {
-                if (userInfo.permission == 0) {
-                    callback('NOT PERMITTED');
-                } else {
-                    callback(null);
-                }
-            });
-        },
-        function (callback) {
-            pool.getCompanyName(function (_companyName) {
-                companyName = _companyName;
-
-                callback(null);
-            });
-        },
-        function (callback) {
-            pool.getDepartmentList(function (departmentList) {
-                pool.getCommuteInfo(oneMonthAgoDate, todayEndDate, function (commuteInfoJson) {
-                    var avgWorkingTimeArr = [];
-                    var minWorkingTimeArr = [];
-                    var maxWorkingTimeArr = [];
-                    var avgOverWorkingTimeArr = [];
-                    var totalAvgWorkingTime = 0;
-                    var totalAvgOverWorkingTime = 0;
-                    var totalPopulation = 0;
-
-                    for (var i = 0; i < commuteInfoJson.departmentList.length; i++) {
-                        var name = commuteInfoJson.departmentList[i].name;
-                        var id = commuteInfoJson.departmentList[i].id_department;
-                        var avgWorkingTime = Math.floor(commuteInfoJson.departmentList[i].avgWorkingTime / 1000);
-                        var minWorkingTime = Math.floor(commuteInfoJson.departmentList[i].minWorkingTime / 1000);
-                        var maxWorkingTime = Math.floor(commuteInfoJson.departmentList[i].maxWorkingTime / 1000);
-                        var avgOverWorkingTime = Math.floor(commuteInfoJson.departmentList[i].avgOverWorkingTime / 1000);
-
-                        if (avgWorkingTime > 0)
-                            avgWorkingTimeArr.push(avgWorkingTime);
-                        if (minWorkingTime > 0)
-                            minWorkingTimeArr.push(minWorkingTime);
-                        if (maxWorkingTime > 0)
-                            maxWorkingTimeArr.push(maxWorkingTime);
-                        if (avgOverWorkingTime > 0)
-                            avgOverWorkingTimeArr.push(avgOverWorkingTime);
-
-                        datasetPieChart += '{ "category":"' + name + '", ';
-                        datasetPieChart += '"measure":' + avgWorkingTime + ' }';
-
-                        if (i < commuteInfoJson.departmentList.length - 1) {
-                            datasetPieChart += ',';
-                        }
-
-                        datasetBarChart += '{ "group":"' + name + '", "category":"평균", "measure":' + avgWorkingTime + '},';
-                        datasetBarChart += '{ "group":"' + name + '", "category":"최저", "measure":' + minWorkingTime + '},';
-                        datasetBarChart += '{ "group":"' + name + '", "category":"최고", "measure":' + maxWorkingTime + '},';
-                        datasetBarChart += '{ "group":"' + name + '", "category":"초과 평균", "measure":' + avgOverWorkingTime + '},';
-
-                        for (var i = 0; i < departmentList.length; i++) {
-                            if (departmentList[i].id == id) {
-                                datasetBarChart += '{ "group":"' + name + '", "category":"총 인원", "measure":' + departmentList[i].population + '},';
-
-                                break;
-                            }
-                        }
-                    }
-
-                    for (var i = 0; i < avgWorkingTimeArr.length; i++) {
-                        totalAvgWorkingTime += avgWorkingTimeArr[i];
-                    }
-
-                    for (var i = 0; i < avgOverWorkingTimeArr.length; i++) {
-                        totalAvgOverWorkingTime += avgOverWorkingTimeArr[i];
-                    }
-
-                    for (var i = 0; i < departmentList.length; i++) {
-                        totalPopulation += departmentList[i].population;
-                    }
-
-                    datasetBarChart += '{ "group":"All", "category":"평균", "measure":' + Math.floor(totalAvgWorkingTime / avgWorkingTimeArr.length) + '}, ';
-                    datasetBarChart += '{ "group":"All", "category":"최저", "measure":' + minWorkingTimeArr.sort()[0] + '}, ';
-                    datasetBarChart += '{ "group":"All", "category":"최고", "measure":' + maxWorkingTimeArr.sort()[maxWorkingTimeArr.length - 1] + '}, ';
-                    datasetBarChart += '{ "group":"All", "category":"초과 평균", "measure":' + Math.floor(totalAvgOverWorkingTime / avgOverWorkingTimeArr.length) + '}, ';
-                    datasetBarChart += '{ "group":"All", "category":"총 인원", "measure":' + totalPopulation + '} ';
-
-                    callback(null);
-                });
-            });
-        }
-    ], function (err) {
-        if (err != null) {
-            switch (err) {
-                case 'NOT PERMITTED':
-                    break;
-
-                default:
-                    console.log(err);
-                    break;
-            }
-        } else {
-            datasetPieChart += ' ]';
-            datasetBarChart += ' ]';
-
-            res.json({
-                companyName: companyName,
-                datasetPieChart: datasetPieChart,
-                datasetBarChart: datasetBarChart
-            });
-        }
-    });
-});
+// router.post('/post/chart/dashboard', function(req, res, next) {
+//     var smartphone_address = req.body.smartphone_address;
+//
+//     var oneMonthAgoDate = new Date();
+//     oneMonthAgoDate.setMonth(oneMonthAgoDate.getMonth() - 1);
+//     oneMonthAgoDate.setHours(0, 0, 0);
+//
+//     var todayEndDate = new Date();
+//     todayEndDate.setHours(23, 59, 59);
+//
+//     var companyName;
+//     var datasetPieChart = '[ ';
+//     var datasetBarChart = '[ ';
+//
+//     async.waterfall([
+//         function (callback) {
+//             pool.getUserInfo(smartphone_address, function (userInfo) {
+//                 if (userInfo.permission == 0) {
+//                     callback('NOT PERMITTED');
+//                 } else {
+//                     callback(null);
+//                 }
+//             });
+//         },
+//         function (callback) {
+//             pool.getCompanyName(function (_companyName) {
+//                 companyName = _companyName;
+//
+//                 callback(null);
+//             });
+//         },
+//         function (callback) {
+//             pool.getDepartmentList(function (departmentList) {
+//                 pool.getCommuteInfo(oneMonthAgoDate, todayEndDate, function (commuteInfoJson) {
+//                     var avgWorkingTimeArr = [];
+//                     var minWorkingTimeArr = [];
+//                     var maxWorkingTimeArr = [];
+//                     var avgOverWorkingTimeArr = [];
+//                     var totalAvgWorkingTime = 0;
+//                     var totalAvgOverWorkingTime = 0;
+//                     var totalPopulation = 0;
+//
+//                     for (var i = 0; i < commuteInfoJson.departmentList.length; i++) {
+//                         var name = commuteInfoJson.departmentList[i].name;
+//                         var id = commuteInfoJson.departmentList[i].id_department;
+//                         var avgWorkingTime = Math.floor(commuteInfoJson.departmentList[i].avgWorkingTime / 1000);
+//                         var minWorkingTime = Math.floor(commuteInfoJson.departmentList[i].minWorkingTime / 1000);
+//                         var maxWorkingTime = Math.floor(commuteInfoJson.departmentList[i].maxWorkingTime / 1000);
+//                         var avgOverWorkingTime = Math.floor(commuteInfoJson.departmentList[i].avgOverWorkingTime / 1000);
+//
+//                         if (avgWorkingTime > 0)
+//                             avgWorkingTimeArr.push(avgWorkingTime);
+//                         if (minWorkingTime > 0)
+//                             minWorkingTimeArr.push(minWorkingTime);
+//                         if (maxWorkingTime > 0)
+//                             maxWorkingTimeArr.push(maxWorkingTime);
+//                         if (avgOverWorkingTime > 0)
+//                             avgOverWorkingTimeArr.push(avgOverWorkingTime);
+//
+//                         datasetPieChart += '{ "category":"' + name + '", ';
+//                         datasetPieChart += '"measure":' + avgWorkingTime + ' }';
+//
+//                         if (i < commuteInfoJson.departmentList.length - 1) {
+//                             datasetPieChart += ',';
+//                         }
+//
+//                         datasetBarChart += '{ "group":"' + name + '", "category":"평균", "measure":' + avgWorkingTime + '},';
+//                         datasetBarChart += '{ "group":"' + name + '", "category":"최저", "measure":' + minWorkingTime + '},';
+//                         datasetBarChart += '{ "group":"' + name + '", "category":"최고", "measure":' + maxWorkingTime + '},';
+//                         datasetBarChart += '{ "group":"' + name + '", "category":"초과 평균", "measure":' + avgOverWorkingTime + '},';
+//
+//                         for (var i = 0; i < departmentList.length; i++) {
+//                             if (departmentList[i].id == id) {
+//                                 datasetBarChart += '{ "group":"' + name + '", "category":"총 인원", "measure":' + departmentList[i].population + '},';
+//
+//                                 break;
+//                             }
+//                         }
+//                     }
+//
+//                     for (var i = 0; i < avgWorkingTimeArr.length; i++) {
+//                         totalAvgWorkingTime += avgWorkingTimeArr[i];
+//                     }
+//
+//                     for (var i = 0; i < avgOverWorkingTimeArr.length; i++) {
+//                         totalAvgOverWorkingTime += avgOverWorkingTimeArr[i];
+//                     }
+//
+//                     for (var i = 0; i < departmentList.length; i++) {
+//                         totalPopulation += departmentList[i].population;
+//                     }
+//
+//                     datasetBarChart += '{ "group":"All", "category":"평균", "measure":' + Math.floor(totalAvgWorkingTime / avgWorkingTimeArr.length) + '}, ';
+//                     datasetBarChart += '{ "group":"All", "category":"최저", "measure":' + minWorkingTimeArr.sort()[0] + '}, ';
+//                     datasetBarChart += '{ "group":"All", "category":"최고", "measure":' + maxWorkingTimeArr.sort()[maxWorkingTimeArr.length - 1] + '}, ';
+//                     datasetBarChart += '{ "group":"All", "category":"초과 평균", "measure":' + Math.floor(totalAvgOverWorkingTime / avgOverWorkingTimeArr.length) + '}, ';
+//                     datasetBarChart += '{ "group":"All", "category":"총 인원", "measure":' + totalPopulation + '} ';
+//
+//                     callback(null);
+//                 });
+//             });
+//         }
+//     ], function (err) {
+//         if (err != null) {
+//             switch (err) {
+//                 case 'NOT PERMITTED':
+//                     break;
+//
+//                 default:
+//                     console.log(err);
+//                     break;
+//             }
+//         } else {
+//             datasetPieChart += ' ]';
+//             datasetBarChart += ' ]';
+//
+//             res.json({
+//                 companyName: companyName,
+//                 datasetPieChart: datasetPieChart,
+//                 datasetBarChart: datasetBarChart
+//             });
+//         }
+//     });
+// });
 
 router.post('/post/todayCommuteInfo', function(req, res, next) {
     var smartphone_address = req.body.smartphone_address;
