@@ -124,7 +124,7 @@ var demo = demo || (function() {
 
                     // 바로 다음 출퇴근 데이터가 퇴근이면 현재 시간으로 퇴근
                     // 마이크로초를 정렬해 바로 다음에 수행될 출퇴근 데이터의 Datetime 추출
-                    circumstanceDataDatetimeMsecArr.sort();
+                    circumstanceDataDatetimeMsecArr.sort(function(a,b) { return  a-b });
                     var nextDatetime = currentTime.getCurrentDate() + ' ' + currentTime.convertCurrentTimezoneDateTime(new Date(circumstanceDataDatetimeMsecArr[0])).split(' ')[1];
 
                     // 추출한 Datetime으로 다음 수행될 출퇴근 데이터 추출
@@ -216,7 +216,7 @@ var demo = demo || (function() {
                                 randomTimeMsecArr.push(randomRawTime * 1000);
                             }
 
-                            randomTimeMsecArr.sort();
+                            randomTimeMsecArr.sort(function(a,b) { return  a-b });
                             logger("demo").info("generateCircumstanceData: userIdx / randomTimeMsecArr Contents:" + userIdx + " / " + randomTimeMsecArr.toString());
 
                             var timestampHour;
