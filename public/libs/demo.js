@@ -122,33 +122,40 @@ var demo = demo || (function() {
                         }
                     }
 
-                    // 바로 다음 출퇴근 데이터가 퇴근이면 현재 시간으로 퇴근
-                    // 마이크로초를 정렬해 바로 다음에 수행될 출퇴근 데이터의 Datetime 추출
-                    circumstanceDataDatetimeMsecArr.sort(function(a,b) { return  a-b });
-                    var nextDatetime = currentTime.getCurrentDate() + ' ' + currentTime.convertCurrentTimezoneDateTime(new Date(circumstanceDataDatetimeMsecArr[0])).split(' ')[1];
-
-                    // 추출한 Datetime으로 다음 수행될 출퇴근 데이터 추출
-                    var nextCircumstanceData;
-                    for (var circumstanceDataIdx = 0; circumstanceDataIdx < circumstanceDataArr.length; circumstanceDataIdx++) {
-                        if (circumstanceDataArr[circumstanceDataIdx].getDatetime() == nextDatetime) {
-                            nextCircumstanceData = circumstanceDataArr[circumstanceDataIdx];
-                        }
-                    }
-
-                    // 추출한 출퇴근 데이터의 출퇴근 정보가 퇴근이면 현재 시간으로 퇴근 등록
-                    if (nextCircumstanceData.getCommuteStatus() == false) {
-                        var datetime = currentTime.getCurrentDateTime();
-                        var smartphoneAddress = nextCircumstanceData.getSmartphoneAddress();
-                        var workplaceId = nextCircumstanceData.getWorkplaceId();
-                        var commuteStatus = nextCircumstanceData.getCommuteStatus();
-
-                        pool.registerCommute(smartphoneAddress, workplaceId, commuteStatus, datetime, function (valid) {
-                            if (valid) {
-                                logger("demo").info("stop: register scheduled circumstance data in advance with current timestamp success: " + circumstanceData.toString());
-                            } else {
-                                logger("demo").info("stop: register scheduled circumstance data in advance with current timestamp fail: " + circumstanceData.toString());
-                            }
+                    // 남은 출퇴근 데이터가 있을 때
+                    if (circumstanceDataArr.length != 0) {
+                        // 바로 다음 출퇴근 데이터가 퇴근이면 현재 시간으로 퇴근
+                        // 마이크로초를 정렬해 바로 다음에 수행될 출퇴근 데이터의 Datetime 추출
+                        circumstanceDataDatetimeMsecArr.sort(function (a, b) {
+                            return a - b
                         });
+                        var nextDatetime = currentTime.getCurrentDate() + ' ' + currentTime.convertCurrentTimezoneDateTime(new Date(circumstanceDataDatetimeMsecArr[0])).split(' ')[1];
+
+                        // 추출한 Datetime으로 다음 수행될 출퇴근 데이터 추출
+                        var nextCircumstanceData;
+                        for (var circumstanceDataIdx = 0; circumstanceDataIdx < circumstanceDataArr.length; circumstanceDataIdx++) {
+                            if (circumstanceDataArr[circumstanceDataIdx].getDatetime() == nextDatetime) {
+                                nextCircumstanceData = circumstanceDataArr[circumstanceDataIdx];
+
+                                break;
+                            }
+                        }
+
+                        // 추출한 출퇴근 데이터의 출퇴근 정보가 퇴근이면 현재 시간으로 퇴근 등록
+                        if (nextCircumstanceData.getCommuteStatus() == false) {
+                            var datetime = currentTime.getCurrentDateTime();
+                            var smartphoneAddress = nextCircumstanceData.getSmartphoneAddress();
+                            var workplaceId = nextCircumstanceData.getWorkplaceId();
+                            var commuteStatus = nextCircumstanceData.getCommuteStatus();
+
+                            pool.registerCommute(smartphoneAddress, workplaceId, commuteStatus, datetime, function (valid) {
+                                if (valid) {
+                                    logger("demo").info("stop: register scheduled circumstance data in advance with current timestamp success: " + circumstanceData.toString());
+                                } else {
+                                    logger("demo").info("stop: register scheduled circumstance data in advance with current timestamp fail: " + circumstanceData.toString());
+                                }
+                            });
+                        }
                     }
                 }
             }
@@ -213,7 +220,7 @@ var demo = demo || (function() {
                                     (LOWESTHOURASSECOND > currentTimeAsSecond)
                                         ? Math.floor((Math.random() * (HIGHESTHOURASSECOND - LOWESTHOURASSECOND + 1)) + LOWESTHOURASSECOND)
                                         : Math.floor((Math.random() * (HIGHESTHOURASSECOND - currentTimeAsSecond + 1)) + currentTimeAsSecond);
-                                randomTimeMsecArr.push(randomRawTime * 1000);
+                                randomTimeMsecArr.push(randomRawTime * 1000 - 32400000);
                             }
 
                             randomTimeMsecArr.sort(function(a,b) { return  a-b });
@@ -223,8 +230,7 @@ var demo = demo || (function() {
                             var timestampMin;
                             var timestampSec;
                             for (commute = 0; commute < commuteCount; commute++) {
-                                // new Date(0) returns 1970-01-01 00:00:00, not 09:00:00 so that no need to subtract 32400000 milliseconds which is equal to 9 hours
-                                var createdTimeStampSplit = (new Date(randomTimeMsecArr[commute]/* - 32400000*/)).toString().split(' ')[4].split(':');
+                                var createdTimeStampSplit = (new Date(randomTimeMsecArr[commute])).toString().split(' ')[4].split(':');
                                 timestampHour = createdTimeStampSplit[0];
                                 timestampMin = createdTimeStampSplit[1];
                                 timestampSec = createdTimeStampSplit[2];
